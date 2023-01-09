@@ -11,5 +11,5 @@
 #node modules
 node_modules/
 
-.env
+src/.env
 .DS_Store
