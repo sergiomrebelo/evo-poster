@@ -181,8 +181,7 @@ const classification = async (txt, lang='en') => {
     const urlexp = /(https?:\/\/)(\s)*(www\.)?(\s)*((\w|\s)+\.)*([\w\-\s]+\/)*([\w\-]+)((\?)?[\w\s]*=\s*[\w\%&]*)*/gm;
     const urlsMatch = txt.match(urlexp);
     let urls = urlsMatch !== null ? urlsMatch : [];
-
-
+    
     // remove of mentions
     const mentionexp = /\B@[a-z0-9_-]+/gi;
     const mentionMatch = txt.match(mentionexp);
@@ -1137,23 +1136,11 @@ class History {
 }
 
 
-
 // MAIN
-setup('ac48b690-793a-4426-8ae7-6624f3f0890e');
-let text = "(o meu nome é Tiago) Eu sou uma pessoa como cada um de nós, portanto sou diferente de cada um de nós. O que me torna diferente, para além do meu aspecto, por não ter nenhum irmão gémeo, é o gosto de abraçar o inesperado, de saber-me não preparado para este mas ao mesmo tempo disfrutar do que este me traz. Nisto entram aventuras, entram viagens, entram amizades, entram oportunidades para ajudar e colaborar plo bem comum. Uma vontade de se tornar todos iguais na ajuda, também me faz diferente. Sou também uma pessoa individual, uma pessoa independente, ignorando às vezes os toques e as sensibilidades normais, assim, ser uma pessoa diferente é ser único, onde essa unidade faz a diferença pois nos completa a todos.";
-let lang = 'pt';
-let no = 11;
-
-classification(text, lang).then((result) => {
-    FS.writeFileSync(`/Users/srebelo/Desktop/text-${no}-${lang}.json`, JSON.stringify(text));
-    FS.writeFileSync(`/Users/srebelo/Desktop/classification-${no}.json`,  JSON.stringify(result));
-    console.log (result);
-});
-
-lexicon(text, lang).then((result) => {
-    console.log (`lexicon=${result.emotions.predominant.emotion}`);
-    FS.writeFileSync(`/Users/srebelo/Desktop/lexicon-${no}.json`,  JSON.stringify(result));
-});
+// EXAMPLE RUNS
+// setup(KEY);
+// classification(text, lang).then((result) => {});
+// lexicon(text, lang).then((result) => {});
 
 
 module.exports = {
