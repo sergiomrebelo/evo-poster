@@ -7,9 +7,9 @@ const CORS = require('cors');
 const APP = EXPRESS();
 const PORT = process.env.PORT || "8000";
 
-/*APP.use(CORS());
+APP.use(CORS());
 
-APP.use(EXPRESS.json());
+/*APP.use(EXPRESS.json());
 APP.use(EXPRESS.urlencoded());
 */
 APP.use(EXPRESS.static('public'));
