@@ -181,7 +181,7 @@ const classification = async (txt, lang='en') => {
     const urlexp = /(https?:\/\/)(\s)*(www\.)?(\s)*((\w|\s)+\.)*([\w\-\s]+\/)*([\w\-]+)((\?)?[\w\s]*=\s*[\w\%&]*)*/gm;
     const urlsMatch = txt.match(urlexp);
     let urls = urlsMatch !== null ? urlsMatch : [];
-    
+
     // remove of mentions
     const mentionexp = /\B@[a-z0-9_-]+/gi;
     const mentionMatch = txt.match(mentionexp);
