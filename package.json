@@ -15,7 +15,9 @@
   "homepage": "https://github.com/sergiomrebelo/evo-poster#readme",
   "dependencies": {
     "express": "^4.18.2",
+    "fs": "^0.0.1-security",
     "nodemon": "^2.0.20",
-    "p5": "^1.5.0"
+    "p5": "^1.5.0",
+    "path": "^0.12.7"
   }
 }
