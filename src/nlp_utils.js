@@ -42,7 +42,8 @@ const check = spelt.default({
 });
 
 const { NeuralNetwork } = require('@nlpjs/neural');
-const fetch = require("node-fetch");
+
+const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
 
 const dictApiKey = process.env.MW_API_KEY; // dictionaryapi API key
 const _MODEL = 'data/models/LST_AIT_2018_SemEval_2018_task_1_model_1624288181749.json';
@@ -250,6 +251,7 @@ const lexicon = async (txt, lang = 'en') => {
     }
 
     const tokens = await _preprocessing(txt, lang);
+
     if (!tokens.success) {
         console.log (`not possible to preprocess the text`);
         return {
@@ -264,6 +266,8 @@ const lexicon = async (txt, lang = 'en') => {
     const wordEmotionRelation = {};
     const wordEmotionRelationSorted = {};
 
+    // create an emotional map of text lines
+    let emotionsByLine = JSON.parse(JSON.stringify(tokens.tokensBySentences));
 
     for (let token of tokens.tokens) {
         let r = wordemo[token];
@@ -274,16 +278,25 @@ const lexicon = async (txt, lang = 'en') => {
                     results[key] = 0.0;
                 }
                 results[key] += parseFloat(r[key]);
-                // console.log(token, key, r[key], results[key]);
             }
         } else {
             // console.log(`not founded emotions to the word ${token}`);
             neutralTokens.push(token);
+            console.log("neutralTokens", token);
+            console.log(emotionsByLine);
+            // remove the word from emotional map of text lines
+            emotionsByLine.forEach((v) => {
+                v.forEach((w) => {
+                    const index = w.findIndex((v) => v === token);
+                    if (index !== -1) {
+                        w.splice(index, 1)
+                    }
+                });
+            });
         }
     }
 
     const emotionalData = _mostPresentEmotion(results, MIN_EMOTION);
-
     // get the most influencing words (in the whole and by emotion)
     // organise the results by emotion
     for (let emotion of Object.keys(results)) {
@@ -357,12 +370,11 @@ const lexicon = async (txt, lang = 'en') => {
         }
     }
 
-
-
     return {
         success: true,
         emotions: emotionalData,
         mostInfluentialToken: mostInfluentialTokenDisplay,
+        mostInfluentialTokenPerLine: emotionsByLine,
         wordEmotionsRelation: wordEmotionRelationSorted,
         neutralTokens: neutralTokens,
         text: tokens.text,
@@ -513,9 +525,6 @@ const _preprocessing = async (txt, lang = 'en') => {
     // update history
     history.remove(rtinfo)
 
-    // sentence tokenizer
-    // const sentenceTokens = await sentenceTokenizer(txt);
-
     // remove URLs (hardwired method)
     const  urlexp = /(https?:\/\/)(\s)*(www\.)?(\s)*((\w|\s)+\.)*([\w\-\s]+\/)*([\w\-]+)((\?)?[\w\s]*=\s*[\w\%&]*)*/gm;
     const urlsMatch = txt.match(urlexp);
@@ -545,7 +554,6 @@ const _preprocessing = async (txt, lang = 'en') => {
         history.update(mention, mention.substring(1, mention.length - 1));
     }
 
-
     // remove hashtags
     const htgexp = /#[^\s!@#$%^&*()=+.\/,\[{\]};:'"?><]+/gi;
     const htgMatch = txt.match(htgexp, '');
@@ -562,7 +570,6 @@ const _preprocessing = async (txt, lang = 'en') => {
         // remove the symbol from the string but maintain the word
         txt = txt.replace(hashtag, `${hashtag.substring(1, hashtag.length-1)}`);
     }
-
 
     // update history
     for (let hash of hashtags) {
@@ -594,6 +601,7 @@ const _preprocessing = async (txt, lang = 'en') => {
 
 
     let tokens = txt.split(' ');
+
     for (let i=0; i<tokens.length; i++){
         if (Object.keys(emoticons).includes(tokens[i].toLowerCase())) {
             // update history
@@ -744,7 +752,6 @@ const _preprocessing = async (txt, lang = 'en') => {
     history.removeBasedOnMap(mapPunctEls);
 
     tokens = tokens.filter(function(el) { return el; });
-    let sentences = sentenceTokenizer(_nTxt);
 
     // remove typos from the remaining words (spell check)
     // not used because the results are not good enough
@@ -757,10 +764,46 @@ const _preprocessing = async (txt, lang = 'en') => {
     //    }
     // }
 
+    //
+
+    // sentence tokenizer
+    let sentences = await sentenceTokenizer(txt);
+
+    // relating emotions by sentences
+    let selectedTokensBySentence = [];
+    for (let i = 0; i<sentences.length; i++) {
+        selectedTokensBySentence[i] = new Array(sentences[i].length);
+        for (let j = 0; j<selectedTokensBySentence[i].length; j++) {
+            selectedTokensBySentence[i][j] = [];
+        }
+    }
+
+    // flat tokens array
+    let t = [];
+    for (let s of processed.sentences) { t.push(s.tokens); }
+    t = [].concat(...t);
+    // counter
+    let c = 0;
+    for (let i in sentences) {
+        for (let j in sentences[i]) {
+            const words = sentences[i][j].split(" ");
+            for (let w in words) {
+                // ignore punctuation
+                while (['.',';'].includes(t[c])) {c++;}
+                if (mapFinal[c]) {
+                    selectedTokensBySentence[i][j].push(t[c]);
+                }
+                c++;
+            }
+        }
+    }
+
+
     return {
         success: true,
         tokens: tokens,
         sentences: sentences,
+        tokensBySentences: selectedTokensBySentence,
         text: _translateRawTxt,
         lang: lang,
         RTInfo: rtinfo,
@@ -866,9 +909,7 @@ const sentenceTokenizer = async (txt, widows= 3, orphans = 2, probw = .95) => {
 
     let sentences = await SentenceTokenizer.sentences(txt, options);
     let res = [];
-    /* TODO:
-    if next word lenght is bigger
-     */
+
     await sentences.forEach((s) => {
         if ((s.length > LINE_SPLIT_OPTIONS.MAX)) {
             let lineLength = 0;

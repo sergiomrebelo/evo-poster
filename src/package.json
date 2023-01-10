@@ -4,10 +4,23 @@
   "description": "wip",
   "main": "index.js",
   "dependencies": {
+    "@nlpjs/neural": "^4.25.0",
     "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
     "express": "^4.18.2",
+    "fin-negation": "^1.0.8",
+    "fin-urls": "^1.0.4",
+    "finnlp": "^1.1.1",
     "fs": "^0.0.1-security",
-    "path": "^0.12.7"
+    "ibm-watson": "^7.1.2",
+    "node-emoji": "^1.11.0",
+    "node-fetch": "^3.3.0",
+    "path": "^0.12.7",
+    "patience-diff": "^0.0.2",
+    "sbd": "^1.0.19",
+    "spelt": "^0.0.3",
+    "spelt-gb-dict": "^1.0.1",
+    "stopwords-json": "^1.2.0"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
