@@ -6,6 +6,7 @@
  *
  * v1.0.0 August 2021
  * v1.1.0 December 2021
+ * v1.2.0 January 2023
  */
 
 const FS = require('fs');
@@ -368,12 +369,10 @@ const lexicon = async (txt, lang = 'en', lineAnalysis = false) => {
     }
 
     // line analysis
-    console.log (`NLP-UTILS: - line analysis ${lineAnalysis}`)
+    let l = [];
     if (lineAnalysis) {
-        let l = [];
         let c = 0;
         for (let sentence of emotionsByLine) {
-            console.log (`NLP-UTILS:`, emotionsByLine);
             for (let line of sentence) {
                 let e = {
                     "number": 0,
@@ -381,6 +380,51 @@ const lexicon = async (txt, lang = 'en', lineAnalysis = false) => {
                     "mostInfluentialToken": "",
                     "relatedTokens": []
                 };
+                let lineEmo = [];
+                let relatedTokens = {};
+                for (let w of line) {
+                    console.log (`W:`, w);
+                    for (let emo of Object.keys(wordEmotionRelationSorted)) {
+                        for (let word of wordEmotionRelationSorted[emo]) {
+                            if (w === word[0]) {
+                                // emotions by line
+                                const availableKeys = [...lineEmo].map((x) => x[0]);
+                                const index = availableKeys.indexOf(emo);
+                                if (index === -1) {
+                                    lineEmo.push([emo, word[1], 1]);
+                                } else {
+                                    lineEmo[index][1] += word[1];
+                                }
+                                // emotionally related tokens by line
+                                if (relatedTokens[emo] === undefined) {
+                                    relatedTokens[emo] = [];
+                                }
+                                relatedTokens[emo].push([word[0], word[1]]);
+                            }
+                        }
+                    }
+                }
+
+                e.emotions.push(lineEmo);
+                e.relatedTokens.push(relatedTokens);
+                e.mostInfluentialToken = emotionsByLine.flat()[c].length > 0 ? emotionsByLine.flat()[c][0] : "";
+                e.number = emotionsByLine.flat()[c].length;
+                l.push(e);
+                c++;
+            }
+        }
+        // normalise values;
+        for (let s of l) {
+            for (let line of s.emotions) {
+                if (line.length > 0) {
+                    let sum = line.map((x) => x[1]).reduce((a, b) => {
+                        return a + b
+                    });
+                    sum = Math.round(sum * 100) / 100;
+                    line.forEach((e) => {
+                        e[2] = Math.round((e[1] / sum) * 100) / 100;
+                    });
+                }
             }
         }
     }
@@ -394,7 +438,10 @@ const lexicon = async (txt, lang = 'en', lineAnalysis = false) => {
         mostInfluentialTokenPerLine: emotionsByLine,
         wordEmotionsRelation: wordEmotionRelationSorted,
         neutralTokens: neutralTokens,
-        lineAnalysis: lineAnalysis,
+        lineAnalysis: {
+            available: lineAnalysis,
+            data: l
+        },
         text: tokens.text,
         tokens: tokens.tokens,
         lang: tokens.lang,

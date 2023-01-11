@@ -1310,6 +1310,58 @@
         }
       ]
     }
+  ],
+  [
+    {
+      "number": 1,
+      "emotions": [[["anger", 0.409, 0.55], ["sadness", 0.344, 0.46]]],
+      "mostInfluentialToken": "forfeit",
+      "relatedTokens": [
+        {
+          "anger": [["forfeit", 0.409]],
+          "sadness": [["forfeit", 0.344]]
+        }
+      ]
+    },
+    {
+      "number": 0,
+      "emotions": [[]],
+      "mostInfluentialToken": "",
+      "relatedTokens": [
+        {}
+      ]
+    },
+    {
+      "number": 1,
+      "emotions": [[["anger", 0.621, 0.28], ["sadness", 0.469, 0.21], ["disgust", 0.516, 0.23], ["fear", 0.594, 0.27]]],
+      "mostInfluentialToken": "convict",
+      "relatedTokens": [
+        {
+          "anger": [["convict", 0.621]],
+          "sadness": [["convict", 0.469]],
+          "disgust": [["convict", 0.516]],
+          "fear": [["convict", 0.594]]
+        }
+      ]
+    },
+    {
+      "number": 0,
+      "emotions": [[]],
+      "mostInfluentialToken": "",
+      "relatedTokens": [
+        {}
+      ]
+    },
+    {
+      "number": 0,
+      "emotions": [
+        []
+      ],
+      "mostInfluentialToken": "",
+      "relatedTokens": [
+        {}
+      ]
+    }
   ]
 ]
 
