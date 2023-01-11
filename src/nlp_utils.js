@@ -170,8 +170,6 @@ const classification = async (txt, lang='en') => {
         }
     }
 
-    // console.log("TXT", txt);
-
     // remove retweet data
     const rtexp = /RT\s*@[^:]*:/gm;
     const rtmatch = txt.match(rtexp);
@@ -211,7 +209,6 @@ const classification = async (txt, lang='en') => {
         displayTxt = await displayTxt.replace(urlexp, '');
         displayTxt.trim();
         sentences = await sentenceTokenizer(displayTxt);
-        // console.log (`txt after= ${displayTxt}`);
     } catch (err) {
         success = false;
     }
@@ -241,7 +238,7 @@ const classification = async (txt, lang='en') => {
     }
 }
 
-const lexicon = async (txt, lang = 'en') => {
+const lexicon = async (txt, lang = 'en', lineAnalysis = false) => {
     // check if language is supported
     // get mother language
     lang = lang.split('-')[0];
@@ -253,7 +250,7 @@ const lexicon = async (txt, lang = 'en') => {
     const tokens = await _preprocessing(txt, lang);
 
     if (!tokens.success) {
-        console.log (`not possible to preprocess the text`);
+        console.error (`not possible to preprocess the text`);
         return {
             success: false
         }
@@ -280,19 +277,19 @@ const lexicon = async (txt, lang = 'en') => {
                 results[key] += parseFloat(r[key]);
             }
         } else {
-            // console.log(`not founded emotions to the word ${token}`);
+            // console.warn(`not founded emotions to the word ${token}`);
             neutralTokens.push(token);
-            console.log("neutralTokens", token);
-            console.log(emotionsByLine);
             // remove the word from emotional map of text lines
-            emotionsByLine.forEach((v) => {
-                v.forEach((w) => {
-                    const index = w.findIndex((v) => v === token);
+            for (let s in emotionsByLine) {
+                let sentence = emotionsByLine[s];
+                for (let l in sentence) {
+                    let line = sentence[l];
+                    const index = line.findIndex((v) => v === token);
                     if (index !== -1) {
-                        w.splice(index, 1)
+                        line.splice(index, 1);
                     }
-                });
-            });
+                }
+            }
         }
     }
 
@@ -370,6 +367,26 @@ const lexicon = async (txt, lang = 'en') => {
         }
     }
 
+    // line analysis
+    console.log (`NLP-UTILS: - line analysis ${lineAnalysis}`)
+    if (lineAnalysis) {
+        let l = [];
+        let c = 0;
+        for (let sentence of emotionsByLine) {
+            console.log (`NLP-UTILS:`, emotionsByLine);
+            for (let line of sentence) {
+                let e = {
+                    "number": 0,
+                    "emotions": [],
+                    "mostInfluentialToken": "",
+                    "relatedTokens": []
+                };
+            }
+        }
+    }
+
+
+
     return {
         success: true,
         emotions: emotionalData,
@@ -377,6 +394,7 @@ const lexicon = async (txt, lang = 'en') => {
         mostInfluentialTokenPerLine: emotionsByLine,
         wordEmotionsRelation: wordEmotionRelationSorted,
         neutralTokens: neutralTokens,
+        lineAnalysis: lineAnalysis,
         text: tokens.text,
         tokens: tokens.tokens,
         lang: tokens.lang,
@@ -780,7 +798,9 @@ const _preprocessing = async (txt, lang = 'en') => {
 
     // flat tokens array
     let t = [];
-    for (let s of processed.sentences) { t.push(s.tokens); }
+    // real tokens
+    // for (let s of processed.sentences) { t.push(s.tokens); }
+    for (let s of processed.sentences) { t.push(s.lemmas); }
     t = [].concat(...t);
     // counter
     let c = 0;
