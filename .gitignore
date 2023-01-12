@@ -13,3 +13,5 @@ node_modules/
 
 src/.env
 .DS_Store
+src/public/bundle.css
+src/public/bundle.js
