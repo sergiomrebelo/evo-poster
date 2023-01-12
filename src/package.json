@@ -34,5 +34,10 @@
   "bugs": {
     "url": "https://github.com/sergiomrebelo/evo-poster/issues"
   },
-  "homepage": "https://github.com/sergiomrebelo/evo-poster#readme"
+  "homepage": "https://github.com/sergiomrebelo/evo-poster#readme",
+  "devDependencies": {
+    "eslint": "^8.31.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.27.4"
+  }
 }
