@@ -22,6 +22,10 @@ Work on a new project version. Currently, no stable version is available.
 
 ## Getting Started
 
+##### System Requirements
+Before you begin, make sure you have the following installed:
+- Node.js v18.12.1 or above
+
 #### Environment Variables
 
 **PORT** = Application Running Port
@@ -36,4 +40,8 @@ Work on a new project version. Currently, no stable version is available.
 
 ## Contributors
 
-## Acknowledgment 🙏
+#### Acknowledgments
+This work is partially supported by national funds through the Foundation for Science and Technology (FCT), Portugal, within the scope of the project UID/CEC/00326/2019. Sérgio M. Rebelo is funded by FCT under the grant SFRH/BD/132728/2017 and COVID/BD/151969/2021. 
+
+## License
+Usage is provided under the MIT License.
