@@ -1,5 +1,6 @@
 # Evolutionary Poster Composer
 2023 version
+[Project page](https://cdv.dei.uc.pt/evoposter/)
 [Control Page](https://sergiomrebelo.notion.site/EvoPoster-v3-7dd731907732484ba1e6b15c6f23fe32)
 
 
