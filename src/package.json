@@ -1,7 +1,7 @@
 {
   "name": "evo-poster",
   "version": "3.0.0",
-  "description": "wip",
+  "description": "The Evolutionary Poster Composer (evo-poster) is a computational design system for the automatic creation of poster designs based on a Genetic Algorithm.",
   "main": "index.js",
   "dependencies": {
     "@nlpjs/neural": "^4.25.0",
@@ -29,7 +29,7 @@
     "type": "git",
     "url": "git+https://github.com/sergiomrebelo/evo-poster.git"
   },
-  "author": "sergiomrebelo",
+  "author": "Sérgio M. Rebelo <sergiorebelo@me.com> (http://sergiorebelo.work/)",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/sergiomrebelo/evo-poster/issues"
