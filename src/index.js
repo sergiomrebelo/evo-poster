@@ -2,7 +2,7 @@ const EXPRESS = require("express");
 const PATH = require("path");
 const FS = require("fs");
 const CORS = require('cors');
-const NLP = require('./nlp_utils');
+const NLP = require('./nlp-utils/nlp_utils.mjs');
 
 const APP = EXPRESS();
 const PORT = process.env.PORT || "8000";
@@ -13,7 +13,7 @@ APP.use(EXPRESS.static('public'));
 
 
 APP.listen(PORT, () => {
-    console.log(`👂application running at port ${PORT}`);
+    console.log(`👂  at port ${PORT}`);
     NLP.setup(process.env.MW_API_KEY);
 });
 

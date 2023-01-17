@@ -6,25 +6,22 @@
  *
  * v1.0.0 August 2021
  * v1.1.0 December 2021
- * v1.2.0 January 2023
+ * v1.2.1 January 2023
  */
-
-const FS = require('fs');
-const dotenv = require('dotenv').config();
-const Emoji = require('node-emoji');
-const LanguageTranslatorV3 = require('ibm-watson/language-translator/v3');
-const { IamAuthenticator } = require('ibm-watson/auth');
-const PatienceDiff = require('patience-diff');
-
-const Fin = require("finnlp");
-require ("fin-negation");
-require ("fin-urls");
-// require ("fin-slang");
-// require ("fin-emphasis");
-
-const normaliser = require('en-norm');
+import {readFileSync} from 'fs';
+import Emoji from 'node-emoji';
+import LanguageTranslatorV3 from 'ibm-watson/language-translator/v3.js';
+import { IamAuthenticator } from 'ibm-watson/auth/index.js';
+import * as Fin from "finnlp";
+import "fin-negation";
+import "fin-urls";
+import * as normaliser from 'en-norm';
 // the sentence tokenizer of fin.js not works with links
-const SentenceTokenizer = require('sbd');
+import * as SentenceTokenizer from 'sbd';
+import * as spelt from 'spelt';
+import * as dict  from 'spelt-gb-dict';
+import { NeuralNetwork } from '@nlpjs/neural';
+
 const SentenceTokenizerOptions = {
     "newline_boundaries" : true,
     "html_boundaries"    : true,
@@ -34,31 +31,24 @@ const SentenceTokenizerOptions = {
     "abbreviations"      : null
 };
 
-
-const spelt = require('spelt');
-const dict = require('spelt-gb-dict');
-const check = spelt.default({
+const check = spelt.default.default({
         dictionary:dict.dictionary,
         distanceThreshold:0.2
 });
 
-const { NeuralNetwork } = require('@nlpjs/neural');
-
 const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
 
-const dictApiKey = process.env.MW_API_KEY; // dictionaryapi API key
+// import * as PatienceDiff from 'patience-diff';
+// require ("fin-slang");
+// require ("fin-emphasis");
+
+
+let dictApiKey = null; // dictionary API key
+let languageTranslator = null; // translator API keys
 const _MODEL = 'data/models/LST_AIT_2018_SemEval_2018_task_1_model_1624288181749.json';
 const _LEXICON = 'data/lexicon/NRC-Emotion-Intensity-Lexicon-v1_1618414260694.json';
 const MIN_EMOTION = .2;
 
-const languageTranslator = new LanguageTranslatorV3({
-    authenticator: new IamAuthenticator({ apikey: process.env.LANGUAGE_TRANSLATOR_IAM_APIKEY }),
-    serviceUrl: process.env.LANGUAGE_TRANSLATOR_URL,
-    version: '2020-11-12',
-});
-
-// console.log (`api key=${process.env.LANGUAGE_TRANSLATOR_IAM_APIKEY}`);
-// console.log (`service key=${process.env.LANGUAGE_TRANSLATOR_URL}`);
 
 // https://cloud.ibm.com/docs/language-translator?topic=language-translator-translation-models
 const availableLanguages = [
@@ -75,6 +65,8 @@ let slang; // slang lexicon (only works on EN)
 let emoticons; // emoticons lexicon
 let wordemo; // word-emotions lexicon
 
+
+
 const LINE_SPLIT_OPTIONS = {
     OPTIMAL: 25,
     MAX: 30,
@@ -85,10 +77,23 @@ const LINE_SPLIT_OPTIONS = {
     SPLIT_PUNT: ['.',',','!']
 };
 
-const setup = () => {
+export const setup = async (key = null, transKey = null, transServiceURL = null) => {
+    if (key === null ||  transKey === null || transServiceURL === null) {
+        console.error(`the dictionary key API is not defined. nlp-utils not init.`);
+        return;
+    }
+
+    dictApiKey = key;
+    languageTranslator = new LanguageTranslatorV3({
+        authenticator: new IamAuthenticator({ apikey: transKey }),
+        serviceUrl: transServiceURL,
+        version: '2020-11-12',
+    });
+
+
     try {
         //  setup classifier
-        const model = FS.readFileSync(_MODEL);
+        const model = readFileSync(_MODEL);
         let classifier = JSON.parse(model); // load model on classifier
         net.fromJSON(classifier);
     } catch (err) {
@@ -98,7 +103,7 @@ const setup = () => {
 
     try {
         // load stop words lexicon (en)
-        let swenLexicon = FS.readFileSync('node_modules/stopwords-json/dist/en.json');
+        let swenLexicon = readFileSync('node_modules/stopwords-json/dist/en.json');
         sw = JSON.parse(swenLexicon);
     } catch (err) {
         console.error(`stop words lexicon not loaded: ${err}`);
@@ -107,7 +112,7 @@ const setup = () => {
 
     try {
         // load slang dictionary
-        let slangLexicon = FS.readFileSync('data/lexicon/slang.json');
+        let slangLexicon = readFileSync('data/lexicon/slang.json');
         slang = JSON.parse(slangLexicon);
     } catch (err) {
         console.error(`slang lexicon not loaded: ${err}`);
@@ -116,7 +121,7 @@ const setup = () => {
 
     try {
         // load emoticons dictionary
-        let emoticonsLexicon = FS.readFileSync('data/lexicon/emoticons.json');
+        let emoticonsLexicon = readFileSync('data/lexicon/emoticons.json');
         emoticons = JSON.parse(emoticonsLexicon);
     } catch (err) {
         console.error(`emoticons lexicon not loaded: ${err}`);
@@ -125,17 +130,19 @@ const setup = () => {
 
     try {
         // load emotion lexicon
-        const lx = FS.readFileSync(_LEXICON);
+        const lx = readFileSync(_LEXICON);
         wordemo = JSON.parse(lx);
     } catch (err) {
         console.error(`word-emotion lexicon not loaded: ${err} (path ${_LEXICON})`);
         return false;
     }
 
+    console.log (`⚙️ Nlp-utils (v1.2.1) setup with success ⚙️`)
+
     return true;
 }
 
-const classification = async (txt, lang='en') => {
+export const classification = async (txt, lang='en') => {
     const _rawTxt = txt;
     let _rawEnTxt = txt, _translateResults = txt;
 
@@ -239,7 +246,7 @@ const classification = async (txt, lang='en') => {
     }
 }
 
-const lexicon = async (txt, lang = 'en', lineAnalysis = false) => {
+export const lexicon = async (txt, lang = 'en', lineAnalysis = false) => {
     // check if language is supported
     // get mother language
     lang = lang.split('-')[0];
@@ -369,70 +376,25 @@ const lexicon = async (txt, lang = 'en', lineAnalysis = false) => {
     }
 
     // line analysis
-    let l = [];
+    const lineAnalysisResult = [];
+    const sentences = (await sentenceTokenizer(txt)).flat();
     if (lineAnalysis) {
-        let c = 0;
-        for (let sentence of emotionsByLine) {
-            for (let line of sentence) {
-                let e = {
-                    "number": 0,
-                    "emotions": [],
-                    "mostInfluentialToken": "",
-                    "relatedTokens": []
-                };
-                let lineEmo = [];
-                let relatedTokens = {};
-                for (let w of line) {
-                    console.log (`W:`, w);
-                    for (let emo of Object.keys(wordEmotionRelationSorted)) {
-                        for (let word of wordEmotionRelationSorted[emo]) {
-                            if (w === word[0]) {
-                                // emotions by line
-                                const availableKeys = [...lineEmo].map((x) => x[0]);
-                                const index = availableKeys.indexOf(emo);
-                                if (index === -1) {
-                                    lineEmo.push([emo, word[1], 1]);
-                                } else {
-                                    lineEmo[index][1] += word[1];
-                                }
-                                // emotionally related tokens by line
-                                if (relatedTokens[emo] === undefined) {
-                                    relatedTokens[emo] = [];
-                                }
-                                relatedTokens[emo].push([word[0], word[1]]);
-                            }
-                        }
-                    }
-                }
+        for (let sentence of sentences) {
+            const line = await lexicon(sentence, lang, false);
+            const data = {
+                'number': line.emotions.recognisedEmotions.length,
+                'emotions': line.emotions.recognisedEmotions,
+                'mostInfluentialToken': Object.keys(line.mostInfluentialToken.originalWord).length === 0 ? "" : line.mostInfluentialToken.originalWord,
+                'relatedTokens': line.wordEmotionsRelation
+            }
+            lineAnalysisResult.push(data);
+        }
 
-                e.emotions.push(lineEmo);
-                e.relatedTokens.push(relatedTokens);
-                e.mostInfluentialToken = emotionsByLine.flat()[c].length > 0 ? emotionsByLine.flat()[c][0] : "";
-                e.number = emotionsByLine.flat()[c].length;
-                l.push(e);
-                c++;
-            }
-        }
-        // normalise values;
-        for (let s of l) {
-            for (let line of s.emotions) {
-                if (line.length > 0) {
-                    let sum = line.map((x) => x[1]).reduce((a, b) => {
-                        return a + b
-                    });
-                    sum = Math.round(sum * 100) / 100;
-                    line.forEach((e) => {
-                        e[2] = Math.round((e[1] / sum) * 100) / 100;
-                    });
-                }
-            }
-        }
     }
-
-
 
     return {
         success: true,
+        sentences: sentences,
         emotions: emotionalData,
         mostInfluentialToken: mostInfluentialTokenDisplay,
         mostInfluentialTokenPerLine: emotionsByLine,
@@ -440,7 +402,7 @@ const lexicon = async (txt, lang = 'en', lineAnalysis = false) => {
         neutralTokens: neutralTokens,
         lineAnalysis: {
             available: lineAnalysis,
-            data: l
+            data: lineAnalysisResult
         },
         text: tokens.text,
         tokens: tokens.tokens,
@@ -537,9 +499,7 @@ const rm = async (rtxt) => {
     txt = Emoji.replace(txt, (emoji) =>  ` ${emoji.emoji} `);
     // replace consecutive white spaces
     txt = await txt.replace (/[^\S\r\n]{2,}/, ' ');
-
     // txt = await txt.trim();
-
     return txt;
 }
 
@@ -896,7 +856,6 @@ const _preprocessing = async (txt, lang = 'en') => {
     };
 }
 
-
 const _antonyms = async (word, tag= 'N') => {
     if (dictApiKey === null) {
         console.error(`dictionaryapi.com key not valid`);
@@ -1040,6 +999,7 @@ const sentenceTokenizer = async (txt, widows= 3, orphans = 2, probw = .95) => {
 
     return res;
 }
+
 
 
 class History {
@@ -1243,14 +1203,3 @@ class History {
     }
 }
 
-
-// MAIN
-// EXAMPLE RUNS
-// setup(KEY);
-// classification(text, lang).then((result) => {});
-// lexicon(text, lang).then((result) => {});
-
-
-module.exports = {
-    setup, classification, lexicon
-};

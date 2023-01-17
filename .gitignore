@@ -6,12 +6,17 @@
 /httpRequests/
 
 #idea
-.idea/
+./.idea/
 
 #node modules
 node_modules/
 
 src/.env
+*.env
 .DS_Store
 src/public/bundle.css
 src/public/bundle.js
+.ideia/
+.idea/modules.xml
+.idea/evo-poster.iml
+src/nlp-utils/.env
