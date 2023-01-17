@@ -16,7 +16,7 @@ src/.env
 *.env
 src/nlp-utils/.env
 
-# apple 
+# apple
 .DS_Store
 
 # front-end bundle

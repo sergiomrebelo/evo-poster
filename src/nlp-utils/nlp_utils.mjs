@@ -8,7 +8,10 @@
  * v1.1.0 December 2021
  * v1.2.1 January 2023
  */
-import {readFileSync} from 'fs';
+import { readFileSync } from 'fs';
+import { join, dirname} from 'path';
+import { fileURLToPath } from 'url';
+
 import Emoji from 'node-emoji';
 import LanguageTranslatorV3 from 'ibm-watson/language-translator/v3.js';
 import { IamAuthenticator } from 'ibm-watson/auth/index.js';
@@ -37,6 +40,8 @@ const check = spelt.default.default({
 });
 
 const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 // import * as PatienceDiff from 'patience-diff';
 // require ("fin-slang");
@@ -79,7 +84,7 @@ const LINE_SPLIT_OPTIONS = {
 
 export const setup = async (key = null, transKey = null, transServiceURL = null) => {
     if (key === null ||  transKey === null || transServiceURL === null) {
-        console.error(`the dictionary key API is not defined. nlp-utils not init.`);
+        console.error(`any key are is defined ${[key, transKey, transServiceURL]}. nlp-utils not init.`);
         return;
     }
 
@@ -93,7 +98,7 @@ export const setup = async (key = null, transKey = null, transServiceURL = null)
 
     try {
         //  setup classifier
-        const model = readFileSync(_MODEL);
+        const model = readFileSync(join(__dirname, _MODEL));
         let classifier = JSON.parse(model); // load model on classifier
         net.fromJSON(classifier);
     } catch (err) {
@@ -103,7 +108,7 @@ export const setup = async (key = null, transKey = null, transServiceURL = null)
 
     try {
         // load stop words lexicon (en)
-        let swenLexicon = readFileSync('node_modules/stopwords-json/dist/en.json');
+        let swenLexicon = readFileSync(join(__dirname, 'node_modules/stopwords-json/dist/en.json'));
         sw = JSON.parse(swenLexicon);
     } catch (err) {
         console.error(`stop words lexicon not loaded: ${err}`);
@@ -112,7 +117,7 @@ export const setup = async (key = null, transKey = null, transServiceURL = null)
 
     try {
         // load slang dictionary
-        let slangLexicon = readFileSync('data/lexicon/slang.json');
+        let slangLexicon = readFileSync(join(__dirname, 'data/lexicon/slang.json'));
         slang = JSON.parse(slangLexicon);
     } catch (err) {
         console.error(`slang lexicon not loaded: ${err}`);
@@ -121,7 +126,7 @@ export const setup = async (key = null, transKey = null, transServiceURL = null)
 
     try {
         // load emoticons dictionary
-        let emoticonsLexicon = readFileSync('data/lexicon/emoticons.json');
+        let emoticonsLexicon = readFileSync(join(__dirname, 'data/lexicon/emoticons.json'));
         emoticons = JSON.parse(emoticonsLexicon);
     } catch (err) {
         console.error(`emoticons lexicon not loaded: ${err}`);
@@ -130,7 +135,7 @@ export const setup = async (key = null, transKey = null, transServiceURL = null)
 
     try {
         // load emotion lexicon
-        const lx = readFileSync(_LEXICON);
+        const lx = readFileSync(join(__dirname, _LEXICON));
         wordemo = JSON.parse(lx);
     } catch (err) {
         console.error(`word-emotion lexicon not loaded: ${err} (path ${_LEXICON})`);

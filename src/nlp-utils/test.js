@@ -50,6 +50,7 @@ const run = async (text, lang) => {
 
 
 // example input data
-const text = "This behavior is not tolerable at all I wish I could do something about it. I’m really very angry.";
+const text = "This behavior is not tolerable at all I wish I could do something about it. I’m really very angry";
+const text = "This behavior is not$tolerable at all I wish I$could do something about it.$I’m really very angry";
 const lang = "en";
 run (text, lang);

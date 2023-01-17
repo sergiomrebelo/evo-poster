@@ -17,9 +17,12 @@
     "finnlp": "^1.1.1",
     "fs": "^0.0.1-security",
     "ibm-watson": "^7.1.2",
+    "path": "^0.12.7",
     "sbd": "^1.0.19",
+    "node-fetch": "^3.3.0",
     "spelt": "^0.0.3",
     "spelt-gb-dict": "^1.0.1",
-    "stopwords-json": "^1.2.0"
+    "stopwords-json": "^1.2.0",
+    "url": "^0.11.0"
   }
 }

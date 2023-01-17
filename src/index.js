@@ -1,49 +1,54 @@
-const EXPRESS = require("express");
-const PATH = require("path");
-const FS = require("fs");
-const CORS = require('cors');
-const NLP = require('./nlp-utils/nlp_utils.mjs');
+import express from 'express';
+import dotenv from 'dotenv';
 
-const APP = EXPRESS();
+import cors from 'cors';
+import {setup, classification, lexicon} from "./nlp-utils/nlp_utils.mjs";
+
+const APP = express();
 const PORT = process.env.PORT || "8000";
-APP.use(CORS());
-APP.use(EXPRESS.json());
-APP.use(EXPRESS.urlencoded({ extended: true }));
-APP.use(EXPRESS.static('public'));
+
+dotenv.config();
+APP.use(cors());
+APP.use(express.json());
+APP.use(express.urlencoded({extended: true}));
+APP.use(express.static('public'));
 
 
 APP.listen(PORT, () => {
     console.log(`👂  at port ${PORT}`);
-    NLP.setup(process.env.MW_API_KEY);
+    setup(process.env.MW_API_KEY, process.env.LANGUAGE_TRANSLATOR_IAM_APIKEY, process.env.LANGUAGE_TRANSLATOR_URL);
 });
 
 APP.get("/lines/:lang/:delimiter/:input/", async (req, res) => {
+    // TEXTING URL
+    // http://localhost:8000/lines/en/$/This behavior is not$tolerable at all I wish I$could do something about it.$I%E2%80%99m really very angry%22
     const delimiter = req.params.delimiter;
     const text = req.params.input;
     const lang = req.params.lang;
-    const results = await lineAnalysis (text, lang, delimiter);
-
+    const results = await lineAnalysis(text, lang, delimiter);
     res.status(200).send(JSON.stringify(results));
 });
 
 APP.get("/text/:input", async (req, res) => {
+    // TEXTING URL
+    // http://localhost:8000/text/This behavior is not tolerable at all I wish I could do something about it.I'm really very angry
     const text = req.params.input;
     const results = await globalAnalysis(text, `en`);
-
     res.status(200).send(JSON.stringify(results));
 });
 
 APP.get("/text/:lang/:input", async (req, res) => {
-   const text = req.params.input;
-   const lang = req.params.lang;
-   const results = await globalAnalysis(text, lang);
-
-   res.status(200).send(JSON.stringify(results));
+    // TEXTING URL
+    // http://localhost:8000/en/text/This behavior is not tolerable at all I wish I could do something about it.I'm really very angry
+    const text = req.params.input;
+    const lang = req.params.lang;
+    const results = await globalAnalysis(text, lang);
+    res.status(200).send(JSON.stringify(results));
 });
 
-/*APP.get("*", (req, res) => {
+APP.get("*", (req, res) => {
     res.status(404).send(`page not found!`);
-});*/
+});
 
 
 /**
@@ -53,18 +58,18 @@ APP.get("/text/:lang/:input", async (req, res) => {
  * @param lang : text language
  */
 const globalAnalysis = async (text, lang) => {
-    const classification = await NLP.classification(text, lang);
-    const lexicon = await NLP.lexicon(text, lang, true);
+    const classificationResults = await classification(text, lang);
+    const lexiconResults = await lexicon(text, lang, true);
 
     return {
         'success': false,
         'automatic': true,
         'text': text,
         'lang': lang,
-        'sentences': lexicon._raw._analysis.sentences.flat(),
-        'classification': classification,
-        'emotionsByLine': lexicon.lineAnalysis,
-        'lexicon': lexicon
+        'sentences': lexiconResults.sentences,
+        'classification': classificationResults,
+        'emotionsByLine': lexiconResults.lineAnalysis,
+        'lexicon': lexiconResults
     }
 }
 
@@ -75,21 +80,20 @@ const globalAnalysis = async (text, lang) => {
  * @param lang : text language
  * @param delimiter : line delimiter
  */
-const lineAnalysis = async (text, lang = "en", delimiter= "&") => {
+const lineAnalysis = async (text, lang = "en", delimiter = "&") => {
     const splitText = text.split(delimiter);
-    const longText = text.replace(/&/g, ` `);
+    const longText = text.replaceAll(delimiter, ` `);
 
-    const classification = await NLP.classification(longText, lang);
-
+    const classificationResults = await classification(longText, lang);
     let emotionsByLine = [];
     for (let line of splitText) {
-        const lexicon = await NLP.lexicon(line);
-        if (lexicon.success) {
+        const lexiconResults = await lexicon(line);
+        if (lexiconResults.success) {
             emotionsByLine.push({
-                'number': lexicon.emotions.recognisedEmotions.length,
-                'emotions': lexicon.emotions.recognisedEmotions,
-                'mostInfluentialToken': Object.keys(lexicon.mostInfluentialToken.originalWord).length === 0 ? "" : lexicon.mostInfluentialToken.originalWord,
-                'relatedTokens': lexicon.wordEmotionsRelation
+                'number': lexiconResults.emotions.recognisedEmotions.length,
+                'emotions': lexiconResults.emotions.recognisedEmotions,
+                'mostInfluentialToken': Object.keys(lexiconResults.mostInfluentialToken.originalWord).length === 0 ? "" : lexiconResults.mostInfluentialToken.originalWord,
+                'relatedTokens': lexiconResults.wordEmotionsRelation
             });
         }
     }
@@ -100,7 +104,7 @@ const lineAnalysis = async (text, lang = "en", delimiter= "&") => {
         'text': longText,
         'lang': lang,
         'sentences': splitText,
-        'classification': classification,
+        'classification': classificationResults,
         'emotionsByLine': emotionsByLine,
         'lexicon': {
             'success': false
