@@ -3,7 +3,6 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 
-
 const _evalClassification = async (text, lang) => {
    await NLP.setup(process.env.MW_API_KEY, process.env.LANGUAGE_TRANSLATOR_IAM_APIKEY, process.env.LANGUAGE_TRANSLATOR_URL);
    await NLP.classification(text, lang).then((result) => {
@@ -30,33 +29,36 @@ const _evalLexicon = async (text, lang) => {
             weight: result.emotions.data.predominant.weight,
             _tokens: result._tokens,
          });
-         console.log(result.emotions);
          analysis.sentences.push(result);
       });
    }
 
    // compute global lexicon value
-   let emotions = {};
-   for (let i in analysis.sentences) {
-      const current = analysis.sentences[i].emotions.data.recognisedEmotions;
-      for (let e of current) {
-            const name = e[0];
-            if (Object.keys(emotions).includes(name)) {
-               emotions[name] = emotions[name] + e[1];
-            } else {
-               emotions[name] = e[1];
-            }
-         }
-      }
-
-   analysis.global = Object.entries(emotions).sort(([,a],[,b]) => b-a)[0];
+   analysis.global = globalAnalysisLexicon(analysis.sentences)[0];
 
    console.group(`lexicon`);
    console.info (`text: ${text}`);
    console.info (`predominant emotion: ${analysis.global[0]} (value: ${analysis.global[1]})`);
-   console.info (`number of sentences: ${analysis.sentences.length})`);
+   console.info (`number of sentences: ${analysis.sentences.length}`);
    console.table (display);
    console.groupEnd();
+}
+
+const globalAnalysisLexicon = (sentences) => {
+   // compute global lexicon value
+   let emotions = {};
+   for (let i in sentences) {
+      const current = sentences[i].emotions.data.recognisedEmotions;
+      for (let e of current) {
+         const name = e[0];
+         if (Object.keys(emotions).includes(name)) {
+            emotions[name] = emotions[name] + e[1];
+         } else {
+            emotions[name] = e[1];
+         }
+      }
+   }
+   return Object.entries(emotions).sort(([,a],[,b]) => b-a);
 }
 
 
@@ -64,8 +66,6 @@ const _evalLexicon = async (text, lang) => {
 const text = "This behavior is not tolerable at all I wish I could do something about it. I’m really very angry";
 // const text = "This behavior is not$tolerable at all I wish I$could do something about it.$I’m really very angry";
 const lang = "en";
-// run (text, lang);
-
 
 _evalClassification (text, lang);
 _evalLexicon(text, lang);
