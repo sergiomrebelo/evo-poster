@@ -21,31 +21,19 @@ import "fin-urls";
 import * as normaliser from 'en-norm';
 // the sentence tokenizer of fin.js not works with links
 import * as SentenceTokenizer from 'sbd';
-import * as spelt from 'spelt';
-import * as dict  from 'spelt-gb-dict';
 import { NeuralNetwork } from '@nlpjs/neural';
 
-const SentenceTokenizerOptions = {
-    "newline_boundaries" : true,
-    "html_boundaries"    : true,
-    "sanitize"           : false,
-    "allowed_tags"       : false,
-    "preserve_whitespace" : false,
-    "abbreviations"      : null
-};
-
-const check = spelt.default.default({
+// spell checking variables
+// import * as spelt from 'spelt';
+// import * as dict  from 'spelt-gb-dict';
+/*const check = spelt.default.default({
         dictionary:dict.dictionary,
         distanceThreshold:0.2
-});
+});*/
 
 const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-
-// import * as PatienceDiff from 'patience-diff';
-// require ("fin-slang");
-// require ("fin-emphasis");
 
 
 let dictApiKey = null; // dictionary API key
@@ -159,9 +147,6 @@ export const classification = async (txt, lang='en') => {
     txt = await rm(txt);
     let displayTxt = txt;
 
-    // DEBUG
-    // console.log(`txt= ${txt}`);
-
     // check if language is supported
     // get mother language
     lang = lang.split('-')[0];
@@ -171,9 +156,6 @@ export const classification = async (txt, lang='en') => {
     }
 
     // translate text
-    // DEBUG
-    // console.log (`txt=${txt}. lang=${lang}`);
-
     if (lang !== 'en') {
         try {
             _translateResults = await _translate(txt, lang);
@@ -195,7 +177,7 @@ export const classification = async (txt, lang='en') => {
     rtinfo = rtinfo.length > 0 ? rtinfo : [];
 
     // remove URLs (hardwired method)
-    const urlexp = /(https?:\/\/)(\s)*(www\.)?(\s)*((\w|\s)+\.)*([\w\-\s]+\/)*([\w\-]+)((\?)?[\w\s]*=\s*[\w\%&]*)*/gm;
+    const urlexp = /(https?:\/\/)(\s)*(www\.)?(\s)*((\w|\s)+\.)*([\w\-\s]+\/)*([\w\-]+)((\?)?[\w\s]*=\s*[\w&]*)*/gm;
     const urlsMatch = txt.match(urlexp);
     let urls = urlsMatch !== null ? urlsMatch : [];
 
@@ -218,7 +200,7 @@ export const classification = async (txt, lang='en') => {
     let emojis = [];
     Emoji.replace(txt, (e) => emojis.push(e));
 
-    let result = null, emotionalData = null, sentences;
+    let result = null, emotionalData = null;
     let success = true;
     try {
         result = await _run(txt);
@@ -226,26 +208,29 @@ export const classification = async (txt, lang='en') => {
         // let normalisedTxt = await rm(txt);
         displayTxt = await displayTxt.replace(urlexp, '');
         displayTxt.trim();
-        sentences = await sentenceTokenizer(displayTxt);
     } catch (err) {
         success = false;
     }
 
     return {
         success: success,
-        text: displayTxt,
-        rawTxt: _rawTxt,
-        sentences: sentences,
-        lang: lang,
-        RTInfo: rtinfo,
-        urls: urls,
-        emotions: emotionalData,
-        hashtags: hashtags,
-        mentions: {
-            mentions: mentionsNative,
-            working: mentions
+        type: "classification",
+        emotions: {
+            data: emotionalData
         },
-        emojis: emojis,
+        text: displayTxt,
+        meta: {
+            lang: lang,
+            RTInfo: rtinfo,
+            urls: urls,
+            hashtags: hashtags,
+            mentions: {
+                mentions: mentionsNative,
+                working: mentions
+            },
+            emojis: emojis,
+        },
+        _rawTxt: _rawTxt,
         _raw: {
             _workingTxt: txt,
             _text: _rawTxt,
@@ -256,7 +241,7 @@ export const classification = async (txt, lang='en') => {
     }
 }
 
-export const lexicon = async (txt, lang = 'en', lineAnalysis = false) => {
+export const lexicon = async (txt, lang = 'en') => {
     // check if the library is config
     try {
         _isConfig();
@@ -380,8 +365,8 @@ export const lexicon = async (txt, lang = 'en', lineAnalysis = false) => {
     return {
         success: true,
         type: "lexicon",
-        emotionalData: {
-            emotions: emotionalData,
+        emotions: {
+            data: emotionalData,
             tokens: {
                 mostInfluential: mostInfluentialTokenDisplay,
                 neutral: neutralTokens,
@@ -426,13 +411,9 @@ const _mostPresentEmotion = (result, min = .5) => {
         }
     }
 
-    // console.log (recognised);
-    // console.log (`predominant emotion= ${predominant} (weight= ${predominantWeight})`);
-
-    // sort object
+    // sort resulting object
     let sortable = [];
     for (let emotion in recognised) {
-        // console.log (`emotion ${[emotion,recognised[emotion]]}`);
         sortable.push([emotion,recognised[emotion]]);
     }
     sortable.sort(function(a, b) {
@@ -469,8 +450,8 @@ const _run = async (data = {'': 1}) => {
     return net.run(input);
 }
 
-const rm = async (rtxt) => {
-    let txt = rtxt;
+const rm = async (rawTxt) => {
+    let txt = rawTxt;
     // remove /n
     txt = await txt.replace(/(\r\n|\r|\n)+/gi, ' ');
     // remove []
@@ -478,7 +459,7 @@ const rm = async (rtxt) => {
     // remove :
     txt = await txt.replace (/:\s/gm, ' ');
     // remove `` and  \``
-    txt = await txt.replace (/(\"|“|”)+/gi, ' ');
+    txt = await txt.replace (/(["“”])+/gi, ' ');
     // remove &amp; by &
     txt = await txt.replace (/&amp;/gi, '&');
     // add a space between emojis
@@ -494,7 +475,6 @@ const _preprocessing = async (txt, lang = 'en') => {
     let _translateRawTxt = txt; // raw result after the translation
     let _translateResults = []; // translation results from the API
     txt = await rm (txt);
-    let _nTxt = txt;
 
     // translate the sentence to en
     if (lang !== 'en') {
@@ -528,7 +508,7 @@ const _preprocessing = async (txt, lang = 'en') => {
     history.remove(rtinfo)
 
     // remove URLs (hardwired method)
-    const  urlexp = /(https?:\/\/)(\s)*(www\.)?(\s)*((\w|\s)+\.)*([\w\-\s]+\/)*([\w\-]+)((\?)?[\w\s]*=\s*[\w\%&]*)*/gm;
+    const  urlexp = /(https?:\/\/)(\s)*(www\.)?(\s)*((\w|\s)+\.)*([\w\-\s]+\/)*([\w\-]+)((\?)?[\w\s]*=\s*[\w&]*)*/gm;
     const urlsMatch = txt.match(urlexp);
     let urls = urlsMatch !== null ? urlsMatch : [];
     txt = await txt.replace(urlexp, '');
@@ -693,7 +673,7 @@ const _preprocessing = async (txt, lang = 'en') => {
     }
 
     // update history
-    history.updateActivePos(detected, processed, detected.map ((e) => []), true);
+    history.updateActivePos(detected, processed, detected.map (() => []), true);
 
     // remove stop words
     const processedLemmas = [];
@@ -724,16 +704,14 @@ const _preprocessing = async (txt, lang = 'en') => {
     history.removeBasedOnMap(mapFinal);
 
     // map to remove in history
-    const toDelete = [];
     const mapPunctEls = []
 
     // remove punctuations
-    const punctexp = /[.,\/#!$%\^&\*;:{}=\-_`~()]/g;
-    tokens = tokens.map((e, i) => {
+    const punctexp = /[.,\/#!$%&;:{}=\-_`~()]/g;
+    tokens = tokens.map((e) => {
         let hasPunctElements = e.match(punctexp);
         if (hasPunctElements !== null) {
             if (hasPunctElements.length === e.length) {
-                toDelete.push(i);
                 mapPunctEls.push(false);
                 return null;
             } else {
@@ -761,47 +739,20 @@ const _preprocessing = async (txt, lang = 'en') => {
     //    }
     // }
 
-    //
-
     // sentence tokenizer
-    let sentences = await sentenceTokenizer(txt);
-
+    // let sentences = await sentenceTokenizer(txt);
     // relating emotions by sentences
-    let selectedTokensBySentence = [];
-    for (let i = 0; i<sentences.length; i++) {
+    // let selectedTokensBySentence = [];
+    /* for (let i = 0; i<sentences.length; i++) {
         selectedTokensBySentence[i] = new Array(sentences[i].length);
         for (let j = 0; j<selectedTokensBySentence[i].length; j++) {
             selectedTokensBySentence[i][j] = [];
         }
-    }
-
-    // flat tokens array
-    let t = [];
-    // real tokens
-    // for (let s of processed.sentences) { t.push(s.tokens); }
-    for (let s of processed.sentences) { t.push(s.lemmas); }
-    t = [].concat(...t);
-    // counter
-    let c = 0;
-    for (let i in sentences) {
-        for (let j in sentences[i]) {
-            const words = sentences[i][j].split(" ");
-            for (let w in words) {
-                // ignore punctuation
-                while (['.',';'].includes(t[c])) {c++;}
-                if (mapFinal[c]) {
-                    selectedTokensBySentence[i][j].push(t[c]);
-                }
-                c++;
-            }
-        }
-    }
+    }*/
 
     return {
         success: true,
         tokens: tokens,
-        sentences: sentences,
-        tokensBySentences: selectedTokensBySentence,
         text: _translateRawTxt,
         lang: lang,
         RTInfo: rtinfo,
@@ -870,7 +821,6 @@ const _removeStopWords = async (tokens) => {
             }
         }
     }
-
     tokens = [].concat(...tokens);
     tokens = tokens.filter(function(el) { return el; });
     return tokens;
@@ -894,17 +844,11 @@ const _translate = async (text, source, target="en") => {
     });
 }
 
-export const sentenceTokenizer = async (txt, widows= 3, orphans = 2, probw = .95) => {
-    // check if the library is config
-    try {
-        _isConfig();
-    } catch (e) {
-        console.error(e);
-    }
+export const sentenceTokenizer = async (txt) => {
 
     const options = {
-        "newline_boundaries" : false,
-        "html_boundaries"    : false,
+        "newline_boundaries" : true,
+        "html_boundaries"    : true,
         "sanitize"           : false,
         "allowed_tags"       : false,
         "preserve_whitespace" : false,
@@ -943,8 +887,6 @@ export const sentenceTokenizer = async (txt, widows= 3, orphans = 2, probw = .95
                     // avoid windows
                     // break the line if characters limit is achieved
                     // as well as the last word is not small than a threshold
-                    // DEBUG
-                    // console.log (`[1] line=[${lines[i]}] stopword=[${word}]`);
                     i++;
                     lineLength = 0;
                 } else if (
@@ -954,8 +896,6 @@ export const sentenceTokenizer = async (txt, widows= 3, orphans = 2, probw = .95
                 ) {
                     // split based on a optimal size and a random factor
                     // avoid windows
-                    // DEBUG
-                    // console.log (`[2] line=[${lines[i]}] stopword=[${word}] STOP_WORD_MIN=[${(word.length >= LINE_SPLIT_OPTIONS.STOP_WORD_MIN_SIZE_IN_OPTIMAL)}]. SPLIT_PUNT=[${(LINE_SPLIT_OPTIONS.SPLIT_PUNT.includes(word[word.length - 1]))}]`);
                     i++;
                     lineLength = 0;
                 } else {
@@ -1082,9 +1022,9 @@ class History {
         }
     }
 
-    updateLemmas = (pLemmas = [], pTokens = [], txt) => {
+    updateLemmas = (pLemmas = [], pTokens = []) => {
         this.active = this.getActive();
-        let counter = 0, currentWord= 0;
+        let counter = 0;
         let _raw = [];
 
         for (let i=0; i<pLemmas.length; i++) {

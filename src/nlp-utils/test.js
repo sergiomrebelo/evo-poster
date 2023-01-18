@@ -2,71 +2,63 @@ import * as NLP from './nlp_utils.mjs';
 import dotenv from 'dotenv';
 dotenv.config();
 
-const run = async (text, lang) => {
-   const global = [], lines = [];
 
-   // setup library
+
+const _evalClassification = async (text, lang) => {
    await NLP.setup(process.env.MW_API_KEY, process.env.LANGUAGE_TRANSLATOR_IAM_APIKEY, process.env.LANGUAGE_TRANSLATOR_URL);
-
-   // classification analysis
    await NLP.classification(text, lang).then((result) => {
-      global.push({
-         analyses: 'classification',
-         predominant: result.success ? result.emotions.predominant.emotion : `❌ error`
-      });
+      console.group(`${result.type}`)
+      console.info(`text: ${text}`);
+      const emo = result.emotions.data.recognisedEmotions;
+      console.info(`predominant emotion: ${emo[0][0]} (${(emo[0][2]*100)}%)`);
+      console.groupEnd();
    });
-
-   // lexicon-based analysis
-   await NLP.lexicon(text, lang, true).then((result) => {
-      global.push({
-         analyses: 'lexicon-based',
-         predominant: result.success ? result.emotions.predominant.emotion : `❌ error`
-      });
-
-      if (result.lineAnalysis.available) {
-         for (let i in result.sentences) {
-            let sentence = result.sentences[i];
-            let sortedEmotions = result.lineAnalysis.data[i].emotions.sort(function (a,b) {return a[2]+b[2]});
-            lines.push({
-               "text": sentence,
-               "number": result.lineAnalysis.data[i].number,
-               "emotions": sortedEmotions.length > 0 ? sortedEmotions[0][0] : 'neutral',
-               "most influential token": result.lineAnalysis.data[i].mostInfluentialToken
-            });
-         }
-      }
-   });
-
-   // log results
-   console.info (`\n🤖 Emotion-recognition global results`)
-   console.table(global);
-   if (lines.length > 0) {
-      console.info(`\n🤖 Emotion-recognition by line results`);
-      console.table(lines);
-   } else {
-      console.info(`\nEmotion-recognition by line not conducted (user request)`);
-   }
 }
 
 
 const _evalLexicon = async (text, lang) => {
+   let analysis = { "global": null, "sentences": [] };
+   const display = [];
    await NLP.setup(process.env.MW_API_KEY, process.env.LANGUAGE_TRANSLATOR_IAM_APIKEY, process.env.LANGUAGE_TRANSLATOR_URL);
-
-   console.info (`text=${text} (lang: ${lang})`);
    const sentences = (await NLP.sentenceTokenizer(text)).flat();
-   console.log(sentences);
-   let analysis = {
-      "global": null,
-      "sentences": []
-   }
+
    for (const sentence of sentences) {
       await NLP.lexicon(sentence, lang, false).then((result) => {
+         display.push ({
+            text: result.text,
+            emotion: result.emotions.data.predominant.emotion,
+            weight: result.emotions.data.predominant.weight,
+            _tokens: result._tokens,
+         });
+         console.log(result.emotions);
          analysis.sentences.push(result);
       });
    }
 
-   console.log(analysis);
+   // compute global lexicon value
+   let emotions = {};
+   for (let i in analysis.sentences) {
+      const current = analysis.sentences[i].emotions.data.recognisedEmotions;
+      for (let e of current) {
+            const name = e[0];
+            if (Object.keys(emotions).includes(name)) {
+               emotions[name] = emotions[name] + e[1];
+            } else {
+               emotions[name] = e[1];
+            }
+         }
+      }
+
+   analysis.global = Object.entries(emotions).sort(([,a],[,b]) => b-a)[0];
+
+   console.group(`lexicon`);
+   console.info (`text: ${text}`);
+   console.info (`predominant emotion: ${analysis.global[0]} (value: ${analysis.global[1]})`);
+   console.info (`number of sentences: ${analysis.sentences.length})`);
+   console.table (display);
+   console.groupEnd();
 }
+
 
 // example input data
 const text = "This behavior is not tolerable at all I wish I could do something about it. I’m really very angry";
@@ -75,4 +67,5 @@ const lang = "en";
 // run (text, lang);
 
 
+_evalClassification (text, lang);
 _evalLexicon(text, lang);
