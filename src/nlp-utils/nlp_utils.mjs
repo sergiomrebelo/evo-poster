@@ -65,12 +65,11 @@ const availableLanguages = [
 ];
 
 const net = new NeuralNetwork();
+let config = false; // is library already configurated
 let sw; // stop words lexicons
 let slang; // slang lexicon (only works on EN)
 let emoticons; // emoticons lexicon
 let wordemo; // word-emotions lexicon
-
-
 
 const LINE_SPLIT_OPTIONS = {
     OPTIMAL: 25,
@@ -94,7 +93,6 @@ export const setup = async (key = null, transKey = null, transServiceURL = null)
         serviceUrl: transServiceURL,
         version: '2020-11-12',
     });
-
 
     try {
         //  setup classifier
@@ -142,12 +140,19 @@ export const setup = async (key = null, transKey = null, transServiceURL = null)
         return false;
     }
 
-    console.log (`⚙️ Nlp-utils (v1.2.1) setup with success ⚙️`)
-
+    console.info (`⚙️ Nlp-utils (v1.2.1) setup with success ⚙️`);
+    config = true;
     return true;
 }
 
 export const classification = async (txt, lang='en') => {
+    // check if the library is config
+    try {
+        _isConfig();
+    } catch (e) {
+        console.error(e);
+    }
+
     const _rawTxt = txt;
     let _rawEnTxt = txt, _translateResults = txt;
 
@@ -252,6 +257,13 @@ export const classification = async (txt, lang='en') => {
 }
 
 export const lexicon = async (txt, lang = 'en', lineAnalysis = false) => {
+    // check if the library is config
+    try {
+        _isConfig();
+    } catch (e) {
+        console.error(e);
+    }
+
     // check if language is supported
     // get mother language
     lang = lang.split('-')[0];
@@ -264,9 +276,7 @@ export const lexicon = async (txt, lang = 'en', lineAnalysis = false) => {
 
     if (!tokens.success) {
         console.error (`not possible to preprocess the text`);
-        return {
-            success: false
-        }
+        return {success: false};
     }
 
     const neutralTokens = [];
@@ -275,9 +285,6 @@ export const lexicon = async (txt, lang = 'en', lineAnalysis = false) => {
     const influencingWords = {};
     const wordEmotionRelation = {};
     const wordEmotionRelationSorted = {};
-
-    // create an emotional map of text lines
-    let emotionsByLine = JSON.parse(JSON.stringify(tokens.tokensBySentences));
 
     for (let token of tokens.tokens) {
         let r = wordemo[token];
@@ -292,21 +299,11 @@ export const lexicon = async (txt, lang = 'en', lineAnalysis = false) => {
         } else {
             // console.warn(`not founded emotions to the word ${token}`);
             neutralTokens.push(token);
-            // remove the word from emotional map of text lines
-            for (let s in emotionsByLine) {
-                let sentence = emotionsByLine[s];
-                for (let l in sentence) {
-                    let line = sentence[l];
-                    const index = line.findIndex((v) => v === token);
-                    if (index !== -1) {
-                        line.splice(index, 1);
-                    }
-                }
-            }
         }
     }
 
     const emotionalData = _mostPresentEmotion(results, MIN_EMOTION);
+
     // get the most influencing words (in the whole and by emotion)
     // organise the results by emotion
     for (let emotion of Object.keys(results)) {
@@ -318,7 +315,7 @@ export const lexicon = async (txt, lang = 'en', lineAnalysis = false) => {
         }
     }
 
-    // sort the words inside of each emotion
+    // sort the words inside each emotion
     for (let e of Object.keys(wordEmotionRelation)) {
         let sortable = [];
         for (let word in wordEmotionRelation[e]) {
@@ -353,12 +350,12 @@ export const lexicon = async (txt, lang = 'en', lineAnalysis = false) => {
     //     }
     // }
 
-
     let mostInfluentialTokenDisplay = {
         rawToken: mostInfluentialToken,
         originalWord: mostInfluentialToken,
         display: mostInfluentialToken
     };
+    // get original version of most influential token
     for (let entry of tokens.history) {
         let current = entry[3][entry[3].length-1];
         for (let word of current) {
@@ -380,43 +377,27 @@ export const lexicon = async (txt, lang = 'en', lineAnalysis = false) => {
         }
     }
 
-    // line analysis
-    const lineAnalysisResult = [];
-    const sentences = (await sentenceTokenizer(txt)).flat();
-    if (lineAnalysis) {
-        for (let sentence of sentences) {
-            const line = await lexicon(sentence, lang, false);
-            const data = {
-                'number': line.emotions.recognisedEmotions.length,
-                'emotions': line.emotions.recognisedEmotions,
-                'mostInfluentialToken': Object.keys(line.mostInfluentialToken.originalWord).length === 0 ? "" : line.mostInfluentialToken.originalWord,
-                'relatedTokens': line.wordEmotionsRelation
-            }
-            lineAnalysisResult.push(data);
-        }
-
-    }
-
     return {
         success: true,
-        sentences: sentences,
-        emotions: emotionalData,
-        mostInfluentialToken: mostInfluentialTokenDisplay,
-        mostInfluentialTokenPerLine: emotionsByLine,
-        wordEmotionsRelation: wordEmotionRelationSorted,
-        neutralTokens: neutralTokens,
-        lineAnalysis: {
-            available: lineAnalysis,
-            data: lineAnalysisResult
+        type: "lexicon",
+        emotionalData: {
+            emotions: emotionalData,
+            tokens: {
+                mostInfluential: mostInfluentialTokenDisplay,
+                neutral: neutralTokens,
+            },
+            wordEmotionsRelation: wordEmotionRelationSorted
         },
         text: tokens.text,
-        tokens: tokens.tokens,
-        lang: tokens.lang,
-        mentions: tokens.mentions,
-        hashtags: tokens.hashtags,
-        emojis: tokens.emojis,
-        urls: tokens.urls,
-        MIN_REG_EMOTION_THRESHOLD: MIN_EMOTION,
+        meta: {
+            lang: tokens.lang,
+            mentions: tokens.mentions,
+            hashtags: tokens.hashtags,
+            emojis: tokens.emojis,
+            urls: tokens.urls,
+        },
+        _MIN_REG_EMOTION_THRESHOLD: MIN_EMOTION,
+        _tokens: tokens.tokens,
         _raw: {
             _history: tokens.history,
             _analysis: tokens,
@@ -489,7 +470,7 @@ const _run = async (data = {'': 1}) => {
 }
 
 const rm = async (rtxt) => {
-    let txt =  rtxt;
+    let txt = rtxt;
     // remove /n
     txt = await txt.replace(/(\r\n|\r|\n)+/gi, ' ');
     // remove []
@@ -515,13 +496,6 @@ const _preprocessing = async (txt, lang = 'en') => {
     txt = await rm (txt);
     let _nTxt = txt;
 
-
-    // DEBUG
-    // console.log (`1 TXT=${txt}`);
-    // console.log (`tw language ${lang}`);
-
-    // console.log (`text=${txt}`);
-
     // translate the sentence to en
     if (lang !== 'en') {
         try {
@@ -537,20 +511,18 @@ const _preprocessing = async (txt, lang = 'en') => {
         }
     }
 
-    // console.log (`lang=${lang}`);
-    // console.log (`text=${txt}`);
-
     // normalise words
     // replace acute by apostrophe
     txt = txt.replace(/’/g, `'`);
 
-    const history = new History(txt); // create an history object to save the transformation in text
+    // create a history object to save the transformation in text
+    const history = new History(txt);
 
     // remove retweet data
     const rtexp = /RT\s*@[^:]*:/gm;
     let rtmatch = txt.match (rtexp);
     let rtinfo = rtmatch !== null ? rtmatch : []; // retweet data
-    txt = await txt.replace(rtexp, '');
+    txt = txt.replace(rtexp, '');
     rtinfo = rtinfo.length > 0 ? rtinfo : [];
     // update history
     history.remove(rtinfo)
@@ -678,11 +650,8 @@ const _preprocessing = async (txt, lang = 'en') => {
         processedTokensRaw.push(processed.sentences[i].tokens);
     }
 
-    // console.log("\ntxt", txt, "\n");
-
     // update history with lemmas
     history.updateLemmas(processedLemmasRaw, processedTokensRaw, txt.split(" "));
-
 
     // history transformation map
     const savedIndex = [];
@@ -706,7 +675,6 @@ const _preprocessing = async (txt, lang = 'en') => {
 
     // update history with antonyms
     history.updateActivePos(savedIndex, processed, savedIndex.map((x) => x[3]));
-
 
     // history transformation map
     const detected = [];
@@ -745,7 +713,6 @@ const _preprocessing = async (txt, lang = 'en') => {
         processedLemmas.push(lemmas);
         mapFinal.push(map);
     }
-
 
     tokens = processedLemmas.flat();
     mapFinal = mapFinal.flat();
@@ -829,7 +796,6 @@ const _preprocessing = async (txt, lang = 'en') => {
             }
         }
     }
-
 
     return {
         success: true,
@@ -928,7 +894,14 @@ const _translate = async (text, source, target="en") => {
     });
 }
 
-const sentenceTokenizer = async (txt, widows= 3, orphans = 2, probw = .95) => {
+export const sentenceTokenizer = async (txt, widows= 3, orphans = 2, probw = .95) => {
+    // check if the library is config
+    try {
+        _isConfig();
+    } catch (e) {
+        console.error(e);
+    }
+
     const options = {
         "newline_boundaries" : false,
         "html_boundaries"    : false,
@@ -1005,7 +978,11 @@ const sentenceTokenizer = async (txt, widows= 3, orphans = 2, probw = .95) => {
     return res;
 }
 
-
+const _isConfig = () => {
+    if (!config) {
+        throw new Error(`⚠️ Nlp-utils is not configurated! ⚠️`);
+    }
+}
 
 class History {
     constructor(txt) {

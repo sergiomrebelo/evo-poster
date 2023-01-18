@@ -49,8 +49,30 @@ const run = async (text, lang) => {
 }
 
 
+const _evalLexicon = async (text, lang) => {
+   await NLP.setup(process.env.MW_API_KEY, process.env.LANGUAGE_TRANSLATOR_IAM_APIKEY, process.env.LANGUAGE_TRANSLATOR_URL);
+
+   console.info (`text=${text} (lang: ${lang})`);
+   const sentences = (await NLP.sentenceTokenizer(text)).flat();
+   console.log(sentences);
+   let analysis = {
+      "global": null,
+      "sentences": []
+   }
+   for (const sentence of sentences) {
+      await NLP.lexicon(sentence, lang, false).then((result) => {
+         analysis.sentences.push(result);
+      });
+   }
+
+   console.log(analysis);
+}
+
 // example input data
 const text = "This behavior is not tolerable at all I wish I could do something about it. I’m really very angry";
-const text = "This behavior is not$tolerable at all I wish I$could do something about it.$I’m really very angry";
+// const text = "This behavior is not$tolerable at all I wish I$could do something about it.$I’m really very angry";
 const lang = "en";
-run (text, lang);
+// run (text, lang);
+
+
+_evalLexicon(text, lang);
