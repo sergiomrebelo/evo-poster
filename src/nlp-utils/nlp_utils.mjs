@@ -243,11 +243,8 @@ export const classification = async (txt, lang='en') => {
 
 export const lexicon = async (txt, lang = 'en') => {
     // check if the library is config
-    try {
-        _isConfig();
-    } catch (e) {
-        console.error(e);
-    }
+    try { _isConfig();
+    } catch (e) { console.error(e); }
 
     // check if language is supported
     // get mother language
@@ -256,6 +253,8 @@ export const lexicon = async (txt, lang = 'en') => {
     if (!availableLanguages.includes(lang)) {
         lang = 'en';
     }
+
+    console.log ("inside lexicon", txt);
 
     const tokens = await _preprocessing(txt, lang);
 
@@ -373,7 +372,7 @@ export const lexicon = async (txt, lang = 'en') => {
             },
             wordEmotionsRelation: wordEmotionRelationSorted
         },
-        text: tokens.text,
+        text: txt,
         meta: {
             lang: tokens.lang,
             mentions: tokens.mentions,
