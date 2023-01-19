@@ -40,7 +40,8 @@ let dictApiKey = null; // dictionary API key
 let languageTranslator = null; // translator API keys
 const _MODEL = 'data/models/LST_AIT_2018_SemEval_2018_task_1_model_1624288181749.json';
 const _LEXICON = 'data/lexicon/NRC-Emotion-Intensity-Lexicon-v1_1618414260694.json';
-const MIN_EMOTION = .2;
+const MIN_EMOTION_ML = .5;
+const MIN_EMOTION_LEXICON = .2;
 
 
 // https://cloud.ibm.com/docs/language-translator?topic=language-translator-translation-models
@@ -204,7 +205,7 @@ export const classification = async (txt, lang='en') => {
     let success = true;
     try {
         result = await _run(txt);
-        emotionalData = _mostPresentEmotion(result, MIN_EMOTION);
+        emotionalData = _mostPresentEmotion(result, MIN_EMOTION_ML);
         // let normalisedTxt = await rm(txt);
         displayTxt = await displayTxt.replace(urlexp, '');
         displayTxt.trim();
@@ -231,6 +232,7 @@ export const classification = async (txt, lang='en') => {
             emojis: emojis,
         },
         _rawTxt: _rawTxt,
+        _MIN_REG_EMOTION_THRESHOLD: MIN_EMOTION_ML,
         _raw: {
             _workingTxt: txt,
             _text: _rawTxt,
@@ -253,8 +255,6 @@ export const lexicon = async (txt, lang = 'en') => {
     if (!availableLanguages.includes(lang)) {
         lang = 'en';
     }
-
-    console.log ("inside lexicon", txt);
 
     const tokens = await _preprocessing(txt, lang);
 
@@ -286,7 +286,7 @@ export const lexicon = async (txt, lang = 'en') => {
         }
     }
 
-    const emotionalData = _mostPresentEmotion(results, MIN_EMOTION);
+    const emotionalData = _mostPresentEmotion(results, MIN_EMOTION_LEXICON);
 
     // get the most influencing words (in the whole and by emotion)
     // organise the results by emotion
@@ -380,7 +380,7 @@ export const lexicon = async (txt, lang = 'en') => {
             emojis: tokens.emojis,
             urls: tokens.urls,
         },
-        _MIN_REG_EMOTION_THRESHOLD: MIN_EMOTION,
+        _MIN_REG_EMOTION_THRESHOLD: MIN_EMOTION_LEXICON,
         _tokens: tokens.tokens,
         _raw: {
             _history: tokens.history,
