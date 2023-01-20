@@ -41,7 +41,7 @@ let languageTranslator = null; // translator API keys
 const _MODEL = 'data/models/LST_AIT_2018_SemEval_2018_task_1_model_1624288181749.json';
 const _LEXICON = 'data/lexicon/NRC-Emotion-Intensity-Lexicon-v1_1618414260694.json';
 const MIN_EMOTION_ML = .5;
-const MIN_EMOTION_LEXICON = .2;
+const MIN_EMOTION_LEXICON = .5;
 
 
 // https://cloud.ibm.com/docs/language-translator?topic=language-translator-translation-models
@@ -260,7 +260,10 @@ export const lexicon = async (txt, lang = 'en') => {
 
     if (!tokens.success) {
         console.error (`not possible to preprocess the text`);
-        return {success: false};
+        return {
+            success: false,
+            msg: tokens.message
+        };
     }
 
     const neutralTokens = [];
@@ -485,7 +488,8 @@ const _preprocessing = async (txt, lang = 'en') => {
         } catch (err) {
             console.warn (`error on translation. err=${err}`);
             return {
-                success: false
+                success: false,
+                message: `error on translation. ${err}`
             }
         }
     }
