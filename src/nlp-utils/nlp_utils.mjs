@@ -45,7 +45,7 @@ const MIN_EMOTION_LEXICON = .5;
 
 
 // https://cloud.ibm.com/docs/language-translator?topic=language-translator-translation-models
-const availableLanguages = [
+export const availableLanguages = [
     'ar', 'bn', 'bs', 'bg', 'zh', 'hr', 'cs', 'da', 'nl', 'en',
     'et', 'fi', 'fr', 'de', 'el', 'gu', 'he', 'hi', 'hu', 'ga',
     'id', 'it', 'ja', 'ko', 'lv', 'lt', 'ms', 'ml', 'mt', 'ne',

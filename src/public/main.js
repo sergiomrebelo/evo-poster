@@ -1,6 +1,14 @@
 const bootstrap = require('bootstrap');
 const style = require('./main.css');
 
+const availableLanguages = [
+    'ar', 'bn', 'bs', 'bg', 'zh', 'hr', 'cs', 'da', 'nl', 'en',
+    'et', 'fi', 'fr', 'de', 'el', 'gu', 'he', 'hi', 'hu', 'ga',
+    'id', 'it', 'ja', 'ko', 'lv', 'lt', 'ms', 'ml', 'mt', 'ne',
+    'nb', 'pl', 'pt', 'ro', 'ru', 'si', 'sk', 'sl', 'es', 'sv',
+    'ta', 'te', 'th', 'tr', 'uk', 'ur', 'vi', 'cy'
+];
+
 // global variables
 const app = {
     images: {
@@ -18,6 +26,14 @@ window.onload = () => {
     const inputImages = document.getElementById('formControlImages');
     form.addEventListener('submit', get);
     inputImages.addEventListener('change', _uploadImages);
+
+    for (let lang of availableLanguages) {
+        const option = document.createElement("option");
+        option.textContent = lang;
+        option.value = lang;
+        option.selected = (lang === 'en');
+        document.getElementById('formControlLang').appendChild(option);
+    }
 
     document.getElementById('lineDivisionCheck').addEventListener('change', (e) => {
         if (e.target.checked) {
@@ -41,6 +57,7 @@ const get = async (e) => {
     let textArea = encodeURIComponent(document.getElementById('formControlTextarea').value);
     const shouldDivide = document.getElementById('lineDivisionCheck').checked;
     const lang = encodeURIComponent(document.getElementById('formControlLang').value);
+    console.log(`lang=${lang}`);
     app.images.randomPlacement = document.getElementById('imagePlacementCheck').checked;
 
     let handler = `text`;
@@ -78,7 +95,6 @@ const handleErr = (res = {success: false}) => {
 }
 
 const _uploadImages = async (e) => {
-    // display fields
     document.getElementById('imagePlacementField').classList.replace('d-none', 'd-block');
     console.log(document.getElementById('imagePlacementField'));
 

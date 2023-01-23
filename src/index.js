@@ -80,9 +80,8 @@ const analysis = async (text, lang, sentences = []) => {
     // lexicon-based analysis
     let lexiconResults = { "global": null, "sentences": [] };
     for (const sentence of sentences) {
-        const res = await NLP.lexicon(sentence, lang, false);
+        const res = await lexicon(sentence, lang, false);
         lexiconResults.sentences.push(res);
-        console.log(res);
         if (!res.success) return [500, errHandler(500, `Error in the lexicon-based method (msg: ${res.msg})`)];;
     }
     // global lexicon-based result
