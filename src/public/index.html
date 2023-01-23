@@ -52,30 +52,33 @@
                         <label for="formControlLang">Language</label>
                         <input class="form-control form-control-lg" id="formControlLang" type="text" value="en" required>
                     </div>
-                    <div class="form-check form-check-inline mb-2">
+                    <div class="my-5"></div>
+                    <div class="form-check form-check-inline mb-2" id="lineDivisionField">
                         <input class="form-check-input" type="checkbox" value="1" id="lineDivisionCheck" checked>
                         <label class="form-check-label" for="lineDivisionCheck"> Automatic line division</label>
                     </div>
-                    <!-- TODO: ONLY OPEN SELECTED -->
-                    <div class="form-group row mb-2">
+                    <div class="form-group row mb-2 d-none" id="textDelimiterField">
                         <label for="formControlTextDelimiter">Text Line delimiter</label>
                         <input class="form-control form-control-lg" id="formControlTextDelimiter" type="text" value="¶">
                     </div>
+                    <div class="my-5"></div>
                     <div class="form-group row mb-2">
-                        <label for="formControlImages">Example file input</label>
+                        <label for="formControlImages">Images</label>
                         <input type="file" class="form-control-file" id="formControlImages"
                                name="files[]" accept="image/jpeg, image/png, image/jpg" multiple>
                     </div>
 
-                    <div class="form-check form-check-inline mb-2">
-                        <input class="form-check-input" type="checkbox" value="1" id="imagePlacementCheck">
-                        <label class="form-check-label" for="imagePlacementCheck"> Image Placement Division</label>
+                    <div class="form-check form-check-inline mb-2 d-none" id="imagePlacementField">
+                        <input class="form-check-input" type="checkbox" value="1" id="imagePlacementCheck" checked>
+                        <label class="form-check-label" for="imagePlacementCheck">Image Random Placement</label>
                     </div>
 
-                    <div class="form-group row mb-2">
-                        <label for="formControlImagePlaceholderDelimiter">Image Placeholder Delimiter</label>
+                    <div class="form-group row mb-2 d-none" id="imageAnchorField">
+                        <label for="formControlImagePlaceholderDelimiter">Image Placement Anchor</label>
                         <input class="form-control form-control-lg" id="formControlImagePlaceholderDelimiter" type="text">
                     </div>
+
+                    <div class="my-5"></div>
                     <div class="col-auto">
                         <button type="submit" class="btn btn-primary mb-2">Submit</button>
                     </div>

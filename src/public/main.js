@@ -18,6 +18,22 @@ window.onload = () => {
     const inputImages = document.getElementById('formControlImages');
     form.addEventListener('submit', get);
     inputImages.addEventListener('change', _uploadImages);
+
+    document.getElementById('lineDivisionCheck').addEventListener('change', (e) => {
+        if (e.target.checked) {
+            document.getElementById('textDelimiterField').classList.add('d-none');
+        } else {
+            document.getElementById('textDelimiterField').classList.remove('d-none');
+        }
+    });
+
+    document.getElementById('imagePlacementCheck').addEventListener('change', (e) => {
+        if (e.target.checked) {
+            document.getElementById('imageAnchorField').classList.add('d-none');
+        } else {
+            document.getElementById('imageAnchorField').classList.remove('d-none');
+        }
+    });
 }
 
 const get = async (e) => {
@@ -62,6 +78,10 @@ const handleErr = (res = {success: false}) => {
 }
 
 const _uploadImages = async (e) => {
+    // display fields
+    document.getElementById('imagePlacementField').classList.replace('d-none', 'd-block');
+    console.log(document.getElementById('imagePlacementField'));
+
     app.images.blobs = [];
     app.images.hasImages = true;
     app.images.loading = true;
@@ -119,7 +139,6 @@ const _readImages = async (files) => {
 const displayResults = (res) => {
     if (!res.success)  { return handleErr(res);}
 
-    // document.getElementById('error-handle').classList.replace('d-block', 'd-none');
     document.getElementById('temp-res-text').textContent = `${res.text} (${res.lang})`;
     document.getElementById('temp-res-sentences').textContent = `${res.sentences.flat()} (${res.sentences.flat().length})`;
     document.getElementById('temp-res-classification').textContent = `${res.classification.emotions.data.predominant.emotion} (${res.classification.emotions.data.predominant.weight})`;
