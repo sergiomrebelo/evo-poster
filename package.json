@@ -2,7 +2,7 @@
   "name": "evo-poster",
   "version": "3.0.0",
   "description": "The Evolutionary Poster Composer (evo-poster) is a computational design system for the automatic creation of poster designs based on a Genetic Algorithm.",
-  "main": "index.js",
+  "main": "src/index.js",
   "type": "module",
   "dependencies": {
     "bootstrap": "^5.2.3",

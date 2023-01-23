@@ -57,7 +57,6 @@ const get = async (e) => {
     let textArea = encodeURIComponent(document.getElementById('formControlTextarea').value);
     const shouldDivide = document.getElementById('lineDivisionCheck').checked;
     const lang = encodeURIComponent(document.getElementById('formControlLang').value);
-    console.log(`lang=${lang}`);
     app.images.randomPlacement = document.getElementById('imagePlacementCheck').checked;
 
     let handler = `text`;
