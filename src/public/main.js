@@ -7,7 +7,9 @@ const app = {
         imageRandomPlacement: true,
         hasImages: false,
         blobs: [],
-        loading: false
+        amount: 0,
+        loading: false,
+        randomPlacement: false
     }
 };
 
@@ -23,24 +25,24 @@ const get = async (e) => {
     let textArea = encodeURIComponent(document.getElementById('formControlTextarea').value);
     const shouldDivide = document.getElementById('lineDivisionCheck').checked;
     const lang = encodeURIComponent(document.getElementById('formControlLang').value);
-    const images = document.getElementById('formControlImages').files;
-    app.hasImages = images.files && images.files[0];
-    app.imageRandomPlacement = document.getElementById('imagePlacementCheck').checked;
+    app.images.randomPlacement = document.getElementById('imagePlacementCheck').checked;
 
     let handler = `text`;
+    let delimiter;
     if (!shouldDivide) {
-        const delimiter = encodeURIComponent(document.getElementById('formControlTextDelimiter').value);
+        delimiter = encodeURIComponent(document.getElementById('formControlTextDelimiter').value);
         handler = `lines/${delimiter}`;
     }
 
-    if (!app.hasImages) {
-        if (!app.imageRandomPlacement) {
-           // random placement
-       } else {
-           // defined placement -> server side
-       }
+    if (app.images.hasImages && !app.images.randomPlacement && !shouldDivide) {
+        let imageDelimiter = encodeURIComponent(document.getElementById('formControlImagePlaceholderDelimiter').value);
+        app.images.nAnchorPoints = [...textArea.matchAll(new RegExp(imageDelimiter,'g'))].length;
+        textArea = textArea.replaceAll(imageDelimiter, `${delimiter}${imageDelimiter}${delimiter}`);
+        if (app.images.nAnchorPoints !== app.images.amount) {
+            const relation = app.images.nAnchorPoints > app.images.amount ? 'higher' : 'smaller';
+            handleErr({ message: `the amount of image anchor points is ${relation} than the amount of upload images. (anchors:${app.images.nAnchorPoints} / images:${app.images.amount})`});
+        }
     }
-
 
     const url = `/${handler}/${lang}/${textArea}`;
 
@@ -61,7 +63,9 @@ const handleErr = (res = {success: false}) => {
 
 const _uploadImages = async (e) => {
     app.images.blobs = [];
+    app.images.hasImages = true;
     app.images.loading = true;
+    app.images.amount = e.target.files.length;
     app.images.blobs = await _readImages(e.target.files).catch((err) => {
         console.error (`not possible to load the image ${err}`);
         handleErr({ message: `error on uploading image(s). ${err}`});
@@ -72,6 +76,7 @@ const _uploadImages = async (e) => {
 
 const _displayImages = (files) => {
     const imgContainer = document.getElementById('input-images');
+    imgContainer.innerHTML = ``;
     for (let i = 0; i<files.length; i++) {
         const img = new Image();
         img.src = files[i];
@@ -114,7 +119,7 @@ const _readImages = async (files) => {
 const displayResults = (res) => {
     if (!res.success)  { return handleErr(res);}
 
-    document.getElementById('error-handle').classList.replace('d-block', 'd-none');
+    // document.getElementById('error-handle').classList.replace('d-block', 'd-none');
     document.getElementById('temp-res-text').textContent = `${res.text} (${res.lang})`;
     document.getElementById('temp-res-sentences').textContent = `${res.sentences.flat()} (${res.sentences.flat().length})`;
     document.getElementById('temp-res-classification').textContent = `${res.classification.emotions.data.predominant.emotion} (${res.classification.emotions.data.predominant.weight})`;
