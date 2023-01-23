@@ -3,6 +3,7 @@
     <title>Evolving Posters</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="bundle.css">
+    <script src="bundle.js"></script>
 </head>
 <body>
     <div class="temp-results container-fluid bg-light d-none" id="error-handle">
@@ -33,6 +34,7 @@
                     <div id="temp-res-lexicon-lines"></div>
                     <p id="temp-res-lexicon-global"></p>
                 </div>
+                <div id="input-images" class="mt-4 d-none"></div>
             </section>
         </div>
     </div>
@@ -40,39 +42,47 @@
     <div class="row">
         <section class="input-form-outer col-10 offset-1 mt-5">
             <form id="input-form" class="input-form-inner">
-                <div class="form-group row mb-2">
-                    <label for="formControlTextarea" class="col-sm-2 col-form-label-sm">Input Text</label>
-                    <textarea class="form-control col-sm-10" id="formControlTextarea" rows="6" required></textarea>
-                </div>
-                <!-- TODO: select required -->
-                <div class="form-group row mb-2">
-                    <label for="formControlLang">Language</label>
-                    <input class="form-control form-control-lg" id="formControlLang" type="text" value="en" required>
-                </div>
-                <div class="form-check form-check-inline mb-2">
-                    <input class="form-check-input" type="checkbox" value="1" id="lineDivisionCheck" checked>
-                    <label class="form-check-label" for="lineDivisionCheck"> Automatic line division</label>
-                </div>
-                <div class="form-group row mb-2">
-                    <label for="formControlTextDelimiter">Text Line delimiter</label>
-                    <input class="form-control form-control-lg" id="formControlTextDelimiter" type="text" value="¶">
-                </div>
-                <div class="form-group row mb-2">
-                    <label for="exampleFormControlImages">Example file input</label>
-                    <input type="file" class="form-control-file" id="exampleFormControlImages">
-                </div>
-                <div class="form-group row mb-2">
-                    <label for="formControlImagePlaceholderDelimiter">Image Placeholder Delimiter</label>
-                    <input class="form-control form-control-lg" id="formControlImagePlaceholderDelimiter" type="text"
-                           placeholder="§">
-                </div>
-                <div class="col-auto">
-                    <button type="submit" class="btn btn-primary mb-2">Submit</button>
-                </div>
+                <fieldset>
+                    <div class="form-group row mb-2">
+                        <label for="formControlTextarea" class="col-sm-2 col-form-label-sm">Input Text</label>
+                        <textarea class="form-control col-sm-10" id="formControlTextarea" rows="6" required></textarea>
+                    </div>
+                    <!-- TODO: select required -->
+                    <div class="form-group row mb-2">
+                        <label for="formControlLang">Language</label>
+                        <input class="form-control form-control-lg" id="formControlLang" type="text" value="en" required>
+                    </div>
+                    <div class="form-check form-check-inline mb-2">
+                        <input class="form-check-input" type="checkbox" value="1" id="lineDivisionCheck" checked>
+                        <label class="form-check-label" for="lineDivisionCheck"> Automatic line division</label>
+                    </div>
+                    <!-- TODO: ONLY OPEN SELECTED -->
+                    <div class="form-group row mb-2">
+                        <label for="formControlTextDelimiter">Text Line delimiter</label>
+                        <input class="form-control form-control-lg" id="formControlTextDelimiter" type="text" value="¶">
+                    </div>
+                    <div class="form-group row mb-2">
+                        <label for="formControlImages">Example file input</label>
+                        <input type="file" class="form-control-file" id="formControlImages"
+                               name="files[]" accept="image/jpeg, image/png, image/jpg" multiple>
+                    </div>
+
+                    <div class="form-check form-check-inline mb-2">
+                        <input class="form-check-input" type="checkbox" value="1" id="imagePlacementCheck">
+                        <label class="form-check-label" for="imagePlacementCheck"> Image Placement Division</label>
+                    </div>
+
+                    <div class="form-group row mb-2">
+                        <label for="formControlImagePlaceholderDelimiter">Image Placeholder Delimiter</label>
+                        <input class="form-control form-control-lg" id="formControlImagePlaceholderDelimiter" type="text">
+                    </div>
+                    <div class="col-auto">
+                        <button type="submit" class="btn btn-primary mb-2">Submit</button>
+                    </div>
+                </fieldset>
             </form>
         </section>
     </div>
 </aside>
-<script src="bundle.js"></script>
 </body>
 </html>

@@ -1,21 +1,46 @@
 const bootstrap = require('bootstrap');
 const style = require('./main.css');
 
+// global variables
+const app = {
+    images: {
+        imageRandomPlacement: true,
+        hasImages: false,
+        blobs: [],
+        loading: false
+    }
+};
+
 window.onload = () => {
     const form = document.getElementById('input-form');
-    form.addEventListener("submit", get);
+    const inputImages = document.getElementById('formControlImages');
+    form.addEventListener('submit', get);
+    inputImages.addEventListener('change', _uploadImages);
 }
 
-const get = (e) => {
+const get = async (e) => {
     e.preventDefault();
     let textArea = encodeURIComponent(document.getElementById('formControlTextarea').value);
     const shouldDivide = document.getElementById('lineDivisionCheck').checked;
     const lang = encodeURIComponent(document.getElementById('formControlLang').value);
+    const images = document.getElementById('formControlImages').files;
+    app.hasImages = images.files && images.files[0];
+    app.imageRandomPlacement = document.getElementById('imagePlacementCheck').checked;
+
     let handler = `text`;
     if (!shouldDivide) {
         const delimiter = encodeURIComponent(document.getElementById('formControlTextDelimiter').value);
         handler = `lines/${delimiter}`;
     }
+
+    if (!app.hasImages) {
+        if (!app.imageRandomPlacement) {
+           // random placement
+       } else {
+           // defined placement -> server side
+       }
+    }
+
 
     const url = `/${handler}/${lang}/${textArea}`;
 
@@ -28,8 +53,62 @@ const get = (e) => {
 }
 
 const handleErr = (res = {success: false}) => {
-    document.getElementById('err-message').textContent = res.message;
+    const container = document.getElementById('err-message');
+    if (container.innerHTML.length > 0) container.innerHTML = container.innerHTML + "<br>";
+    container.innerHTML = container.innerHTML+res.message;
     document.getElementById('error-handle').classList.replace('d-none', 'd-block');
+}
+
+const _uploadImages = async (e) => {
+    app.images.blobs = [];
+    app.images.loading = true;
+    app.images.blobs = await _readImages(e.target.files).catch((err) => {
+        console.error (`not possible to load the image ${err}`);
+        handleErr({ message: `error on uploading image(s). ${err}`});
+    })
+    app.images.loading = false;
+    _displayImages(app.images.blobs);
+}
+
+const _displayImages = (files) => {
+    const imgContainer = document.getElementById('input-images');
+    for (let i = 0; i<files.length; i++) {
+        const img = new Image();
+        img.src = files[i];
+        img.classList.add('d-inline-block');
+        if (i > 0) img.classList.add(`mx-2`);
+        img.style.height = `100px`;
+        img.style.width = `auto`;
+        imgContainer.appendChild(img);
+    }
+    imgContainer.classList.replace('d-none', 'd-block');
+}
+
+const _readImages = async (files) => {
+    const res = [];
+    let err = [];
+    const getBase64 = (file) => {
+        const reader = new FileReader()
+        return new Promise(resolve => {
+            reader.onload = (ev) => {
+                resolve(ev.target.result)
+            }
+            reader.readAsDataURL(file);
+        });
+    };
+    for (let i = 0; i < files.length; i++) {
+        if (files[i].type.includes('image')) {
+            res.push(getBase64(files[i]));
+        } else {
+            err.push (files[i].name);
+        }
+    }
+
+    if (err.length > 0) {
+        handleErr({message: `error loading the following image(s): ${err.flat()}`});
+    }
+
+    return await Promise.all(res);
 }
 
 const displayResults = (res) => {
@@ -49,6 +128,6 @@ const displayResults = (res) => {
     }
 
     document.getElementById('temp-res-lexicon-global').innerHTML = `<b>global lexicon</b>: ${res.lexicon.global[0][0]} (${res.lexicon.global[0][1]})`
-
     document.getElementById('temp-info').classList.replace('d-none', 'd-block');
+    document.querySelector('#input-form fieldset').disabled = true;
 }
