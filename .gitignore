@@ -12,9 +12,7 @@
 node_modules/
 
 # env files
-src/.env
 *.env
-src/nlp-utils/.env
 
 # apple
 .DS_Store
