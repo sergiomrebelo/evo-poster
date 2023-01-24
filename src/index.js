@@ -72,7 +72,7 @@ const _lexiconGlobalResults = async (sentences) => {
 const analysis = async (text, lang, sentences = []) => {
     // classification analysis
     const classificationResults = await classification(text, lang);
-    if (!classificationResults.success) return [500, errHandler(500, `Error in the classification method`)];
+    if (!classificationResults.success) return [400, errHandler(400, `Error in the classification method`)];
 
     // sentence tokenizer (if necessary)
     if (sentences.length === 0) sentences = (await NLP.sentenceTokenizer(text)).flat();
@@ -82,7 +82,7 @@ const analysis = async (text, lang, sentences = []) => {
     for (const sentence of sentences) {
         const res = await lexicon(sentence, lang, false);
         lexiconResults.sentences.push(res);
-        if (!res.success) return [500, errHandler(500, `Error in the lexicon-based method (msg: ${res.msg})`)];;
+        if (!res.success) return [400, errHandler(400, `Error in the lexicon-based method (msg: ${res.msg})`)];;
     }
     // global lexicon-based result
     lexiconResults.global = await _lexiconGlobalResults(lexiconResults.sentences);
