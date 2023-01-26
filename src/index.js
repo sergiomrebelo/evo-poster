@@ -25,14 +25,15 @@ APP.get("/lines/:delimiter/:lang/:input/", async (req, res) => {
     const text = req.params.input;
     const sentences = text.split(delimiter);
     const lang = req.params.lang;
-    const results = await analysis(text, lang, sentences);
+    const results = await analysis(sentences, lang);
     res.status(results[0]).send(JSON.stringify(results[1]));
 });
 
 APP.get("/text/:lang/:input", async (req, res) => {
     const text = req.params.input;
     const lang = req.params.lang;
-    const results = await analysis(text, lang);
+    const sentences = (await _sentenceTokenizer(text)).flat();
+    const results = await analysis(sentences, lang);
     res.status(results[0]).send(JSON.stringify(results[1]));
 });
 
@@ -46,6 +47,10 @@ const errHandler = (code, msg) => {
         'success': false,
         'message': `${msg} (code ${code})`
     }
+}
+
+const _sentenceTokenizer = async (text) => {
+    return sentenceTokeniser(text);
 }
 
 const _lexiconGlobalResults = async (sentences) => {
@@ -69,13 +74,11 @@ const _lexiconGlobalResults = async (sentences) => {
     return res.length === 0 ? [['neutral', 1]] : res;
 }
 
-const analysis = async (text, lang, sentences = []) => {
+const analysis = async (sentences = [], lang) => {
+    const text = sentences.flat().join(' ');
     // classification analysis
     const classificationResults = await classification(text, lang);
     if (!classificationResults.success) return [400, errHandler(400, `Error in the classification method`)];
-
-    // sentence tokenizer (if necessary)
-    if (sentences.length === 0) sentences = (await sentenceTokeniser(text)).flat();
 
     // lexicon-based analysis
     let lexiconResults = { "global": null, "sentences": [] };
