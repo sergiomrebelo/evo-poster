@@ -19,8 +19,6 @@ import * as Fin from "finnlp";
 import "fin-negation";
 import "fin-urls";
 import * as normaliser from 'en-norm';
-// the sentence tokenizer of fin.js not works with links
-import * as SentenceTokenizer from 'sbd';
 import { NeuralNetwork } from '@nlpjs/neural';
 
 // spell checking variables
@@ -742,16 +740,6 @@ const _preprocessing = async (txt, lang = 'en') => {
     //    }
     // }
 
-    // sentence tokenizer
-    // let sentences = await sentenceTokenizer(txt);
-    // relating emotions by sentences
-    // let selectedTokensBySentence = [];
-    /* for (let i = 0; i<sentences.length; i++) {
-        selectedTokensBySentence[i] = new Array(sentences[i].length);
-        for (let j = 0; j<selectedTokensBySentence[i].length; j++) {
-            selectedTokensBySentence[i][j] = [];
-        }
-    }*/
 
     return {
         success: true,
@@ -845,80 +833,6 @@ const _translate = async (text, source, target="en") => {
                 resolve(text);
             });
     });
-}
-
-export const sentenceTokenizer = async (txt) => {
-
-    const options = {
-        "newline_boundaries" : true,
-        "html_boundaries"    : true,
-        "sanitize"           : false,
-        "allowed_tags"       : false,
-        "preserve_whitespace" : false,
-        "abbreviations"      : null
-    };
-
-    let sentences = await SentenceTokenizer.sentences(txt, options);
-    let res = [];
-
-    await sentences.forEach((s) => {
-        if ((s.length > LINE_SPLIT_OPTIONS.MAX)) {
-            let lineLength = 0;
-            let lines = [];
-            let i = 0;
-            const tokens = s.split(" ");
-            tokens.forEach ((word, j) => {
-                if (tokens[j-1] === undefined) {
-                    // ensure that the no error appears in first words
-                    if (lineLength + word.length + 1 >= LINE_SPLIT_OPTIONS.MAX) {
-                        // if the word is bigger split
-                        i++;
-                        lineLength = 0;
-                    } else {
-                        lineLength++;
-                    }
-                }
-                else if (tokens[j + LINE_SPLIT_OPTIONS.ORPHANS_SIZE] === undefined) {
-                    // avoid orphans
-                    // always ensure that exists three (ORPHANS_SIZE+1) words in the last line.
-                    lineLength ++;
-                }
-                else if (
-                    lineLength + word.length + 1 >= LINE_SPLIT_OPTIONS.MAX &&
-                    (tokens[j-1].length > LINE_SPLIT_OPTIONS.WIDOWS_SIZE || Math.random() > LINE_SPLIT_OPTIONS.PROB_SPLIT_AGAINST_RULES)
-                ) {
-                    // avoid windows
-                    // break the line if characters limit is achieved
-                    // as well as the last word is not small than a threshold
-                    i++;
-                    lineLength = 0;
-                } else if (
-                    ((lineLength + word.length + 1 >= LINE_SPLIT_OPTIONS.OPTIMAL) && (Math.random() > (LINE_SPLIT_OPTIONS.PROB_SPLIT_AGAINST_RULES - LINE_SPLIT_OPTIONS.PROB_SPLIT_AGAINST_RULES / 3))) &&
-                    (word.length >= LINE_SPLIT_OPTIONS.STOP_WORD_MIN_SIZE_IN_OPTIMAL || LINE_SPLIT_OPTIONS.SPLIT_PUNT.includes(word[word.length - 1])) &&
-                    (tokens[j-1].length > LINE_SPLIT_OPTIONS.WIDOWS_SIZE || Math.random() > LINE_SPLIT_OPTIONS.PROB_SPLIT_AGAINST_RULES)
-                ) {
-                    // split based on a optimal size and a random factor
-                    // avoid windows
-                    i++;
-                    lineLength = 0;
-                } else {
-                    lineLength ++;
-                }
-
-                lines[i] = lines[i] || [];
-                lines[i].push(word);
-                lineLength += (word.length + 1);
-            });
-
-            res.push(lines.map((line) => {
-                return line.join(" ");
-            }));
-        } else {
-            res.push(s);
-        }
-    });
-
-    return res;
 }
 
 const _isConfig = () => {

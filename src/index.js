@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 
 import cors from 'cors';
 import {setup, classification, lexicon} from "./nlp-utils/nlp_utils.mjs";
-import * as NLP from "./nlp-utils/nlp_utils.mjs";
+import sentenceTokeniser from "./nlp-utils/sentence-tokeniser/sentence-tokeniser.mjs";
 
 const APP = express();
 const PORT = process.env.PORT || "8000";
@@ -75,7 +75,7 @@ const analysis = async (text, lang, sentences = []) => {
     if (!classificationResults.success) return [400, errHandler(400, `Error in the classification method`)];
 
     // sentence tokenizer (if necessary)
-    if (sentences.length === 0) sentences = (await NLP.sentenceTokenizer(text)).flat();
+    if (sentences.length === 0) sentences = (await sentenceTokeniser(text)).flat();
 
     // lexicon-based analysis
     let lexiconResults = { "global": null, "sentences": [] };
