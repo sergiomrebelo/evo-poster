@@ -10,7 +10,6 @@ dotenv.config({
     path: `${__dirname}/../.env`
 });
 
-
 const txt = "as saudades que eu já tenho da minha alegre casinha";
 setup(process.env.LANGUAGE_TRANSLATOR_IAM_APIKEY, process.env.LANGUAGE_TRANSLATOR_URL).then(() => {
     translate(txt, "pt").then((res) => {

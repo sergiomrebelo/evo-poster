@@ -1,5 +1,7 @@
 /**
- * ML emotion analysis
+ * text translator simplifier
+ * using IBM Watson LanguageTranslatorV3
+ *
  * Sérgio M. Rebelo
  * CDV lab. (CMS, CISUC, Portugal)
  * srebelo[at]dei.uc.pt
@@ -26,6 +28,7 @@ const availableLanguages = [
     'ta', 'te', 'th', 'tr', 'uk', 'ur', 'vi', 'cy'
 ];
 
+// check if language is supported
 export const isLangAvailable = (lang) => {
     lang = lang.split('-')[0];
     return !availableLanguages.includes(lang) ? `en` : lang;
