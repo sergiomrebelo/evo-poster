@@ -10,18 +10,13 @@
  * v1.3.0 January 2023
  */
 
-import {fileURLToPath} from "url";
-import {dirname, join} from "path";
 import Emoji from "node-emoji";
 import {setup, isLangAvailable, translate} from "../translator/translator.mjs";
 import {NeuralNetwork} from "@nlpjs/neural";
-import {readFileSync} from "fs";
+// classifier
+import * as classifier from './data/LST_AIT_2018_SemEval_2018_task_1_model_1624288181749.json' assert { type: "json" };
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-// params
-const _MODEL = 'data/LST_AIT_2018_SemEval_2018_task_1_model_1624288181749.json';
+// FIXME params -> NLP Utils
 const MIN_EMOTION_ML = .5;
 
 let _isConfig = false;
@@ -80,8 +75,8 @@ export const classification = async (txt, lang='en') => {
    }
 
    // remove hashtags
-   const htgexp = /#[^\s!@#$%^&*()=+.\/,\[{\]};:'"?><]+/gi;
-   const htgMatch = txt.match(htgexp, '');
+   const htgExp = /#[^\s!@#$%^&*()=+.\/,\[{\]};:'"?><]+/gi;
+   const htgMatch = txt.match(htgExp);
    const hashtags = htgMatch !== null ? htgMatch : [];
 
    // get emojis
@@ -130,7 +125,7 @@ export const classification = async (txt, lang='en') => {
 
 const isConfig = () => {
    if (!_isConfig) {
-      throw new Error(`⚠️ Nlp-utils is not configurated! ⚠️`);
+      throw new Error(`⚠️ Nlp-utils is not init! ⚠️`);
    }
 }
 
@@ -139,8 +134,6 @@ export const config = async (key = null, serviceURL) => {
    console.info(`Configuring ML-Emotion-Analysis (nlp-utils)`)
    try {
       //  setup classifier
-      const model = readFileSync(join(__dirname, _MODEL));
-      let classifier = JSON.parse(model); // load model on classifier
       net.fromJSON(classifier);
       console.info(`✅ classifier`)
    } catch (err) {
