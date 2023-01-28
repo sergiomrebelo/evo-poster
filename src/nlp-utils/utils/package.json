@@ -1,0 +1,15 @@
+{
+  "name": "nlp-utils",
+  "version": "1.3.0",
+  "description": "utils from toolkit of Nature Language Processing (NLP) methods for emotional analysis of text",
+  "main": "utils.mjs",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Sérgio M. Rebelo <sergiorebelo@me.com> (http://sergiorebelo.work/)",
+  "license": "ISC",
+  "dependencies": {
+    "node-emoji": "^1.11.0"
+  }
+}
