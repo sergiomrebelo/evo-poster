@@ -57,7 +57,6 @@ export const classification = async (txt, lang='en') => {
 
    txt =  tweetInfo.txt;
 
-   console.log ("txt", txt);
 
    let result = null, emotionalData = null, success = true;
 

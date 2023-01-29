@@ -11,12 +11,12 @@
  */
 
 import * as normaliser from "en-norm";
-import Emoji from "node-emoji";
 import * as Fin from "finnlp";
 import "fin-negation";
 import "fin-urls";
 
 import History from './History.js';
+import * as TweetInfo from "../utils/TweetToolkit.mjs";
 import {setup, isLangAvailable, translate} from "../translator/translator.mjs";
 import {params, rm, mostPresentEmotion} from '../utils/utils.mjs'
 
@@ -32,7 +32,6 @@ import * as _lexicon from './data/NRC-Emotion-Intensity-Lexicon-v1_1618414260694
 const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
 
 // params
-const _LEXICON_PATH = 'data/lexicon/NRC-Emotion-Intensity-Lexicon-v1_1618414260694.json';
 let _dictApiKey = null; // dictionary API key
 let _isConfig = false;
 
@@ -187,65 +186,19 @@ const _preprocessing = async (txt, lang = 'en') => {
     const history = new History(txt);
 
 
-
+    const tweetAnalyser = new TweetInfo.TweetToolkit (txt, _rawTxt, lang);
     // remove retweet data
-    const rtExp = /RT\s*@[^:]*:/gm;
-    let rtMatch = txt.match (rtExp);
-    let rtInfo = rtMatch !== null ? rtMatch : []; // retweet data
-    txt = txt.replace(rtExp, '');
-    rtInfo = rtInfo.length > 0 ? rtInfo : [];
-    // update history
-    history.remove(rtInfo)
-
+    const rtInfo = tweetAnalyser.getReTweetData(true, history);
     // remove URLs (hardwired method)
-    const  urlExp = /(https?:\/\/)(\s)*(www\.)?(\s)*((\w|\s)+\.)*([\w\-\s]+\/)*([\w\-]+)((\?)?[\w\s]*=\s*[\w&]*)*/gm;
-    const urlsMatch = txt.match(urlExp);
-    let urls = urlsMatch !== null ? urlsMatch : [];
-    txt = txt.replace(urlExp, '');
-    // update history
-    history.remove(urls);
-
+    const urls = tweetAnalyser.getURLs(true, history);
     // remove of mentions
-    const mentionExp = /\B@[a-z0-9_-]+/gi;
-    const mentionMatch = txt.match(mentionExp);
-    const mentions = mentionMatch !== null ? mentionMatch : [];
-    let mentionsNative = mentions;
-    if (lang !== 'en') {
-        const mentionsNativeMatch = txt.match(mentionExp);
-        mentionsNative = mentionsNativeMatch !== null ? mentionsNativeMatch : [];
-    }
-
-    for (let mention of mentions) {
-        // remove the symbol from the string but maintain the word
-        txt = txt.replace(mention, `${mention.substring(1, mention.length-1)}`);
-    }
-
-    // update history
-    for (let mention of mentions) {
-        history.update(mention, mention.substring(1, mention.length - 1));
-    }
-
+    const mentions = tweetAnalyser.getMentions(false, true, history)
     // remove hashtags
-    const htgExp = /#[^\s!@#$%^&*()=+.\/,\[{\]};:'"?><]+/gi;
-    const htgMatch = txt.match(htgExp);
-    const hashtags = htgMatch !== null ? htgMatch : [];
+    const hashtags  = tweetAnalyser.getHashtags(false, true, history);
+    // change the emojis to their meaning and save emojis information
+    let emojis = await tweetAnalyser.getEmojis(true, false, history);
 
-    // save hashtags in native language (if not english)
-    let hashtagsNative = hashtags;
-    if (lang !== 'en') {
-        const htgNativeMatch = txt.match(htgExp);
-        hashtagsNative = htgNativeMatch !== null ? htgNativeMatch : [];
-    }
-
-    for (let hashtag of hashtags) {
-        // remove the symbol from the string but maintain the word
-        txt = txt.replace(hashtag, `${hashtag.substring(1, hashtag.length-1)}`);
-    }
-
-    // update history
-    for (let hash of hashtags) {
-        history.update(hash, hash.substring(1, hash.length - 1));
-    }
+    txt = tweetAnalyser.getText();
 
     // contractions resolver
     let _normalisedText = [];
@@ -289,20 +242,6 @@ const _preprocessing = async (txt, lang = 'en') => {
     }
 
     txt = tokens.join(' ');
-
-
-    // change the emojis for their meaning
-    // save emojis
-    let emojis = [];
-    Emoji.replace(txt, (e) => emojis.push(e), true);
-
-    // get emojis
-    txt = Emoji.replace(txt, (emoji) => {
-        const value = `${emoji.key.replace(/(_)|(-)/g, " ")}`;
-        // update history
-        history.update(emoji.emoji, value);
-        return value;
-    }, true);
 
 
     // tokenize and process the text
@@ -428,14 +367,8 @@ const _preprocessing = async (txt, lang = 'en') => {
         lang: lang,
         RTInfo: rtInfo,
         urls: urls,
-        mentions: {
-            mentions: mentionsNative,
-            working: mentions
-        },
-        hashtags: {
-            hashtags: hashtagsNative,
-            working: hashtags
-        },
+        mentions: mentions,
+        hashtags: hashtags,
         emojis: emojis,
         history: history.get(),
         _raw: {
@@ -451,7 +384,7 @@ const _preprocessing = async (txt, lang = 'en') => {
 
 const _antonyms = async (word, tag= 'N') => {
     if (_dictApiKey === null) {
-        console.error(`dictionaryapi.com key not valid`);
+        console.error(`dictionaryApi.com key not valid`);
         return word;
     }
 
