@@ -10,32 +10,11 @@
  */
 
 import Emoji from 'node-emoji';
-import e from "express";
 
 export const params = {
    "MIN_EMOTION_LEXICON": 0.5,
     "MIN_EMOTION_ML": 0.5
 }
-
-
-// TODO: change to class
-export const tweetToolkit = {
-    "getReTweetData": (txt, remove = false) => {
-        // remove retweet data
-        const rtExp = /RT\s*@[^:]*:/gm;
-        const rtMatch = txt.match(rtExp);
-        let rtInfo = rtMatch !== null ? rtMatch : []; // retweet data
-        if (remove) txt = txt.replace(rtExp, "");
-
-        return {
-            "data": rtInfo.length > 0 ? rtInfo : [],
-            "text": txt
-        }
-    },
-
-}
-
-
 
 export const rm = async (rawTxt) => {
     let txt = rawTxt;

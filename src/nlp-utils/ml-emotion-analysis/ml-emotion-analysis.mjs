@@ -10,10 +10,10 @@
  * v1.3.0 January 2023
  */
 
-import Emoji from "node-emoji";
 import {NeuralNetwork} from "@nlpjs/neural";
 import {setup, isLangAvailable, translate} from "../translator/translator.mjs";
-import {params, rm, mostPresentEmotion,tweetToolkit} from '../utils/utils.mjs';
+import {params, rm, mostPresentEmotion} from '../utils/utils.mjs';
+import * as TweetInfo from "../utils/TweetToolkit.mjs";
 // classifier
 import * as classifier from './data/LST_AIT_2018_SemEval_2018_task_1_model_1624288181749.json' assert { type: "json" };
 
@@ -52,35 +52,12 @@ export const classification = async (txt, lang='en') => {
    }
 
 
-   // remove retweet data
-   const rt = tweetToolkit.getReTweetData(txt, true);
-   const rtInfo = rt.data;
-   txt = rt.text;
+   const tweetInfo = new TweetInfo.TweetToolkit (txt, _rawTxt, lang).run(false);
+   const tweetData = tweetInfo.info;
 
+   txt =  tweetInfo.txt;
 
-   // remove URLs (hardwired method)
-   const urlExp = /(https?:\/\/)(\s)*(www\.)?(\s)*((\w|\s)+\.)*([\w\-\s]+\/)*([\w\-]+)((\?)?[\w\s]*=\s*[\w&]*)*/gm;
-   const urlsMatch = txt.match(urlExp);
-   let urls = urlsMatch !== null ? urlsMatch : [];
-
-   // remove of mentions
-   const mentionExp = /\B@[a-z0-9_-]+/gi;
-   const mentionMatch = txt.match(mentionExp);
-   const mentions = mentionMatch !== null ? mentionMatch : [];
-   let mentionsNative = mentions;
-   if (lang !== 'en') {
-      const mentionsNativeMatch = _rawTxt.match(mentionExp, '');
-      mentionsNative = mentionsNativeMatch !== null ? mentionsNativeMatch : [];
-   }
-
-   // remove hashtags
-   const htgExp = /#[^\s!@#$%^&*()=+.\/,\[{\]};:'"?><]+/gi;
-   const htgMatch = txt.match(htgExp);
-   const hashtags = htgMatch !== null ? htgMatch : [];
-
-   // get emojis
-   let emojis = [];
-   Emoji.replace(txt, (e) => emojis.push(e), true);
+   console.log ("txt", txt);
 
    let result = null, emotionalData = null, success = true;
 
@@ -101,14 +78,11 @@ export const classification = async (txt, lang='en') => {
       text: displayTxt,
       meta: {
          lang: lang,
-         RTInfo: rtInfo,
-         urls: urls,
-         hashtags: hashtags,
-         mentions: {
-            mentions: mentionsNative,
-            working: mentions
-         },
-         emojis: emojis,
+         RTInfo: tweetData.rtInfo,
+         urls: tweetData.urls,
+         hashtags: tweetData.hashtags,
+         mentions: tweetData.mentions,
+         emojis: tweetData.emojis,
       },
       _rawTxt: _rawTxt,
       _MIN_REG_EMOTION_THRESHOLD: params.MIN_EMOTION_ML,
