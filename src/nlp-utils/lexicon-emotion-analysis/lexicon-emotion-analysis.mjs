@@ -406,7 +406,8 @@ const _antonyms = async (word, tag= 'N') => {
         }
         return output;
     } catch (err) {
-        console.log(`address= https://dictionaryapi.com/api/v3/references/ithesaurus/json/${word}?key=${_dictApiKey}`);
+        //
+        // console.info(`address= https://dictionaryapi.com/api/v3/references/ithesaurus/json/${word}?key=${_dictApiKey}`);
         console.error(err);
         return word;
     }
@@ -417,7 +418,6 @@ const isStopWord = (token) => {
 }
 
 const _relationWordsEmotions = (results, influencingWords) => {
-    console.log(results, influencingWords);
     const relation = {}, relationSortable = {};
 
     // get the most influencing words (in the whole and by emotion)
