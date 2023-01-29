@@ -55,9 +55,7 @@ const _sentenceTokenizer = async (text) => {
     return sentenceTokeniser(text);
 }
 
-// TODO: NLP UTILS..
 const _lexiconGlobalResults = async (sentences) => {
-
     // compute global lexicon value
     let emotions = {};
     for (let i in sentences) {
