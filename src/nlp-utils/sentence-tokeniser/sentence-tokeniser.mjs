@@ -11,7 +11,8 @@
  */
 
 import * as SentenceTokenizer from 'sbd';
-import * as defaultParams from './data/default-line-split-params.json' assert { type: "json" };
+import * as defaultParams from './data/default-line-split-params.cjs';
+
 
 const options = {
     "newline_boundaries" : true,

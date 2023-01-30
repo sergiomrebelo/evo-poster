@@ -1,11 +1,26 @@
 import sentenceTokenizer from "../../src/nlp-utils/sentence-tokeniser/sentence-tokeniser.mjs";
+import sentences from "../testing-text.js";
 
-describe("Test for initial Jest setup.", async () => {
-    describe("practiceTest", () => {
-        test("Given 'Hello World!', return 'Hello World!'", () => {
-            const received = sentenceTokenizer(`hi`);
-            const expected = sentenceTokenizer(`hi`);
-            expect(received).toBe(expected);
-        });
+const number = 100;
+const tokeniserDiference = 1;
+
+
+describe(`Test for Sentence Tokeniser unit`, () => {
+    describe(`Sentence Tokeniser test (times: ${number})`, () => {
+        for (let sentence of sentences) {
+            test(`Given ${sentence.text}, return number of lines`, async () => {
+                let mean = 0;
+                for (let i = 0; i < number; i++) {
+                    let res = await sentenceTokenizer(sentence.text);
+                    res = res.flat();
+                    mean += res.length;
+                }
+                mean /= number;
+                const dif = Math.abs(mean-sentence.sentenceNumber);
+
+                // console.log (`[${sentence.text.substring(0, 50)}] mean=${mean}, expected=${sentence.sentenceNumber} dif={${dif})`);
+                expect(dif).toBeLessThan(tokeniserDiference);
+            });
+        }
     });
-});node
+});

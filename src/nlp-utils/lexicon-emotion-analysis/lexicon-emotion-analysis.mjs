@@ -169,7 +169,7 @@ const _preprocessing = async (txt, lang = 'en') => {
             txt = _translateResults.translations[0].translation;
             _translateRawTxt = txt;
         } catch (err) {
-            console.warn (`error on translation. err=${err}`);
+            console.warn(`error on translation. err=${err}`);
             return {
                 success: false,
                 message: `error on translation. ${err}`

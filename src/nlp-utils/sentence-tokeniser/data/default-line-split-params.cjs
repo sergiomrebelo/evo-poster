@@ -1,4 +1,4 @@
-{
+module.exports = {
   "OPTIMAL": 25,
   "MAX": 30,
   "STOP_WORD_MIN_SIZE_IN_OPTIMAL": 10,
