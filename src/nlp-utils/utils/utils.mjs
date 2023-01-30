@@ -9,6 +9,14 @@
  * v1.2.1 January 2023
  */
 
+
+// TODO see tools for handle different respositry in athe same folder
+// pnpm _> paralel npm
+// yarn
+// impoort in package.json @rebeposter/lutils.js --> rebelo poster is
+// if you use two package i need to package
+
+
 import Emoji from 'node-emoji';
 
 export const params = {

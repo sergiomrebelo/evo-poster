@@ -4,7 +4,7 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import * as CLASSIFIER from "./nlp-utils/ml-emotion-analysis/ml-emotion-analysis.mjs";
 import * as LEXICON from "./nlp-utils/lexicon-emotion-analysis/lexicon-emotion-analysis.mjs";
-import sentenceTokeniser from "./nlp-utils/sentence-tokeniser/sentence-tokeniser.mjs";
+import sentenceTokenizer from "./nlp-utils/sentence-tokeniser/sentence-tokeniser.mjs";
 
 const APP = express();
 const PORT = process.env.PORT || "8000";
@@ -52,7 +52,7 @@ const errHandler = (code, msg) => {
 }
 
 const _sentenceTokenizer = async (text) => {
-    return sentenceTokeniser(text);
+    return sentenceTokenizer(text);
 }
 
 const _lexiconGlobalResults = async (sentences) => {
@@ -86,7 +86,7 @@ const analysis = async (sentences = [], lang) => {
     for (const sentence of sentences) {
         const res = await LEXICON.lexicon(sentence, lang, false);
         lexiconResults.sentences.push(res);
-        if (!res.success) return [400, errHandler(400, `Error in the lexicon-based method (msg: ${res.msg})`)];;
+        if (!res.success) return [400, errHandler(400, `Error in the lexicon-based method (msg: ${res.msg})`)];
     }
     // global lexicon-based result
     lexiconResults.global = await _lexiconGlobalResults(lexiconResults.sentences);

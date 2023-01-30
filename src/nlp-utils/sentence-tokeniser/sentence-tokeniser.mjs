@@ -24,6 +24,7 @@ const options = {
 
 
 const tokenizer = async (txt, params = defaultParams.default, sdbParams = options) => {
+    if (txt === null || txt === undefined) throw new Error('Sentence not defined');
     let sentences = await SentenceTokenizer.sentences(txt, sdbParams);
     let res = [];
     await sentences.forEach((s) => {

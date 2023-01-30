@@ -5,7 +5,7 @@
   "main": "lexicon-emotion-analysis.mjs",
   "type": "module",
   "scripts": {
-    "test": "node test.js"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Sérgio M. Rebelo <sergiorebelo@me.com> (http://sergiorebelo.work/)",
   "license": "ISC",
