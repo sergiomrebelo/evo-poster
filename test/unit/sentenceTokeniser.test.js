@@ -4,12 +4,15 @@ import sentences from "../testing-text.js";
 const number = 100;
 const tokeniserDiference = 1;
 
+// TODO: number of characters and comparing with data
+
 
 describe(`Test for Sentence Tokeniser unit`, () => {
     describe(`Sentence Tokeniser test (times: ${number})`, () => {
         for (let sentence of sentences) {
             test(`Given ${sentence.text}, return number of lines`, async () => {
                 let mean = 0;
+
                 for (let i = 0; i < number; i++) {
                     let res = await sentenceTokenizer(sentence.text);
                     res = res.flat();
