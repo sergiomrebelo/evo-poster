@@ -22,13 +22,15 @@ describe(`Test for Machine Learning classifier unit`, () => {
     describe(`Sentence ML classifier test (times: ${number})`, () => {
         config(process.env.LANGUAGE_TRANSLATOR_IAM_APIKEY, process.env.LANGUAGE_TRANSLATOR_URL).then( async (res) => {
             for (let sentence of sentences) {
-                test(`Given ${sentence.text}, return the following classification`, () => {
-                    classification(sentence.text, sentence.lang).then((res) => {
-                        const val = res.emotions.data.predominant;
-                        expect(val.emotion).toBe(sentence.classification[0]);
-                        expect(val.weight).toBe(sentence.classification[1]);
+                for (let i=0; i<number; i++) {
+                    test(`Given ${sentence.text}, return the following classification`, () => {
+                        classification(sentence.text, sentence.lang).then((res) => {
+                            const val = res.emotions.data.predominant;
+                            expect(val.emotion).toBe(sentence.classification[0]);
+                            expect(val.weight).toBe(sentence.classification[1]);
+                        });
                     });
-                });
+                }
             }
         });
     });
