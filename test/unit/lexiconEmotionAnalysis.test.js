@@ -10,7 +10,6 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const number = 5;
-const wordDif = 5;
 import sentences from "../testing-text.js";
 import {classification} from "../../src/@evoposter/nlp/src/ml-emotion-analysis/ml-emotion-analysis.mjs";
 
@@ -22,47 +21,31 @@ dotenv.config({
 
 describe(`Test for Lexicon classifier unit`, () => {
     describe(`Lexicon classifier test`, () => {
-        config(process.env.MW_API_KEY, process.env.LANGUAGE_TRANSLATOR_IAM_APIKEY, process.env.LANGUAGE_TRANSLATOR_URL).then(() => {
+        config(process.env.MW_API_KEY, process.env.LANGUAGE_TRANSLATOR_IAM_APIKEY, process.env.LANGUAGE_TRANSLATOR_URL).then(async () => {
             for (let sentence of sentences) {
-                test(`Given ${sentence.text}, return the following classification`, async () => {
-                    for (let i = 0; i < number; i++) {
+                test(`Given ${sentence.text}, return the following lexicon`, async () => {
+                    let attempts = [];
+                    for (let i=0; i<number; i++) {
                         let t = await tokenizer(sentence.text);
                         t = t.flat();
-                        const global = [];
-                        let maxW = Number.MIN_VALUE, content = "";
-                        const similar = sentence.sentenceNumber === t.length;
-                        for (let i in t) {
-                            let line = t[i];
+                        let global = [];
+                        for (let j in t) {
+                            let line = t[j];
                             await lexicon(line, sentence.lang).then((res) => {
                                 global.push(res);
-                                if (res.emotions.data.recognisedEmotions.length > 0) {
-                                    if (res.emotions.data.recognisedEmotions[0][1] > maxW) {
-                                        maxW = res.emotions.data.recognisedEmotions[0][1];
-                                        content = line;
-                                    }
-                                }
                             });
-                            const gRes = await lexiconGlobalResults(global);
-
-                            // depends on the division
-                            // if (similar) expect(gRes[0]).toBe(sentence.lexicon.global);
-                            if (content !== "" && sentence.mostImportantPart !== "") {
-                                const dif = checkWords(content, sentence.mostImportantPart);
-                                expect(dif).toBeLessThan(wordDif);
-
-                            }
                         }
+                        const globalResult = await lexiconGlobalResults(global);
+                        attempts.push(globalResult);
                     }
+                    const predominant = {};
+                    for (let a of attempts) {
+                        if (predominant[a[0][0]] === undefined) predominant[a[0][0]] = ( a[0][1] / number);
+                        else predominant[a[0][0]] = predominant[a[0][0]] + ( a[0][1] / number);
+                    }
+                    expect(Object.keys(predominant)[0]).toBe(sentence.lexicon.global[0]);
                 });
             }
         });
     });
 });
-
-
-const checkWords = (o, n) => {
-    o = o.split(" ");
-    n = n[0].split(" ");
-    const result = n.filter((s) => !o.some((str) => str.includes(s)));
-    return o.length - result.length;
-}
