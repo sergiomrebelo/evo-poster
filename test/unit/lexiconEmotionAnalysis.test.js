@@ -5,6 +5,7 @@ import tokenizer from "../../src/@evoposter/nlp/src/sentence-tokeniser/sentence-
 import dotenv from "dotenv";
 import {fileURLToPath} from "url";
 import {dirname} from "path";
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
@@ -19,13 +20,12 @@ dotenv.config({
 });
 
 
-
 describe(`Test for Lexicon classifier unit`, () => {
     describe(`Lexicon classifier test`, () => {
-        config(process.env.MW_API_KEY, process.env.LANGUAGE_TRANSLATOR_IAM_APIKEY,  process.env.LANGUAGE_TRANSLATOR_URL).then( () => {
+        config(process.env.MW_API_KEY, process.env.LANGUAGE_TRANSLATOR_IAM_APIKEY, process.env.LANGUAGE_TRANSLATOR_URL).then(() => {
             for (let sentence of sentences) {
-                for (let i = 0; i < number; i++) {
-                    test(`Given ${sentence.text}, return the following classification`, async () => {
+                test(`Given ${sentence.text}, return the following classification`, async () => {
+                    for (let i = 0; i < number; i++) {
                         let t = await tokenizer(sentence.text);
                         t = t.flat();
                         const global = [];
@@ -52,8 +52,8 @@ describe(`Test for Lexicon classifier unit`, () => {
 
                             }
                         }
-                    });
-                }
+                    }
+                });
             }
         });
     });
