@@ -2,9 +2,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 
 import cors from 'cors';
-import * as CLASSIFIER from "./nlp-utils/ml-emotion-analysis/ml-emotion-analysis.mjs";
-import * as LEXICON from "./nlp-utils/lexicon-emotion-analysis/lexicon-emotion-analysis.mjs";
-import sentenceTokeniser from "./nlp-utils/sentence-tokeniser/sentence-tokeniser.mjs";
+import * as nlp from "@evoposter/nlp";
 
 const APP = express();
 const PORT = process.env.PORT || "8000";
@@ -17,8 +15,7 @@ APP.use(express.static('src/public'));
 
 
 APP.listen(PORT, async () => {
-    await CLASSIFIER.config(process.env.LANGUAGE_TRANSLATOR_IAM_APIKEY, process.env.LANGUAGE_TRANSLATOR_URL);
-    await LEXICON.config(process.env.MW_API_KEY, process.env.LANGUAGE_TRANSLATOR_IAM_APIKEY, process.env.LANGUAGE_TRANSLATOR_URL);
+    await nlp.setup(process.env.LANGUAGE_TRANSLATOR_IAM_APIKEY, process.env.LANGUAGE_TRANSLATOR_URL, process.env.MW_API_KEY);
     console.info(`👂at port ${PORT}`);
 });
 
@@ -52,7 +49,7 @@ const errHandler = (code, msg) => {
 }
 
 const _sentenceTokenizer = async (text) => {
-    return sentenceTokeniser(text);
+    return nlp.sentenceTokenizer(text);
 }
 
 const _lexiconGlobalResults = async (sentences) => {
@@ -78,15 +75,15 @@ const _lexiconGlobalResults = async (sentences) => {
 const analysis = async (sentences = [], lang) => {
     const text = sentences.flat().join(' ');
     // classification analysis
-    const classificationResults = await CLASSIFIER.classification(text, lang);
+    const classificationResults = await nlp.classification(text, lang);
     if (!classificationResults.success) return [400, errHandler(400, `Error in the classification method`)];
 
     // lexicon-based analysis
     let lexiconResults = { "global": null, "sentences": [] };
     for (const sentence of sentences) {
-        const res = await LEXICON.lexicon(sentence, lang, false);
+        const res = await nlp.lexicon(sentence, lang, false);
         lexiconResults.sentences.push(res);
-        if (!res.success) return [400, errHandler(400, `Error in the lexicon-based method (msg: ${res.msg})`)];;
+        if (!res.success) return [400, errHandler(400, `Error in the lexicon-based method (msg: ${res.msg})`)];
     }
     // global lexicon-based result
     lexiconResults.global = await _lexiconGlobalResults(lexiconResults.sentences);

@@ -5,11 +5,14 @@
         "es2021": true
     },
     "extends": "airbnb-base",
-    "overrides": [
-    ],
+    "overrides": [],
+    "parser": "@babel/eslint-parser",
     "parserOptions": {
-        "ecmaVersion": "latest"
-    },
-    "rules": {
+        "requireConfigFile": false,
+        "babelOptions": {
+            "plugins": [
+                "@babel/plugin-syntax-import-assertions"
+            ]
+        }
     }
 }
