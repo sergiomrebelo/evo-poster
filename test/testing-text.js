@@ -9,6 +9,7 @@
  * meta : meta information about the quote [author, year, book, page]
  */
 
+
 const data = [
     {
         text: "The feelings that hurt most, the emotions that sting most, are those that are absurd - The longing for impossible things, precisely because they are impossible; nostalgia for what never was; the desire for what could have been; regret over not being someone else; dissatisfaction with the world’s existence. All these half-tones of the soul’s consciousness create in us a painful landscape, an eternal sunset of what we are.",
@@ -45,7 +46,7 @@ const data = [
         v: 300123.1,
         sentenceNumber: 5,
         lang: "es",
-        classification: ["neutral", 1],
+        classification: ["neutral", 0],
         mostImportantPart: [],
         lexicon: {
             sentences: [
@@ -55,7 +56,7 @@ const data = [
                 ["neutral", 0],
                 ["neutral", 0]
             ],
-            global: ["neutral", 1],
+            global: ["neutral", 0],
         },
         meta: ["Gabriel Garcia Márquez", 1967, "Cien años de soledad", null]
     },
@@ -109,7 +110,6 @@ const data = [
         },
         meta: ["Gabriel Garcia Márquez", 1967, "Cien años de soledad", null]
     }
-
 ];
 
 export default data;
