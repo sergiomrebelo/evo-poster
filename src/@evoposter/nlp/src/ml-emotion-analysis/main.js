@@ -19,6 +19,8 @@ const txt = "RT @TwitterAPI: ) As saudades que eu já tenho da minha alegre casi
 const number = 100;
 import sentences from "../../../../../test/testing-text.js";
 
+
+
 config(process.env.LANGUAGE_TRANSLATOR_IAM_APIKEY, process.env.LANGUAGE_TRANSLATOR_URL).then((res) => {
     for (let sentence of sentences) {
         classification(sentence.text, sentence.lang).then((res) => {

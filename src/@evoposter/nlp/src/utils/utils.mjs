@@ -10,13 +10,6 @@
  */
 
 
-// TODO see tools for handle different respositry in athe same folder
-// pnpm _> paralel npm
-// yarn
-// impoort in package.json @rebeposter/lutils.js --> rebelo poster is
-// if you use two package i need to package
-
-
 import Emoji from 'node-emoji';
 
 export const params = {
@@ -88,4 +81,30 @@ export const mostPresentEmotion = (result, min = .5) => {
     };
 }
 
+export const errHandler = (msg) => {
+    return `❌   error: ${msg}`;
+}
 
+export const warningHandler = (msg) => {
+    return `⚠️   warning: ${msg}`;
+}
+
+export const lexiconGlobalResults = async (sentences) => {
+    // compute global lexicon value
+    let emotions = {};
+    for (let i in sentences) {
+        const current = sentences[i].emotions.data.recognisedEmotions;
+        for (let e of current) {
+            const name = e[0];
+            if (Object.keys(emotions).includes(name)) {
+                emotions[name] = emotions[name] + e[1];
+            } else {
+                emotions[name] = e[1];
+            }
+        }
+    }
+
+    let res = Object.entries(emotions).sort(([,a],[,b]) => b-a);
+
+    return res.length === 0 ? [['neutral', 1]] : res;
+}
