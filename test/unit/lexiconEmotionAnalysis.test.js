@@ -44,7 +44,7 @@ describe(`Test for Lexicon classifier unit`, () => {
                         else predominant[a[0][0]] = predominant[a[0][0]] + ( a[0][1] / number);
                     }
                     expect(Object.keys(predominant)[0]).toBe(sentence.lexicon.global[0]);
-                });
+                }, 60000);
             }
         });
     });

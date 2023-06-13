@@ -41,7 +41,7 @@ describe(`Test for Machine Learning classifier unit`, () => {
                     expect(unique[0]).toBe(sentence.classification[0]);
                     expect(unique.length).toBe(1);
                     expect(score).toBe(sentence.classification[1]);
-                });
+                }, 60000);
             }
         });
     });

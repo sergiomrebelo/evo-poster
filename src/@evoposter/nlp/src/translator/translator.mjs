@@ -18,10 +18,6 @@ import { IamAuthenticator } from 'ibm-watson/auth/index.js';
 let languageTranslator = null; // translator API keys
 let _isConfig = false;
 
-// TODO: create a function to warning and error
-// TODO: create a issue on github
-
-
 
 // https://cloud.ibm.com/docs/language-translator?topic=language-translator-translation-models
 const availableLanguages = [
