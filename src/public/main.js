@@ -90,7 +90,7 @@ const handleErr = (res = {success: false}) => {
     const container = document.getElementById('err-message');
     if (container.innerHTML.length > 0) container.innerHTML = container.innerHTML + "<br>";
     container.innerHTML = container.innerHTML+res.message;
-    document.getElementById('error-handle').classList.replace('d-none', 'd-block');
+        document.getElementById('error-handle').classList.replace('d-none', 'd-block');
 }
 
 const _uploadImages = async (e) => {
