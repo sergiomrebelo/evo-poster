@@ -43,6 +43,7 @@ describe(`Test for Lexicon classifier unit`, () => {
                         if (predominant[a[0][0]] === undefined) predominant[a[0][0]] = ( a[0][1] / number);
                         else predominant[a[0][0]] = predominant[a[0][0]] + ( a[0][1] / number);
                     }
+                    // console.log (Object.keys(predominant));
                     expect(Object.keys(predominant)[0]).toBe(sentence.lexicon.global[0]);
                 }, 60000);
             }

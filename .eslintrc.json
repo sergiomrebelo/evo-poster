@@ -1,18 +1,15 @@
 {
     "env": {
         "browser": true,
-        "commonjs": true,
         "es2021": true
     },
-    "extends": "airbnb-base",
-    "overrides": [],
-    "parser": "@babel/eslint-parser",
+    "extends": "eslint:recommended",
+    "overrides": [
+    ],
     "parserOptions": {
-        "requireConfigFile": false,
-        "babelOptions": {
-            "plugins": [
-                "@babel/plugin-syntax-import-assertions"
-            ]
-        }
+        "ecmaVersion": "latest",
+        "sourceType": "module"
+    },
+    "rules": {
     }
 }
