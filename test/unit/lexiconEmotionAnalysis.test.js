@@ -1,6 +1,5 @@
 import {config, lexicon} from "../../src/@evoposter/nlp/src/lexicon-emotion-analysis/lexicon-emotion-analysis.mjs";
 import {lexiconGlobalResults} from "../../src/@evoposter/nlp/src/utils/utils.mjs";
-import tokenizer from "../../src/@evoposter/nlp/src/sentence-tokeniser/sentence-tokeniser.mjs";
 
 import dotenv from "dotenv";
 import {fileURLToPath} from "url";
@@ -11,7 +10,6 @@ const __dirname = dirname(__filename);
 
 const number = 5;
 import sentences from "../testing-text.js";
-import {classification} from "../../src/@evoposter/nlp/src/ml-emotion-analysis/ml-emotion-analysis.mjs";
 
 dotenv.config({
     debug: true,
@@ -28,8 +26,6 @@ describe(`Test for Lexicon classifier unit`, () => {
                     for (let i=0; i<number; i++) {
                         // mocking translate function, directly using the translated text
                         let t = sentence["lines"];
-                        // let t = await tokenizer(sentence.translation !== null ? sentence.translation : sentence.text);
-                        // t = t.flat();
                         let global = [];
                         for (let j in t) {
                             let line = t[j];
@@ -45,7 +41,6 @@ describe(`Test for Lexicon classifier unit`, () => {
                         if (predominant[a[0][0]] === undefined) predominant[a[0][0]] = ( a[0][1] / number);
                         else predominant[a[0][0]] = predominant[a[0][0]] + ( a[0][1] / number);
                     }
-                    // console.log (Object.keys(predominant));
                     expect(Object.keys(predominant)[0]).toBe(sentence["lexicon"]["global"][0]);
                 }, 60000);
             }
