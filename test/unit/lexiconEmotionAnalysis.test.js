@@ -23,15 +23,17 @@ describe(`Test for Lexicon classifier unit`, () => {
     describe(`Lexicon classifier test`, () => {
         config(process.env.MW_API_KEY, process.env.LANGUAGE_TRANSLATOR_IAM_APIKEY, process.env.LANGUAGE_TRANSLATOR_URL).then(async () => {
             for (let sentence of sentences) {
-                test(`Given ${sentence.text}, return the following lexicon`, async () => {
+                test(`Given ${sentence["text"]}, return the following lexicon`, async () => {
                     let attempts = [];
                     for (let i=0; i<number; i++) {
-                        let t = await tokenizer(sentence.text);
-                        t = t.flat();
+                        // mocking translate function, directly using the translated text
+                        let t = sentence["lines"];
+                        // let t = await tokenizer(sentence.translation !== null ? sentence.translation : sentence.text);
+                        // t = t.flat();
                         let global = [];
                         for (let j in t) {
                             let line = t[j];
-                            await lexicon(line, sentence.lang).then((res) => {
+                            await lexicon(line, "en").then((res) => {
                                 global.push(res);
                             });
                         }
@@ -44,7 +46,7 @@ describe(`Test for Lexicon classifier unit`, () => {
                         else predominant[a[0][0]] = predominant[a[0][0]] + ( a[0][1] / number);
                     }
                     // console.log (Object.keys(predominant));
-                    expect(Object.keys(predominant)[0]).toBe(sentence.lexicon.global[0]);
+                    expect(Object.keys(predominant)[0]).toBe(sentence["lexicon"]["global"][0]);
                 }, 60000);
             }
         });

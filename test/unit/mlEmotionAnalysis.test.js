@@ -17,7 +17,6 @@ dotenv.config({
     path: `${__dirname}/../../.env`
 });
 
-
 describe(`Test for Machine Learning classifier unit`, () => {
     describe(`Sentence ML classifier test (times: ${number})`, () => {
         config(process.env.LANGUAGE_TRANSLATOR_IAM_APIKEY, process.env.LANGUAGE_TRANSLATOR_URL).then(async (res) => {
@@ -26,7 +25,7 @@ describe(`Test for Machine Learning classifier unit`, () => {
                     const emotions = [];
                     let score = 0;
                     for (let i = 0; i < number; i++) {
-                        await classification(sentence.text, sentence.lang).then((res) => {
+                        await classification(sentence.text, sentence.lang, sentence.translation).then((res) => {
                             const val = res.emotions.data.predominant;
                             emotions.push(val.emotion);
                             score += parseFloat(val.weight);

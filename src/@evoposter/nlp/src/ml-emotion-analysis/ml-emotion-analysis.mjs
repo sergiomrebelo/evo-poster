@@ -20,7 +20,7 @@ import * as classifier from '../../data/classifier.cjs';
 let _isConfig = false;
 const net = new NeuralNetwork();
 
-export const classification = async (txt, lang='en') => {
+export const classification = async (txt, lang='en', translation = null) => {
    // check if the library is config
    try {
       isConfig();
@@ -37,7 +37,7 @@ export const classification = async (txt, lang='en') => {
    lang = isLangAvailable(lang);
 
    // translate text
-   if (lang !== 'en') {
+   if (lang !== 'en' && translation === null) {
       try {
          _translateResults = await translate(txt, lang);
          _translateResults = JSON.parse(_translateResults);
@@ -49,6 +49,9 @@ export const classification = async (txt, lang='en') => {
             success: false
          }
       }
+   } else if (translation !== null) {
+      txt = translation;
+      _rawEnTxt = txt;
    }
 
 

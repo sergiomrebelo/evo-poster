@@ -52,7 +52,7 @@ export const config = async (dict = null, key = null, serviceURL) => {
     });
 }
 
-export const lexicon = async (txt, lang = 'en') => {
+export const lexicon = async (txt, lang = 'en', translation = null) => {
     // check if the library is config
     try {
         isConfig();
