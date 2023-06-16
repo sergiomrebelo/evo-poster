@@ -43,12 +43,36 @@ export const inputForm = () => {
     const containerInner = container("div", ["row"]);
     const mainSection = container("section", ["input-form-outer", "col-10","offset-1", "mt-5"]);
 
-    const h1 = headline ("h1", `FORM`, ["mb-3"]);
-    mainSection.appendChild(h1);
+    const inputTextAreaContainer = container("div", ["form-group", "row", "mb-2"]);
+    const inputTextArea = document.createElement("textarea");
+    inputTextArea.id = `formControlTextarea`;
+    inputTextArea.classList.add("form-control", "col-sm-10");
+    inputTextArea.required = true;
+    inputTextArea.rows = 6;
+
+    const inputTextAreaLabel = createLabel(inputTextArea.id, "Input Text", ["col-sm-2","col-form-label-sm"])
+
+    inputTextAreaContainer.appendChild(inputTextAreaLabel);
+    inputTextAreaContainer.appendChild(inputTextArea);
+    mainSection.appendChild(inputTextAreaContainer);
+
+    //HERE
+
 
     containerOuter.appendChild(mainSection);
     containerOuter.appendChild(containerInner);
     return containerOuter;
+}
+
+
+export const createLabel = (id, textContent, classes = []) => {
+    const label = document.createElement("label");
+    label.setAttribute("for", id);
+    label.textContent = textContent;
+    for (let c of classes) {
+        label.classList.add(c);
+    }
+    return label;
 }
 
 export default inputForm;

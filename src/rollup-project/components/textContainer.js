@@ -44,6 +44,22 @@ export const container = (
     if (id !== null) container.id = id;
 
     return container;
+};
+
+export const createInput = (
+     type = "text",
+) => {
+
 }
+
+
+export const createTextArea = (
+    id=null, label = false, rows=10, required=true
+) => {
+
+}
+
+
+
 
 export default paragraphContainer;
