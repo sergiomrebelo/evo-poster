@@ -85,6 +85,19 @@ const resultsContainer = () => {
     return containerOuter;
 };
 
+const inputForm = () => {
+    const containerOuter = container("aside", ["container-fluid"]);
+    const containerInner = container("div", ["row"]);
+    const mainSection = container("section", ["input-form-outer", "col-10","offset-1", "mt-5"]);
+
+    const h1 = headline ("h1", `FORM`, ["mb-3"]);
+    mainSection.appendChild(h1);
+
+    containerOuter.appendChild(mainSection);
+    containerOuter.appendChild(containerInner);
+    return containerOuter;
+};
+
 class App {
     constructor()  {
         this.images = {
@@ -102,8 +115,11 @@ class App {
     }
 
     init = () => {
-        const screen = resultsContainer();
-        document.body.appendChild(screen);
+        const resultsScreen = resultsContainer();
+        const formInput = inputForm();
+        // screen.style(style);
+        document.body.appendChild(resultsScreen);
+        document.body.appendChild(formInput);
     }
 
 

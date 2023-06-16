@@ -1,3 +1,4 @@
+import style from './main.css';
 import {resultsContainer, inputForm} from './input.js';
 
 export default class App {
@@ -17,8 +18,11 @@ export default class App {
     }
 
     init = () => {
-        const screen = resultsContainer();
-        document.body.appendChild(screen);
+        const resultsScreen = resultsContainer();
+        const formInput = inputForm();
+        // screen.style(style);
+        document.body.appendChild(resultsScreen);
+        document.body.appendChild(formInput);
     }
 
 

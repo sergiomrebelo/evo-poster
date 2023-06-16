@@ -39,7 +39,16 @@ export const resultsContainer = () => {
 }
 
 export const inputForm = () => {
+    const containerOuter = container("aside", ["container-fluid"]);
+    const containerInner = container("div", ["row"]);
+    const mainSection = container("section", ["input-form-outer", "col-10","offset-1", "mt-5"]);
 
+    const h1 = headline ("h1", `FORM`, ["mb-3"]);
+    mainSection.appendChild(h1);
+
+    containerOuter.appendChild(mainSection);
+    containerOuter.appendChild(containerInner);
+    return containerOuter;
 }
 
 export default inputForm;
