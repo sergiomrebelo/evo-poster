@@ -24,6 +24,8 @@ const app = {
 window.onload = () => {
     const form = document.getElementById('input-form');
     const inputImages = document.getElementById('formControlImages');
+
+
     form.addEventListener('submit', get);
     inputImages.addEventListener('change', _uploadImages);
 

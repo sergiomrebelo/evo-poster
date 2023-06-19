@@ -25,6 +25,7 @@ export default class App {
     init = () => {
         const resultsScreen = resultsContainer();
         const formInput = inputForm();
+
         // screen.style(style);
         document.body.appendChild(resultsScreen);
         document.body.appendChild(formInput);

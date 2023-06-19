@@ -1,5 +1,3 @@
-
-
 import {container, input, headline, paragraphContainer, button} from './components/textContainer.js'
 
 const availableLanguages = [
@@ -25,7 +23,7 @@ export const resultsContainer = () => {
     const resultingSentences = paragraphContainer("","Sentences:", ["d-inline"], "temp-res-sentences");
     mainSection.appendChild(resultingSentences);
 
-    const classificationResults = paragraphContainer("","Classification results::", ["d-inline"], "temp-res-classification");
+    const classificationResults = paragraphContainer("","Classification results:", ["d-inline"], "temp-res-classification");
     mainSection.appendChild(classificationResults);
 
     const lexiconResultsContainer = container("div", ["mt-4"]);
@@ -50,7 +48,11 @@ export const resultsContainer = () => {
 export const inputForm = () => {
     const containerOuter = container("aside", ["container-fluid"]);
     const containerInner = container("div", ["row"]);
-    const mainSection = container("section", ["input-form-outer", "col-10","offset-1", "mt-5"]);
+    const section = container("section", ["input-form-outer", "col-10","offset-1", "mt-5"]);
+    const form = document.createElement("form");
+    form.id = "input-form";
+    form.classList.add("input-form-inner");
+    const mainSection = document.createElement("fieldset");
 
     const inputTextAreaContainer = container("div", ["form-group", "row", "mb-2"]);
     const inputTextArea = document.createElement("textarea");
@@ -64,7 +66,6 @@ export const inputForm = () => {
     inputTextAreaContainer.appendChild(inputTextAreaLabel);
     inputTextAreaContainer.appendChild(inputTextArea);
     mainSection.appendChild(inputTextAreaContainer);
-
 
     const inputSelectContainer = container("div", ["form-group", "row", "mb-2"]);
     const inputSelect = document.createElement("select");
@@ -82,7 +83,6 @@ export const inputForm = () => {
 
     inputSelectContainer.appendChild(inputSelectLabel);
     inputSelectContainer.appendChild(inputSelect);
-
     mainSection.appendChild(inputSelectContainer);
 
     mainSection.appendChild(divider());
@@ -142,10 +142,57 @@ export const inputForm = () => {
 
     mainSection.appendChild(submitContainer);
 
-    containerOuter.appendChild(mainSection);
+    form.appendChild(mainSection);
+    section.appendChild(form);
+
+    containerOuter.appendChild(section);
     containerOuter.appendChild(containerInner);
+
+    containerOuter.addEventListener("submit", get);
+
     return containerOuter;
 }
+
+
+const get = async (e) => {
+    e.preventDefault();
+    console.log(e, "inside");
+    /*let textArea = encodeURIComponent(document.getElementById('formControlTextarea').value);
+    const shouldDivide = document.getElementById('lineDivisionCheck').checked;
+    const lang = encodeURIComponent(document.getElementById('formControlLang').value);
+    app.images.randomPlacement = document.getElementById('imagePlacementCheck').checked;
+
+    let handler = `text`;
+    let delimiter;
+    if (!shouldDivide) {
+        delimiter = encodeURIComponent(document.getElementById('formControlTextDelimiter').value);
+        handler = `lines/${delimiter}`;
+    }
+
+    if (app.images.hasImages && !app.images.randomPlacement && !shouldDivide) {
+        let imageDelimiter = encodeURIComponent(document.getElementById('formControlImagePlaceholderDelimiter').value);
+        app.images.nAnchorPoints = [...textArea.matchAll(new RegExp(imageDelimiter,'g'))].length;
+        textArea = textArea.replaceAll(imageDelimiter, `${delimiter}${imageDelimiter}${delimiter}`);
+        if (app.images.nAnchorPoints !== app.images.amount) {
+            const relation = app.images.nAnchorPoints > app.images.amount ? 'higher' : 'smaller';
+            handleErr({ message: `the amount of image anchor points is ${relation} than the amount of upload images. (anchors:${app.images.nAnchorPoints} / images:${app.images.amount})`});
+        }
+    }
+
+    const url = `/${handler}/${lang}/${textArea}`;
+
+    fetch(url).then((response) => response.json()).then((result) => {
+        displayResults(result);
+    }).catch((error) => {
+        console.error('Error:', error);
+        handleErr({ message: `error on fetch. ${error}`});
+    });*/
+}
+
+
+
+
+
 
 
 export const createLabel = (id, textContent, classes = []) => {
