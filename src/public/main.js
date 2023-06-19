@@ -1,4 +1,4 @@
-const bootstrap = require('bootstrap');
+const bootstrap = require('bootstrap'); // ✅
 const style = require('./main.css');
 
 const availableLanguages = [
@@ -27,6 +27,7 @@ window.onload = () => {
     form.addEventListener('submit', get);
     inputImages.addEventListener('change', _uploadImages);
 
+    // ✅ DONE
     for (let lang of availableLanguages) {
         const option = document.createElement("option");
         option.textContent = lang;
@@ -35,6 +36,7 @@ window.onload = () => {
         document.getElementById('formControlLang').appendChild(option);
     }
 
+    // ❌
     document.getElementById('lineDivisionCheck').addEventListener('change', (e) => {
         if (e.target.checked) {
             document.getElementById('textDelimiterField').classList.add('d-none');

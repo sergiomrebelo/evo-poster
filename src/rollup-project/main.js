@@ -1,4 +1,9 @@
-import style from './main.css';
+import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';
+import './main.css';
+// TODO: (!) "this" has been rewritten to "undefined"
+import '../../node_modules/bootstrap/dist/js/bootstrap.bundle';
+
+
 import {resultsContainer, inputForm} from './input.js';
 
 export default class App {
