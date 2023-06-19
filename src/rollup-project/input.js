@@ -36,7 +36,15 @@ export const resultsContainer = () => {
     lexiconResultsContainer.appendChild(lexiconGlobalResult);
     mainSection.appendChild(lexiconResultsContainer);
 
+
+    const inputImagesLabel = headline("h3", "Input Images", ["d-none"], "input-images-headline");
+    mainSection.appendChild(inputImagesLabel);
+
     const inputImagesContainer = container("div", ["mt-4", "d-none"], "input-images");
+
+
+
+
     mainSection.appendChild(inputImagesContainer);
 
     containerOuter.appendChild(mainSection);

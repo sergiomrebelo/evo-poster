@@ -113,7 +113,15 @@ const resultsContainer = () => {
     lexiconResultsContainer.appendChild(lexiconGlobalResult);
     mainSection.appendChild(lexiconResultsContainer);
 
+
+    const inputImagesLabel = headline("h3", "Input Images", ["d-none"], "input-images-headline");
+    mainSection.appendChild(inputImagesLabel);
+
     const inputImagesContainer = container("div", ["mt-4", "d-none"], "input-images");
+
+
+
+
     mainSection.appendChild(inputImagesContainer);
 
     containerOuter.appendChild(mainSection);
@@ -281,6 +289,8 @@ class App {
         this.text = null;
         this.screen = 0;
 
+        this.IMAGE_SIZE = 1024; // in kb
+
         this.init();
     }
 
@@ -383,13 +393,13 @@ class App {
         for (let i = 0; i<files.length; i++) {
             const img = new Image();
             img.src = files[i];
-            img.classList.add('d-inline-block');
-            if (i > 0) img.classList.add(`mx-2`);
+            img.classList.add('d-inline-block', `mb-2`, `mr-2`);
             img.style.height = `100px`;
             img.style.width = `auto`;
             imgContainer.appendChild(img);
         }
         imgContainer.classList.replace('d-none', 'd-block');
+        document.getElementById("input-images-headline").classList.replace('d-none', 'd-block');
     }
 
     _readImages = async (files) => {
@@ -405,10 +415,17 @@ class App {
             });
         };
         for (let i = 0; i < files.length; i++) {
-            if (files[i].type.includes('image')) {
-                res.push(getBase64(files[i]));
+            console.log (`size size: ${Math.round(files[i].size/1024)}`);
+            if (files[i].size/1024 < this.IMAGE_SIZE) {
+                // if (files[i].size)
+                if (files[i].type.includes('image')) {
+                    res.push(getBase64(files[i]));
+                } else {
+                    err.push(files[i].name);
+                }
             } else {
-                err.push (files[i].name);
+                // handler
+                console.error (`size bigger than ${this.IMAGE_SIZE}`);
             }
         }
 
