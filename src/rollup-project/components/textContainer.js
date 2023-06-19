@@ -55,7 +55,7 @@ export const input = (
     for (let c of classes) {
         input.classList.add(c);
     }
-    if (id !== null) input.id = value;
+    if (id !== null) input.id = id;
     if (checked !== null) input.checked = checked;
     if (name !== null) input.name = name;
     return input;
@@ -63,10 +63,11 @@ export const input = (
 
 
 export const button = (
-    textContent, classes = [], type = null, o
+    textContent, classes = [], type = null, id = null
 ) => {
     const bt = document.createElement(`button`);
     if (type !== null) bt.type = type;
+    if (id !== null) bt.id = id;
     for (let c of classes) {
         bt.classList.add(c);
     }

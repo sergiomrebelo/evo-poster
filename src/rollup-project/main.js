@@ -1,7 +1,7 @@
 import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import './main.css';
 // TODO: (!) "this" has been rewritten to "undefined"
-import '../../node_modules/bootstrap/dist/js/bootstrap.bundle';
+// import '../../node_modules/bootstrap/dist/js/bootstrap.bundle';
 
 
 import {resultsContainer, inputForm} from './input.js';
@@ -28,11 +28,138 @@ export default class App {
 
         // screen.style(style);
         document.body.appendChild(resultsScreen);
+
         document.body.appendChild(formInput);
+        formInput.addEventListener("submit", this.get);
+        document.getElementById('formControlImages').addEventListener('change', this._uploadImages);
     }
 
+    get = async (e) => {
+        e.preventDefault();
+        let textArea = encodeURIComponent(document.getElementById('formControlTextarea').value);
+        const shouldDivide = document.getElementById('lineDivisionCheck').checked;
+        const lang = encodeURIComponent(document.getElementById('formControlLang').value);
 
+        let handler = `text`;
+        let delimiter;
+        if (!shouldDivide) {
+            delimiter = encodeURIComponent(document.getElementById('formControlTextDelimiter').value);
+            handler = `lines/${delimiter}`;
+        }
+
+        if (this.images.hasImages && !this.images.randomPlacement && !shouldDivide) {
+            let imageDelimiter = encodeURIComponent(document.getElementById('formControlImagePlaceholderDelimiter').value);
+            this.images.nAnchorPoints = [...textArea.matchAll(new RegExp(imageDelimiter,'g'))].length;
+            textArea = textArea.replaceAll(imageDelimiter, `${delimiter}${imageDelimiter}${delimiter}`);
+            if (this.images.nAnchorPoints !== app.images.amount) {
+                const relation = app.images.nAnchorPoints > app.images.amount ? 'higher' : 'smaller';
+                // handleErr({ message: `the amount of image anchor points is ${relation} than the amount of upload images. (anchors:${app.images.nAnchorPoints} / images:${app.images.amount})`});
+                console.error({ message: `the amount of image anchor points is ${relation} than the amount of upload images. (anchors:${app.images.nAnchorPoints} / images:${app.images.amount})`});
+            }
+        }
+
+
+        const url = `/${handler}/${lang}/${textArea}`;
+
+        fetch(url).then((response) => response.json()).then((result) => {
+            this._displayResults(result);
+        }).catch((error) => {
+            console.error('Error:', error);
+            // handleErr({ message: `error on fetch. ${error}`});
+            console.error ({ message: `error on fetch. ${error}`});
+        });
+    }
+
+    _displayResults = async (res) => {
+        if (!res.success)  {
+            // return handleErr(res);
+            console.log(res.err);
+        }
+
+        document.getElementById('temp-res-text').textContent = `${res.text} (${res.lang})`;
+        document.getElementById('temp-res-sentences').textContent = `${res.sentences.flat()} (${res.sentences.flat().length})`;
+        document.getElementById('temp-res-classification').textContent = `${res.classification.emotions.data.predominant.emotion} (${res.classification.emotions.data.predominant.weight})`;
+        const el = document.getElementById('temp-res-lexicon-lines');
+        el.innerHTML = '';
+        for (let i in res.lexicon.sentences) {
+            const sentence = res.lexicon.sentences[i]
+            const span = document.createElement("span");
+            span.innerHTML = `[${i}] ${sentence.text} (${sentence.emotions.data.predominant.emotion}, ${sentence.emotions.data.predominant.weight}) <br>`;
+            el.appendChild(span);
+        }
+
+        document.getElementById('temp-res-lexicon-global').innerHTML = `<b>global lexicon</b>: ${res.lexicon.global[0][0]} (${res.lexicon.global[0][1]})`
+        document.getElementById('temp-info').classList.replace('d-none', 'd-block');
+        document.querySelector('#input-form fieldset').disabled = true;
+        document.getElementById('btReload').enable = true;
+
+        const btReload =  document.getElementById(`btReload`);
+        btReload.disabled = false;
+        btReload.classList.replace('d-none', 'd-block');
+    }
+
+    _uploadImages = async (e) => {
+        this.images.blobs = [];
+        this.images.hasImages = true;
+        this.images.loading = true;
+        this.images.amount = e.target.files.length;
+
+       this.images.blobs = await this._readImages(e.target.files).catch((err) => {
+            console.error (`not possible to load the image ${err}`);
+            // handleErr({ message: `error on uploading image(s). ${err}`});
+        })
+
+        this.images.loading = false;
+        this._displayImages(this.images.blobs);
+
+    }
+
+    _displayImages = (files) => {
+        const imgContainer = document.getElementById('input-images');
+        imgContainer.innerHTML = ``;
+
+        for (let i = 0; i<files.length; i++) {
+            const img = new Image();
+            img.src = files[i];
+            img.classList.add('d-inline-block');
+            if (i > 0) img.classList.add(`mx-2`);
+            img.style.height = `100px`;
+            img.style.width = `auto`;
+            imgContainer.appendChild(img);
+        }
+        imgContainer.classList.replace('d-none', 'd-block');
+    }
+
+    _readImages = async (files) => {
+        const res = [];
+        let err = [];
+        const getBase64 = (file) => {
+            const reader = new FileReader()
+            return new Promise(resolve => {
+                reader.onload = (ev) => {
+                    resolve(ev.target.result)
+                }
+                reader.readAsDataURL(file);
+            });
+        };
+        for (let i = 0; i < files.length; i++) {
+            if (files[i].type.includes('image')) {
+                res.push(getBase64(files[i]));
+            } else {
+                err.push (files[i].name);
+            }
+        }
+
+        if (err.length > 0) {
+            // ERROR
+            // handleErr({message: `error loading the following image(s): ${err.flat()}`});
+            console.error({message: `error loading the following image(s): ${err.flat()}`});
+        }
+
+        return await Promise.all(res);
+    }
 }
+
 
 window.onload = () => {
     const app = new App();
