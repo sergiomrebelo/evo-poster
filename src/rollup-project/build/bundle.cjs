@@ -86,43 +86,46 @@ const availableLanguages = [
 ];
 
 const resultsContainer = () => {
-    const containerOuter = container("div", ["temp-results", "container-fluid", "bg-light"], "temp-info");
+    const containerOuter = container("div", ["temp-results", "container-fluid"], "temp-info");
     const containerInner = container("div", ["row"]);
-    const mainSection = container("section", ["col-10", "offset-1", "my-5"]);
 
-    const h1 = headline("h1", `Emotional analysis Results`, ["mb-3"]);
+    const mainSection = container("section", ["col-10", "offset-1", "my-4"]);
+
+    const h1 = headline("h1", `Evolving Posters`, ["mb-3"]);
     mainSection.appendChild(h1);
 
+    const resultsSection = container("div", ["results-info", "d-none"], `info-results-section`);
+
+
     // create only when it shows results
-    const inputText = paragraphContainer("", "Text:", ["d-inline"], "temp-res-text");
-    mainSection.appendChild(inputText);
+    const inputText = paragraphContainer("", "Input Text: ", ["d-inline"], "temp-res-text");
+    resultsSection.appendChild(inputText);
 
-    const resultingSentences = paragraphContainer("", "Sentences:", ["d-inline"], "temp-res-sentences");
-    mainSection.appendChild(resultingSentences);
+    const resultingSentences = paragraphContainer("", "Sentences: ", ["d-inline"], "temp-res-sentences");
+    resultsSection.appendChild(resultingSentences);
 
-    const classificationResults = paragraphContainer("", "Classification results:", ["d-inline"], "temp-res-classification");
-    mainSection.appendChild(classificationResults);
+    const classificationResults = paragraphContainer("", "Classification results: ", ["d-inline"], "temp-res-classification");
+    resultsSection.appendChild(classificationResults);
 
     const lexiconResultsContainer = container("div", ["mt-4"]);
-    const lexiconHeadline = headline("h3", "Lexicon results");
+    const lexiconHeadline = headline("h3", "Lexicon results:", ["d-block", "my-0"]);
     const lexiconResultsLines = container("div", [], "temp-res-lexicon-lines");
     const lexiconGlobalResult = paragraphContainer("", null, [], "temp-res-lexicon-global");
 
     lexiconResultsContainer.appendChild(lexiconHeadline);
     lexiconResultsContainer.appendChild(lexiconResultsLines);
     lexiconResultsContainer.appendChild(lexiconGlobalResult);
-    mainSection.appendChild(lexiconResultsContainer);
+    resultsSection.appendChild(lexiconResultsContainer);
+
+    mainSection.appendChild(resultsSection);
 
 
-    const inputImagesLabel = headline("h3", "Input Images", ["d-none"], "input-images-headline");
+    const inputImagesLabel = headline("h3", "Input Images", ["d-none", "text-uppercase"], "input-images-headline");
     mainSection.appendChild(inputImagesLabel);
 
     const inputImagesContainer = container("div", ["mt-4", "d-none"], "input-images");
-
-
-
-
     mainSection.appendChild(inputImagesContainer);
+
 
     containerOuter.appendChild(mainSection);
     containerOuter.appendChild(containerInner);
@@ -156,7 +159,7 @@ const inputForm = () => {
     const inputSelect = document.createElement("select");
     inputSelect.id = `formControlLang`;
     inputSelect.classList.add('form-control', 'form-control-lg');
-    const inputSelectLabel = createLabel(inputSelect.id, "Language");
+    const inputSelectLabel = createLabel(inputSelect.id, "Language", ["col-form-label-sm"]);
 
     for (let lang of availableLanguages) {
         const option = document.createElement("option");
@@ -174,7 +177,7 @@ const inputForm = () => {
 
     const lineDivisionContainer = container("div", ["form-check", "form-check-inline", "mb-2"], `lineDivisionField`);
     const checkAutomaticLineDivision = input(`checkbox`, "1", ["form-check-input"], "lineDivisionCheck", true);
-    const labelCheckAutomaticLineDivision = createLabel(checkAutomaticLineDivision.id, "Automatic line division", ["form-check-label"]);
+    const labelCheckAutomaticLineDivision = createLabel(checkAutomaticLineDivision.id, "Automatic line division", ["form-check-label", "col-form-label-sm"]);
 
 
     checkAutomaticLineDivision.addEventListener('change', (e) => {
@@ -188,7 +191,7 @@ const inputForm = () => {
 
     const textDelimiterContainer = container("div", ["form-group", "row", "mb-2", "d-none"], `textDelimiterField`);
     const inputTextDelimiter = input("text", "¶", ["form-control", "form-control-lg"], "formControlTextDelimiter");
-    const inputTextDelimiterLabel = createLabel(inputTextDelimiter.id, "Text Line delimiter");
+    const inputTextDelimiterLabel = createLabel(inputTextDelimiter.id, "Text Line delimiter", ["col-form-label-sm"]);
 
 
     lineDivisionContainer.appendChild(labelCheckAutomaticLineDivision);
@@ -205,16 +208,15 @@ const inputForm = () => {
     const inputImagesContainer = input("file", null, ["form-control-file"], "formControlImages", "files[]");
     inputImagesContainer.accept = "image/jpeg, image/png, image/jpg";
     inputImagesContainer.multiple = true;
-    const inputImagesContainerLabel = createLabel(inputImagesContainer.id, "Images");
+    const inputImagesContainerLabel = createLabel(inputImagesContainer.id, "Images", ["col-form-label-sm"]);
 
     imagesContainer.appendChild(inputImagesContainerLabel);
     imagesContainer.appendChild(inputImagesContainer);
-    // TODO: check size
     mainSection.appendChild(imagesContainer);
 
     const imagePlacementCheckContainer = container("div", ["form-check", "form-check-inline", "mb-2", "d-none"], "imagePlacementField");
     const inputImagePlacementCheck = input(`checkbox`, "1", ["form-check-input"], "imagePlacementCheck", true);
-    const inputImagePlacementCheckLabel = createLabel(inputImagePlacementCheck.id, "Image Random Placement", ["form-check-label"]);
+    const inputImagePlacementCheckLabel = createLabel(inputImagePlacementCheck.id, "Image Random Placement", ["form-check-label", "col-form-label-sm"]);
     imagePlacementCheckContainer.appendChild(inputImagePlacementCheckLabel);
     imagePlacementCheckContainer.appendChild(inputImagePlacementCheck);
     mainSection.appendChild(imagePlacementCheckContainer);
@@ -231,7 +233,7 @@ const inputForm = () => {
 
     const imagePlaceholderDelimiterContainer = container("div", ["form-group", "row", "mb-2", "d-none"], "imageAnchorField");
     const imagePlaceholderDelimiterInput = input(`text`, null, ["form-control", "form-control-lg"], "formControlImagePlaceholderDelimiter", false);
-    const imagePlaceholderDelimiterLabel = createLabel(imagePlaceholderDelimiterInput.id, "Image Placement Anchor");
+    const imagePlaceholderDelimiterLabel = createLabel(imagePlaceholderDelimiterInput.id, "Image Placement Anchor", ["col-form-label-sm"]);
     imagePlaceholderDelimiterContainer.appendChild(imagePlaceholderDelimiterLabel);
     imagePlaceholderDelimiterContainer.appendChild(imagePlaceholderDelimiterInput);
     mainSection.appendChild(imagePlaceholderDelimiterContainer);
@@ -250,13 +252,18 @@ const inputForm = () => {
     form.appendChild(mainSection);
     section.appendChild(form);
 
-    const reloadBt = button("New Analysis", ["btn", "d-none", "btn-secondary"], null, "btReload");
+    const reloadBt = button("New Analysis", ["btn", "d-none", "btn-secondary", "my-2", "nextBts"], null, "btReload");
     reloadBt.disabled = true;
     reloadBt.onclick = () => {
         window.location.reload();
     };
 
+    const nextBt = button("Next", ["btn", "d-none", "btn-primary", "my-2", "nextBts", "mx-3"], null, "btNext");
+    nextBt.disabled = true;
+
     section.appendChild(reloadBt);
+    section.appendChild(nextBt);
+
     containerOuter.appendChild(section);
     containerOuter.appendChild(containerInner);
     return containerOuter;
@@ -273,7 +280,34 @@ const createLabel = (id, textContent, classes = []) => {
 };
 
 const divider = () => {
-    return container("div", ["my-5"]);
+    return container("div", ["my-4"]);
+};
+
+const errorHandler = (res = {success: false}) => {
+
+
+    // remove any message
+    document.querySelectorAll(`#error-handle`).forEach((el) => {
+        el.remove();
+    });
+
+
+    const containerOuter = container("div", ["temp-results", "container-fluid", "bg-light",], "error-handle");
+    const containerInner = container("div", ["row"]);
+    const mainSection = container("section", ["col-12", "bg-warning", "p-3"]);
+    const info = container("span", [], "err-message");
+    info.innerHTML = res.message;
+
+
+    mainSection.appendChild(info);
+    containerInner.appendChild(mainSection);
+    containerOuter.appendChild(containerInner);
+
+    document.body.appendChild(containerOuter);
+
+
+
+    return containerOuter;
 };
 
 class App {
@@ -325,11 +359,9 @@ class App {
             textArea = textArea.replaceAll(imageDelimiter, `${delimiter}${imageDelimiter}${delimiter}`);
             if (this.images.nAnchorPoints !== app.images.amount) {
                 const relation = app.images.nAnchorPoints > app.images.amount ? 'higher' : 'smaller';
-                // handleErr({ message: `the amount of image anchor points is ${relation} than the amount of upload images. (anchors:${app.images.nAnchorPoints} / images:${app.images.amount})`});
-                console.error({ message: `the amount of image anchor points is ${relation} than the amount of upload images. (anchors:${app.images.nAnchorPoints} / images:${app.images.amount})`});
+                errorHandler({ message: `the amount of image anchor points is ${relation} than the amount of upload images. (anchors:${app.images.nAnchorPoints} / images:${app.images.amount})`});
             }
         }
-
 
         const url = `/${handler}/${lang}/${textArea}`;
 
@@ -337,15 +369,13 @@ class App {
             this._displayResults(result);
         }).catch((error) => {
             console.error('Error:', error);
-            // handleErr({ message: `error on fetch. ${error}`});
-            console.error ({ message: `error on fetch. ${error}`});
+            errorHandler ({ message: `error on fetch. ${error}`});
         });
     }
 
     _displayResults = async (res) => {
         if (!res.success)  {
-            // return handleErr(res);
-            console.log(res.err);
+            errorHandler(res.err);
         }
 
         document.getElementById('temp-res-text').textContent = `${res.text} (${res.lang})`;
@@ -365,9 +395,15 @@ class App {
         document.querySelector('#input-form fieldset').disabled = true;
         document.getElementById('btReload').enable = true;
 
-        const btReload =  document.getElementById(`btReload`);
-        btReload.disabled = false;
-        btReload.classList.replace('d-none', 'd-block');
+
+        const section = document.getElementById(`info-results-section`);
+        section.classList.replace('d-none', 'd-block');
+
+        const bts =  document.querySelectorAll(`.nextBts`);
+        bts.forEach((el) => {
+            el.disabled = false;
+            el.classList.replace('d-none', 'd-inline');
+        });
     }
 
     _uploadImages = async (e) => {
@@ -377,8 +413,7 @@ class App {
         this.images.amount = e.target.files.length;
 
        this.images.blobs = await this._readImages(e.target.files).catch((err) => {
-            console.error (`not possible to load the image ${err}`);
-            // handleErr({ message: `error on uploading image(s). ${err}`});
+           errorHandler (`not possible to load the image ${err}`);
         });
 
         this.images.loading = false;
@@ -414,25 +449,30 @@ class App {
                 reader.readAsDataURL(file);
             });
         };
+
         for (let i = 0; i < files.length; i++) {
-            console.log (`size size: ${Math.round(files[i].size/1024)}`);
             if (files[i].size/1024 < this.IMAGE_SIZE) {
                 // if (files[i].size)
                 if (files[i].type.includes('image')) {
                     res.push(getBase64(files[i]));
                 } else {
-                    err.push(files[i].name);
+                    err.push(`error loading the following image(s): ${files[i].name}.`);
                 }
             } else {
-                // handler
-                console.error (`size bigger than ${this.IMAGE_SIZE}`);
+                err.push(`${files[i].name} size bigger than ${this.IMAGE_SIZE}.`);
             }
         }
 
         if (err.length > 0) {
-            // ERROR
-            // handleErr({message: `error loading the following image(s): ${err.flat()}`});
-            console.error({message: `error loading the following image(s): ${err.flat()}`});
+            let msg = "";
+            for (let i=0; i<err.length; i++) {
+                msg += err[i];
+                if (i !== err.length-1) {
+                    msg += "<br>";
+                }
+            }
+
+            errorHandler({message: msg});
         }
 
         return await Promise.all(res);

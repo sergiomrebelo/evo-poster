@@ -1,10 +1,11 @@
 import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import './main.css';
+
 // TODO: (!) "this" has been rewritten to "undefined"
 // import '../../node_modules/bootstrap/dist/js/bootstrap.bundle';
 
-
 import {resultsContainer, inputForm} from './input.js';
+import errorHandler from "./components/information-message.js";
 
 export default class App {
     constructor()  {
@@ -55,11 +56,9 @@ export default class App {
             textArea = textArea.replaceAll(imageDelimiter, `${delimiter}${imageDelimiter}${delimiter}`);
             if (this.images.nAnchorPoints !== app.images.amount) {
                 const relation = app.images.nAnchorPoints > app.images.amount ? 'higher' : 'smaller';
-                // handleErr({ message: `the amount of image anchor points is ${relation} than the amount of upload images. (anchors:${app.images.nAnchorPoints} / images:${app.images.amount})`});
-                console.error({ message: `the amount of image anchor points is ${relation} than the amount of upload images. (anchors:${app.images.nAnchorPoints} / images:${app.images.amount})`});
+                errorHandler({ message: `the amount of image anchor points is ${relation} than the amount of upload images. (anchors:${app.images.nAnchorPoints} / images:${app.images.amount})`});
             }
         }
-
 
         const url = `/${handler}/${lang}/${textArea}`;
 
@@ -67,15 +66,13 @@ export default class App {
             this._displayResults(result);
         }).catch((error) => {
             console.error('Error:', error);
-            // handleErr({ message: `error on fetch. ${error}`});
-            console.error ({ message: `error on fetch. ${error}`});
+            errorHandler ({ message: `error on fetch. ${error}`});
         });
     }
 
     _displayResults = async (res) => {
         if (!res.success)  {
-            // return handleErr(res);
-            console.log(res.err);
+            errorHandler(res.err);
         }
 
         document.getElementById('temp-res-text').textContent = `${res.text} (${res.lang})`;
@@ -95,9 +92,15 @@ export default class App {
         document.querySelector('#input-form fieldset').disabled = true;
         document.getElementById('btReload').enable = true;
 
-        const btReload =  document.getElementById(`btReload`);
-        btReload.disabled = false;
-        btReload.classList.replace('d-none', 'd-block');
+
+        const section = document.getElementById(`info-results-section`);
+        section.classList.replace('d-none', 'd-block');
+
+        const bts =  document.querySelectorAll(`.nextBts`);
+        bts.forEach((el) => {
+            el.disabled = false;
+            el.classList.replace('d-none', 'd-inline');
+        });
     }
 
     _uploadImages = async (e) => {
@@ -107,8 +110,7 @@ export default class App {
         this.images.amount = e.target.files.length;
 
        this.images.blobs = await this._readImages(e.target.files).catch((err) => {
-            console.error (`not possible to load the image ${err}`);
-            // handleErr({ message: `error on uploading image(s). ${err}`});
+           errorHandler (`not possible to load the image ${err}`);
         })
 
         this.images.loading = false;
@@ -144,25 +146,30 @@ export default class App {
                 reader.readAsDataURL(file);
             });
         };
+
         for (let i = 0; i < files.length; i++) {
-            console.log (`size size: ${Math.round(files[i].size/1024)}`)
             if (files[i].size/1024 < this.IMAGE_SIZE) {
                 // if (files[i].size)
                 if (files[i].type.includes('image')) {
                     res.push(getBase64(files[i]));
                 } else {
-                    err.push(files[i].name);
+                    err.push(`error loading the following image(s): ${files[i].name}.`);
                 }
             } else {
-                // handler
-                console.error (`size bigger than ${this.IMAGE_SIZE}`);
+                err.push(`${files[i].name} size bigger than ${this.IMAGE_SIZE} kb.`);
             }
         }
 
         if (err.length > 0) {
-            // ERROR
-            // handleErr({message: `error loading the following image(s): ${err.flat()}`});
-            console.error({message: `error loading the following image(s): ${err.flat()}`});
+            let msg = "";
+            for (let i=0; i<err.length; i++) {
+                msg += err[i];
+                if (i !== err.length-1) {
+                    msg += "<br>";
+                }
+            }
+
+            errorHandler({message: msg});
         }
 
         return await Promise.all(res);

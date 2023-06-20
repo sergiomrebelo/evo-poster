@@ -9,43 +9,46 @@ const availableLanguages = [
 ];
 
 export const resultsContainer = () => {
-    const containerOuter = container("div", ["temp-results", "container-fluid", "bg-light"], "temp-info");
+    const containerOuter = container("div", ["temp-results", "container-fluid"], "temp-info");
     const containerInner = container("div", ["row"]);
-    const mainSection = container("section", ["col-10", "offset-1", "my-5"]);
 
-    const h1 = headline("h1", `Emotional analysis Results`, ["mb-3"]);
+    const mainSection = container("section", ["col-10", "offset-1", "my-4"]);
+
+    const h1 = headline("h1", `Evolving Posters`, ["mb-3"]);
     mainSection.appendChild(h1);
 
+    const resultsSection = container("div", ["results-info", "d-none"], `info-results-section`);
+
+
     // create only when it shows results
-    const inputText = paragraphContainer("", "Text:", ["d-inline"], "temp-res-text");
-    mainSection.appendChild(inputText);
+    const inputText = paragraphContainer("", "Input Text: ", ["d-inline"], "temp-res-text");
+    resultsSection.appendChild(inputText);
 
-    const resultingSentences = paragraphContainer("", "Sentences:", ["d-inline"], "temp-res-sentences");
-    mainSection.appendChild(resultingSentences);
+    const resultingSentences = paragraphContainer("", "Sentences: ", ["d-inline"], "temp-res-sentences");
+    resultsSection.appendChild(resultingSentences);
 
-    const classificationResults = paragraphContainer("", "Classification results:", ["d-inline"], "temp-res-classification");
-    mainSection.appendChild(classificationResults);
+    const classificationResults = paragraphContainer("", "Classification results: ", ["d-inline"], "temp-res-classification");
+    resultsSection.appendChild(classificationResults);
 
     const lexiconResultsContainer = container("div", ["mt-4"]);
-    const lexiconHeadline = headline("h3", "Lexicon results");
+    const lexiconHeadline = headline("h3", "Lexicon results:", ["d-block", "my-0"]);
     const lexiconResultsLines = container("div", [], "temp-res-lexicon-lines");
     const lexiconGlobalResult = paragraphContainer("", null, [], "temp-res-lexicon-global");
 
     lexiconResultsContainer.appendChild(lexiconHeadline);
     lexiconResultsContainer.appendChild(lexiconResultsLines);
     lexiconResultsContainer.appendChild(lexiconGlobalResult);
-    mainSection.appendChild(lexiconResultsContainer);
+    resultsSection.appendChild(lexiconResultsContainer);
+
+    mainSection.appendChild(resultsSection);
 
 
-    const inputImagesLabel = headline("h3", "Input Images", ["d-none"], "input-images-headline");
+    const inputImagesLabel = headline("h3", "Input Images", ["d-none", "text-uppercase"], "input-images-headline");
     mainSection.appendChild(inputImagesLabel);
 
     const inputImagesContainer = container("div", ["mt-4", "d-none"], "input-images");
-
-
-
-
     mainSection.appendChild(inputImagesContainer);
+
 
     containerOuter.appendChild(mainSection);
     containerOuter.appendChild(containerInner);
@@ -79,7 +82,7 @@ export const inputForm = () => {
     const inputSelect = document.createElement("select");
     inputSelect.id = `formControlLang`;
     inputSelect.classList.add('form-control', 'form-control-lg');
-    const inputSelectLabel = createLabel(inputSelect.id, "Language");
+    const inputSelectLabel = createLabel(inputSelect.id, "Language", ["col-form-label-sm"]);
 
     for (let lang of availableLanguages) {
         const option = document.createElement("option");
@@ -97,7 +100,7 @@ export const inputForm = () => {
 
     const lineDivisionContainer = container("div", ["form-check", "form-check-inline", "mb-2"], `lineDivisionField`);
     const checkAutomaticLineDivision = input(`checkbox`, "1", ["form-check-input"], "lineDivisionCheck", true);
-    const labelCheckAutomaticLineDivision = createLabel(checkAutomaticLineDivision.id, "Automatic line division", ["form-check-label"]);
+    const labelCheckAutomaticLineDivision = createLabel(checkAutomaticLineDivision.id, "Automatic line division", ["form-check-label", "col-form-label-sm"]);
 
 
     checkAutomaticLineDivision.addEventListener('change', (e) => {
@@ -111,7 +114,7 @@ export const inputForm = () => {
 
     const textDelimiterContainer = container("div", ["form-group", "row", "mb-2", "d-none"], `textDelimiterField`);
     const inputTextDelimiter = input("text", "¶", ["form-control", "form-control-lg"], "formControlTextDelimiter");
-    const inputTextDelimiterLabel = createLabel(inputTextDelimiter.id, "Text Line delimiter");
+    const inputTextDelimiterLabel = createLabel(inputTextDelimiter.id, "Text Line delimiter", ["col-form-label-sm"]);
 
 
     lineDivisionContainer.appendChild(labelCheckAutomaticLineDivision);
@@ -128,16 +131,15 @@ export const inputForm = () => {
     const inputImagesContainer = input("file", null, ["form-control-file"], "formControlImages", "files[]");
     inputImagesContainer.accept = "image/jpeg, image/png, image/jpg";
     inputImagesContainer.multiple = true;
-    const inputImagesContainerLabel = createLabel(inputImagesContainer.id, "Images");
+    const inputImagesContainerLabel = createLabel(inputImagesContainer.id, "Images", ["col-form-label-sm"]);
 
     imagesContainer.appendChild(inputImagesContainerLabel);
     imagesContainer.appendChild(inputImagesContainer);
-    // TODO: check size
     mainSection.appendChild(imagesContainer);
 
     const imagePlacementCheckContainer = container("div", ["form-check", "form-check-inline", "mb-2", "d-none"], "imagePlacementField");
     const inputImagePlacementCheck = input(`checkbox`, "1", ["form-check-input"], "imagePlacementCheck", true);
-    const inputImagePlacementCheckLabel = createLabel(inputImagePlacementCheck.id, "Image Random Placement", ["form-check-label"]);
+    const inputImagePlacementCheckLabel = createLabel(inputImagePlacementCheck.id, "Image Random Placement", ["form-check-label", "col-form-label-sm"]);
     imagePlacementCheckContainer.appendChild(inputImagePlacementCheckLabel);
     imagePlacementCheckContainer.appendChild(inputImagePlacementCheck);
     mainSection.appendChild(imagePlacementCheckContainer);
@@ -154,7 +156,7 @@ export const inputForm = () => {
 
     const imagePlaceholderDelimiterContainer = container("div", ["form-group", "row", "mb-2", "d-none"], "imageAnchorField");
     const imagePlaceholderDelimiterInput = input(`text`, null, ["form-control", "form-control-lg"], "formControlImagePlaceholderDelimiter", false)
-    const imagePlaceholderDelimiterLabel = createLabel(imagePlaceholderDelimiterInput.id, "Image Placement Anchor");
+    const imagePlaceholderDelimiterLabel = createLabel(imagePlaceholderDelimiterInput.id, "Image Placement Anchor", ["col-form-label-sm"]);
     imagePlaceholderDelimiterContainer.appendChild(imagePlaceholderDelimiterLabel);
     imagePlaceholderDelimiterContainer.appendChild(imagePlaceholderDelimiterInput);
     mainSection.appendChild(imagePlaceholderDelimiterContainer);
@@ -173,13 +175,18 @@ export const inputForm = () => {
     form.appendChild(mainSection);
     section.appendChild(form);
 
-    const reloadBt = button("New Analysis", ["btn", "d-none", "btn-secondary"], null, "btReload");
+    const reloadBt = button("New Analysis", ["btn", "d-none", "btn-secondary", "my-2", "nextBts"], null, "btReload");
     reloadBt.disabled = true;
     reloadBt.onclick = () => {
         window.location.reload();
     }
 
+    const nextBt = button("Next", ["btn", "d-none", "btn-primary", "my-2", "nextBts", "mx-3"], null, "btNext");
+    nextBt.disabled = true;
+
     section.appendChild(reloadBt);
+    section.appendChild(nextBt);
+
     containerOuter.appendChild(section);
     containerOuter.appendChild(containerInner);
     return containerOuter;
@@ -196,7 +203,7 @@ export const createLabel = (id, textContent, classes = []) => {
 }
 
 const divider = () => {
-    return container("div", ["my-5"]);
+    return container("div", ["my-4"]);
 }
 
 export default inputForm;
