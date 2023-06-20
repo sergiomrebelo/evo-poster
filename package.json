@@ -11,6 +11,7 @@
     "cross-env": "^7.0.3",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
+    "p5js": "^1.2.18",
     "pm2": "^5.3.0"
   },
   "babel": {
@@ -21,6 +22,7 @@
   "scripts": {
     "test": "cross-env NODE_OPTIONS=--experimental-vm-modules npx jest",
     "build2": "rollup --config",
+    "watch2": "rollup -c -w",
     "build": "browserify -t [ browserify-css --minify=true --output public/bundle.css ] public/main.js -o public/bundle.js",
     "watch": "watchify -t [ browserify-css --minify=true --output public/bundle.css ] public/main.js -o public/bundle.js",
     "dev": "nodemon --exec babel-node src/index.js",

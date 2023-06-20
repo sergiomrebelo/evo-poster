@@ -1,4 +1,4 @@
-import {container, input, headline, paragraphContainer, button} from './components/textContainer.js'
+import {container, inputField, headline, paragraphContainer, button} from './utils.js'
 
 const availableLanguages = [
     'ar', 'bn', 'bs', 'bg', 'zh', 'hr', 'cs', 'da', 'nl', 'en',
@@ -99,7 +99,7 @@ export const inputForm = () => {
     mainSection.appendChild(divider());
 
     const lineDivisionContainer = container("div", ["form-check", "form-check-inline", "mb-2"], `lineDivisionField`);
-    const checkAutomaticLineDivision = input(`checkbox`, "1", ["form-check-input"], "lineDivisionCheck", true);
+    const checkAutomaticLineDivision = inputField(`checkbox`, "1", ["form-check-input"], "lineDivisionCheck", true);
     const labelCheckAutomaticLineDivision = createLabel(checkAutomaticLineDivision.id, "Automatic line division", ["form-check-label", "col-form-label-sm"]);
 
 
@@ -113,7 +113,7 @@ export const inputForm = () => {
     });
 
     const textDelimiterContainer = container("div", ["form-group", "row", "mb-2", "d-none"], `textDelimiterField`);
-    const inputTextDelimiter = input("text", "¶", ["form-control", "form-control-lg"], "formControlTextDelimiter");
+    const inputTextDelimiter = inputField("text", "¶", ["form-control", "form-control-lg"], "formControlTextDelimiter");
     const inputTextDelimiterLabel = createLabel(inputTextDelimiter.id, "Text Line delimiter", ["col-form-label-sm"]);
 
 
@@ -128,7 +128,7 @@ export const inputForm = () => {
     mainSection.appendChild(divider());
 
     const imagesContainer = container("div", ["form-group", "row", "mb-2"]);
-    const inputImagesContainer = input("file", null, ["form-control-file"], "formControlImages", "files[]");
+    const inputImagesContainer = inputField("file", null, ["form-control-file"], "formControlImages", "files[]");
     inputImagesContainer.accept = "image/jpeg, image/png, image/jpg";
     inputImagesContainer.multiple = true;
     const inputImagesContainerLabel = createLabel(inputImagesContainer.id, "Images", ["col-form-label-sm"]);
@@ -138,7 +138,7 @@ export const inputForm = () => {
     mainSection.appendChild(imagesContainer);
 
     const imagePlacementCheckContainer = container("div", ["form-check", "form-check-inline", "mb-2", "d-none"], "imagePlacementField");
-    const inputImagePlacementCheck = input(`checkbox`, "1", ["form-check-input"], "imagePlacementCheck", true);
+    const inputImagePlacementCheck = inputField(`checkbox`, "1", ["form-check-input"], "imagePlacementCheck", true);
     const inputImagePlacementCheckLabel = createLabel(inputImagePlacementCheck.id, "Image Random Placement", ["form-check-label", "col-form-label-sm"]);
     imagePlacementCheckContainer.appendChild(inputImagePlacementCheckLabel);
     imagePlacementCheckContainer.appendChild(inputImagePlacementCheck);
@@ -155,7 +155,7 @@ export const inputForm = () => {
     });
 
     const imagePlaceholderDelimiterContainer = container("div", ["form-group", "row", "mb-2", "d-none"], "imageAnchorField");
-    const imagePlaceholderDelimiterInput = input(`text`, null, ["form-control", "form-control-lg"], "formControlImagePlaceholderDelimiter", false)
+    const imagePlaceholderDelimiterInput = inputField(`text`, null, ["form-control", "form-control-lg"], "formControlImagePlaceholderDelimiter", false)
     const imagePlaceholderDelimiterLabel = createLabel(imagePlaceholderDelimiterInput.id, "Image Placement Anchor", ["col-form-label-sm"]);
     imagePlaceholderDelimiterContainer.appendChild(imagePlaceholderDelimiterLabel);
     imagePlaceholderDelimiterContainer.appendChild(imagePlaceholderDelimiterInput);
@@ -166,12 +166,9 @@ export const inputForm = () => {
     const submitContainer = container("div", ["col-auto"]);
     const submitBt = button("Submit", ["btn", "btn-primary", "mb-2"], "submit");
 
-    const resetBt = button("Reset", ["btn", "btn-secondary", "mx-3", "mb-2"], "reset");
-
     submitContainer.appendChild(submitBt);
-    submitContainer.appendChild(resetBt);
-
     mainSection.appendChild(submitContainer);
+
     form.appendChild(mainSection);
     section.appendChild(form);
 
@@ -181,7 +178,7 @@ export const inputForm = () => {
         window.location.reload();
     }
 
-    const nextBt = button("Next", ["btn", "d-none", "btn-primary", "my-2", "nextBts", "mx-3"], null, "btNext");
+    const nextBt = button("Next", ["btn", "d-none", "btn-primary", "my-2", "nextBts", "mx-3"], "button", "btNext");
     nextBt.disabled = true;
 
     section.appendChild(reloadBt);

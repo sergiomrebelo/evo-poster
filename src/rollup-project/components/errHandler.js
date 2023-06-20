@@ -1,7 +1,6 @@
-import {container} from "./textContainer.js";
+import {container} from "./utils.js";
 
 const errorHandler = (res = {success: false}) => {
-
 
     // remove any message
     document.querySelectorAll(`#error-handle`).forEach((el) => {

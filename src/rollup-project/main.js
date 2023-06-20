@@ -1,11 +1,16 @@
 import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import './main.css';
 
-// TODO: (!) "this" has been rewritten to "undefined"
-// import '../../node_modules/bootstrap/dist/js/bootstrap.bundle';
+import '../../node_modules/p5js/p5.js/p5.min.js';
 
-import {resultsContainer, inputForm} from './input.js';
-import errorHandler from "./components/information-message.js";
+import {resultsContainer, inputForm} from './components/input-module.js';
+import errorHandler from "./components/errHandler.js";
+import {container} from "./components/utils.js";
+
+// import {setup, preload, draw, windowResized} from "./components/sketch.js";
+// import p5 from "./components/evolution-module.js"
+
+let app;
 
 export default class App {
     constructor()  {
@@ -20,22 +25,67 @@ export default class App {
         this.text = null;
         this.screen = 0;
 
-        this.IMAGE_SIZE = 1024; // in kb
+        this.results = null;
 
-        this.init();
+        // params
+        this.IMAGE_SIZE = 1024; // in kb
+        this.BACKGROUND_COLOR = color(random(255), random(255), random(255));
     }
+
+    evolve = () => {
+        this.screen = 1;
+        document.getElementById(`input-module`).style.display = "none";
+        document.querySelector(`.p5Canvas`).style.display = "block";
+
+        // init canvas
+        createCanvas(windowWidth, windowHeight);
+        background (this.BACKGROUND_COLOR);
+
+        window.draw = () => {
+            background (this.BACKGROUND_COLOR);
+            push();
+            fill(0);
+            textSize(36);
+            let leading = 36*1.35;
+            let y = Math.round(leading * this.results.sentences.length/2);
+            for (let i=0; i<this.results.sentences.length; i++) {
+                let sentence =  this.results.sentences[i];
+                text(
+                    sentence,
+                    windowWidth/2-textWidth(sentence)/2,
+                    windowHeight/2 - y
+                );
+                y -= leading;
+            }
+            pop();
+        }
+
+        window.windowResized = () => {
+            clearTimeout(this.resize);
+            this.resize = setTimeout(() => {
+                this.BACKGROUND_COLOR = color(random(255), random(255), random(255));
+                resizeCanvas(windowWidth, windowHeight);
+            }, 100);
+        }
+    }
+
+
 
     init = () => {
         const resultsScreen = resultsContainer();
         const formInput = inputForm();
 
-        // screen.style(style);
-        document.body.appendChild(resultsScreen);
+        const inputModuleContainer = container(`div`, [],`input-module`);
+        inputModuleContainer.appendChild(resultsScreen);
+        inputModuleContainer.appendChild(formInput);
 
-        document.body.appendChild(formInput);
+        document.body.appendChild(inputModuleContainer);
         formInput.addEventListener("submit", this.get);
         document.getElementById('formControlImages').addEventListener('change', this._uploadImages);
+
+
     }
+
 
     get = async (e) => {
         e.preventDefault();
@@ -64,6 +114,7 @@ export default class App {
 
         fetch(url).then((response) => response.json()).then((result) => {
             this._displayResults(result);
+            this.results = result;
         }).catch((error) => {
             console.error('Error:', error);
             errorHandler ({ message: `error on fetch. ${error}`});
@@ -92,7 +143,6 @@ export default class App {
         document.querySelector('#input-form fieldset').disabled = true;
         document.getElementById('btReload').enable = true;
 
-
         const section = document.getElementById(`info-results-section`);
         section.classList.replace('d-none', 'd-block');
 
@@ -101,6 +151,16 @@ export default class App {
             el.disabled = false;
             el.classList.replace('d-none', 'd-inline');
         });
+
+        document.getElementById(`btNext`).onclick = (e) => {
+            e.preventDefault();
+            if (this.results !== null) {
+                this.evolve();
+            } else {
+                errorHandler({ message: "text input not defined"})
+            }
+        }
+
     }
 
     _uploadImages = async (e) => {
@@ -110,7 +170,7 @@ export default class App {
         this.images.amount = e.target.files.length;
 
        this.images.blobs = await this._readImages(e.target.files).catch((err) => {
-           errorHandler (`not possible to load the image ${err}`);
+           errorHandler ({ message: `not possible to load the image ${err}`});
         })
 
         this.images.loading = false;
@@ -177,6 +237,7 @@ export default class App {
 }
 
 
-window.onload = () => {
-    const app = new App();
+window.setup = () => {
+    app = new App();
+    app.init();
 }

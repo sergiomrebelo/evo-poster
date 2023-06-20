@@ -46,7 +46,7 @@ export const container = (
     return container;
 };
 
-export const input = (
+export const inputField = (
      type = "text", value = null, classes = [], id = null, checked = null, name = null
 ) => {
     const input = document.createElement(`input`);

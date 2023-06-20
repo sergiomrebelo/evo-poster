@@ -43,3 +43,7 @@ h4 {
 #info-results-section div {
     margin-bottom: 1.35em;
 }
+
+.p5Canvas {
+    display: none;
+}
