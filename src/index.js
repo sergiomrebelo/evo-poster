@@ -11,7 +11,8 @@ dotenv.config()
 APP.use(cors())
 APP.use(express.json())
 APP.use(express.urlencoded({ extended: true }))
-APP.use(express.static('src/public'))
+// TODO: change the root src
+APP.use(express.static('src/rollup-project'))
 
 APP.listen(PORT, async () => {
   await nlp.setup(process.env.LANGUAGE_TRANSLATOR_IAM_APIKEY, process.env.LANGUAGE_TRANSLATOR_URL, process.env.MW_API_KEY)

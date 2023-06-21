@@ -1,4 +1,4 @@
-const bootstrap = require('bootstrap');
+const bootstrap = require('bootstrap'); // ✅
 const style = require('./main.css');
 
 const availableLanguages = [
@@ -24,6 +24,7 @@ const app = {
 window.onload = () => {
     const form = document.getElementById('input-form');
     const inputImages = document.getElementById('formControlImages');
+
     form.addEventListener('submit', get);
     inputImages.addEventListener('change', _uploadImages);
 
@@ -34,7 +35,6 @@ window.onload = () => {
         option.selected = (lang === 'en');
         document.getElementById('formControlLang').appendChild(option);
     }
-
     document.getElementById('lineDivisionCheck').addEventListener('change', (e) => {
         if (e.target.checked) {
             document.getElementById('textDelimiterField').classList.add('d-none');
@@ -50,8 +50,12 @@ window.onload = () => {
             document.getElementById('imageAnchorField').classList.remove('d-none');
         }
     });
+
+    // ✅ DONE
 }
 
+
+// ✅
 const get = async (e) => {
     e.preventDefault();
     let textArea = encodeURIComponent(document.getElementById('formControlTextarea').value);
@@ -93,6 +97,7 @@ const handleErr = (res = {success: false}) => {
         document.getElementById('error-handle').classList.replace('d-none', 'd-block');
 }
 
+// ✅
 const _uploadImages = async (e) => {
     document.getElementById('imagePlacementField').classList.replace('d-none', 'd-block');
     console.log(document.getElementById('imagePlacementField'));
@@ -109,6 +114,7 @@ const _uploadImages = async (e) => {
     _displayImages(app.images.blobs);
 }
 
+// ✅
 const _displayImages = (files) => {
     const imgContainer = document.getElementById('input-images');
     imgContainer.innerHTML = ``;
@@ -124,6 +130,7 @@ const _displayImages = (files) => {
     imgContainer.classList.replace('d-none', 'd-block');
 }
 
+// ✅
 const _readImages = async (files) => {
     const res = [];
     let err = [];
@@ -151,6 +158,7 @@ const _readImages = async (files) => {
     return await Promise.all(res);
 }
 
+// ✅
 const displayResults = (res) => {
     if (!res.success)  { return handleErr(res);}
 
