@@ -144,7 +144,7 @@ export const inputForm = () => {
     imagePlacementCheckContainer.appendChild(inputImagePlacementCheck);
     mainSection.appendChild(imagePlacementCheckContainer);
 
-    // TODO: not implemented
+
     inputImagePlacementCheck.addEventListener('change', (e) => {
         const imageAnchor = document.getElementById('imageAnchorField');
         if (e.target.checked && imageAnchor !== null) {
