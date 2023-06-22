@@ -82,8 +82,6 @@ export default class App {
         document.body.appendChild(inputModuleContainer);
         formInput.addEventListener("submit", this.get);
         document.getElementById('formControlImages').addEventListener('change', this._uploadImages);
-
-
     }
 
 
