@@ -1,4 +1,54 @@
-import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';
+import 'p5';
+import {LitElement, html, css} from "lit";
+
+import {InputForm} from "./components/InputForm.js";
+
+window.preload = () => {}
+
+window.setup = () => {
+    window.app = new App();
+    /*window.app.init();*/
+    console.log (`setup app`);
+}
+
+window.draw = () => {
+    console.log ("evolve");
+}
+
+window.windowResized = () => {
+
+}
+
+
+export class App {
+    // App.properties.availableLanguages
+    static properties = {
+        availableLanguages: [
+            'ar', 'bn', 'bs', 'bg', 'zh', 'hr', 'cs', 'da', 'nl', 'en',
+            'et', 'fi', 'fr', 'de', 'el', 'gu', 'he', 'hi', 'hu', 'ga',
+            'id', 'it', 'ja', 'ko', 'lv', 'lt', 'ms', 'ml', 'mt', 'ne',
+            'nb', 'pl', 'pt', 'ro', 'ru', 'si', 'sk', 'sl', 'es', 'sv',
+            'ta', 'te', 'th', 'tr', 'uk', 'ur', 'vi', 'cy'
+        ]
+    }
+
+    constructor() {
+        // super();
+        console.log (`new app created --html served dynamically`);
+    }
+
+    render () {
+        return html`<InputForm></InputForm>`;
+    }
+
+}
+
+
+
+
+
+
+/*import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import './main.css';
 
 import '../../node_modules/p5/lib/p5.min.js';
@@ -233,10 +283,5 @@ export default class App {
 
         return await Promise.all(res);
     }
-}
+}*/
 
-
-window.setup = () => {
-    window.app = new App();
-    window.app.init();
-}

@@ -11,7 +11,7 @@ dotenv.config()
 APP.use(cors())
 APP.use(express.json())
 APP.use(express.urlencoded({ extended: true }))
-APP.use(express.static('src/public'))
+APP.use(express.static('src/public/build'))
 
 
 APP.listen(PORT, async () => {
