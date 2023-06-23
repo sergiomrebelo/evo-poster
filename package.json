@@ -43,6 +43,8 @@
     "nodemon": "^2.0.22",
     "p5": "^1.6.0",
     "rollup": "^3.25.1",
-    "rollup-plugin-import-css": "^3.2.1"
+    "rollup-plugin-delete": "^2.0.0",
+    "rollup-plugin-import-css": "^3.2.1",
+    "rollup-plugin-summary": "^2.0.0"
   }
 }

@@ -1,4 +1,8 @@
 import 'p5';
+
+import 'bootstrap/dist/css/bootstrap.min.css';
+import './main.css';
+
 import {LitElement, html, css} from "lit";
 
 import {InputForm} from "./components/InputForm.js";
@@ -6,21 +10,29 @@ import {InputForm} from "./components/InputForm.js";
 window.preload = () => {}
 
 window.setup = () => {
-    window.app = new App();
-    /*window.app.init();*/
-    console.log (`setup app`);
+    console.log(`setup-22223333`);
+    window.app = document.createElement(`app-evo`); // create app
+    document.querySelector(`main`).appendChild(app);
+
+
+    // console.log("app", window.app.screen);
+
+    // not init canvas
+    noCanvas();
+    noLoop();
 }
 
 window.draw = () => {
-    console.log ("evolve");
+    console.log (`draw. screen=${window.app.screen}`);
+    if (window.app.screen === 0) return;
 }
 
 window.windowResized = () => {
-
+    if (window.app.screen === 0) return;
 }
 
 
-export class App {
+export class App extends LitElement{
     // App.properties.availableLanguages
     static properties = {
         availableLanguages: [
@@ -33,15 +45,21 @@ export class App {
     }
 
     constructor() {
-        // super();
-        console.log (`new app created --html served dynamically`);
+        super();
+
+        this.screen = 0;
+
+        console.log (`new app created --html served dynamically --2`);
     }
 
     render () {
-        return html`<InputForm></InputForm>`;
+        return html`
+            <h1 class="mb-3">Evolving Posters</h1>
+            <input-form></input-form>
+        `;
     }
-
 }
+customElements.define('app-evo', App);
 
 
 

@@ -60,6 +60,7 @@ export const inputForm = () => {
     const containerOuter = container("aside", ["container-fluid"]);
     const containerInner = container("div", ["row"]);
     const section = container("section", ["input-form-outer", "col-10", "offset-1", "mt-5"]);
+
     const form = document.createElement("form");
     form.id = "input-form";
     form.classList.add("input-form-inner");
