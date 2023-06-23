@@ -21,14 +21,12 @@
   },
   "scripts": {
     "test": "cross-env NODE_OPTIONS=--experimental-vm-modules npx jest",
-    "build2": "rollup --config",
-    "watch2": "rollup -c -w",
-    "build": "browserify -t [ browserify-css --minify=true --output public/bundle.css ] public/main.js -o public/bundle.js",
-    "watch": "watchify -t [ browserify-css --minify=true --output public/bundle.css ] public/main.js -o public/bundle.js",
+    "test:cypress": "cypress open --project test",
+    "build": "rollup --config",
+    "watch": "rollup -c -w",
     "dev": "nodemon --exec babel-node src/index.js",
     "start": "pm2 start src/index.js",
-    "stop": "pm2 stop src/index.js",
-    "test:cypress": "cypress open --project test"
+    "stop": "pm2 stop src/index.js"
   },
   "repository": {
     "type": "git",
@@ -47,8 +45,6 @@
     "@babel/preset-env": "^7.20.2",
     "@rollup/plugin-json": "^6.0.0",
     "@rollup/plugin-terser": "^0.4.3",
-    "browserify": "^17.0.0",
-    "browserify-css": "^0.15.0",
     "cypress": "^12.15.0",
     "cypress-multi-reporters": "^1.6.3",
     "eslint": "^8.42.0",
