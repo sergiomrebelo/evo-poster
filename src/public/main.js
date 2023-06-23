@@ -1,7 +1,7 @@
 import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import './main.css';
 
-import '../../node_modules/p5js/p5.js/p5.min.js';
+import '../../node_modules/p5/lib/p5.min.js';
 
 import {resultsContainer, inputForm} from './components/input-module.js';
 import errorHandler from "./components/errHandler.js";
@@ -24,7 +24,7 @@ export default class App {
         };
         this.text = null;
         this.screen = 0;
-        this.testingVarWatch = null;
+        this.testingVarWatch2 = "testing string";
 
         this.results = null;
 
