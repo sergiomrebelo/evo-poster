@@ -26,7 +26,8 @@
     "watch": "rollup -c -w",
     "dev": "nodemon --exec babel-node src/index.js",
     "start": "pm2 start src/index.js",
-    "stop": "pm2 stop src/index.js"
+    "stop": "pm2 stop src/index.js",
+    "restart": "pm2 stop src/index.js && pm2 start src/index.js"
   },
   "repository": {
     "type": "git",
