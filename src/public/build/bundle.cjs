@@ -225,7 +225,7 @@ const inputForm = () => {
     imagePlacementCheckContainer.appendChild(inputImagePlacementCheck);
     mainSection.appendChild(imagePlacementCheckContainer);
 
-    // TODO: not implemented
+
     inputImagePlacementCheck.addEventListener('change', (e) => {
         const imageAnchor = document.getElementById('imageAnchorField');
         if (e.target.checked && imageAnchor !== null) {
@@ -327,6 +327,7 @@ class App {
         };
         this.text = null;
         this.screen = 0;
+        this.testingVarWatch = null;
 
         this.results = null;
 
@@ -385,8 +386,6 @@ class App {
         document.body.appendChild(inputModuleContainer);
         formInput.addEventListener("submit", this.get);
         document.getElementById('formControlImages').addEventListener('change', this._uploadImages);
-
-
     }
 
 
@@ -541,8 +540,8 @@ class App {
 
 
 window.setup = () => {
-    app = new App();
-    app.init();
+    window.app = new App();
+    window.app.init();
 };
 
 module.exports = App;

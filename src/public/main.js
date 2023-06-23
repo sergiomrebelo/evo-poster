@@ -24,6 +24,7 @@ export default class App {
         };
         this.text = null;
         this.screen = 0;
+        this.testingVarWatch = null;
 
         this.results = null;
 
@@ -236,6 +237,6 @@ export default class App {
 
 
 window.setup = () => {
-    app = new App();
-    app.init();
+    window.app = new App();
+    window.app.init();
 }
