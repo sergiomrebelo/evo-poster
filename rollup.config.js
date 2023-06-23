@@ -1,4 +1,3 @@
-// rollup.config.js
 import json from '@rollup/plugin-json';
 import terser from '@rollup/plugin-terser';
 import css from 'rollup-plugin-import-css';
