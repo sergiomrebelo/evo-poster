@@ -1,5 +1,3 @@
-@import url('../node_modules/bootstrap/dist/css/bootstrap.css');
-
 :root {
     --main-bg-color: #f3f3f3;
 }
@@ -7,4 +5,39 @@
 html {
     background-color: var(--main-bg-color);
     font-family: monospace;
+}
+
+body {
+    background-color: var(--main-bg-color);
+    display:flex;
+    flex-flow: column;
+}
+
+body > * {
+    order: 1;
+}
+
+#error-handle {
+    order: 0;
+}
+
+.mr-2 {
+    margin-right: .5rem!important;
+}
+
+h3 {
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+h4 {
+    font-size: 1rem;
+}
+
+#info-results-section div {
+    margin-bottom: 1.35em;
+}
+
+.p5Canvas {
+    display: none;
 }

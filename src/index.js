@@ -11,9 +11,7 @@ dotenv.config()
 APP.use(cors())
 APP.use(express.json())
 APP.use(express.urlencoded({ extended: true }))
-// TODO: change the root src
-APP.use(express.static('src/rollup-project'))
-APP.use("/browserify", express.static('src/public'))
+APP.use(express.static('src/public'))
 
 
 APP.listen(PORT, async () => {

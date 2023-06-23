@@ -1,94 +1,12 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- TODO: meta information -->
     <title>Evolving Posters</title>
     <meta charset="utf-8" />
-    <link rel="stylesheet" href="bundle.css">
-    <script src="bundle.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./build/bundle.min.css">
 </head>
 <body>
-    <!-- warning message -->
-    <div class="temp-results container-fluid bg-light d-none" id="error-handle">
-        <div class="row">
-            <section class="col-12 bg-warning p-3">
-                <span id="err-message" class=""></span>
-            </section>
-        </div>
-    </div>
-    <div class="temp-results container-fluid bg-light d-none" id="temp-info">
-        <div class="row">
-            <section class="col-10 offset-1 my-5">
-                <h1 class="mb-3">Emotional analysis Results</h1>
-                <div>
-                    <b class="d-inline">Text:</b>
-                    <p id="temp-res-text" class="d-inline"></p>
-                </div>
-                <div>
-                    <b class="d-inline">Sentences:</b>
-                    <p id="temp-res-sentences" class="d-inline"></p>
-                </div>
-                <div class="mt-4">
-                    <b class="d-inline">Classification results=</b>
-                    <p id="temp-res-classification" class="d-inline"></p>
-                </div>
-                <div class="mt-4">
-                    <b>Lexicon results</b>
-                    <div id="temp-res-lexicon-lines"></div>
-                    <p id="temp-res-lexicon-global"></p>
-                </div>
-                <div id="input-images" class="mt-4 d-none"></div>
-            </section>
-        </div>
-    </div>
-<aside class="container-fluid">
-    <div class="row">
-        <section class="input-form-outer col-10 offset-1 mt-5">
-            <form id="input-form" class="input-form-inner">
-                <fieldset>
-                    <div class="form-group row mb-2">
-                        <label for="formControlTextarea" class="col-sm-2 col-form-label-sm">Input Text</label>
-                        <textarea class="form-control col-sm-10" id="formControlTextarea" rows="6" required></textarea>
-                    </div>
-                    <div class="form-group row mb-2">
-                        <label for="formControlLang">Language</label>
-                        <select class="form-control form-control-lg" id="formControlLang" type="text">
-                        </select>
-                    </div>
-                    <div class="my-5"></div>
-                    <div class="form-check form-check-inline mb-2" id="lineDivisionField">
-                        <input class="form-check-input" type="checkbox" value="1" id="lineDivisionCheck" checked>
-                        <label class="form-check-label" for="lineDivisionCheck"> Automatic line division</label>
-                    </div>
-                    <div class="form-group row mb-2 d-none" id="textDelimiterField">
-                        <label for="formControlTextDelimiter">Text Line delimiter</label>
-                        <input class="form-control form-control-lg" id="formControlTextDelimiter" type="text" value="¶">
-                    </div>
-                    <div class="my-5"></div>
-                    <div class="form-group row mb-2">
-                        <label for="formControlImages">Images</label>
-                        <input type="file" class="form-control-file" id="formControlImages"
-                               name="files[]" accept="image/jpeg, image/png, image/jpg" multiple>
-                    </div>
-
-                    <div class="form-check form-check-inline mb-2 d-none" id="imagePlacementField">
-                        <input class="form-check-input" type="checkbox" value="1" id="imagePlacementCheck" checked>
-                        <label class="form-check-label" for="imagePlacementCheck">Image Random Placement</label>
-                    </div>
-
-                    <div class="form-group row mb-2 d-none" id="imageAnchorField">
-                        <label for="formControlImagePlaceholderDelimiter">Image Placement Anchor</label>
-                        <input class="form-control form-control-lg" id="formControlImagePlaceholderDelimiter" type="text">
-                    </div>
-
-                    <div class="my-5"></div>
-                    <div class="col-auto">
-                        <button type="submit" class="btn btn-primary mb-2">Submit</button>
-                        <button type="button" class="btn btn-secondary mb-2 mx-3"  onClick="window.location.reload();">New Analysis</button>
-                    </div>
-                </fieldset>
-            </form>
-        </section>
-    </div>
-</aside>
+    <script src="./build/bundle.min.js"></script>
 </body>
 </html>
