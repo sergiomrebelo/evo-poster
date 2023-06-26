@@ -1,6 +1,6 @@
 import json from '@rollup/plugin-json';
 import terser from '@rollup/plugin-terser';
-import css from 'rollup-plugin-import-css';
+import scss from 'rollup-plugin-scss';
 import resolve from '@rollup/plugin-node-resolve';
 import del from 'rollup-plugin-delete';
 import summary from 'rollup-plugin-summary';
@@ -28,7 +28,7 @@ export default [
         plugins: [
             resolve(),
             json(),
-            css(),
+            scss({ fileName: 'bundle.css' }),
             html({
                 input: 'src/public/index.html',
                 minify: false,

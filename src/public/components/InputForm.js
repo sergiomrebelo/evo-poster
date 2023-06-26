@@ -1,10 +1,24 @@
-import {LitElement, html, css} from "lit";
-import {App} from "../app.js";
+import {LitElement, html} from "lit";
+import {Params} from "../Params.js";
 import {Divider} from "./Divider.js";
 
 export class InputForm extends LitElement {
-    constructor(onSubmit) {
+    static properties = {
+        images: {}
+    }
+    constructor(onSubmit, container, errHandler) {
         super();
+        this.images = {
+            "imageRandomPlacement": true,
+            "hasImages": false,
+            "blobs": [],
+            "amount": 0,
+            "loading": false,
+            "randomPlacement": false
+        }
+        this.disable = false;
+        this._resultsContainer = container;
+        this._errHandlerRef = errHandler;
         this._onSubmit = async (e) => {
             e.preventDefault();
             await onSubmit();
@@ -14,7 +28,6 @@ export class InputForm extends LitElement {
     _toggleVisibility = (e) => {
         const related = e.target.dataset.related;
         const el = this.shadowRoot.getElementById(related);
-
         if (e.target.checked && el !== null) {
             el.classList.add('d-none');
         } else {
@@ -22,13 +35,93 @@ export class InputForm extends LitElement {
         }
     }
 
+    dis = () => {
+        this.disable = true;
+        this.shadowRoot.querySelector(`fieldset`).disabled = this.disable;
+    }
+
     data = () => {
         return {
             "textContent": encodeURIComponent(this.shadowRoot.getElementById('formControlTextarea').value),
             "shouldDivide": this.shadowRoot.getElementById('lineDivisionCheck').checked,
             "lang": encodeURIComponent(this.shadowRoot.getElementById('formControlLang').value),
-            "delimiter": encodeURIComponent(this.shadowRoot.getElementById('formControlTextDelimiter').value)
+            "delimiter": encodeURIComponent(this.shadowRoot.getElementById('formControlTextDelimiter').value),
+            "images": this.images
         }
+    }
+
+    _uploadImages = async (e) => {
+        this.images.blobs = [];
+        this.images.hasImages = true;
+        this.images.loading = true;
+        this.images.amount = e.target.files.length;
+
+        console.log(this._formRef,  this._errHandlerRef);
+
+        this.images.blobs = await this._readImages(e.target.files).catch((err) => {
+            this._errHandlerRef.set({message: `not possible to load the image ${err}`});
+        })
+
+
+        this.images.loading = false;
+
+        this._resultsContainer.displayImages(this.images.blobs);
+    }
+
+    /*
+    _displayImages = (files) => {
+        const imgContainer = document.getElementById('input-images');
+        imgContainer.innerHTML = ``;
+
+        for (let i = 0; i<files.length; i++) {
+            const img = new Image();
+            img.src = files[i];
+            img.classList.add('d-inline-block', `mb-2`, `mr-2`);
+            img.style.height = `100px`;
+            img.style.width = `auto`;
+            imgContainer.appendChild(img);
+        }
+        imgContainer.classList.replace('d-none', 'd-block');
+        document.getElementById("input-images-headline").classList.replace('d-none', 'd-block');
+    }
+     */
+
+    _readImages = async (files) => {
+        const res = [];
+        let err = [];
+        const getBase64 = (file) => {
+            const reader = new FileReader()
+            return new Promise(resolve => {
+                reader.onload = (ev) => {
+                    resolve(ev.target.result)
+                }
+                reader.readAsDataURL(file);
+            });
+        };
+
+        for (let i = 0; i < files.length; i++) {
+            if (files[i].size/1024 < Params.imageMaxSize) {
+                if (files[i].type.includes('image')) {
+                    res.push(getBase64(files[i]));
+                } else {
+                    err.push(`error loading the following image(s): ${files[i].name}.`);
+                }
+            } else {
+                err.push(`${files[i].name} size bigger than ${Params.imageMaxSize} kb. (size: ${files[i].size})`);
+            }
+        }
+
+        if (err.length > 0) {
+            let msg = "";
+            for (let i=0; i<err.length; i++) {
+                msg += err[i];
+                if (i !== err.length-1) {
+                    msg += "<br>";
+                }
+            }
+            this._errHandlerRef.set({message: msg});
+        }
+        return await Promise.all(res);
     }
 
     render() {
@@ -45,7 +138,7 @@ export class InputForm extends LitElement {
                             <div class="form-group row mb-2">
                                 <label for="formControlLang">Language</label>
                                 <select class="form-control form-control-lg" id="formControlLang" type="text">
-                                    ${App.properties.availableLanguages.map((lang) => {
+                                    ${Params.availableLanguages.map((lang) => {
                                         let opt = html`
                                             <option value=${lang}>${lang}</option>`;
                                         if (lang === 'en') {
@@ -75,8 +168,9 @@ export class InputForm extends LitElement {
                             </div>
                             ${Divider.get()}
                             <div class="form-group row mb-2">
-                                <label for="formControlImages" class="col-form-label-sm">Images</label>
+                                <label for="formControlImages" class="col-form-label-sm" Images</label>
                                 <input type="file" class="form-control-file" id="formControlImages"
+                                       @change="${this._uploadImages}"
                                        checked="files[]" accept="image/jpeg, image/png, image/jpg" multiple>
                             </div>
                             <div class="form-check form-check-inline mb-2 d-none" id="imagePlacementField">
@@ -98,14 +192,6 @@ export class InputForm extends LitElement {
                             </div>
                         </fieldset>
                     </form>
-                    <button type="button" id="btReload" @click="${() => {
-                        window.location.reload()
-                    }}"
-                            class="btn d-none btn-secondary my-2 nextBts" disabled>New Analysis
-                    </button>
-                    <button type="button"
-                            class="btn d-none btn-primary my-2 nextBts mx-3" disabled>Next
-                    </button>
                 </section>
             </div>
         `;

@@ -35,6 +35,8 @@ export default class App {
         this.BACKGROUND_COLOR = color(random(255), random(255), random(255));
     }
 
+
+    // TODO
     evolve = () => {
         this.screen = 1;
         document.getElementById(`input-module`).style.display = "none";
@@ -113,10 +115,12 @@ export default class App {
             }
         }
 
+        // ✅✅✅✅✅✅
         const url = `/${handler}/${lang}/${textArea}`;
 
         fetch(url).then((response) => response.json()).then((result) => {
             this._displayResults(result);
+            // ✅✅✅✅✅✅
             this.results = result;
         }).catch((error) => {
             console.error('Error:', error);
@@ -142,9 +146,12 @@ export default class App {
         }
 
         document.getElementById('temp-res-lexicon-global').innerHTML = `<b>global lexicon</b>: ${res.lexicon.global[0][0]} (${res.lexicon.global[0][1]})`
+
+
         document.getElementById('temp-info').classList.replace('d-none', 'd-block');
         document.querySelector('#input-form fieldset').disabled = true;
         document.getElementById('btReload').enable = true;
+
 
         const section = document.getElementById(`info-results-section`);
         section.classList.replace('d-none', 'd-block');
@@ -166,6 +173,13 @@ export default class App {
 
     }
 
+
+
+
+
+
+    // IMAGES
+
     _uploadImages = async (e) => {
         this.images.blobs = [];
         this.images.hasImages = true;
@@ -184,7 +198,6 @@ export default class App {
     _displayImages = (files) => {
         const imgContainer = document.getElementById('input-images');
         imgContainer.innerHTML = ``;
-
         for (let i = 0; i<files.length; i++) {
             const img = new Image();
             img.src = files[i];

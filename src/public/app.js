@@ -1,14 +1,14 @@
-import {LitElement, html, css} from "lit";
+import {LitElement, html} from "lit";
 import {InputForm} from "./components/InputForm.js";
 import {ResultsContainer} from "./components/ResultsContainer.js";
+import {ErrHandler} from "./components/ErrHandler.js";
+
+import 'bootstrap/scss/bootstrap.scss';
 
 import 'p5';
-// import 'bootstrap/dist/css/bootstrap.css';
-// import './main.css';
 
 
-window.preload = () => {
-}
+window.preload = () => {}
 
 window.setup = () => {
     window.app = document.createElement(`app-evo`); // create app
@@ -27,62 +27,74 @@ window.windowResized = () => {
     if (window.app.screen === 0) return null;
 }
 
-
 export class App extends LitElement {
-    // App.properties.availableLanguages
     static properties = {
-        availableLanguages: [
-            'ar', 'bn', 'bs', 'bg', 'zh', 'hr', 'cs', 'da', 'nl', 'en',
-            'et', 'fi', 'fr', 'de', 'el', 'gu', 'he', 'hi', 'hu', 'ga',
-            'id', 'it', 'ja', 'ko', 'lv', 'lt', 'ms', 'ml', 'mt', 'ne',
-            'nb', 'pl', 'pt', 'ro', 'ru', 'si', 'sk', 'sl', 'es', 'sv',
-            'ta', 'te', 'th', 'tr', 'uk', 'ur', 'vi', 'cy'
-        ],
-        imageMaxSize: 1024 // in kb
+        _screen: 0
     }
-
     constructor() {
         super();
-        this.images = {
-            "imageRandomPlacement": true,
-            "hasImages": false,
-            "blobs": [],
-            "amount": 0,
-            "loading": false,
-            "randomPlacement": false
-        }
         this.text = null;
         this.results = null;
-        this.screen = 0;
-
-        this._inputForm = new InputForm(this.analyse);
+        this._screen = 0;
+        this.errorMessage = new ErrHandler();
+        this._resultsContainer = new ResultsContainer();
+        this._inputForm = new InputForm(this.analyse, this._resultsContainer,  this.errorMessage);
     }
 
     analyse = async () => {
         // get data from input form
-        //  console.log("outside", this._inputForm.get());
+
         const formData = this._inputForm.data();
-        console.log(formData);
         let params = formData.shouldDivide ? `text` : `lines/${formData.delimiter}`;
         let req = `/${params}/${formData.lang}/${formData.textContent}`;
-        console.log("req=", req);
+
 
         fetch(req).then((response) => response.json()).then((res) => {
-           console.log(res);
-           // TODO: display results
            this.results = res;
+           if (res.success === false) {
+               this.errorMessage.set(res);
+           }
+            this._resultsContainer.set(this.results);
+
+           this._inputForm.dis();
+           this._screen = 1
         }).catch((err) => {
-            console.error(err);
-            //TODO: error handler
+            this.errorMessage.set(err);
         })
+    }
+
+    initEvolution = (e) => {
+        e.preventDefault();
+        // init canvas
+        console.log(`init canvas`);
+        // init pop
+        if (this.results !== null) {
+            console.log(`evolve`);
+        } else {
+            this.errorMessage.set({msg: "text input not defined"});
+        }
+    }
+
+    _nextBts = () => {
+        return html`
+            <button type="button" id="btReload" @click="${() => { window.location.reload()}}"
+                            class="btn d-none btn-secondary my-2 nextBts">
+                New Analysis
+            </button>
+            <button type="button" @click="${this.initEvolution}"
+                class="btn d-none btn-primary my-2 nextBts mx-3 ">
+                Next
+            </button>`;
     }
 
     render() {
         return html`
+            ${this.errorMessage}
             <h1 class="mb-3">Evolving Posters</h1>
             <div id="input-module">
-                <results-container></results-container>
+                ${this._resultsContainer}
                 ${this._inputForm}
+                ${this._screen === 1 ? this._nextBts() : ``}
             </div>
         `;
     }
