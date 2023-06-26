@@ -1,7 +1,9 @@
 import 'p5';
 
-import 'bootstrap/dist/css/bootstrap.min.css';
-import './main.css';
+import 'bootstrap/dist/css/bootstrap.css';
+// import './main.css';
+
+
 
 import {LitElement, html, css} from "lit";
 
@@ -41,7 +43,7 @@ export class App extends LitElement{
             'id', 'it', 'ja', 'ko', 'lv', 'lt', 'ms', 'ml', 'mt', 'ne',
             'nb', 'pl', 'pt', 'ro', 'ru', 'si', 'sk', 'sl', 'es', 'sv',
             'ta', 'te', 'th', 'tr', 'uk', 'ur', 'vi', 'cy'
-        ]
+        ],
     }
 
     constructor() {

@@ -138,6 +138,8 @@ export const inputForm = () => {
     imagesContainer.appendChild(inputImagesContainer);
     mainSection.appendChild(imagesContainer);
 
+
+
     const imagePlacementCheckContainer = container("div", ["form-check", "form-check-inline", "mb-2", "d-none"], "imagePlacementField");
     const inputImagePlacementCheck = inputField(`checkbox`, "1", ["form-check-input"], "imagePlacementCheck", true);
     const inputImagePlacementCheckLabel = createLabel(inputImagePlacementCheck.id, "Image Random Placement", ["form-check-label", "col-form-label-sm"]);
