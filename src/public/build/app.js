@@ -22,7 +22,7 @@ var g;y[m]=!0,y.elementProperties=new Map,y.elementStyles=[],y.shadowRootOptions
  * Copyright 2017 Google LLC
  * SPDX-License-Identifier: BSD-3-Clause
  */
-var ee,te;class re extends y{constructor(){super(...arguments),this.renderOptions={host:this},this._$Do=void 0}createRenderRoot(){var e,t;const r=super.createRenderRoot();return null!==(e=(t=this.renderOptions).renderBefore)&&void 0!==e||(t.renderBefore=r.firstChild),r}update(e){const t=this.render();this.hasUpdated||(this.renderOptions.isConnected=this.isConnected),super.update(e),this._$Do=((e,t,r)=>{var o,n;const s=null!==(o=null==r?void 0:r.renderBefore)&&void 0!==o?o:t;let i=s._$litPart$;if(void 0===i){const e=null!==(n=null==r?void 0:r.renderBefore)&&void 0!==n?n:null;s._$litPart$=i=new q(t.insertBefore(E(),e),e,void 0,null!=r?r:{})}return i._$AI(e),i})(t,this.renderRoot,this.renderOptions)}connectedCallback(){var e;super.connectedCallback(),null===(e=this._$Do)||void 0===e||e.setConnected(!0)}disconnectedCallback(){var e;super.disconnectedCallback(),null===(e=this._$Do)||void 0===e||e.setConnected(!1)}render(){return N}}re.finalized=!0,re._$litElement$=!0,null===(ee=globalThis.litElementHydrateSupport)||void 0===ee||ee.call(globalThis,{LitElement:re});const oe=globalThis.litElementPolyfillSupport;null==oe||oe({LitElement:re}),(null!==(te=globalThis.litElementVersions)&&void 0!==te?te:globalThis.litElementVersions=[]).push("3.3.2");class ne extends re{constructor(){super()}render(){return U`<div class="my-4"></div>`}}customElements.define("section-divider",ne);customElements.define("input-form",class extends re{constructor(){super()}_divider=()=>new ne;_toggleVisibility=e=>{const t=e.target.dataset.related,r=this.shadowRoot.getElementById(t);e.target.checked&&null!==r?r.classList.add("d-none"):r.classList.remove("d-none")};render(){return U`
+var ee,te;class re extends y{constructor(){super(...arguments),this.renderOptions={host:this},this._$Do=void 0}createRenderRoot(){var e,t;const r=super.createRenderRoot();return null!==(e=(t=this.renderOptions).renderBefore)&&void 0!==e||(t.renderBefore=r.firstChild),r}update(e){const t=this.render();this.hasUpdated||(this.renderOptions.isConnected=this.isConnected),super.update(e),this._$Do=((e,t,r)=>{var o,n;const s=null!==(o=null==r?void 0:r.renderBefore)&&void 0!==o?o:t;let i=s._$litPart$;if(void 0===i){const e=null!==(n=null==r?void 0:r.renderBefore)&&void 0!==n?n:null;s._$litPart$=i=new q(t.insertBefore(E(),e),e,void 0,null!=r?r:{})}return i._$AI(e),i})(t,this.renderRoot,this.renderOptions)}connectedCallback(){var e;super.connectedCallback(),null===(e=this._$Do)||void 0===e||e.setConnected(!0)}disconnectedCallback(){var e;super.disconnectedCallback(),null===(e=this._$Do)||void 0===e||e.setConnected(!1)}render(){return N}}re.finalized=!0,re._$litElement$=!0,null===(ee=globalThis.litElementHydrateSupport)||void 0===ee||ee.call(globalThis,{LitElement:re});const oe=globalThis.litElementPolyfillSupport;null==oe||oe({LitElement:re}),(null!==(te=globalThis.litElementVersions)&&void 0!==te?te:globalThis.litElementVersions=[]).push("3.3.2");class ne extends re{static get=()=>new ne;constructor(){super()}render(){return U`<div class="my-4"></div>`}}customElements.define("section-divider",ne);customElements.define("input-form",class extends re{constructor(){super()}_toggleVisibility=e=>{const t=e.target.dataset.related,r=this.shadowRoot.getElementById(t);e.target.checked&&null!==r?r.classList.add("d-none"):r.classList.remove("d-none")};render(){return U`
             <div class="row">
                 <section class="input-form-outer col-10 offset-1 mt-5">
                     <form id="input-form" class="input-form-inner">
@@ -39,7 +39,7 @@ var ee,te;class re extends y{constructor(){super(...arguments),this.renderOption
                                                 <option selected=true value=${e}>${e}</option>`),t}))}
                                 </select>
                             </div>
-                            ${this._divider()}
+                            ${ne.get()}
                             <div class="form-check form-check-inline mb-2" id="lineDivisionField">
                                 <label for="lineDivisionCheck" class="form-check-label col-form-label-sm">
                                     Automatic line division
@@ -52,7 +52,7 @@ var ee,te;class re extends y{constructor(){super(...arguments),this.renderOption
                                 <label for="formControlTextDelimiter" class="col-form-label-sm">Text Line delimiter</label>
                                 <input type="text" value="¶" class="form-control form-control-lg d-none" id="formControlTextDelimiter">
                             </div>
-                            ${this._divider()}
+                            ${ne.get()}
                             <div class="form-group row mb-2">
                                 <label for="formControlImages" class="col-form-label-sm">Images</label>
                                 <input type="file" class="form-control-file" id="formControlImages" 
@@ -68,13 +68,13 @@ var ee,te;class re extends y{constructor(){super(...arguments),this.renderOption
                                 <label for="formControlImagePlaceholderDelimiter" class="col-form-label-sm">Image Placement Anchor</label>
                                 <input type="text" value=${null} class="form-control form-control-lg" id="formControlImagePlaceholderDelimiter" checked=${!1}>
                             </div>
-                            ${this._divider()}
+                            ${ne.get()}
                             <div class="col-auto">
                                 <button type="submit" class="btn btn-primary mb-2">Submit</button>
                             </div>
                         </fieldset>
                     </form>
-                    <button type="button" id="btReload" @click ="${()=>{console.log("inside"),window.location.reload()}}"
+                    <button type="button" id="btReload" @click ="${()=>{window.location.reload()}}"
                             class="btn d-none btn-secondary my-2 nextBts" disabled>New Analysis
                     </button>
                     <button type="button" 
@@ -82,7 +82,33 @@ var ee,te;class re extends y{constructor(){super(...arguments),this.renderOption
                     </button>
                 </section>
             </div>
-        `}}),window.preload=()=>{},window.setup=()=>{console.log("setup-22223333"),window.app=document.createElement("app-evo"),document.querySelector("main").appendChild(app),noCanvas(),noLoop()},window.draw=()=>{console.log(`draw. screen=${window.app.screen}`),window.app.screen},window.windowResized=()=>{window.app.screen};class se extends re{static properties={availableLanguages:["ar","bn","bs","bg","zh","hr","cs","da","nl","en","et","fi","fr","de","el","gu","he","hi","hu","ga","id","it","ja","ko","lv","lt","ms","ml","mt","ne","nb","pl","pt","ro","ru","si","sk","sl","es","sv","ta","te","th","tr","uk","ur","vi","cy"]};constructor(){super(),this.screen=0,console.log("new app created --html served dynamically --2")}render(){return U`
+        `}});customElements.define("results-container",class extends re{constructor(){super()}_pTitle=(e,t="",r)=>U`<div>
+            <h3 class="d-inline">${e}</h3>
+            <p class="d-inline" id=${r}>${t}</p>
+        </div>`;render(){return U`
+            <div class="temp-results container-fluid" id="temp-info">
+                <div class="row">
+                    <section class="col-10 offset-1 my-4">
+                        <div class="results-info d-none" id="info-results-section">
+                            <p class="d-inline" id="temp-res-text"></p>
+                        </div>
+                        ${this._pTitle("Sentences: ","","temp-res-sentences")}
+                        ${this._pTitle("Classification results: ","","temp-res-classification")}
+                        ${ne.get()}
+                        <div class="d-none" id="input-images-results">
+                            <h3 class="d-block my-0">Lexicon results:</h3>
+                            <div id="temp-res-lexicon-lines">
+                                <p id="temp-res-lexicon-global"></p>
+                            </div>
+                            <div class="text-uppercase">
+                                <h3 id="input-images-headline">Input Images</h3>
+                                <div class="mt-4 d-none" id="input-images"></div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        `}}),window.preload=()=>{},window.setup=()=>{window.app=document.createElement("app-evo"),document.querySelector("main").appendChild(app),noCanvas(),noLoop()},window.draw=()=>{window.app.screen},window.windowResized=()=>{window.app.screen};class se extends re{static properties={availableLanguages:["ar","bn","bs","bg","zh","hr","cs","da","nl","en","et","fi","fr","de","el","gu","he","hi","hu","ga","id","it","ja","ko","lv","lt","ms","ml","mt","ne","nb","pl","pt","ro","ru","si","sk","sl","es","sv","ta","te","th","tr","uk","ur","vi","cy"]};constructor(){super(),this.screen=0}render(){return U`
             <h1 class="mb-3">Evolving Posters</h1>
             <input-form></input-form>
         `}}customElements.define("app-evo",se);export{se as App};

@@ -1,5 +1,6 @@
 import {container, inputField, headline, paragraphContainer, button} from './utils.js'
 
+// ✅
 const availableLanguages = [
     'ar', 'bn', 'bs', 'bg', 'zh', 'hr', 'cs', 'da', 'nl', 'en',
     'et', 'fi', 'fr', 'de', 'el', 'gu', 'he', 'hi', 'hu', 'ga',
@@ -8,6 +9,7 @@ const availableLanguages = [
     'ta', 'te', 'th', 'tr', 'uk', 'ur', 'vi', 'cy'
 ];
 
+// ✅
 export const resultsContainer = () => {
     const containerOuter = container("div", ["temp-results", "container-fluid"], "temp-info");
     const containerInner = container("div", ["row"]);
@@ -21,6 +23,7 @@ export const resultsContainer = () => {
 
 
     // create only when it shows results
+    // HERE
     const inputText = paragraphContainer("", "Input Text: ", ["d-inline"], "temp-res-text");
     resultsSection.appendChild(inputText);
 
@@ -55,7 +58,7 @@ export const resultsContainer = () => {
 
     return containerOuter;
 }
-
+// ✅
 export const inputForm = () => {
     const containerOuter = container("aside", ["container-fluid"]);
     const containerInner = container("div", ["row"]);
@@ -192,6 +195,7 @@ export const inputForm = () => {
     return containerOuter;
 }
 
+// ✅
 export const createLabel = (id, textContent, classes = []) => {
     const label = document.createElement("label");
     label.setAttribute("for", id);
@@ -202,6 +206,7 @@ export const createLabel = (id, textContent, classes = []) => {
     return label;
 }
 
+// ✅
 const divider = () => {
     return container("div", ["my-4"]);
 }

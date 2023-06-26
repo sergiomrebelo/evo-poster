@@ -8,16 +8,13 @@ import 'bootstrap/dist/css/bootstrap.css';
 import {LitElement, html, css} from "lit";
 
 import {InputForm} from "./components/InputForm.js";
+import {ResultsContainer} from "./components/ResultsContainer.js";
 
 window.preload = () => {}
 
 window.setup = () => {
-    console.log(`setup-22223333`);
     window.app = document.createElement(`app-evo`); // create app
     document.querySelector(`main`).appendChild(app);
-
-
-    // console.log("app", window.app.screen);
 
     // not init canvas
     noCanvas();
@@ -25,7 +22,6 @@ window.setup = () => {
 }
 
 window.draw = () => {
-    console.log (`draw. screen=${window.app.screen}`);
     if (window.app.screen === 0) return;
 }
 
@@ -48,10 +44,7 @@ export class App extends LitElement{
 
     constructor() {
         super();
-
         this.screen = 0;
-
-        console.log (`new app created --html served dynamically --2`);
     }
 
     render () {

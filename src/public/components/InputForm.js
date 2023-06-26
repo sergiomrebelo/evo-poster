@@ -7,10 +7,6 @@ export class InputForm extends LitElement {
         super();
     }
 
-    _divider = () => {
-        return new Divider();
-    }
-
     _toggleVisibility = (e) => {
         const related = e.target.dataset.related;
         const el = this.shadowRoot.getElementById(related);
@@ -47,7 +43,7 @@ export class InputForm extends LitElement {
                                     }
                                 </select>
                             </div>
-                            ${this._divider()}
+                            ${Divider.get()}
                             <div class="form-check form-check-inline mb-2" id="lineDivisionField">
                                 <label for="lineDivisionCheck" class="form-check-label col-form-label-sm">
                                     Automatic line division
@@ -60,7 +56,7 @@ export class InputForm extends LitElement {
                                 <label for="formControlTextDelimiter" class="col-form-label-sm">Text Line delimiter</label>
                                 <input type="text" value="¶" class="form-control form-control-lg d-none" id="formControlTextDelimiter">
                             </div>
-                            ${this._divider()}
+                            ${Divider.get()}
                             <div class="form-group row mb-2">
                                 <label for="formControlImages" class="col-form-label-sm">Images</label>
                                 <input type="file" class="form-control-file" id="formControlImages" 
@@ -76,14 +72,13 @@ export class InputForm extends LitElement {
                                 <label for="formControlImagePlaceholderDelimiter" class="col-form-label-sm">Image Placement Anchor</label>
                                 <input type="text" value=${null} class="form-control form-control-lg" id="formControlImagePlaceholderDelimiter" checked=${false}>
                             </div>
-                            ${this._divider()}
+                            ${Divider.get()}
                             <div class="col-auto">
                                 <button type="submit" class="btn btn-primary mb-2">Submit</button>
                             </div>
                         </fieldset>
                     </form>
-                    <button type="button" id="btReload" @click ="${() => {
-                        console.log("inside"); window.location.reload()}}"
+                    <button type="button" id="btReload" @click ="${() => {window.location.reload()}}"
                             class="btn d-none btn-secondary my-2 nextBts" disabled>New Analysis
                     </button>
                     <button type="button" 
