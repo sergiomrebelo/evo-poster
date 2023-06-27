@@ -3,6 +3,7 @@ import {InputForm} from "./components/InputForm.js";
 import {ResultsContainer} from "./components/ResultsContainer.js";
 import {ErrHandler} from "./components/ErrHandler.js";
 import {nothing} from "https://unpkg.com/lit-html/lit-html.js?module";
+import Population from "./components/Population.js";
 
 import 'bootstrap/scss/bootstrap.scss';
 import './main.css';
@@ -20,12 +21,12 @@ window.setup = () => {
 }
 
 window.draw = () => {
-    if (window.app.screen > 2) return null;
-    console.log(`draw`);
+    if (window.app.screen < 3) return null;
+    window.app.population.draw();
 }
 
 window.windowResized = () => {
-    if (window.app.screen > 2) return null;
+    if (window.app.screen < 2) return null;
 }
 
 export class App extends LitElement {
@@ -44,6 +45,8 @@ export class App extends LitElement {
         this.errorMessage = new ErrHandler();
         this._resultsContainer = new ResultsContainer();
         this._inputForm = new InputForm(this.analyse, this._resultsContainer,  this.errorMessage);
+
+        this.population = null;
     }
 
     analyse = async () => {
@@ -74,17 +77,13 @@ export class App extends LitElement {
         background(backgroundColour);
         loop();
 
-        // init pop
         if (this.results !== null) {
-            this._initalisation();
+            this.population = new Population(this.results);
+            this.population.initialisation();
+            this.screen = 3;
         } else {
-            this.errorMessage.set({msg: "text input not defined"});
+            this.errorMessage.set({msg: "text input not defined. Not possible to init population"});
         }
-    }
-
-    _initalisation = () => {
-        console.log(`_initalisation`);
-        console.log(this.results);
     }
 
     _nextBts = () => {

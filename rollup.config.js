@@ -23,7 +23,7 @@ export default [
             }
         ],
         watch: {
-            include: 'src/public/**'
+            include: 'src/client/**'
         },
         plugins: [
             resolve(),
