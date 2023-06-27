@@ -9,6 +9,7 @@ import 'bootstrap/scss/bootstrap.scss';
 import './main.css';
 
 import 'p5';
+import {Params} from "./Params.js";
 
 
 window.preload = () => {}
@@ -22,11 +23,17 @@ window.setup = () => {
 
 window.draw = () => {
     if (window.app.screen < 3) return null;
+    background(window.app.backgroundColor);
     window.app.population.draw();
+    noLoop();
 }
 
 window.windowResized = () => {
     if (window.app.screen < 2) return null;
+}
+
+window.keyPressed = () => {
+    // console.log("kye");
 }
 
 export class App extends LitElement {
@@ -47,6 +54,8 @@ export class App extends LitElement {
         this._inputForm = new InputForm(this.analyse, this._resultsContainer,  this.errorMessage);
 
         this.population = null;
+        document.getElementById(`defaultCanvas0`).style.visibility = "visible";
+        this.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue('--main-bg-color');
     }
 
     analyse = async () => {
@@ -71,10 +80,11 @@ export class App extends LitElement {
         e.preventDefault();
         // init canvas
         this.screen = 2;
-        createCanvas(windowWidth, windowHeight);
-        document.getElementById(`defaultCanvas0`).style.visibility = "visible";
-        const backgroundColour = getComputedStyle(document.documentElement).getPropertyValue('--main-bg-color');
-        background(backgroundColour);
+        let numberOfPosters = Params.visiblePosters > Params.populationSize ? Params.populationSize : Params.visiblePosters;
+        const h = numberOfPosters / Math.floor(windowWidth/Params.visualisationGrid.width) * (Params.visualisationGrid.height + Params.visualisationGrid.marginY) // calculate the height of canvas
+        createCanvas(windowWidth, h);
+
+        background(this.backgroundColor);
         loop();
 
         if (this.results !== null) {
@@ -103,15 +113,15 @@ export class App extends LitElement {
     render() {
         return html`
             ${this.errorMessage}
-            ${this.screen < 2 ? 
-                html`<div class="container-fluid">
-                    <div class="row">
-                        <div class="col-10">
-                            <h1 class="my-2 mx-2">Evolving Posters</h1>
-                        </div>
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-10">
+                        <h1 class="my-2 mx-2">Evolving Posters</h1>
                     </div>
                 </div>
-                <div id="input-module" class="container-fluid">
+            </div>
+            ${this.screen < 2 ? 
+                html`<div id="input-module" class="container-fluid">
                     ${this._resultsContainer}
                     ${this._inputForm}
                     ${this.screen === 1 ? this._nextBts() : nothing}
