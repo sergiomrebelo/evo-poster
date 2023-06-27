@@ -1,0 +1,48 @@
+:root {
+    --main-bg-color: #f3f3f3;
+}
+
+
+html, main {
+    background-color: var(--main-bg-color);
+}
+
+body {
+    background-color: var(--main-bg-color);
+    display:flex;
+    flex-flow: column;
+}
+
+body > * {
+    order: 1;
+}
+
+#error-handle {
+    order: 0;
+}
+
+#error-handle-inner {
+    padding-bottom: 0 !important;
+    margin-bottom: 0 !important;
+}
+
+.mr-2 {
+    margin-right: .5rem!important;
+}
+
+h3 {
+    font-size: 1rem !important;
+    font-weight: 900;
+}
+
+h4 {
+    font-size: 1rem;
+}
+
+#info-results-section div {
+    margin-bottom: 1.35em;
+}
+
+.p5Canvas {
+    /*display: none;*/
+}

@@ -2,36 +2,51 @@
   "name": "evo-poster",
   "version": "3.0.0",
   "description": "The Evolutionary Poster Composer (evo-poster) is a computational design system for the automatic creation of poster designs based on a Genetic Algorithm.",
-  "main": "src/index.js",
+  "main": "src/server.js",
   "type": "module",
   "dependencies": {
-    "bootstrap": "^5.2.3",
+    "@evoposter/nlp": "file:src/@evoposter/nlp",
     "cors": "^2.8.5",
-    "dotenv": "^16.0.3",
+    "cross-env": "^7.0.3",
     "express": "^4.18.2",
-    "npm": "^9.3.1"
+    "pm2": "^5.3.0"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "browserify -t [ browserify-css --minify=true --output public/bundle.css ] public/main.js -o public/bundle.js",
-    "watch": "npx watchify -t [ browserify-css --minify=true --output public/bundle.css ] public/main.js -o public/bundle.js"
+    "test": "cross-env NODE_OPTIONS=--experimental-vm-modules npx jest",
+    "test:cypress": "cypress open --project test",
+    "build": "rollup --config",
+    "watch": "rollup -c -w",
+    "dev": "nodemon --exec babel-node src/server.js",
+    "start": "pm2 start src/server.js --name evoposter",
+    "stop": "pm2 stop evoposter",
+    "restart": "pm2 restart evoposter"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/sergiomrebelo/evo-poster.git"
   },
-  "author": "Sérgio M. Rebelo <sergiorebelo@me.com> (http://sergiorebelo.work/)",
+  "author": "Sérgio M. Rebelo <sergiorebelo@me.com> (https://sergiorebelo.work/)",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/sergiomrebelo/evo-poster/issues"
   },
   "homepage": "https://github.com/sergiomrebelo/evo-poster#readme",
   "devDependencies": {
-    "browserify": "^17.0.0",
-    "browserify-css": "^0.15.0",
-    "eslint": "^8.31.0",
-    "eslint-config-airbnb-base": "^15.0.0",
-    "eslint-plugin-import": "^2.27.4",
-    "watchify": "^4.0.0"
+    "@rollup/plugin-json": "^6.0.0",
+    "@rollup/plugin-node-resolve": "^15.1.0",
+    "@rollup/plugin-terser": "^0.4.3",
+    "@web/rollup-plugin-html": "^2.0.0",
+    "bootstrap": "^5.3.0",
+    "cypress": "^12.15.0",
+    "jest": "^29.5.0",
+    "lit": "^2.7.5",
+    "nodemon": "^2.0.22",
+    "p5": "^1.6.0",
+    "rollup": "^3.25.1",
+    "rollup-plugin-delete": "^2.0.0",
+    "rollup-plugin-import-css": "^3.2.1",
+    "rollup-plugin-scss": "^4.0.0",
+    "rollup-plugin-summary": "^2.0.0",
+    "sass": "^1.63.6"
   }
 }

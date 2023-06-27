@@ -21,3 +21,5 @@ node_modules/
 src/public/bundle.css
 src/public/bundle.js
 
+/coverage
+
