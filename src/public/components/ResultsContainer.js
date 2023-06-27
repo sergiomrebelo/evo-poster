@@ -23,7 +23,7 @@ export class ResultsContainer extends LitElement {
     }
 
     _pTitle = (titleContent, textContent="", id) => {
-        return html`<div>
+        return html`<div class="my-4">
             <h3 class="d-inline">${titleContent}</h3>
             <p class="d-inline" id=${id}>${textContent}</p>
         </div>`;
@@ -51,16 +51,13 @@ export class ResultsContainer extends LitElement {
                 global: `<b>global lexicon</b>: ${res.lexicon.global[0][0]} (${res.lexicon.global[0][1]})`
             }
         }
-
-
-
     }
 
     displayImages = (files) => {
         this._imagesAvailable = files.length > 0;
         this._images = [];
         for (let i = 0; i<files.length; i++) {
-            const img = html`<img src="${files[i]}" class="d-inline-block mb-2 mr-2" height="100px" width="auto"/>`;
+            const img = html`<img src="${files[i]}" class="d-inline-block mr-2" height="100px" width="auto"/>`;
             this._images.push(img);
         }
     }
@@ -69,9 +66,11 @@ export class ResultsContainer extends LitElement {
         let imagesContainer = html``;
         if (this._imagesAvailable) {
             imagesContainer =
-                html`<div class="text-uppercase">
+                html`<div>
+                    ${Divider.get()}
+                    ${Divider.get()}
                     <h3 id="input-images-headline">Input Images</h3>
-                    <div class="mt-4 d-none" id="input-images">${this._images}</div>
+                    <div id="input-images">${this._images}</div>
                 </div>`
         }
 
@@ -79,18 +78,18 @@ export class ResultsContainer extends LitElement {
         ? html`
             <div class="temp-results container-fluid" id="temp-info">
                 <div class="row">
-                    <section class="col-10 offset-1 my-4">
-                        <div class="results-info d-none" id="info-results-section">
+                    <section class="col-10">
+                        <div class="results-info my-4" id="info-results-section">
                             <p class="d-inline" id="temp-res-text">${this._data.text} (${this._data.lang})</p>
                         </div>
                         ${this._pTitle("Sentences: ", `${this._data.sentences.flat()} (${this._data.sentences.flat().length})}`, "temp-res-sentences")}
-                        ${this._pTitle("Classification results: ",  `${this._data.classification.predominant} (${this._data.classification.score})}`, "temp-res-classification")}
+                        ${this._pTitle("Classification results: ",  `${this._data.classification.predominant} (${this._data.classification.score})`, "temp-res-classification")}
                         ${Divider.get()}
-                        <div class="d-none" id="input-images-results">
+                        <div id="input-lexicon-results my-4">
                             <h3 class="d-block my-0">Lexicon results:</h3>
                             <div id="temp-res-lexicon-lines">
                                 ${unsafeHTML(this._data.lexicon.lines)}
-                                <p id="temp-res-lexicon-global">${unsafeHTML(this._data.lexicon.global)}</p>
+                                <p id="temp-res-lexicon-global" class="my-2">${unsafeHTML(this._data.lexicon.global)}</p>
                             </div>
                         </div>
                         ${imagesContainer}
@@ -101,6 +100,10 @@ export class ResultsContainer extends LitElement {
                     ${imagesContainer}
                 </div>`;
 
+    }
+
+    createRenderRoot() {
+        return this;
     }
 }
 

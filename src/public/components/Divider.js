@@ -10,7 +10,10 @@ export class Divider extends LitElement {
     }
 
     render(){
-        return html`<div class="my-4"></div>`;
+        return html`<div class="my-3"></div>`;
+    }
+    createRenderRoot() {
+        return this;
     }
 }
 
