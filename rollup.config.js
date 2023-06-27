@@ -12,11 +12,11 @@ const production = !process.env.ROLLUP_WATCH
 
 export default [
     {
-        input: 'src/public/app.js',
+        input: 'src/client/app.js',
         preserveEntrySignatures: 'strict',
         output: [
             {
-                dir: 'src/public/build',
+                dir: 'src/public',
                 name: 'version',
                 assetFileNames: 'assets/[name]-[hash][extname]',
                 plugins: [terser()],
@@ -30,12 +30,12 @@ export default [
             json(),
             scss({ fileName: 'bundle.css' }),
             html({
-                input: 'src/public/index.html',
+                input: 'src/client/index.html',
                 minify: false,
                 extractAssets: false
             }),
             summary(),
-            del({ targets: 'src/public/build/assets/*' })
+            del({ targets: 'src/public/assets/*' })
         ]
     }
 ];

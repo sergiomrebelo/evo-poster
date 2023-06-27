@@ -2,7 +2,7 @@
   "name": "evo-poster",
   "version": "3.0.0",
   "description": "The Evolutionary Poster Composer (evo-poster) is a computational design system for the automatic creation of poster designs based on a Genetic Algorithm.",
-  "main": "src/index.js",
+  "main": "src/server.js",
   "type": "module",
   "dependencies": {
     "@evoposter/nlp": "file:src/@evoposter/nlp",
@@ -16,10 +16,10 @@
     "test:cypress": "cypress open --project test",
     "build": "rollup --config",
     "watch": "rollup -c -w",
-    "dev": "nodemon --exec babel-node src/index.js",
-    "start": "pm2 start src/index.js",
-    "stop": "pm2 stop src/index.js",
-    "restart": "pm2 stop src/index.js && pm2 start src/index.js"
+    "dev": "nodemon --exec babel-node src/server.js",
+    "start": "pm2 start src/server.js --name evoposter",
+    "stop": "pm2 stop evoposter",
+    "restart": "pm2 restart evoposter"
   },
   "repository": {
     "type": "git",

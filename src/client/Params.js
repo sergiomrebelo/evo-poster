@@ -7,4 +7,5 @@ export class Params {
         'ta', 'te', 'th', 'tr', 'uk', 'ur', 'vi', 'cy'
     ];
     static imageMaxSize = 1024;
+    static populationSize = 100;
 }
