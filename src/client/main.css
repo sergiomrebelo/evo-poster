@@ -2,9 +2,9 @@
     --main-bg-color: #f3f3f3;
 }
 
-html {
+
+html, main {
     background-color: var(--main-bg-color);
-    font-family: monospace;
 }
 
 body {
@@ -21,13 +21,18 @@ body > * {
     order: 0;
 }
 
+#error-handle-inner {
+    padding-bottom: 0 !important;
+    margin-bottom: 0 !important;
+}
+
 .mr-2 {
     margin-right: .5rem!important;
 }
 
 h3 {
-    font-size: 1rem;
-    font-weight: bold;
+    font-size: 1rem !important;
+    font-weight: 900;
 }
 
 h4 {
@@ -39,5 +44,5 @@ h4 {
 }
 
 .p5Canvas {
-    display: none;
+    /*display: none;*/
 }

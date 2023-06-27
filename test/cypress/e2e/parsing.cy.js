@@ -52,7 +52,7 @@ const inputText = {
     }
 }
 
-const b = true;
+const b = false; //only to test old version
 
 for (let lang of Object.keys(inputText)) {
     // automatic line
