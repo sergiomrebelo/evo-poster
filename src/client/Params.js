@@ -7,9 +7,12 @@ export class Params {
         'ta', 'te', 'th', 'tr', 'uk', 'ur', 'vi', 'cy'
     ];
     static imageMaxSize = 1024;
-    static populationSize = 100;
-    static maxGenerations = 50;
+
+    static populationSize = 10;
     static visiblePosters = 10;
+
+    static maxGenerations = 10;
+
     static visualisationGrid = {
         height: 250,
         width: 180,

@@ -1,17 +1,20 @@
 import {Params} from "../Params.js";
 
 class Poster {
-    constructor(n, generation, sentences = [], params) {
+    constructor(n, generation, params) {
         this.id = `${generation}-${n}`;
         this.n = n;
         this.generation = generation;
+
 
         // genotype
         // [size, colour, textboxes]
 
         this.textboxes = [];
+        // console.log("params.sentences", params.sentences);
 
-        for (let sentence of sentences) {
+
+        for (let sentence of params.sentences) {
             this.textboxes.push({
                 "content": sentence,
                 "weight": Math.round(100+Math.random()*800),
@@ -75,7 +78,7 @@ class Poster {
             pg.textSize(textbox["size"]);
             pg.text(textbox["content"],
                 pg.width/2,
-                pg.height/2 - Params.typography.maxSize * (i-this.textboxes.length/2)
+                pg.height/2 + Params.typography.maxSize * (i-this.textboxes.length/2)
             ); //(Params.visualisationGrid.width/this.textboxes.length)*(i-this.textboxes.length/2)
         }
         pg.pop();

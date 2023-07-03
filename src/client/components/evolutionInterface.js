@@ -11,8 +11,11 @@ export class EvolutionInterface extends LitElement {
         this.initPop = initFunction;
     }
 
-    render(){
+    #updateSize = () => {
+        console.log(`#updateSize`);
+    }
 
+    render(){
         return html`<div class="wrapper initial-Form-outer container-fluid collapse show">
             <section id="initialForm" class="initial-Form-inner row">
                 <div class="offset-sm-6 col-12 col-sm-6 p-3" id="info-init">
@@ -35,11 +38,14 @@ export class EvolutionInterface extends LitElement {
                                            (width x height ratio)
                                        </small>
                                        <div class="col-3" id="size-x">
-                                           <input type="text" class="form-control" id="size-x-input" placeholder="width" value="1">
+                                           <input type="text" class="form-control" id="size-x-input" placeholder="width" value="1"
+                                                  @change="${this.#updateSize}">
                                        </div>
                                        <div class="col-3" id="size-y">
                                            <input type="text" class="form-control" id="size-y-input" 
-                                                  placeholder="height" value="${Math.round(this.params.posterSize.height/this.params.posterSize.width*100)/100}">
+                                                  placeholder="height" 
+                                                  value="${Math.round(this.params.posterSize.height/this.params.posterSize.width*100)/100} 
+                                                  @change="${this.#updateSize}"">
                                        </div>
                                    </div>
                                    ${Divider.get()}
@@ -76,7 +82,12 @@ export class EvolutionInterface extends LitElement {
                                            <b>Content</b><br>
                                            (each line of text must be defined using a semicolon)
                                        </small>
-                                       <textarea class="form-control my-2" id="text-area-content-begin" rows="3">${this.params.text}</textarea>
+                                       <textarea class="form-control my-2" id="text-area-content-begin" rows="${this.params.sentences.length}" 
+                                                 @change="${ async (e) => {
+                                                     const textContent = e.target.value.split("¶")
+                                                     this.params["sentences"] = textContent.map(t => t.trim());
+                                                     this.initPop();
+                                                 }}">${this.params.sentences.join(`¶`)}</textarea>
                                    </div>
                                    ${Divider.get()}
                                    <div class="form-group">

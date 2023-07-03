@@ -2,18 +2,19 @@ import {Params} from "../Params.js";
 import Poster from "./Poster.js";
 
 export class Population {
-    constructor(data, params) {
+    constructor(params) {
         this.size = Params.populationSize;
         this.params = params;
         this.population = [];
         this.generation = 0;
-        this._data = data; // private variable new version
-        this.genotype = {}
+        this.updated = true;
+        // this._data = data; // private variable new version
     }
 
     initialisation = () => {
+        this.updated = true;
         for (let i=0; i<this.size; i++) {
-            const poster = new Poster(i, this.generation, this._data['sentences'], this.params);
+            const poster = new Poster(i, this.generation, this.params);
             this.population.push(poster);
         }
     }
@@ -29,6 +30,9 @@ export class Population {
                 posX = 0;
                 posY += 1;
             }
+        }
+        if (this.updated) {
+            this.updated = false;
         }
     }
 }

@@ -13,8 +13,6 @@ import {EvolutionInterface} from "./components/EvolutionInterface.js"
 import Population from "./controllers/Population.js";
 
 
-
-
 window.preload = () => {}
 
 window.setup = () => {
@@ -22,12 +20,15 @@ window.setup = () => {
     document.querySelector(`main`).appendChild(app);
     noCanvas();
     noLoop();
+    frameRate(25);
 }
 
 window.draw = () => {
     if (window.app.screen < 3) return null;
-    background(window.app.backgroundColor);
-    window.app.population.draw();
+    if (window.app.population.updated) {
+        background(window.app.backgroundColor);
+        window.app.population.draw();
+    }
 }
 
 window.windowResized = () => {
@@ -58,7 +59,7 @@ export class App extends LitElement {
                 width: Params.visualisationGrid.width,
                 height: Params.visualisationGrid.height,
             },
-            text: "sample text",
+            sentences: null,
             background: {
                 style: 0,
                 color: {
@@ -126,8 +127,10 @@ export class App extends LitElement {
 
 
         if (this.results !== null) {
-            this.evolutionController["text"] = this.results.sentences;
-            this.population = new Population(this.results, this.evolutionController);
+            if (this.evolutionController["sentences"] == null) {
+                this.evolutionController["sentences"] = this.results.sentences;
+            }
+            this.population = new Population( this.evolutionController);
             this.population.initialisation();
             this.screen = 3;
         } else {
