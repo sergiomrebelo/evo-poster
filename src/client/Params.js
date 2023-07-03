@@ -10,9 +10,9 @@ export class Params {
     static visualisationGrid = {
         height: 282,
         width: 200,
-        marginY: 20
+        marginY: 20,
+        posterMargins: [.02, .02, .02, .02],
     }
-    
 
     static imageMaxSize = 1024;
 
