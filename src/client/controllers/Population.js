@@ -19,6 +19,13 @@ export class Population {
         }
     }
 
+    toggleGrid = (show) => {
+        for (let poster of this.population) {
+           poster.toggleGrid(show);
+        }
+        this.updated = true;
+    }
+
     draw = () => {
         const n = this.population.length < Params.visiblePosters ? this.population.length : Params.visiblePosters;
         let posX = 0, posY = 0;

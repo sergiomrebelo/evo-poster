@@ -23,7 +23,7 @@ export class Params {
 
 
     static backgroundStyleOptions = [ [`Solid`, 1], [`Gradient`,2], [`Triangle`,2]];
-    static textAlignmentOptions = [ [`Top`], [`Middle`],  ["Bottom"]];
+    static textAlignmentOptions = [ [`Random`], [`Top`], [`Middle`],  ["Bottom"]];
 
     static typography = {
         defaultColor: `#ff0000`,

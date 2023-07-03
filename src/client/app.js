@@ -73,17 +73,22 @@ export class App extends LitElement {
                     random: true,
                     value: Params.typography.defaultColor,
                 },
+            },
+            display: {
+                grid: true
             }
         }
 
         this.errorMessage = new ErrHandler();
         this._resultsContainer = new ResultsContainer();
         this._inputForm = new InputForm(this.analyse, this._resultsContainer,  this.errorMessage);
-        this._initPopForm = new EvolutionInterface(this.evolutionController, this.#initPopulation);
+
 
         this.population = null;
         document.getElementById(`defaultCanvas0`).style.visibility = "visible";
         this.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue('--main-bg-color');
+
+        this._initPopForm = new EvolutionInterface(this.evolutionController, this.#initPopulation, this.population);
     }
 
     analyse = async () => {
@@ -133,6 +138,7 @@ export class App extends LitElement {
             }
             this.population = new Population( this.evolutionController);
             this.population.initialisation();
+            this._initPopForm.pop = this.population;
             this.screen = 3;
         } else {
             this.errorMessage.set({msg: "text input not defined. Not possible to init population"});

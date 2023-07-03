@@ -1,6 +1,7 @@
 import {Params} from "../Params.js";
 
 class Poster {
+    #showGrid = false;
     constructor(n, generation, params) {
         this.id = `${generation}-${n}`;
         this.n = n;
@@ -36,6 +37,9 @@ class Poster {
             2,
             params.sentences.length
         );
+        
+        this.#showGrid = params.display.grid;
+        console.log("#showGrid", this.#showGrid, params.display) ;
 
         this.genotype = {
             grid: grid,
@@ -75,7 +79,9 @@ class Poster {
         pg.fill(0);
         pg.textAlign(CENTER, CENTER);
         pg.text(this.id, 20, 20)
-        this.genotype.grid.display(pg);
+        if (this.#showGrid) {
+            this.genotype.grid.display(pg);
+        }
         imageMode(CENTER);
         image(pg, x, y);
         pop();
@@ -95,6 +101,13 @@ class Poster {
             ); //(Params.visualisationGrid.width/this.textboxes.length)*(i-this.textboxes.length/2)
         }
         pg.pop();
+    }
+
+    toggleGrid = (show = null) => {
+        if (show === null) {
+            show = !this.#showGrid;
+        }
+        this.#showGrid = show;
     }
 }
 
@@ -369,7 +382,6 @@ class Grid {
     }
 
     #displayMargins = (pg, c = '#0000ff') => {
-        console.log (`#displayMargins`);
         pg.push();
         pg.stroke(c);
         pg.rectMode(CORNER);

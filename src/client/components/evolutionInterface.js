@@ -1,14 +1,15 @@
-import {html, LitElement} from "lit";
+import {html, LitElement, nothing} from "lit";
 import {Divider} from "./Divider.js";
 import {Params} from "../Params.js";
 
 export class EvolutionInterface extends LitElement {
     static properties = {
     }
-    constructor(params, initFunction, editFunction) {
+    constructor(params, initFunction, pop) {
         super();
         this.params = params;
         this.initPop = initFunction;
+        this.pop = pop;
     }
 
     #updateSize = () => {
@@ -197,7 +198,10 @@ export class EvolutionInterface extends LitElement {
                                            <b>Alignment</b><br>
                                            (Text alignment on poster)
                                        </small>
-                                       <select class="form-select form-select-sm my-2" id="background-style-form">
+                                       <select class="form-select form-select-sm my-2" id="background-style-form" 
+                                               @change="${(e) => {
+                                                   console.log("text", e);
+                                               }}">
                                            ${Params.textAlignmentOptions.map((x, i) =>
                                                    html`<option value=${i}>${x[0]}</option>`)
                                            }
@@ -205,7 +209,12 @@ export class EvolutionInterface extends LitElement {
                                    </div>
                                    ${Divider.get()}
                                    <div class="com-group my-2">
-                                       <input class="form-check-input" type="checkbox" value="" id="debug-check" checked>
+                                       <input class="form-check-input" type="checkbox" value="" id="debug-check"
+                                              checked="${this.params.display.grid}"
+                                              @change="${(e) => {
+                                                  this.params.display.grid = e.target.checked;
+                                                  this.pop.toggleGrid(this.params.display.grid);
+                                              }}">
                                        <label class="form-check-label small px-2" for="debug-check">Show Grid</label>
                                    </div>
                                </form>
