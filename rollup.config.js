@@ -10,6 +10,10 @@ import { rollupPluginHTML as html } from '@web/rollup-plugin-html';
 
 const production = !process.env.ROLLUP_WATCH
 
+// live loaading plugi
+// tree-shaling -->
+
+
 export default [
     {
         input: 'src/client/app.js',

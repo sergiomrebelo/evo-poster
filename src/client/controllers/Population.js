@@ -6,7 +6,7 @@ export class Population {
         this.size = Params.populationSize;
         this.population = [];
         this.generation = 0;
-        this._data = data;
+        this._data = data; // private variable new version
     }
 
     initialisation = () => {
@@ -15,8 +15,6 @@ export class Population {
             this.population.push(poster);
         }
     }
-
-
 
     draw = () => {
         const n = this.population.length < Params.visiblePosters ? this.population.length : Params.visiblePosters;

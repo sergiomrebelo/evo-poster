@@ -11,13 +11,15 @@ export class Params {
     static populationSize = 100;
     static maxGenerations = 50;
 
-    static visiblePosters = 200;
+    static visiblePosters = 10;
 
     static visualisationGrid = {
         height: 250,
         width: 180,
         marginY: 20
     }
+
+
 
     static typography = {
         maxSize: 60,
