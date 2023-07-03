@@ -12,7 +12,24 @@ export class EvolutionInterface extends LitElement {
     }
 
     #updateSize = () => {
-        console.log(`#updateSize`);
+        let width = parseFloat(document.getElementById(`size-x-input`).value.replace(",", "."));
+        let height = parseFloat(document.getElementById(`size-y-input`).value.replace(",", "."));
+
+        width = isNaN(width) || width === undefined || width === null ? 1 : width;
+        height = isNaN(height) || height === undefined || height === null ? 1 : height;
+
+        // automatic width calculation (width remains 1)
+        if (width !== 1) {
+            height = Math.round(parseFloat(height/width)*100) / 100;
+            width = 1;
+        }
+
+        this.params.size.width = Params.visualisationGrid.width * width;
+        this.params.size.height = Params.visualisationGrid.height * height;
+
+        document.getElementById(`size-x-input`).value = width;
+        document.getElementById(`size-y-input`).value = height;
+        this.initPop(true);
     }
 
     render(){
@@ -44,8 +61,8 @@ export class EvolutionInterface extends LitElement {
                                        <div class="col-3" id="size-y">
                                            <input type="text" class="form-control" id="size-y-input" 
                                                   placeholder="height" 
-                                                  value="${Math.round(this.params.posterSize.height/this.params.posterSize.width*100)/100} 
-                                                  @change="${this.#updateSize}"">
+                                                  value="${Math.round(this.params.size.height/this.params.size.width*100)/100}"
+                                                  @change="${this.#updateSize}">
                                        </div>
                                    </div>
                                    ${Divider.get()}

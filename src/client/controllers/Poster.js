@@ -27,13 +27,17 @@ class Poster {
             });
         }
 
-        this.size = {};
+
 
         // text alignment
         this.globalProperties = {}
 
 
         this.genotype = {
+            size: {
+                width: params.size.width,
+                height: params.size.height
+            },
             background: {
                 style: 0,
                 colors: [
@@ -49,7 +53,8 @@ class Poster {
 
     draw = (posX = 0, posY=0) => {
         push();
-        const pg = createGraphics(Params.visualisationGrid.width, Params.visualisationGrid.height);
+
+        const pg = createGraphics(this.genotype.size.width, this.genotype.size.height);
 
         pg.background(this.genotype.background.colors[0]);
         this.typeset(pg);

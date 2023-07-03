@@ -55,7 +55,7 @@ export class App extends LitElement {
 
         // evolution controller
         this.evolutionController = {
-            posterSize: {
+            size: {
                 width: Params.visualisationGrid.width,
                 height: Params.visualisationGrid.height,
             },
@@ -84,9 +84,6 @@ export class App extends LitElement {
         this.population = null;
         document.getElementById(`defaultCanvas0`).style.visibility = "visible";
         this.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue('--main-bg-color');
-
-
-
     }
 
     analyse = async () => {
@@ -121,10 +118,14 @@ export class App extends LitElement {
     }
 
 
-    #initPopulation = () => {
+    #initPopulation = (size = false) => {
+
+        if (size) {
+            this.#initCanvas();
+        }
+
         // clean old population
         background(this.backgroundColor);
-
 
         if (this.results !== null) {
             if (this.evolutionController["sentences"] == null) {
@@ -138,11 +139,9 @@ export class App extends LitElement {
         }
     }
 
-
-
     #initCanvas = () => {
         let numberOfPosters = Params.visiblePosters > Params.populationSize ? Params.populationSize : Params.visiblePosters;
-        const h = numberOfPosters / Math.floor(windowWidth/Params.visualisationGrid.width) * (Params.visualisationGrid.height + Params.visualisationGrid.marginY) // calculate the height of canvas
+        const h = numberOfPosters / Math.floor(windowWidth/this.evolutionController.size.width) * (this.evolutionController.size.height + Params.visualisationGrid.marginY) // calculate the height of canvas
         createCanvas(windowWidth, h);
         loop();
     }

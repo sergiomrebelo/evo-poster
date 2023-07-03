@@ -6,6 +6,14 @@ export class Params {
         'nb', 'pl', 'pt', 'ro', 'ru', 'si', 'sk', 'sl', 'es', 'sv',
         'ta', 'te', 'th', 'tr', 'uk', 'ur', 'vi', 'cy'
     ];
+
+    static visualisationGrid = {
+        height: 282,
+        width: 200,
+        marginY: 20
+    }
+    
+
     static imageMaxSize = 1024;
 
     static populationSize = 10;
@@ -13,11 +21,7 @@ export class Params {
 
     static maxGenerations = 10;
 
-    static visualisationGrid = {
-        height: 250,
-        width: 180,
-        marginY: 20
-    }
+
     static backgroundStyleOptions = [ [`Solid`, 1], [`Gradient`,2], [`Triangle`,2]];
     static textAlignmentOptions = [ [`Top`], [`Middle`],  ["Bottom"]];
 
