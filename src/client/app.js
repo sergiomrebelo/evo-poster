@@ -3,7 +3,7 @@ import {InputForm} from "./components/InputForm.js";
 import {ResultsContainer} from "./components/ResultsContainer.js";
 import {ErrHandler} from "./components/ErrHandler.js";
 import {nothing} from "https://unpkg.com/lit-html/lit-html.js?module";
-import Population from "./components/Population.js";
+import Population from "./controllers/Population.js";
 
 import 'bootstrap/scss/bootstrap.scss';
 import './main.css';

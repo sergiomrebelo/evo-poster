@@ -13,7 +13,7 @@
   },
   "scripts": {
     "test": "cross-env NODE_OPTIONS=--experimental-vm-modules npx jest",
-    "test:cypress": "cypress open --project test",
+    "test:cypress": "cypress open",
     "build": "rollup --config",
     "watch": "rollup -c -w",
     "dev": "nodemon --exec babel-node src/server.js",
