@@ -7,6 +7,7 @@ export class Population {
         this.population = [];
         this.generation = 0;
         this._data = data; // private variable new version
+        this.genotype = {}
     }
 
     initialisation = () => {

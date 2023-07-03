@@ -43,6 +43,33 @@ h4 {
     margin-bottom: 1.35em;
 }
 
-.p5Canvas {
-    /*display: none;*/
+.p5Canvas {}
+
+.initial-Form-outer {
+    background: rgba(0,0,0, 0.5);
+    top:0;
+    right:0;
+    position: fixed;
+    overflow-y:scroll;
+    overflow-x:hidden;
+}
+
+.initial-Form-inner {
+    height: 100vh;
+    overflow-y:scroll;
+    overflow-x:hidden;
+}
+
+#info-init {
+    background: var(--main-bg-color);
+    min-height: 100%;
+    overflow-y:scroll;
+    overflow-x:hidden;
+}
+
+init-form {
+    min-height: 100vh;
+    overflow-y:scroll;
+    overflow-x:hidden;
+    z-index:10;
 }

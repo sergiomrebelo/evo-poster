@@ -1,15 +1,19 @@
 import {LitElement, html} from "lit";
-import {InputForm} from "./components/InputForm.js";
-import {ResultsContainer} from "./components/ResultsContainer.js";
-import {ErrHandler} from "./components/ErrHandler.js";
 import {nothing} from "https://unpkg.com/lit-html/lit-html.js?module";
-import Population from "./controllers/Population.js";
 
 import 'bootstrap/scss/bootstrap.scss';
 import './main.css';
-
 import 'p5';
+
 import {Params} from "./Params.js";
+import {InputForm} from "./components/InputForm.js";
+import {ResultsContainer} from "./components/ResultsContainer.js";
+import {ErrHandler} from "./components/ErrHandler.js";
+import {InitForm} from "./components/initForm.js"
+
+import Population from "./controllers/Population.js";
+
+
 
 
 window.preload = () => {}
@@ -45,17 +49,29 @@ export class App extends LitElement {
 
     constructor() {
         super();
-        this.text = null;
         this.results = null;
         this.screen = 0;
         this.evolving = false;
+
+        this.currentParams = {
+            posterSize: {
+                width: Params.visualisationGrid.width,
+                height: Params.visualisationGrid.height,
+            },
+            text: "sample text"
+        }
+
         this.errorMessage = new ErrHandler();
         this._resultsContainer = new ResultsContainer();
         this._inputForm = new InputForm(this.analyse, this._resultsContainer,  this.errorMessage);
+        this._initPopForm = new InitForm(this.currentParams);
 
         this.population = null;
         document.getElementById(`defaultCanvas0`).style.visibility = "visible";
         this.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue('--main-bg-color');
+
+
+
     }
 
     analyse = async () => {
@@ -88,6 +104,9 @@ export class App extends LitElement {
         loop();
 
         if (this.results !== null) {
+            /*TODO: verify text*/
+            this.currentParams["text"] = this.results;
+            console.log(this.results);
             this.population = new Population(this.results);
             this.population.initialisation();
             this.screen = 3;
@@ -112,6 +131,7 @@ export class App extends LitElement {
 
     render() {
         return html`
+            ${this._initPopForm}
             ${this.errorMessage}
             <div class="container-fluid">
                 <div class="row">
