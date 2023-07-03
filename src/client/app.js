@@ -69,6 +69,7 @@ export class App extends LitElement {
                 }
             },
             typography: {
+                globalTextAlignment: 0,
                 color:  {
                     random: true,
                     value: Params.typography.defaultColor,

@@ -39,7 +39,6 @@ class Poster {
         );
         
         this.#showGrid = params.display.grid;
-        console.log("#showGrid", this.#showGrid, params.display) ;
 
         this.genotype = {
             grid: grid,
@@ -56,7 +55,7 @@ class Poster {
             },
             typography: {
                 color: params.typography.color.random ? color(random(255), random(255), random(255)) : color(params.typography.color.value),
-                globalTextAlignment: 0
+                globalTextAlignment: params.typography.globalTextAlignment === 0 ? Math.round(1+Math.random()*2) : params.typography.globalTextAlignment
             }
         }
     }
@@ -78,7 +77,7 @@ class Poster {
         pg.textSize(10);
         pg.fill(0);
         pg.textAlign(CENTER, CENTER);
-        pg.text(this.id, 20, 20)
+        pg.text(`${this.id}+${this.genotype.typography.globalTextAlignment}`, 20, 20)
         if (this.#showGrid) {
             this.genotype.grid.display(pg);
         }

@@ -200,7 +200,8 @@ export class EvolutionInterface extends LitElement {
                                        </small>
                                        <select class="form-select form-select-sm my-2" id="background-style-form" 
                                                @change="${(e) => {
-                                                   console.log("text", e);
+                                                   this.params.typography.globalTextAlignment = parseInt(e.target.value);
+                                                   this.initPop();
                                                }}">
                                            ${Params.textAlignmentOptions.map((x, i) =>
                                                    html`<option value=${i}>${x[0]}</option>`)
