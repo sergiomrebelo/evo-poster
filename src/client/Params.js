@@ -7,24 +7,25 @@ export class Params {
         'ta', 'te', 'th', 'tr', 'uk', 'ur', 'vi', 'cy'
     ];
     static imageMaxSize = 1024;
-
     static populationSize = 100;
     static maxGenerations = 50;
-
     static visiblePosters = 10;
-
     static visualisationGrid = {
         height: 250,
         width: 180,
         marginY: 20
     }
-
-
     static backgroundStyleOptions = [ [`Solid`, 1], [`Gradient`,2], [`Triangle`,2]];
     static textAlignmentOptions = [ [`Top`], [`Middle`],  ["Bottom"]];
 
     static typography = {
+        defaultColor: `#ff0000`,
         maxSize: 60,
         minSize: 60
     }
+
+    static background = {
+        availableStyles: [ [`Solid`, 1], [`Gradient`,2], [`Triangle`,2]],
+        defaultColors: [`#ffff00`, `#000000`]
+    };
 }

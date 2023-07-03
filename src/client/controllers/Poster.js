@@ -1,7 +1,7 @@
 import {Params} from "../Params.js";
 
 class Poster {
-    constructor(n, generation, sentences = []) {
+    constructor(n, generation, sentences = [], params) {
         this.id = `${generation}-${n}`;
         this.n = n;
         this.generation = generation;
@@ -19,29 +19,36 @@ class Poster {
                 "alignment": Math.round(Math.random()*3),
                 "size": Math.round(Params.typography.minSize + Math.random()*Params.typography.maxSize),
                 "typeface": null,
-                "color": color(Math.random()*255, Math.random()*255, Math.random()*255),
+                "color": params.typography.color.random ? color(random(255), random(255), random(255)) : color(params.typography.color.value),
                 "uppercase": Math.random() > 0.5,
             });
-        }
-
-        this.background = {
-            backgroundStyle: 0,
-            backgroundColors: [
-                color(Math.random()*255, Math.random()*255, Math.random()*255),
-                color(Math.random()*255, Math.random()*255, Math.random()*255)
-            ]
         }
 
         this.size = {};
 
         // text alignment
         this.globalProperties = {}
+
+
+        this.genotype = {
+            background: {
+                style: 0,
+                colors: [
+                    params.background.color.random ? color(random(255), random(255), random(255)) : color(params.background.color.valueA),
+                    params.background.color.random ? color(random(255), random(255), random(255)) : color(params.background.color.valueB)
+                ]
+            },
+            typography: {
+                color: params.typography.color.random ? color(random(255), random(255), random(255)) : color(params.typography.color.value),
+            }
+        }
     }
 
     draw = (posX = 0, posY=0) => {
         push();
         const pg = createGraphics(Params.visualisationGrid.width, Params.visualisationGrid.height);
-        pg.background(this.background.backgroundColors[0]);
+
+        pg.background(this.genotype.background.colors[0]);
         this.typeset(pg);
 
         const sideX = width / Math.floor(width/Params.visualisationGrid.width);

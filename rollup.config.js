@@ -29,7 +29,7 @@ export default [
             }
         ],
         watch: {
-            include: 'src/client/**'
+            include: ['src/client/**', 'src/client/components/**', 'src/client/controllers/**']
         },
         plugins: [
             resolve(),

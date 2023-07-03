@@ -1,5 +1,4 @@
-import {LitElement, html} from "lit";
-import {nothing} from "https://unpkg.com/lit-html/lit-html.js?module";
+import {LitElement, html, css, nothing} from "lit";
 
 import 'bootstrap/scss/bootstrap.scss';
 import './main.css';
@@ -9,7 +8,7 @@ import {Params} from "./Params.js";
 import {InputForm} from "./components/InputForm.js";
 import {ResultsContainer} from "./components/ResultsContainer.js";
 import {ErrHandler} from "./components/ErrHandler.js";
-import {InitForm} from "./components/initForm.js"
+import {EvolutionInterface} from "./components/EvolutionInterface.js"
 
 import Population from "./controllers/Population.js";
 
@@ -29,7 +28,6 @@ window.draw = () => {
     if (window.app.screen < 3) return null;
     background(window.app.backgroundColor);
     window.app.population.draw();
-    noLoop();
 }
 
 window.windowResized = () => {
@@ -53,18 +51,34 @@ export class App extends LitElement {
         this.screen = 0;
         this.evolving = false;
 
-        this.currentParams = {
+
+        // evolution controller
+        this.evolutionController = {
             posterSize: {
                 width: Params.visualisationGrid.width,
                 height: Params.visualisationGrid.height,
             },
-            text: "sample text"
+            text: "sample text",
+            background: {
+                style: 0,
+                color: {
+                    random: true,
+                    valueA: Params.background.defaultColors[0],
+                    valueB: Params.background.defaultColors[1]
+                }
+            },
+            typography: {
+                color:  {
+                    random: true,
+                    value: Params.typography.defaultColor,
+                },
+            }
         }
 
         this.errorMessage = new ErrHandler();
         this._resultsContainer = new ResultsContainer();
         this._inputForm = new InputForm(this.analyse, this._resultsContainer,  this.errorMessage);
-        this._initPopForm = new InitForm(this.currentParams);
+        this._initPopForm = new EvolutionInterface(this.evolutionController, this.#initPopulation);
 
         this.population = null;
         document.getElementById(`defaultCanvas0`).style.visibility = "visible";
@@ -94,26 +108,42 @@ export class App extends LitElement {
 
     setupEvolution = (e) => {
         e.preventDefault();
-        // init canvas
         this.screen = 2;
-        let numberOfPosters = Params.visiblePosters > Params.populationSize ? Params.populationSize : Params.visiblePosters;
-        const h = numberOfPosters / Math.floor(windowWidth/Params.visualisationGrid.width) * (Params.visualisationGrid.height + Params.visualisationGrid.marginY) // calculate the height of canvas
-        createCanvas(windowWidth, h);
+        this.#initCanvas();
+        this.#initPopulation();
 
+        // check initialisation of population
+        /* setInterval(()=> {
+            console.log(`init new pop`);
+            this.#initPopulation();
+        }, 2000) */
+    }
+
+
+    #initPopulation = () => {
+        // clean old population
         background(this.backgroundColor);
-        loop();
+
 
         if (this.results !== null) {
-            /*TODO: verify text*/
-            this.currentParams["text"] = this.results;
-            console.log(this.results);
-            this.population = new Population(this.results);
+            this.evolutionController["text"] = this.results.sentences;
+            this.population = new Population(this.results, this.evolutionController);
             this.population.initialisation();
             this.screen = 3;
         } else {
             this.errorMessage.set({msg: "text input not defined. Not possible to init population"});
         }
     }
+
+
+
+    #initCanvas = () => {
+        let numberOfPosters = Params.visiblePosters > Params.populationSize ? Params.populationSize : Params.visiblePosters;
+        const h = numberOfPosters / Math.floor(windowWidth/Params.visualisationGrid.width) * (Params.visualisationGrid.height + Params.visualisationGrid.marginY) // calculate the height of canvas
+        createCanvas(windowWidth, h);
+        loop();
+    }
+
 
     _nextBts = () => {
         return html`
@@ -130,8 +160,8 @@ export class App extends LitElement {
     }
 
     render() {
+        console.log (`screen=${this.screen}`)
         return html`
-            ${this._initPopForm}
             ${this.errorMessage}
             <div class="container-fluid">
                 <div class="row">
@@ -140,6 +170,7 @@ export class App extends LitElement {
                     </div>
                 </div>
             </div>
+            ${this.screen === 3 ? this._initPopForm : nothing}
             ${this.screen < 2 ? 
                 html`<div id="input-module" class="container-fluid">
                     ${this._resultsContainer}

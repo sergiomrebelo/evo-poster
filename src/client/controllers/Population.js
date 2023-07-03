@@ -2,8 +2,9 @@ import {Params} from "../Params.js";
 import Poster from "./Poster.js";
 
 export class Population {
-    constructor(data) {
+    constructor(data, params) {
         this.size = Params.populationSize;
+        this.params = params;
         this.population = [];
         this.generation = 0;
         this._data = data; // private variable new version
@@ -12,7 +13,7 @@ export class Population {
 
     initialisation = () => {
         for (let i=0; i<this.size; i++) {
-            const poster = new Poster(i, this.generation, this._data['sentences']);
+            const poster = new Poster(i, this.generation, this._data['sentences'], this.params);
             this.population.push(poster);
         }
     }

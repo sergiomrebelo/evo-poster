@@ -57,8 +57,6 @@ export class InputForm extends LitElement {
         this.images.loading = true;
         this.images.amount = e.target.files.length;
 
-        console.log(this._formRef,  this._errHandlerRef);
-
         this.images.blobs = await this._readImages(e.target.files).catch((err) => {
             this._errHandlerRef.set({message: `not possible to load the image ${err}`});
         })
