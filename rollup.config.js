@@ -5,6 +5,7 @@ import resolve from '@rollup/plugin-node-resolve';
 import del from 'rollup-plugin-delete';
 import summary from 'rollup-plugin-summary';
 import livereload from 'rollup-plugin-livereload'
+import url from '@rollup/plugin-url';
 
 import { rollupPluginHTML as html } from '@web/rollup-plugin-html';
 
@@ -37,11 +38,16 @@ export default [
             scss({ fileName: 'bundle.css' }),
             html({
                 input: 'src/client/index.html',
-                minify: false,
+                minify: true,
                 extractAssets: false
             }),
             summary(),
             livereload(),
+            url({
+                include: ['**/*.woff', '**/*.woff2', '**/*.ttf'],
+                limit: Infinity,
+                fileName: '[dirname][name][extname]',
+            }),
             del({ targets: 'src/public/assets/*' })
         ]
     }

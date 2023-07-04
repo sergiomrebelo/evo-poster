@@ -53,7 +53,7 @@ export class App extends LitElement {
         this.evolving = false;
 
 
-        // evolution controller
+        // TODO: evolution controller --> config
         this.evolutionController = {
             size: {
                 width: Params.visualisationGrid.width,
@@ -74,6 +74,9 @@ export class App extends LitElement {
                     random: true,
                     value: Params.typography.defaultColor,
                 },
+                typefaces: [],
+                weight: null,
+                stretch: null
             },
             display: {
                 grid: true
@@ -89,7 +92,7 @@ export class App extends LitElement {
         document.getElementById(`defaultCanvas0`).style.visibility = "visible";
         this.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue('--main-bg-color');
 
-        this._initPopForm = new EvolutionInterface(this.evolutionController, this.#initPopulation, this.population);
+        this._initPopForm = new EvolutionInterface(this.evolutionController, this.#initPopulation, this.population, this.errorMessage);
     }
 
     analyse = async () => {

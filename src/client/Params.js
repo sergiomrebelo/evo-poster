@@ -7,6 +7,11 @@ export class Params {
         'ta', 'te', 'th', 'tr', 'uk', 'ur', 'vi', 'cy'
     ];
 
+    // TODO: method to automatically check if typeface exists
+    static availableTypefaces = [
+        'Amstelvar', 'Anybody', 'Barlow', 'Cabin', 'Emberly', 'Epilogue', 'IBMPlexSans', 'Inconsolata'
+    ]
+
     static visualisationGrid = {
         height: 282,
         width: 200,
