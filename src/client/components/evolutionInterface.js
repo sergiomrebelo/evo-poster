@@ -521,9 +521,10 @@ export class EvolutionInterface extends LitElement {
                                 </div>
                             </div>
                         </div>
+                        ${Divider.get()}
+                        <button type="button" class="btn btn-primary">Evolve</button>
                     </div>
                 </section>
-                <!-- submission bt -->
             </div>`;
     }
 
