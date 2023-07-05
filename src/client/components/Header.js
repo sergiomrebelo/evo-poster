@@ -23,7 +23,18 @@ export class Header extends LitElement {
                     </a>
                 </div>
                 ${this.evolutionaryInterface ? html`<div class="col-2 d-flex justify-content-end mt-2 d-block">
-                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-toggle="collapse" 
+                            data-target="#evo-interface-inner" data-bs-target="#evo-interface-inner" aria-controls="evo-interface-inner" 
+                            aria-expanded="false" aria-label="Toggle navigation" 
+                            @click="${(e) => {
+                                // get state
+                                const divs = document.querySelectorAll('.opacity-fade');
+                                console.log(divs);
+                                divs.forEach((el) => {
+                                    console.log(el.classList);
+                                    el.classList.toggle('show');
+                                })
+                            }}">
                         <span class="navbar-toggler-icon"></span>
                     </button>
                 </div>`: nothing}

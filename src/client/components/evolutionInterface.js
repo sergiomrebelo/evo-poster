@@ -59,12 +59,24 @@ export class EvolutionInterface extends LitElement {
         return fonts;
     }
 
-    #updateSize = () => {
-        let width = parseFloat(document.getElementById(`size-x-input`).value.replace(",", "."));
-        let height = parseFloat(document.getElementById(`size-y-input`).value.replace(",", "."));
+    #validateNumberField = (value, defaultValue = 1) => {
+        value = parseFloat(value.replace(",", "."));
+        return isNaN(value) || value === undefined || value === null ? defaultValue : value;
+    }
 
-        width = isNaN(width) || width === undefined || width === null ? 1 : width;
-        height = isNaN(height) || height === undefined || height === null ? 1 : height;
+    #defineTextInput = (id, value) => {
+        document.getElementById(id).value = value;
+    }
+
+    #updateSize = () => {
+        let width = this.#validateNumberField(document.getElementById(`size-x-input`).value);
+        let height = this.#validateNumberField(document.getElementById(`size-y-input`).value);
+
+        let ml = this.#validateNumberField(document.getElementById(`size-mg-input-l`).value, this.params.size.margin[0]);
+        let mt = this.#validateNumberField(document.getElementById(`size-mg-input-t`).value, this.params.size.margin[1]);
+        let mr = this.#validateNumberField(document.getElementById(`size-mg-input-r`).value, this.params.size.margin[2]);
+        let mb = this.#validateNumberField(document.getElementById(`size-mg-input-b`).value, this.params.size.margin[3]);
+
 
         // automatic width calculation (width remains 1)
         if (width !== 1) {
@@ -74,9 +86,15 @@ export class EvolutionInterface extends LitElement {
 
         this.params.size.width = Params.visualisationGrid.width * width;
         this.params.size.height = Params.visualisationGrid.height * height;
+        this.params.size.margin = [ml,mt,mr,mb];
 
-        document.getElementById(`size-x-input`).value = width;
-        document.getElementById(`size-y-input`).value = height;
+        this.#defineTextInput(`size-x-input`, width);
+        this.#defineTextInput(`size-y-input`, height);
+        this.#defineTextInput(`size-mg-input-l`, ml);
+        this.#defineTextInput(`size-mg-input-t`, mt);
+        this.#defineTextInput(`size-mg-input-r`, mr);
+        this.#defineTextInput(`size-mg-input-b`, mb);
+
         this.initPop(true);
     }
 
@@ -119,9 +137,10 @@ export class EvolutionInterface extends LitElement {
 
     render() {
         return html`
-            <div class="wrapper initial-Form-outer container-fluid collapse show z-2">
-                <section id="initialForm" class="initial-Form-inner row">
-                    <div class="offset-sm-6 col-12 col-sm-6 p-3" id="info-init">
+            <div class="backdrop z-1 opacity-fade show" id="evo-interface-backdrop"></div>
+            <div class="wrapper initial-form-outer container-fluid show z-2" id="evo-interface-outer">
+                <section id="initialForm" class="initial-form-inner row">
+                    <div class="offset-sm-6 col-12 col-sm-6 p-3 pt-5 collapse-horizontal collapse show" id="evo-interface-inner">
                         <ul class="nav nav-tabs" id="myTab" role="tablist">
                             <li class="nav-item" role="presentation">
                                 <button class="nav-link active" id="poster-tab" data-bs-toggle="tab"
@@ -136,23 +155,46 @@ export class EvolutionInterface extends LitElement {
                                  aria-labelledby="poster-tab" tabindex="0">
                                 <div class="row form-group my-2" id="poster-features">
                                     <form>
+                                        
                                         <div class="form-group row">
-                                            <small class="my-2">
-                                                <b>Poster size</b><br>
-                                                (width x height ratio)
-                                            </small>
-                                            <div class="col-3" id="size-x">
-                                                <input type="text" class="form-control" id="size-x-input"
-                                                       placeholder="width" value="1"
-                                                       @change="${this.#updateSize}">
+                                            <small class="my-2 fw-bold">Poster size</small>
+                                            <div class="col-4">
+                                                <div class="input-group  input-group-sm" id="size-x">
+                                                    <span class="input-group-text" id="size-x-input-label">Width</span>
+                                                    <input type="text" class="form-control" id="size-x-input"
+                                                           placeholder="width" value="1"
+                                                           @change="${this.#updateSize}">
+                                                </div>
                                             </div>
-                                            <div class="col-3" id="size-y">
-                                                <input type="text" class="form-control" id="size-y-input"
-                                                       placeholder="height"
-                                                       value="${Math.round(this.params.size.height / this.params.size.width * 100) / 100}"
-                                                       @change="${this.#updateSize}">
+                                            <div class="col-4 mb-2">
+                                                <div class="input-group  input-group-sm" id="size-y">
+                                                    <span class="input-group-text" id="size-y-input-label">Height</span>
+                                                    <input type="text" class="form-control" id="size-y-input"
+                                                           placeholder="height"
+                                                           value="${Math.round(this.params.size.height / this.params.size.width * 100) / 100}"
+                                                           @change="${this.#updateSize}">
+                                                </div>
                                             </div>
+                                            <div class="col-12 col-md-8 mb-3">
+                                                <div class="input-group input-group-sm" id="size-mg">
+                                                    <span class="input-group-text" id="size-mg-input-label">Margins (ltrb)</span>
+                                                    <input type="text" class="form-control mr-2 mg-input col-2" id="size-mg-input-l"
+                                                           placeholder="left" value="${this.params.size.margin[0]}"
+                                                           @change="${this.#updateSize}">
+                                                    <input type="text" class="form-control mr-2 mg-input col-2" id="size-mg-input-t"
+                                                           placeholder="top" value="${this.params.size.margin[1]}"
+                                                           @change="${this.#updateSize}">
+                                                    <input type="text" class="form-control mr-2 mg-input col-2" id="size-mg-input-r"
+                                                           placeholder="right" value="${this.params.size.margin[2]}"
+                                                           @change="${this.#updateSize}">
+                                                    <input type="text" class="form-control mr-2 mg-input col-2" id="size-mg-input-b"
+                                                           placeholder="bottom" value="${this.params.size.margin[3]}"
+                                                           @change="${this.#updateSize}">
+                                                </div>
+                                            </div>
+                                            <hr>
                                         </div>
+                                        
                                         ${Divider.get()}
                                         <div class="form-group">
                                             <small class="my-2">

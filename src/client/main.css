@@ -1,6 +1,6 @@
 :root {
     --main-bg-color: #f3f3f3;
-    --header-height: 90px;
+    --header-height: 70px;
 }
 
 @font-face {
@@ -82,7 +82,6 @@ body > * {
 }
 
 
-
 #error-handle {
     order: 0;
 }
@@ -112,26 +111,43 @@ h4 {
 
 .p5Canvas {}
 
-.initial-Form-outer {
-    background: rgba(0,0,0, 0.5);
-    top:var(--header-height);
-    right:0;
+#evo-interface-outer {
     position: fixed;
-    overflow-y:scroll;
-    overflow-x:hidden;
+    right:0;
+    top:var(--header-height);
 }
 
-.initial-Form-inner {
+.backdrop {
+    background: rgba(0,0,0, 0.5);
+    overflow:hidden;
+    height: 100vh;
+    width: 1000vw;
+    position: fixed;
+    top:0;
+    transition: opacity 0.3s ease-in;
+    opacity: 0;
+}
+
+.backdrop.show {
+    opacity: 1;
+}
+
+.initial-form-inner {
     height: calc(100vh - var(--header-height));
     overflow-y:scroll;
     overflow-x:hidden;
 }
 
-#info-init {
+#evo-interface-inner {
     background: var(--main-bg-color);
     min-height: 100%;
     overflow-y:scroll;
     overflow-x:hidden;
+    margin-left: auto;
+}
+
+.mg-input {
+    max-width: 20px;
 }
 
 init-form {
@@ -140,9 +156,13 @@ init-form {
     overflow-x:hidden;
 }
 
+.
 
-
+/* header */
 #header-container {
     background: var(--main-bg-color);
+}
+
+header {
     height: var(--header-height);
 }

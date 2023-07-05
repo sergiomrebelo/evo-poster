@@ -1,6 +1,7 @@
 import {LitElement, html, css, nothing} from "lit";
 
 import 'bootstrap/scss/bootstrap.scss';
+import 'bootstrap/dist/js/bootstrap.bundle';
 import './main.css';
 import 'p5';
 
@@ -59,6 +60,7 @@ export class App extends LitElement {
             size: {
                 width: Params.visualisationGrid.width,
                 height: Params.visualisationGrid.height,
+                margin: Params.visualisationGrid.posterMargins
             },
             sentences: null,
             background: {

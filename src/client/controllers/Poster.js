@@ -32,7 +32,7 @@ class Poster {
             {
                 width: params.size.width,
                 height: params.size.height,
-                margin: Params.visualisationGrid.posterMargins
+                margin: params.size.margin
             },
             2,
             params.sentences.length
@@ -44,7 +44,8 @@ class Poster {
             grid: grid,
             size: {
                 width: params.size.width,
-                height: params.size.height
+                height: params.size.height,
+                margin: params.size.margin,
             },
             background: {
                 style: 0,
