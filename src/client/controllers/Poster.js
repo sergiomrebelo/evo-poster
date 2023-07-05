@@ -89,16 +89,22 @@ class Poster {
     }
 
     typeset = (pg) => {
+        console.log (`genotype=`, this.genotype)
         pg.push();
-        pg.textAlign(CENTER, CENTER);
+        pg.translate(pg.width/2, pg.height/2);
+
         for (let i in this.textboxes) {
             const textbox = this.textboxes[i];
+            let xPos = this.genotype.grid.col(0, false); // TODO: genotype aligne typogrpahy
+            let yPos = this.genotype.grid.row(parseInt(i)+1, false);
+
             pg.fill(textbox["color"]);
             pg.textSize(textbox["size"]);
-            pg.text(textbox["content"],
-                pg.width/2,
-                pg.height/2 + Params.typography.maxSize * (i-this.textboxes.length/2)
-            ); //(Params.visualisationGrid.width/this.textboxes.length)*(i-this.textboxes.length/2)
+            pg.text(textbox["content"]+"-"+i, xPos, yPos);
+            // pg.stroke(255,0,255);
+            // pg.line(0, yPos - pg.textAscent(), pg.width, yPos - pg.textAscent());
+            // pg.stroke(255,255, 0);
+            // pg.line(0, yPos, pg.width, yPos);
         }
         pg.pop();
     }
@@ -112,8 +118,7 @@ class Poster {
 }
 
 class Grid {
-    //right, top, left, bottom
-    constructor(size, v = 12, h = 24, gwper = .03, ghper = null) {
+    constructor(size, v = 12, h = 24, gwper = 0.03, ghper = null) {
         if (ghper === null) {
             ghper = gwper;
         }
@@ -203,10 +208,10 @@ class Grid {
     }
 
     #defMargins = () => {
-        this.marginsPos.left = this.size.margin[0];
-        this.marginsPos.top = this.size.margin[1];
-        this.marginsPos.right = this.size.margin[2];
-        this.marginsPos.bottom = this.size.margin[3];
+        this.marginsPos.left = this.size.margin[0] * this.size.width;
+        this.marginsPos.top = this.size.margin[1] * this.size.height;
+        this.marginsPos.right = this.size.margin[2] * this.size.width;
+        this.marginsPos.bottom = this.size.margin[3] * this.size.height;
     }
 
     getSpace = () => {
@@ -225,12 +230,10 @@ class Grid {
     }
 
     #defVertical = () => {
-
         this.columns.y.top = -(this.size.height / 2) + this.marginsPos.top; //(this.marginsPos.top
         this.columns.y.bottom = (this.size.height / 2) - (this.marginsPos.bottom);
 
-
-        const inc = (this.size.width - (this.size.margin[0] + this.size.margin[2])) / this.v;
+        const inc = (this.size.width - (this.marginsPos.left + this.marginsPos.right)) / this.v;
         this.columns.l = inc;
 
         // start cod of x
@@ -278,7 +281,7 @@ class Grid {
         // horizontal margins
         this.rows.x.left = -(this.size.width / 2) + this.marginsPos.left;
         this.rows.x.right = (this.size.width / 2) - this.marginsPos.right;
-        const inc = (this.size.height - (this.size.margin[1] + this.size.margin[3])) / this.h;
+        const inc = (this.size.height - (this.marginsPos.top + this.marginsPos.bottom)) / this.h;
         if (this.verticalSpace === null || this.verticalSpace.length !== this.h || this.regular) {
             this.verticalSpace = [];
             for (let i = 0; i < this.h; i++) {
@@ -307,6 +310,8 @@ class Grid {
                 this.rows.gap[x].top = this.rows.center[x];
             }
         }
+
+        console.log(this.rows, this.size);
     }
 
     col = (n, center = false) => {
@@ -426,6 +431,7 @@ class Grid {
             key = parseInt(key);
             const row = this.rows.gap[key];
             if (key !== 0 && key !== this.h) {
+                pg.text(key, this.rows.x.left+this.rows.x.right/2, row.top)
                 pg.line(this.rows.x.left, row.top, this.rows.x.right, row.top);
                 pg.line(this.rows.x.left, row.bottom, this.rows.x.right, row.bottom);
             }

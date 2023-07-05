@@ -1,4 +1,5 @@
 export class Params {
+    /* create evo.config.js */
     static  availableLanguages = [
         'ar', 'bn', 'bs', 'bg', 'zh', 'hr', 'cs', 'da', 'nl', 'en',
         'et', 'fi', 'fr', 'de', 'el', 'gu', 'he', 'hi', 'hu', 'ga',
@@ -7,16 +8,15 @@ export class Params {
         'ta', 'te', 'th', 'tr', 'uk', 'ur', 'vi', 'cy'
     ];
 
-    // TODO: method to automatically check if typeface exists
     static availableTypefaces = [
         'Amstelvar', 'Anybody', 'Barlow', 'Cabin', 'Emberly', 'Epilogue', 'IBMPlexSans', 'Inconsolata'
     ]
 
     static visualisationGrid = {
-        height: 282,
-        width: 200,
+        height: 423,
+        width: 300,
         marginY: 20,
-        posterMargins: [.02, .02, .02, .02],
+        posterMargins: [.05, .05, .05, .05],
     }
 
     static imageMaxSize = 1024;
@@ -31,13 +31,13 @@ export class Params {
     static textAlignmentOptions = [ [`Random`], [`Top`], [`Middle`],  ["Bottom"]];
 
     static typography = {
-        defaultColor: `#ff0000`,
+        defaultColor: `#000000`,
         maxSize: 60,
         minSize: 60
     }
 
     static background = {
         availableStyles: [ [`Solid`, 1], [`Gradient`,2], [`Triangle`,2]],
-        defaultColors: [`#ffff00`, `#000000`]
+        defaultColors: [`#ffffff`, `#000000`]
     };
 }
