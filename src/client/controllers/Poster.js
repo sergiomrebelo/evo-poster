@@ -1,33 +1,15 @@
 import {Params} from "../Params.js";
+import backgroundStyles from "./BackgroundStyles.js";
 
 class Poster {
     #showGrid = false;
+    #debug = true;
     constructor(n, generation, params) {
         this.id = `${generation}-${n}`;
         this.n = n;
         this.generation = generation;
 
-
-        // TODO: add to genotype
-        this.textboxes = [];
-        for (let sentence of params.sentences) {
-            this.textboxes.push({
-                "content": sentence,
-                "weight": Math.round(100+Math.random()*800),
-                "font-stretch": null, // "ultra-expanded"
-                "alignment": Math.round(Math.random()*3),
-                "size": Math.round(Params.typography.minSize + Math.random()*Params.typography.maxSize),
-                "typeface": null,
-                "color": params.typography.color.random ? color(random(255), random(255), random(255)) : color(params.typography.color.value),
-                "uppercase": Math.random() > 0.5,
-            });
-        }
-
-
-
-        this.globalProperties = {}
-
-
+        // define grid
         const grid = new Grid(
             {
                 width: params.size.width,
@@ -37,11 +19,37 @@ class Poster {
             2,
             params.sentences.length
         );
-        
-        this.#showGrid = params.display.grid;
 
+        // define texboxes
+        const textboxes = [];
+        for (let sentence of params.sentences) {
+            const selectedTypeface = Math.round(Math.random()*(params.typography.typefaces.length-1));
+            const selectedWeight = params.typography.weight.min+Math.round(Math.random()*(params.typography.weight.max));
+            const selectedStretch = params.typography.stretch.min+Math.round(Math.random()*(params.typography.stretch.max));
+            // define initial size
+            let size = Math.round(grid.rows.l[0]);
+            size += Math.round(-(size*Params.typography.range)+(Math.random()*(size*Params.typography.range)));
+            size = Math.max(
+                Math.round(params.size.height * Params.typography.minSize),
+                Math.min(Math.round(params.size.height * Params.typography.maxSize), size)
+            );
+
+            textboxes.push({
+                "content": sentence,
+                "weight": selectedWeight,
+                "font-stretch": selectedStretch,
+                "alignment": params.typography.textAlignment === 0 ? Math.round(Math.random()*2.4) : params.typography.textAlignment,
+                "size": size,
+                "typeface": params.typography.typefaces[selectedTypeface].family,
+                "color": params.typography.color.random ? color(random(255), random(255), random(255)) : color(params.typography.color.value),
+                "uppercase": Math.random() > 0.5,
+            });
+        }
+
+        // create genotype
         this.genotype = {
             grid: grid,
+            textboxes: textboxes,
             size: {
                 width: params.size.width,
                 height: params.size.height,
@@ -56,55 +64,75 @@ class Poster {
             },
             typography: {
                 color: params.typography.color.random ? color(random(255), random(255), random(255)) : color(params.typography.color.value),
-                globalTextAlignment: params.typography.globalTextAlignment === 0 ? Math.round(1+Math.random()*2) : params.typography.globalTextAlignment
+                verticalAlignment: params.typography.verticalAlignment === 0 ? Math.round(Math.random()*2.4) : params.typography.verticalAlignment
             }
         }
+
+        this.#showGrid = params.display.grid;
     }
 
-    draw = (posX = 0, posY=0) => {
+    draw = async (posX = 0, posY=0) => {
         push();
-
         const pg = createGraphics(this.genotype.size.width, this.genotype.size.height);
 
-        pg.background(this.genotype.background.colors[0]);
-        this.typeset(pg);
+        // background styles
+        backgroundStyles.solid(pg, this.genotype.background.colors[0]);
 
+        // typesetting typography on poster
+        await this.typeset(pg);
+
+        // debug
+        if (this.#debug) {
+            pg.textSize(10);
+            pg.fill(0);
+            pg.text(`${this.id}+${this.genotype.typography.verticalAlignment}`, 20, 20);
+        }
+
+        if (this.#showGrid && this.#debug) {
+            this.genotype.grid.display(pg);
+        }
+
+        // place graphics
         const sideX = width / Math.floor(width/Params.visualisationGrid.width);
         const sideY = Params.visualisationGrid.height + Params.visualisationGrid.marginY;
         const x = posX * sideX + sideX/2;
         const y = posY * sideY + sideY/2;
-        // translate (x, y);
-        // rect(0,0, Params.visualisationGrid.width, Params.visualisationGrid.height);
-        pg.textSize(10);
-        pg.fill(0);
-        pg.textAlign(CENTER, CENTER);
-        pg.text(`${this.id}+${this.genotype.typography.globalTextAlignment}`, 20, 20)
-        if (this.#showGrid) {
-            this.genotype.grid.display(pg);
-        }
         imageMode(CENTER);
         image(pg, x, y);
         pop();
 
     }
 
-    typeset = (pg) => {
-        console.log (`genotype=`, this.genotype)
+    typeset = async(pg) => {
         pg.push();
         pg.translate(pg.width/2, pg.height/2);
+        const ctx = pg.drawingContext;
 
-        for (let i in this.textboxes) {
-            const textbox = this.textboxes[i];
-            let xPos = this.genotype.grid.col(0, false); // TODO: genotype aligne typogrpahy
+        for (let i in this.genotype.textboxes) {
+            const tb = this.genotype.textboxes[i];
+
+            // define text align
+            const col = tb["alignment"];
+            let align = LEFT;
+            if (col === 1) {
+                align = CENTER;
+            } else if (col === 2) {
+                align = RIGHT;
+            }
+            pg.textAlign(align, BASELINE);
+
+            // position of text
+            let xPos =  this.genotype.grid.col(col, false);
             let yPos = this.genotype.grid.row(parseInt(i)+1, false);
 
-            pg.fill(textbox["color"]);
-            pg.textSize(textbox["size"]);
-            pg.text(textbox["content"]+"-"+i, xPos, yPos);
-            // pg.stroke(255,0,255);
-            // pg.line(0, yPos - pg.textAscent(), pg.width, yPos - pg.textAscent());
-            // pg.stroke(255,255, 0);
-            // pg.line(0, yPos, pg.width, yPos);
+            // color
+            pg.fill(tb["color"]);
+            pg.textSize(tb["size"]);
+            pg.textFont(tb["typeface"])
+            // ctx.font = `${tb["size"]}px ${tb.typeface}`;
+            console.log(ctx.font);
+            let content = tb["uppercase"] === true ? tb["content"].toUpperCase() : tb["content"];
+            pg.text(content, xPos, yPos);
         }
         pg.pop();
     }
@@ -116,6 +144,7 @@ class Poster {
         this.#showGrid = show;
     }
 }
+
 
 class Grid {
     constructor(size, v = 12, h = 24, gwper = 0.03, ghper = null) {
@@ -438,6 +467,7 @@ class Grid {
         }
         pg.pop();
     }
+
 }
 
 export default Poster;

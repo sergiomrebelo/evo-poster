@@ -6,6 +6,7 @@ import del from 'rollup-plugin-delete';
 import summary from 'rollup-plugin-summary';
 import livereload from 'rollup-plugin-livereload'
 import url from '@rollup/plugin-url';
+import copy from 'rollup-plugin-copy';
 
 import { rollupPluginHTML as html } from '@web/rollup-plugin-html';
 
@@ -48,6 +49,7 @@ export default [
                 limit: Infinity,
                 fileName: '[dirname][name][extname]',
             }),
+            copy({targets: [{src: 'src/client/assets', dest: 'src/public'}]}),
             del({ targets: 'src/public/assets/*' })
         ]
     }

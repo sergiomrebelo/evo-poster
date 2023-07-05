@@ -1,5 +1,5 @@
 export class Params {
-    /* create evo.config.js */
+    /* TODO: create evo.config.js */
     static  availableLanguages = [
         'ar', 'bn', 'bs', 'bg', 'zh', 'hr', 'cs', 'da', 'nl', 'en',
         'et', 'fi', 'fr', 'de', 'el', 'gu', 'he', 'hi', 'hu', 'ga',
@@ -32,8 +32,9 @@ export class Params {
 
     static typography = {
         defaultColor: `#000000`,
-        maxSize: 60,
-        minSize: 60
+        range: 0.1,
+        maxSize: 0.95,
+        minSize: 0.03
     }
 
     static background = {

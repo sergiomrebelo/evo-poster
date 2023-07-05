@@ -27,6 +27,11 @@ export class Population {
     }
 
     draw = () => {
+        for (let font of this.params.typography.typefaces) {
+            // TODO: ensure that typeface is loaded
+            const isLoaded = document.fonts.check(`bold 12px ${font.family}`);
+        }
+
         const n = this.population.length < Params.visiblePosters ? this.population.length : Params.visiblePosters;
         let posX = 0, posY = 0;
         for (let i=0; i<n; i++) {
@@ -38,6 +43,11 @@ export class Population {
                 posY += 1;
             }
         }
+
+
+        // document.fonts.check("12px molot")
+
+
         if (this.updated) {
             this.updated = false;
         }

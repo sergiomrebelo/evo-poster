@@ -1,7 +1,7 @@
 import {LitElement, html, css, nothing} from "lit";
 
 import 'bootstrap/scss/bootstrap.scss';
-import 'bootstrap/dist/js/bootstrap.bundle';
+import 'bootstrap/dist/js/bootstrap';
 import './main.css';
 import 'p5';
 
@@ -69,11 +69,12 @@ export class App extends LitElement {
                 }
             },
             typography: {
-                globalTextAlignment: 0,
+                verticalAlignment: 0,
                 color:  {
                     random: true,
                     value: Params.typography.defaultColor,
                 },
+                textAlignment: 0,
                 typefaces: [],
                 weight: null,
                 stretch: null

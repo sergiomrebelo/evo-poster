@@ -76,7 +76,6 @@ export class EvolutionInterface extends LitElement {
         let mr = this.#validateNumberField(document.getElementById(`size-mg-input-r`).value, this.params.size.margin[2]);
         let mb = this.#validateNumberField(document.getElementById(`size-mg-input-b`).value, this.params.size.margin[3]);
 
-
         // automatic width calculation (width remains 1)
         if (width !== 1) {
             height = Math.round(parseFloat(height / width) * 100) / 100;
@@ -214,8 +213,10 @@ export class EvolutionInterface extends LitElement {
                                                                for (let f of this.fonts.typefaces) {
                                                                    if (f.family === name) {
                                                                        this.params.typography.typefaces.push(f)
+                                                                       break;
                                                                    }
                                                                }
+                                                               this.initPop();
                                                                this.changesInTypefaces++;
                                                            } else {
                                                                this.errorMessage.set({message: `Typeface ${name} is not available<br>available typefaces: ${Params.availableTypefaces}`});
@@ -537,7 +538,7 @@ export class EvolutionInterface extends LitElement {
                                             </small>
                                             <select class="form-select form-select-sm my-2" id="background-style-form"
                                                     @change="${(e) => {
-                                                        this.params.typography.globalTextAlignment = parseInt(e.target.value);
+                                                        this.params.typography.verticalAlignment = parseInt(e.target.value);
                                                         this.initPop();
                                                     }}">
                                                 ${Params.textAlignmentOptions.map((x, i) =>
