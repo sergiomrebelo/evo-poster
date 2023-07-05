@@ -24,7 +24,11 @@ class Poster {
         const textboxes = [];
         for (let sentence of params.sentences) {
             const selectedTypeface = Math.round(Math.random()*(params.typography.typefaces.length-1));
+
+            // TODO: check if typeface supports
             const selectedWeight = params.typography.weight.min+Math.round(Math.random()*(params.typography.weight.max));
+
+            // TODO: check if typeface supports
             const selectedStretch = params.typography.stretch.min+Math.round(Math.random()*(params.typography.stretch.max));
             // define initial size
             let size = Math.round(grid.rows.l[0]);
@@ -34,17 +38,24 @@ class Poster {
                 Math.min(Math.round(params.size.height * Params.typography.maxSize), size)
             );
 
+            let alignment = params.typography.textAlignment === 0 ?
+                    Math.round(1+Math.random()*(Params.textAlignmentTbOptions.length-2)) :
+                    params.typography.textAlignment;
+
             textboxes.push({
                 "content": sentence,
                 "weight": selectedWeight,
                 "font-stretch": selectedStretch,
-                "alignment": params.typography.textAlignment === 0 ? Math.round(Math.random()*2.4) : params.typography.textAlignment,
+                "alignment":alignment,
                 "size": size,
                 "typeface": params.typography.typefaces[selectedTypeface].family,
                 "color": params.typography.color.random ? color(random(255), random(255), random(255)) : color(params.typography.color.value),
                 "uppercase": Math.random() > 0.5,
             });
+
         }
+
+
 
         // create genotype
         this.genotype = {
@@ -56,7 +67,7 @@ class Poster {
                 margin: params.size.margin,
             },
             background: {
-                style: 0,
+                style: params.background.style === 0 ? Math.round(1+Math.random()*(Params.background.availableStyles.length-2)) : params.background.style,
                 colors: [
                     params.background.color.random ? color(random(255), random(255), random(255)) : color(params.background.color.valueA),
                     params.background.color.random ? color(random(255), random(255), random(255)) : color(params.background.color.valueB)
@@ -64,7 +75,7 @@ class Poster {
             },
             typography: {
                 color: params.typography.color.random ? color(random(255), random(255), random(255)) : color(params.typography.color.value),
-                verticalAlignment: params.typography.verticalAlignment === 0 ? Math.round(Math.random()*2.4) : params.typography.verticalAlignment
+                verticalAlignment: params.typography.verticalAlignment === 0 ? Math.round(1+(Math.random()*Params.textAlignmentTbOptions.length-2)) : params.typography.verticalAlignment
             }
         }
 
@@ -112,25 +123,29 @@ class Poster {
             const tb = this.genotype.textboxes[i];
 
             // define text align
-            const col = tb["alignment"];
+            let col = tb["alignment"];
             let align = LEFT;
-            if (col === 1) {
+            if (col === 2) {
                 align = CENTER;
-            } else if (col === 2) {
+            } else if (col === 3) {
                 align = RIGHT;
             }
             pg.textAlign(align, BASELINE);
 
             // position of text
-            let xPos =  this.genotype.grid.col(col, false);
+            let xPos =  this.genotype.grid.col(col-1, false);
             let yPos = this.genotype.grid.row(parseInt(i)+1, false);
 
             // color
             pg.fill(tb["color"]);
-            pg.textSize(tb["size"]);
-            pg.textFont(tb["typeface"])
-            // ctx.font = `${tb["size"]}px ${tb.typeface}`;
-            console.log(ctx.font);
+            // pg.textSize(tb["size"]);
+            // pg.textFont(tb["typeface"])
+            //
+            // pg.textStyle();
+            ctx.font = `${tb["weight"]} ${getFontStretchName(tb['font-stretch'])} ${tb["size"]}px ${tb["typeface"]}`;
+            // TODO: weight and font-stretch
+            // console.log(ctx.font);
+            // console.log(ctx.font, tb["weight"], getFontStretchName(tb['font-stretch']));
             let content = tb["uppercase"] === true ? tb["content"].toUpperCase() : tb["content"];
             pg.text(content, xPos, yPos);
         }
@@ -145,6 +160,27 @@ class Poster {
     }
 }
 
+const getFontStretchName = (value) => {
+    if (value > -10 && value <= 50) {
+        return 'ultra-condensed';
+    } else if (value > 50 && value <= 62.5) {
+        return 'extra-condensed';
+    } else if (value > 62.5 && value <= 75) {
+        return 'condensed';
+    } else if (value > 75 && value <= 87.5) {
+        return 'semi-condensed';
+    } else if (value > 87.5 && value <= 100) {
+        return 'normal';
+    } else if  (value > 100 && value <= 112.5) {
+        return 'semi-expanded';
+    }  else if  (value > 112.5 && value <= 125) {
+        return 'expanded';
+    } else if  (value > 125 && value <= 150) {
+        return 'extra-expanded';
+    } else {
+        return `ultra-expanded`;
+    }
+}
 
 class Grid {
     constructor(size, v = 12, h = 24, gwper = 0.03, ghper = null) {

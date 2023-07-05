@@ -28,8 +28,11 @@ window.setup = () => {
 window.draw = () => {
     if (window.app.screen < 3) return null;
     if (window.app.population.updated) {
+        push();
+        translate(-width/2, -height/2);
         background(window.app.backgroundColor);
         window.app.population.draw();
+        pop();
     }
 }
 
@@ -152,9 +155,11 @@ export class App extends LitElement {
     }
 
     #initCanvas = () => {
+        // calculate the height of canvas
         let numberOfPosters = Params.visiblePosters > Params.populationSize ? Params.populationSize : Params.visiblePosters;
-        const h = numberOfPosters / Math.floor(windowWidth/this.config.size.width) * (this.config.size.height + Params.visualisationGrid.marginY) // calculate the height of canvas
-        createCanvas(windowWidth, h);
+        let h = Math.ceil(numberOfPosters / Math.floor(windowWidth/this.config.size.width));
+        h *= (this.config.size.height + (Params.visualisationGrid.marginY*2));
+        createCanvas(windowWidth, h, WEBGL);
         loop();
     }
 

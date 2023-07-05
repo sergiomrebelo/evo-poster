@@ -27,8 +27,9 @@ export class Params {
     static maxGenerations = 10;
 
 
-    static backgroundStyleOptions = [ [`Solid`, 1], [`Gradient`,2], [`Triangle`,2]];
+    static backgroundStyleOptions = [ [`Random`,0], [`Solid`, 1], [`Gradient`,2], [`Triangle`,2]];
     static textAlignmentOptions = [ [`Random`], [`Top`], [`Middle`],  ["Bottom"]];
+    static textAlignmentTbOptions = [ [`Random`], [`LEFT`], [`CENTER`],  [`RIGHT`]];
 
     static typography = {
         defaultColor: `#000000`,
