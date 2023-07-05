@@ -1,7 +1,6 @@
 import {html, LitElement, nothing} from "lit";
 import {Divider} from "./Divider.js";
 import {Params} from "../Params.js";
-import {ErrHandler} from "./ErrHandler.js";
 
 export class EvolutionInterface extends LitElement {
     static properties = {

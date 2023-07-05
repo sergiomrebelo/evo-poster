@@ -37,12 +37,9 @@ window.windowResized = () => {
     if (window.app.screen < 2) return null;
 }
 
-window.keyPressed = () => {
-    // console.log("kye");
-}
+window.keyPressed = () => {}
 
 export class App extends LitElement {
-    #header;
     static properties = {
         screen: 0,
         results: {},
@@ -55,7 +52,7 @@ export class App extends LitElement {
         this.screen = 0;
         this.evolving = false;
 
-
+        // evolution controllers
         this.config = {
             size: {
                 width: Params.visualisationGrid.width,
@@ -85,22 +82,22 @@ export class App extends LitElement {
                 grid: true
             }
         }
-
-        this.errorMessage = new ErrHandler();
-        this._resultsContainer = new ResultsContainer();
-        this._inputForm = new InputForm(this.analyse, this._resultsContainer,  this.errorMessage);
-        this.#header = new Header();
-
         this.population = null;
+
+        // ui components
+        this.errorMessage = new ErrHandler();
+        this.resultsContainer = new ResultsContainer();
+        this.inputForm = new InputForm(this.analyse, this.resultsContainer,  this.errorMessage);
+        this.header = new Header();
+        this.initPopForm = new EvolutionInterface(this.config, this.#initPopulation, this.population, this.errorMessage);
+
+        // misc
         document.getElementById(`defaultCanvas0`).style.visibility = "visible";
         this.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue('--main-bg-color');
-
-        this._initPopForm = new EvolutionInterface(this.config, this.#initPopulation, this.population, this.errorMessage);
-
     }
 
     analyse = async () => {
-        const formData = this._inputForm.data();
+        const formData = this.inputForm.data();
         let params = formData.shouldDivide ? `text` : `lines/${formData.delimiter}`;
         let req = `/${params}/${formData.lang}/${formData.textContent}`;
 
@@ -109,8 +106,8 @@ export class App extends LitElement {
            if (res.success === false) {
                this.errorMessage.set(res);
            }
-            this._resultsContainer.set(this.results);
-            this._inputForm.dis();
+            this.resultsContainer.set(this.results);
+            this.inputForm.dis();
             this.screen = 1;
         }).catch((err) => {
             this.errorMessage.set(err);
@@ -132,12 +129,11 @@ export class App extends LitElement {
 
 
     #initPopulation = (size = false) => {
-
         if (size) {
             this.#initCanvas();
         }
 
-        // clean old population
+        // clean the display old population
         background(this.backgroundColor);
 
         if (this.results !== null) {
@@ -146,9 +142,9 @@ export class App extends LitElement {
             }
             this.population = new Population(this.config);
             this.population.initialisation();
-            this._initPopForm.pop = this.population;
+            this.initPopForm.pop = this.population;
             this.screen = 3;
-            this.#header.showControls();
+            this.header.showControls();
         } else {
             this.errorMessage.set({msg: "text input not defined. Not possible to init population"});
         }
@@ -161,8 +157,7 @@ export class App extends LitElement {
         loop();
     }
 
-
-    _nextBts = () => {
+    #nextBts = () => {
         return html`
             <div class="container-fluid">
                 <button type="button" id="btReload" @click="${() => {window.location.reload()}}"
@@ -179,13 +174,13 @@ export class App extends LitElement {
     render() {
         return html`
             ${this.errorMessage}
-            ${this.#header}
-            ${this.screen === 3 ? this._initPopForm : nothing}
+            ${this.header}
+            ${this.screen === 3 ? this.initPopForm : nothing}
             ${this.screen < 2 ? 
                 html`<div id="input-module" class="container-fluid">
-                    ${this._resultsContainer}
-                    ${this._inputForm}
-                    ${this.screen === 1 ? this._nextBts() : nothing}
+                    ${this.resultsContainer}
+                    ${this.inputForm}
+                    ${this.screen === 1 ? this.#nextBts() : nothing}
                 </div>` :
             nothing }
         `;
