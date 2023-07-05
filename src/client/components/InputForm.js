@@ -108,7 +108,7 @@ export class InputForm extends LitElement {
     render() {
         return html`
             <div class="container-fluid" id="input-form-section">
-                <section class="input-form-outer row mt-5">
+                <section class="input-form-outer row mt-3">
                     <form id="input-form" class="input-form-inner" @submit=${this._onSubmit}>
                         <fieldset class="col-10">
                             <div class="form-group mb-2">

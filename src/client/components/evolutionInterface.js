@@ -118,7 +118,6 @@ export class EvolutionInterface extends LitElement {
     }
 
     render() {
-        // TODO: clean code --github issue
         return html`
             <div class="wrapper initial-Form-outer container-fluid collapse show z-2">
                 <section id="initialForm" class="initial-Form-inner row">

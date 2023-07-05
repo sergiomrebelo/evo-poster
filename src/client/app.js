@@ -9,6 +9,7 @@ import {InputForm} from "./components/InputForm.js";
 import {ResultsContainer} from "./components/ResultsContainer.js";
 import {ErrHandler} from "./components/ErrHandler.js";
 import {EvolutionInterface} from "./components/EvolutionInterface.js"
+import {Header} from "./components/Header.js";
 
 import Population from "./controllers/Population.js";
 
@@ -40,6 +41,7 @@ window.keyPressed = () => {
 }
 
 export class App extends LitElement {
+    #header;
     static properties = {
         screen: 0,
         results: {},
@@ -53,8 +55,7 @@ export class App extends LitElement {
         this.evolving = false;
 
 
-        // TODO: evolution controller --> config
-        this.evolutionController = {
+        this.config = {
             size: {
                 width: Params.visualisationGrid.width,
                 height: Params.visualisationGrid.height,
@@ -86,13 +87,14 @@ export class App extends LitElement {
         this.errorMessage = new ErrHandler();
         this._resultsContainer = new ResultsContainer();
         this._inputForm = new InputForm(this.analyse, this._resultsContainer,  this.errorMessage);
-
+        this.#header = new Header();
 
         this.population = null;
         document.getElementById(`defaultCanvas0`).style.visibility = "visible";
         this.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue('--main-bg-color');
 
-        this._initPopForm = new EvolutionInterface(this.evolutionController, this.#initPopulation, this.population, this.errorMessage);
+        this._initPopForm = new EvolutionInterface(this.config, this.#initPopulation, this.population, this.errorMessage);
+
     }
 
     analyse = async () => {
@@ -137,13 +139,14 @@ export class App extends LitElement {
         background(this.backgroundColor);
 
         if (this.results !== null) {
-            if (this.evolutionController["sentences"] == null) {
-                this.evolutionController["sentences"] = this.results.sentences;
+            if (this.config["sentences"] == null) {
+                this.config["sentences"] = this.results.sentences;
             }
-            this.population = new Population( this.evolutionController);
+            this.population = new Population(this.config);
             this.population.initialisation();
             this._initPopForm.pop = this.population;
             this.screen = 3;
+            this.#header.showControls();
         } else {
             this.errorMessage.set({msg: "text input not defined. Not possible to init population"});
         }
@@ -151,7 +154,7 @@ export class App extends LitElement {
 
     #initCanvas = () => {
         let numberOfPosters = Params.visiblePosters > Params.populationSize ? Params.populationSize : Params.visiblePosters;
-        const h = numberOfPosters / Math.floor(windowWidth/this.evolutionController.size.width) * (this.evolutionController.size.height + Params.visualisationGrid.marginY) // calculate the height of canvas
+        const h = numberOfPosters / Math.floor(windowWidth/this.config.size.width) * (this.config.size.height + Params.visualisationGrid.marginY) // calculate the height of canvas
         createCanvas(windowWidth, h);
         loop();
     }
@@ -172,16 +175,9 @@ export class App extends LitElement {
     }
 
     render() {
-        console.log (`screen=${this.screen}`)
         return html`
             ${this.errorMessage}
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-10">
-                        <h1 class="my-2 mx-2">Evolving Posters</h1>
-                    </div>
-                </div>
-            </div>
+            ${this.#header}
             ${this.screen === 3 ? this._initPopForm : nothing}
             ${this.screen < 2 ? 
                 html`<div id="input-module" class="container-fluid">
