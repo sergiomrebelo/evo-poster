@@ -85,6 +85,7 @@ class Poster {
     draw = async (posX = 0, posY=0) => {
         push();
         const pg = createGraphics(this.genotype.size.width, this.genotype.size.height);
+        // pg.translate(-pg.width/2, -pg.height/2);
 
         // background styles
         backgroundStyles.solid(pg, this.genotype.background.colors[0]);
@@ -105,7 +106,7 @@ class Poster {
 
         // place graphics
         const sideX = width / Math.floor(width/Params.visualisationGrid.width);
-        const sideY = Params.visualisationGrid.height + Params.visualisationGrid.marginY;
+        const sideY = this.genotype.grid.size.height + Params.visualisationGrid.marginY;
         const x = posX * sideX + sideX/2;
         const y = posY * sideY + sideY/2;
         imageMode(CENTER);
@@ -138,14 +139,11 @@ class Poster {
 
             // color
             pg.fill(tb["color"]);
-            // pg.textSize(tb["size"]);
-            // pg.textFont(tb["typeface"])
-            //
             // pg.textStyle();
-            ctx.font = `${tb["weight"]} ${getFontStretchName(tb['font-stretch'])} ${tb["size"]}px ${tb["typeface"]}`;
             // TODO: weight and font-stretch
-            // console.log(ctx.font);
-            // console.log(ctx.font, tb["weight"], getFontStretchName(tb['font-stretch']));
+            ctx.font = `${tb["weight"]} ${getFontStretchName(tb['font-stretch'])} ${tb["size"]}px ${tb["typeface"]}`;
+            drawingContext.font = `${tb["weight"]} ${getFontStretchName(tb['font-stretch'])} ${tb["size"]}px ${tb["typeface"]}`;
+            console.log(ctx.font, drawingContext.font);
             let content = tb["uppercase"] === true ? tb["content"].toUpperCase() : tb["content"];
             pg.text(content, xPos, yPos);
         }
@@ -375,8 +373,6 @@ class Grid {
                 this.rows.gap[x].top = this.rows.center[x];
             }
         }
-
-        console.log(this.rows, this.size);
     }
 
     col = (n, center = false) => {

@@ -27,11 +27,8 @@ export class Header extends LitElement {
                             data-target="#evo-interface-inner" data-bs-target="#evo-interface-inner" aria-controls="evo-interface-inner" 
                             aria-expanded="false" aria-label="Toggle navigation" 
                             @click="${(e) => {
-                                // get state
                                 const divs = document.querySelectorAll('.opacity-fade');
-                                console.log(divs);
                                 divs.forEach((el) => {
-                                    console.log(el.classList);
                                     el.classList.toggle('show');
                                 })
                             }}">
