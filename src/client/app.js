@@ -56,6 +56,7 @@ export class App extends LitElement {
         this.evolving = false;
 
         // evolution controllers
+        // TODO: database
         this.config = {
             size: {
                 width: Params.visualisationGrid.width,

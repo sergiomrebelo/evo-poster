@@ -24,12 +24,27 @@ class Poster {
         const textboxes = [];
         for (let sentence of params.sentences) {
             const selectedTypeface = Math.round(Math.random()*(params.typography.typefaces.length-1));
+            let stretchDefaultParams = params.typography.typefaces[selectedTypeface]["stretch"]
+                .replaceAll("%", "").split(" ").map(
+                    (v) => {
+                        if (isNaN(v)) {
+                            v = 100;
+                        }
+                        return parseInt(v);
+                    });
 
-            // TODO: check if typeface supports
-            const selectedWeight = params.typography.weight.min+Math.round(Math.random()*(params.typography.weight.max));
+            if (stretchDefaultParams.length < 2) {
+                stretchDefaultParams.push(100);
+            }
 
-            // TODO: check if typeface supports
-            const selectedStretch = params.typography.stretch.min+Math.round(Math.random()*(params.typography.stretch.max));
+            let weightDefaultParams = params.typography.typefaces[selectedTypeface]["weight"].split(" ").map((v) => parseInt(v));
+            let selectedWeight = params.typography.weight.min+Math.round(Math.random()*(params.typography.weight.max));
+            selectedWeight = Math.max(weightDefaultParams[0], Math.min(selectedWeight, weightDefaultParams[1]));
+
+            let selectedStretch = params.typography.stretch.min+Math.round(Math.random()*(params.typography.stretch.max));
+            selectedStretch = Math.max(stretchDefaultParams[0], Math.min(selectedStretch, stretchDefaultParams[1]));
+
+
             // define initial size
             let size = Math.round(grid.rows.l[0]);
             size += Math.round(-(size*Params.typography.range)+(Math.random()*(size*Params.typography.range)));
@@ -46,7 +61,7 @@ class Poster {
                 "content": sentence,
                 "weight": selectedWeight,
                 "font-stretch": selectedStretch,
-                "alignment":alignment,
+                "alignment": alignment,
                 "size": size,
                 "typeface": params.typography.typefaces[selectedTypeface].family,
                 "color": params.typography.color.random ? color(random(255), random(255), random(255)) : color(params.typography.color.value),
@@ -54,8 +69,6 @@ class Poster {
             });
 
         }
-
-
 
         // create genotype
         this.genotype = {
@@ -139,7 +152,10 @@ class Poster {
 
             // color
             pg.fill(tb["color"]);
-            // pg.textStyle();
+
+            // typeface
+            // pg.textFont(tb["typeface"]);
+
             // TODO: weight and font-stretch
             ctx.font = `${tb["weight"]} ${getFontStretchName(tb['font-stretch'])} ${tb["size"]}px ${tb["typeface"]}`;
             drawingContext.font = `${tb["weight"]} ${getFontStretchName(tb['font-stretch'])} ${tb["size"]}px ${tb["typeface"]}`;
