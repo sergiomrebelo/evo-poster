@@ -31,12 +31,11 @@ export default [
             }
         ],
         watch: {
-            include: ['src/client/**', 'src/client/components/**', 'src/client/controllers/**']
+            include: ['src/client/**']
         },
         plugins: [
             resolve(),
             json(),
-            scss({ fileName: 'bundle.css' }),
             html({
                 input: 'src/client/index.html',
                 minify: true,
@@ -50,9 +49,10 @@ export default [
                 fileName: '[dirname][name][extname]',
             }),
             copy({targets: [{src: 'src/client/assets', dest: 'src/public'}]}),
-            del({ targets: 'src/public/assets/*' })
-        ]
+            del({ targets: 'src/public/assets/*' }),
+            scss({
+                fileName: 'bundle.css',
+                sourceMap: true
+            })]
     }
 ];
-
-

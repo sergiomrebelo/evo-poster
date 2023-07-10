@@ -1,8 +1,6 @@
 import {LitElement, html, css, nothing} from "lit";
 
-import 'bootstrap/scss/bootstrap.scss';
 import 'bootstrap/dist/js/bootstrap';
-import './main.css';
 import 'p5';
 
 import {Params} from "./Params.js";
@@ -14,6 +12,8 @@ import {Header} from "./components/Header.js";
 
 import Population from "./controllers/Population.js";
 
+import 'bootstrap/scss/bootstrap.scss';
+import './main.css';
 
 window.preload = () => {}
 

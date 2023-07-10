@@ -35,6 +35,7 @@ export class EvolutionInterface extends LitElement {
                 max: Number.MIN_VALUE
             }
         }
+
         for (let font of Array.from(document.fonts)) {
             if (Params.availableTypefaces.includes(font.family)) {
                 let stretch = font.stretch.replaceAll(`%`, ``);
