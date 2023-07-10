@@ -426,6 +426,33 @@ export class EvolutionInterface extends LitElement {
                                             </div>
                                         </div>
                                         ${Divider.get()}
+                                        <div class="com-group my-2">
+                                            <input class="form-check-input" type="checkbox" value="" id="case-check"
+                                                   @change="${(e) => {
+                                                       this.params.typography.uppercase = e.target.checked;
+                                                       this.initPop();
+                                                   }}">
+                                            <label class="form-check-label small px-2" for="case-check">Uppercase</label>
+                                        </div>
+                                        ${Divider.get()}
+                                        <div class="form-group">
+                                            <small class="my-2">
+                                                <b>Texbox Alignment</b><br>
+                                            </small>
+                                            <select
+                                                    class="form-select form-select-sm my-2" id="texbox-align-style-form"
+                                                    @change="${(e) => {
+                                                        this.params.typography.textAlignment = parseInt(e.target.value);
+                                                        this.initPop();
+                                                    }}"
+                                            >
+                                                ${Params.textAlignmentTbOptions.map((x, i) =>
+                                                        html`
+                                                                <option value=${i}>${x[0]}</option>`)
+                                                }
+                                            </select>
+                                        </div>
+                                        ${Divider.get()}
                                         <div class="form-group">
                                             <small class="my-2">
                                                 <b>Content</b><br>

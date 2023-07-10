@@ -81,7 +81,9 @@ export class App extends LitElement {
                 textAlignment: 0,
                 typefaces: [],
                 weight: null,
-                stretch: null
+                stretch: null,
+                uppercase: false,
+                texboxAlignment: 0
             },
             display: {
                 grid: true

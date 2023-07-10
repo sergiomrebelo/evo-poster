@@ -65,7 +65,7 @@ class Poster {
                 "size": size,
                 "typeface": params.typography.typefaces[selectedTypeface].family,
                 "color": params.typography.color.random ? color(random(255), random(255), random(255)) : color(params.typography.color.value),
-                "uppercase": Math.random() > 0.5,
+                "uppercase": params.typography.uppercase
             });
 
         }
@@ -154,12 +154,8 @@ class Poster {
             pg.fill(tb["color"]);
 
             // typeface
-            // pg.textFont(tb["typeface"]);
-
-            // TODO: weight and font-stretch
             ctx.font = `${tb["weight"]} ${getFontStretchName(tb['font-stretch'])} ${tb["size"]}px ${tb["typeface"]}`;
             drawingContext.font = `${tb["weight"]} ${getFontStretchName(tb['font-stretch'])} ${tb["size"]}px ${tb["typeface"]}`;
-            console.log(ctx.font, drawingContext.font);
             let content = tb["uppercase"] === true ? tb["content"].toUpperCase() : tb["content"];
             pg.text(content, xPos, yPos);
         }

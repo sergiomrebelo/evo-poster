@@ -39,7 +39,7 @@ export class Params {
     }
 
     static background = {
-        availableStyles: [ [`Solid`, 1], [`Gradient`,2], [`Triangle`,2]],
+        availableStyles: [ ["Random", 0], [`Solid`, 1], [`Gradient`,2], [`Triangle`,2]],
         defaultColors: [`#ffffff`, `#000000`]
     };
 }
