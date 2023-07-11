@@ -34,6 +34,7 @@ window.draw = () => {
         window.app.population.draw();
         pop();
     }
+
 }
 
 window.windowResized = () => {
@@ -63,6 +64,7 @@ export class App extends LitElement {
                 height: Params.visualisationGrid.height,
                 margin: Params.visualisationGrid.posterMargins
             },
+            images: [],
             sentences: null,
             background: {
                 style: 0,
@@ -124,8 +126,12 @@ export class App extends LitElement {
     setupEvolution = (e) => {
         e.preventDefault();
         this.screen = 2;
+        // get images
+        this.config.images = document.querySelectorAll(`#input-images img`);
+
         this.#initCanvas();
         this.#initPopulation();
+
 
         // check initialisation of population
         /* setInterval(()=> {
@@ -152,6 +158,7 @@ export class App extends LitElement {
             this.initPopForm.pop = this.population;
             this.screen = 3;
             this.header.showControls();
+
         } else {
             this.errorMessage.set({msg: "text input not defined. Not possible to init population"});
         }

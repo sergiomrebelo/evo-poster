@@ -32,10 +32,15 @@ export class Population {
             const isLoaded = document.fonts.check(`bold 12px ${font.family}`);
         }
 
+        this.updated = false;
+
         const n = this.population.length < Params.visiblePosters ? this.population.length : Params.visiblePosters;
         let posX = 0, posY = 0;
         for (let i=0; i<n; i++) {
             const ind = this.population[i];
+            if (!ind.ready) {
+                this.updated = true;
+            }
             ind.draw(posX, posY);
             posX += 1;
             if (posX % Math.floor(width/Params.visualisationGrid.width) === 0) { // (Params.visualisationGrid.cols-1)
@@ -46,11 +51,6 @@ export class Population {
 
 
         // document.fonts.check("12px molot")
-
-
-        if (this.updated) {
-            this.updated = false;
-        }
     }
 }
 

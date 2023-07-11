@@ -8,6 +8,7 @@ class Poster {
         this.id = `${generation}-${n}`;
         this.n = n;
         this.generation = generation;
+        this.ready = false;
 
         // define grid
         const grid = new Grid(
@@ -70,6 +71,25 @@ class Poster {
 
         }
 
+        const images = [];
+
+        for (let input of params.images) {
+            const src = input.src;
+
+            const img = loadImage(src, async (img) => {
+                // resize image
+                await img.resize(0, params.size.height);
+                img.ready = true;
+            });
+
+            images.push({
+                x: Math.random(),
+                y: Math.random(),
+                scale: Math.random(),
+                src: img
+            })
+        }
+
         // create genotype
         this.genotype = {
             grid: grid,
@@ -89,20 +109,25 @@ class Poster {
             typography: {
                 color: params.typography.color.random ? color(random(255), random(255), random(255)) : color(params.typography.color.value),
                 verticalAlignment: params.typography.verticalAlignment === 0 ? Math.round(1+(Math.random()*Params.textAlignmentTbOptions.length-2)) : params.typography.verticalAlignment
-            }
+            },
+            images: images
         }
 
         this.#showGrid = params.display.grid;
     }
 
     draw = async (posX = 0, posY=0) => {
+        this.ready = true;
         push();
         const pg = createGraphics(this.genotype.size.width, this.genotype.size.height);
 
-        // background style
+        // background
         const backgroundStyleKey = Object.keys(backgroundStyles)[this.genotype.background.style-1];
         const backgroundFunction =  backgroundStyles[backgroundStyleKey];
         backgroundFunction(pg, this.genotype.background.colors[0], this.genotype.background.colors[1]);
+
+        // place images
+        this.ready = await this.#placeImages(pg);
 
         // typesetting typography on poster
         await this.typeset(pg);
@@ -126,7 +151,6 @@ class Poster {
         imageMode(CENTER);
         image(pg, x, y);
         pop();
-
     }
 
     typeset = async(pg) => {
@@ -161,6 +185,26 @@ class Poster {
             pg.text(content, xPos, yPos);
         }
         pg.pop();
+    }
+
+    #placeImages = async (pg) => {
+        let ready = true;
+        for (let img of this.genotype["images"]) {
+            if (img["src"] !== undefined && img["src"].hasOwnProperty("ready")) {
+                if (img["src"]["ready"]) {
+                    let x = pg.width * img.x;
+                    let y = pg.height * img.y;
+                    pg.imageMode(CENTER);
+                    pg.image (img.src,
+                        x, y,
+                        (img.src.width * img.scale), (img.src.height * img.scale)
+                    );
+                }
+            }  else {
+                ready = false;
+            }
+        }
+        return ready;
     }
 
     toggleGrid = (show = null) => {
