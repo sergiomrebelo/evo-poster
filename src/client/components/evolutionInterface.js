@@ -479,7 +479,7 @@ export class EvolutionInterface extends LitElement {
                                                         const els = document.querySelectorAll(`.colour-background`);
                                                         const randomColours = document.getElementById(`random-colour-background-check`);
                                                         this.params.background.color.random = randomColours.checked;
-                                                        this.params.background.style = e.target.value;
+                                                        this.params.background.style = parseInt(e.target.value);
                                                         if (!randomColours.checked) {
                                                             const numberOfColours = Params.background.availableStyles[parseInt(e.target.value)][1];
                                                             els.forEach((el, i) => {
@@ -530,7 +530,6 @@ export class EvolutionInterface extends LitElement {
                                                                if (!e.target.checked) {
                                                                    const mainEl = document.querySelector(`#background-style-form`);
                                                                    const numberOfColours = Params.background.availableStyles[parseInt(mainEl.value)][1];
-
                                                                    els.forEach((el, i) => {
                                                                        if (i < numberOfColours) {
                                                                            el.disabled = false;

@@ -98,10 +98,11 @@ class Poster {
     draw = async (posX = 0, posY=0) => {
         push();
         const pg = createGraphics(this.genotype.size.width, this.genotype.size.height);
-        // pg.translate(-pg.width/2, -pg.height/2);
 
-        // background styles
-        backgroundStyles.solid(pg, this.genotype.background.colors[0]);
+        // background style
+        const backgroundStyleKey = Object.keys(backgroundStyles)[this.genotype.background.style-1];
+        const backgroundFunction =  backgroundStyles[backgroundStyleKey];
+        backgroundFunction(pg, this.genotype.background.colors[0], this.genotype.background.colors[1]);
 
         // typesetting typography on poster
         await this.typeset(pg);
@@ -110,7 +111,7 @@ class Poster {
         if (this.#debug) {
             pg.textSize(10);
             pg.fill(0);
-            pg.text(`${this.id}+${this.genotype.typography.verticalAlignment}`, 20, 20);
+            pg.text(`${this.id}+${this.genotype.typography.verticalAlignment}+style=${this.genotype.background.style}`, 20, 20);
         }
 
         if (this.#showGrid && this.#debug) {
