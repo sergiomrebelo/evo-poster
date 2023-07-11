@@ -2,7 +2,9 @@ import {html, LitElement, nothing} from "lit";
 import {Divider} from "./Divider.js";
 import {Params} from "../Params.js";
 
-import {TextInput} from "../components/inputs/TextInput.js";
+import {TextInput} from "./inputs/TextInput.js";
+import {EvolutionPanel} from "./panels/EvolutionPanel.js";
+import {GenerationPanel} from "./panels/GenerationPanel.js";
 
 export class EvolutionInterface extends LitElement {
     static properties = {
@@ -24,23 +26,10 @@ export class EvolutionInterface extends LitElement {
 
         this.changesInTypefaces = 0;
 
-        // inputs
-        console.log("Params", Params["populationSize"]);
-        this.inputs = {
-            evolution: {
-                populationSize: new TextInput("Population Size", Params["populationSize"], `pop-size`, (e) => {
-                    console.log(e);
-                    console.log("changing pop size");
-                }, 6),
-                numberOfGenerations: new TextInput( "No. Generations", Params["NumberOfGenerations"], "no-gen", (e) => {
-                    console.log(e);
-                    console.log("changing no gene");
-                }, 6),
-                eliteSize: null,
-                crossoverProbability: null,
-                mutationProbability: null
-            }
-        }
+
+        // TODO: for to save the panels
+        this.generationPanel = new GenerationPanel(this.params, this.initPop);
+        this.evolutionPanel = new EvolutionPanel();
     }
 
     #getAvailableTypefaces = () => {
@@ -146,7 +135,6 @@ export class EvolutionInterface extends LitElement {
         return tags;
     }
 
-
     #mirrorUpdate = (e) => {
         const mirrorEl = document.getElementById(e.target.getAttribute(`data-mirror`));
         if (mirrorEl) {
@@ -186,49 +174,9 @@ export class EvolutionInterface extends LitElement {
                         <div class="tab-content m-3" id="tabs-contents">
                             <div class="tab-pane fade show active" id="poster-tab-pane" role="tabpanel"
                                  aria-labelledby="poster-tab" tabindex="0">
+                                ${this.generationPanel}
                                 <div class="row form-group my-2" id="poster-features">
                                     <form>
-                                        
-                                        <div class="form-group row">
-                                            <small class="my-2 fw-bold">Poster size</small>
-                                            <div class="col-4">
-                                                <div class="input-group  input-group-sm" id="size-x">
-                                                    <span class="input-group-text" id="size-x-input-label">Width</span>
-                                                    <input type="text" class="form-control" id="size-x-input"
-                                                           placeholder="width" value="1"
-                                                           @change="${this.#updateSize}">
-                                                </div>
-                                            </div>
-                                            <div class="col-4 mb-2">
-                                                <div class="input-group  input-group-sm" id="size-y">
-                                                    <span class="input-group-text" id="size-y-input-label">Height</span>
-                                                    <input type="text" class="form-control" id="size-y-input"
-                                                           placeholder="height"
-                                                           value="${Math.round(this.params.size.height / this.params.size.width * 100) / 100}"
-                                                           @change="${this.#updateSize}">
-                                                </div>
-                                            </div>
-                                            <div class="col-12 col-md-8 mb-3">
-                                                <div class="input-group input-group-sm" id="size-mg">
-                                                    <span class="input-group-text" id="size-mg-input-label">Margins (ltrb)</span>
-                                                    <input type="text" class="form-control mr-2 mg-input col-2" id="size-mg-input-l"
-                                                           placeholder="left" value="${this.params.size.margin[0]}"
-                                                           @change="${this.#updateSize}">
-                                                    <input type="text" class="form-control mr-2 mg-input col-2" id="size-mg-input-t"
-                                                           placeholder="top" value="${this.params.size.margin[1]}"
-                                                           @change="${this.#updateSize}">
-                                                    <input type="text" class="form-control mr-2 mg-input col-2" id="size-mg-input-r"
-                                                           placeholder="right" value="${this.params.size.margin[2]}"
-                                                           @change="${this.#updateSize}">
-                                                    <input type="text" class="form-control mr-2 mg-input col-2" id="size-mg-input-b"
-                                                           placeholder="bottom" value="${this.params.size.margin[3]}"
-                                                           @change="${this.#updateSize}">
-                                                </div>
-                                            </div>
-                                            <hr>
-                                        </div>
-                                        
-                                        ${Divider.get()}
                                         <div class="form-group">
                                             <small class="my-2">
                                                 <b>Typefaces</b>
@@ -623,14 +571,7 @@ export class EvolutionInterface extends LitElement {
                                 </div>
                             </div>
                             <div class="tab-pane fade" id="evolution-tab-pane" role="tabpanel" aria-labelledby="evolution-tab" tabindex="1">
-                                <h3>Evolutionary Setup</h3>
-                                ${Divider.get()}
-                                ${this.inputs.evolution.populationSize}
-                                ${this.inputs.evolution.numberOfGenerations}
-                                ${this.inputs.evolution.eliteSize}
-                                ${this.inputs.evolution.crossoverProbability}
-                                ${this.inputs.evolution.mutationProbability}
-                                <hr>
+                               ${this.evolutionPanel}
                             </div>
                             <div class="tab-pane fade" id="refine-tab-pane" role="tabpanel" aria-labelledby="refine-tab" tabindex="2">
                                 <h2>Refine</h2>

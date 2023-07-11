@@ -15,6 +15,7 @@ import Population from "./controllers/Population.js";
 import 'bootstrap/scss/bootstrap.scss';
 import './main.css';
 
+// TODO: separe app.js from entry point
 window.preload = () => {}
 
 window.setup = () => {
@@ -33,6 +34,7 @@ window.draw = () => {
         background(window.app.backgroundColor);
         window.app.population.draw();
         pop();
+        console.log(`draw`);
     }
 
 }

@@ -21,10 +21,16 @@ export class Params {
 
     static imageMaxSize = 1024;
 
-    static populationSize = 10;
+    static evolution = {
+        popSize: 10,
+        noGen: 100,
+        crossoverProb: 0.85,
+        mutationProb: 0.2,
+        eliteSize: 1
+    }
+
     static visiblePosters = 10;
 
-    static NumberOfGenerations = 100;
 
 
     static backgroundStyleOptions = [ [`Random`,0], [`Solid`, 1], [`Gradient`,2], [`Triangle`,2]];

@@ -3,25 +3,32 @@ import {html, LitElement, nothing} from "lit";
 export class TextInput extends LitElement {
     static properties = {
         label: "label",
+        showLabel: true,
         value: 1,
-        onChange: () => {}
+        onChange: () => {},
     }
-    constructor(label, value, id, onChange = () => {}, size=4) {
+
+    // col-${this.size} mb-2
+    constructor(label, value, id, onChange = () => {}, classList = []) {
         super();
-        this.size = size;
+        this.classList.add(...classList);
         this.value = value;
         this.id = id;
-        this.label = label;
+        this.showLabel = label !== null;
+        this.label = this.showLabel ? label : null;
         this.onChange = onChange
-        console.log(`size=${this.value}`);
+    }
+
+    getValue = () => {
+        return this.value;
     }
 
     render() {
-        return html`<div class="col-${this.size} mb-2">
+        return html`<div>
             <div class="input-group  input-group-sm" id="${this.id}">
-                <span class="input-group-text" id="${this.id}-input-label">${this.label}</span>
+                ${this.showLabel ? html`<span class="input-group-text" id="${this.id}-input-label">${this.label}</span>` : nothing}
                 <input type="text" class="form-control" id="${this.id}-input"
-                       placeholder="${this.label}"
+                       placeholder="${this.showLabel ? this.label : nothing}"
                        value="${this.value}"
                        @change="${this.onChange}">
             </div>

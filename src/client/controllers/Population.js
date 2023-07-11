@@ -3,7 +3,7 @@ import Poster from "./Poster.js";
 
 export class Population {
     constructor(params) {
-        this.size = Params.populationSize;
+        this.size = Params["evolution"]["popSize"];
         this.params = params;
         this.population = [];
         this.generation = 0;
@@ -29,14 +29,13 @@ export class Population {
     draw = () => {
         this.updated = false;
 
-        // check if typefaces are loaded
+        // FIXME: check if typefaces are loaded
         for (let font of this.params.typography.typefaces) {
-            const isLoaded = document.fonts.check(`bold 12px ${font.family}`);
+            const isLoaded = document.fonts.check(`12px ${font.family}`);
             if (!isLoaded) {
-                this.updated = true;
+                // this.updated = true;
             }
         }
-
 
         const n = this.population.length < Params.visiblePosters ? this.population.length : Params.visiblePosters;
         let posX = 0, posY = 0;
