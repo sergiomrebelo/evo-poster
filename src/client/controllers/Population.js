@@ -27,18 +27,23 @@ export class Population {
     }
 
     draw = () => {
+        this.updated = false;
+
+        // check if typefaces are loaded
         for (let font of this.params.typography.typefaces) {
-            // TODO: ensure that typeface is loaded
             const isLoaded = document.fonts.check(`bold 12px ${font.family}`);
+            if (!isLoaded) {
+                this.updated = true;
+            }
         }
 
-        this.updated = false;
 
         const n = this.population.length < Params.visiblePosters ? this.population.length : Params.visiblePosters;
         let posX = 0, posY = 0;
         for (let i=0; i<n; i++) {
             const ind = this.population[i];
             if (!ind.ready) {
+                // check if individuals are loaded
                 this.updated = true;
             }
             ind.draw(posX, posY);
