@@ -24,7 +24,7 @@ export class Params {
     static populationSize = 10;
     static visiblePosters = 10;
 
-    static maxGenerations = 10;
+    static NumberOfGenerations = 100;
 
 
     static backgroundStyleOptions = [ [`Random`,0], [`Solid`, 1], [`Gradient`,2], [`Triangle`,2]];

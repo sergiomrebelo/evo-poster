@@ -2,6 +2,8 @@ import {html, LitElement, nothing} from "lit";
 import {Divider} from "./Divider.js";
 import {Params} from "../Params.js";
 
+import {TextInput} from "../components/inputs/TextInput.js";
+
 export class EvolutionInterface extends LitElement {
     static properties = {
         changesInTypefaces: 0
@@ -21,6 +23,24 @@ export class EvolutionInterface extends LitElement {
         this.params.typography.typefaces = this.fonts.typefaces;
 
         this.changesInTypefaces = 0;
+
+        // inputs
+        console.log("Params", Params["populationSize"]);
+        this.inputs = {
+            evolution: {
+                populationSize: new TextInput("Population Size", Params["populationSize"], `pop-size`, (e) => {
+                    console.log(e);
+                    console.log("changing pop size");
+                }, 6),
+                numberOfGenerations: new TextInput( "No. Generations", Params["NumberOfGenerations"], "no-gen", (e) => {
+                    console.log(e);
+                    console.log("changing no gene");
+                }, 6),
+                eliteSize: null,
+                crossoverProbability: null,
+                mutationProbability: null
+            }
+        }
     }
 
     #getAvailableTypefaces = () => {
@@ -146,6 +166,20 @@ export class EvolutionInterface extends LitElement {
                                         data-bs-target="#poster-tab-pane"
                                         type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">
                                     General
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="evolution-tab" data-bs-toggle="tab"
+                                        data-bs-target="#evolution-tab-pane"
+                                        type="button" role="tab" aria-controls="evolution-tab-pane" aria-selected="true">
+                                    Evolution
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="refine-tab" data-bs-toggle="tab"
+                                        data-bs-target="#refine-tab-pane"
+                                        type="button" role="tab" aria-controls="refine-tab-pane" aria-selected="true">
+                                    Refine
                                 </button>
                             </li>
                         </ul>
@@ -587,6 +621,19 @@ export class EvolutionInterface extends LitElement {
                                         </div>
                                     </form>
                                 </div>
+                            </div>
+                            <div class="tab-pane fade" id="evolution-tab-pane" role="tabpanel" aria-labelledby="evolution-tab" tabindex="1">
+                                <h3>Evolutionary Setup</h3>
+                                ${Divider.get()}
+                                ${this.inputs.evolution.populationSize}
+                                ${this.inputs.evolution.numberOfGenerations}
+                                ${this.inputs.evolution.eliteSize}
+                                ${this.inputs.evolution.crossoverProbability}
+                                ${this.inputs.evolution.mutationProbability}
+                                <hr>
+                            </div>
+                            <div class="tab-pane fade" id="refine-tab-pane" role="tabpanel" aria-labelledby="refine-tab" tabindex="2">
+                                <h2>Refine</h2>
                             </div>
                         </div>
                         ${Divider.get()}
