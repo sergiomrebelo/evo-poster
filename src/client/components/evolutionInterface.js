@@ -84,7 +84,7 @@ export class EvolutionInterface extends LitElement {
         }
 
         this.params.size.width = Params.visualisationGrid.width * width;
-        this.params.size.height = Params.visualisationGrid.height * height;
+        this.params.size.height = Params.visualisationGrid.width * height;
         this.params.size.margin = [ml,mt,mr,mb];
 
         this.#defineTextInput(`size-x-input`, width);
