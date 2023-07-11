@@ -25,7 +25,7 @@ export class TextInput extends LitElement {
 
     render() {
         return html`<div>
-            <div class="input-group  input-group-sm" id="${this.id}">
+            <div class="input-group input-group-sm" id="${this.id}-inner">
                 ${this.showLabel ? html`<span class="input-group-text" id="${this.id}-input-label">${this.label}</span>` : nothing}
                 <input type="text" class="form-control" id="${this.id}-input"
                        placeholder="${this.showLabel ? this.label : nothing}"

@@ -212,36 +212,6 @@ export class EvolutionInterface extends LitElement {
                                         ${Divider.get()}
                                         <div class="form-group">
                                             <small class="my-2">
-                                                <b>Typography Main Colour</b>
-                                            </small>
-                                            <div class="my-2">
-                                                <input type="color"
-                                                       class="form-control form-control-color colour-picker mr-2 d-inline-flex"
-                                                       id="typography-colour-picker"
-                                                       value="${this.params.typography.color.value}"
-                                                       title="colour-typography" disabled
-                                                       @change="${(e) => {
-                                                           if (this.params.typography.color.value !== e.target.value) {
-                                                               this.params.typography.color.value = e.target.value;
-                                                               this.initPop();
-                                                           }
-                                                       }}">
-                                                <div class="d-inline-flex flex-md-fill mx-2">
-                                                    <input class="form-check-input" type="checkbox" value=""
-                                                           id="random-colour-typo-check" checked=true
-                                                           @change="${async (e) => {
-                                                               const el = document.getElementById(`typography-colour-picker`);
-                                                               this.params.typography.color.random = e.target.checked;
-                                                               el.disabled = e.target.checked;
-                                                               this.initPop();
-                                                           }}">
-                                                    <label class="form-check-label small px-2" for="color-typo-check">Random</label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        ${Divider.get()}
-                                        <div class="form-group">
-                                            <small class="my-2">
                                                 <b>Typography Weight</b>
                                             </small>
                                             <div class="row">

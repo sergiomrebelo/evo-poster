@@ -3,6 +3,8 @@ import {TextInput} from "../inputs/TextInput.js";
 import {validateNumberInput} from "../inputs/utils.js"
 import {Params} from "../../Params.js";
 import {Divider} from "../Divider.js";
+import {ColorInput} from "../inputs/ColorInput.js";
+import {Checkbox} from "../inputs/Checkbox.js";
 
 export class GenerationPanel extends LitElement {
     constructor(params, restart) {
@@ -19,6 +21,24 @@ export class GenerationPanel extends LitElement {
                     right: new TextInput(null, this.params.size.margin[2], `size-mg-r`, this.#updateSize, ["col-4" ]),
                     bottom: new TextInput(null, this.params.size.margin[3], `size-mg-b`, this.#updateSize, ["col-4"])
                 }
+            },
+            typography:{
+                color: new ColorInput(
+                    "Main Colour", this.params.typography.color.value, null,
+                    "typography", (e) => {
+                        if (this.params.typography.color.value !== e.target.value) {
+                            this.params.typography.color.value = e.target.value;
+                            this.restart();
+                        }
+                    },
+                    ["col-8", "my-2"]),
+                random: new Checkbox(`Random`, true, `random-colour-typo`, async (e) => {
+                    console.log(`inside`);
+                    const el = document.getElementById(`typography-colour-picker`);
+                    this.params.typography.color.random = e.target.checked;
+                    el.disabled = e.target.checked;
+                    this.restart();
+                }, ["col-4"])
             }
         }
     }
@@ -68,37 +88,15 @@ export class GenerationPanel extends LitElement {
         </div>`;
     }
 
-    /*
-    <div class="form-group">
-                                            <small class="my-2">
-                                                <b>Typography Main Colour</b>
-                                            </small>
-                                            <div class="my-2">
-                                                <input type="color"
-                                                       class="form-control form-control-color colour-picker mr-2 d-inline-flex"
-                                                       id="typography-colour-picker"
-                                                       value="${this.params.typography.color.value}"
-                                                       title="colour-typography" disabled
-                                                       @change="${(e) => {
-                                                           if (this.params.typography.color.value !== e.target.value) {
-                                                               this.params.typography.color.value = e.target.value;
-                                                               this.initPop();
-                                                           }
-                                                       }}">
-                                                <div class="d-inline-flex flex-md-fill mx-2">
-                                                    <input class="form-check-input" type="checkbox" value=""
-                                                           id="random-colour-typo-check" checked=true
-                                                           @change="${async (e) => {
-                                                               const el = document.getElementById(`typography-colour-picker`);
-                                                               this.params.typography.color.random = e.target.checked;
-                                                               el.disabled = e.target.checked;
-                                                               this.initPop();
-                                                           }}">
-                                                    <label class="form-check-label small px-2" for="color-typo-check">Random</label>
-                                                </div>
-                                            </div>
-                                        </div>
-     */
+    #posterTypographyFeatures = () => {
+        return html`<div class="form-group row">
+            <h3 class="mb-3 fw-bold col-12">Typography</h3>
+            <div class="row d-flex align-items-center">
+                ${this.fields.typography.color}
+                ${this.fields.typography.random}
+            </div>
+        </div>`;
+    }
 
     render() {
         return html`<div class="row form-group my-2" id="poster-features">
@@ -106,6 +104,8 @@ export class GenerationPanel extends LitElement {
                 ${this.#posterSizeFeatures()}
                 ${Divider.get()}
                 <!-- typefaces -->
+                ${this.#posterTypographyFeatures()}
+                ${Divider.get()}
             </form>
         </div>`;
     }
