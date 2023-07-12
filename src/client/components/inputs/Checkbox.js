@@ -1,5 +1,4 @@
 import {html, LitElement, nothing} from "lit";
-import {TextInput} from "./TextInput.js";
 
 export class Checkbox extends LitElement {
     static properties = {
