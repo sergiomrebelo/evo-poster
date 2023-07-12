@@ -11,14 +11,11 @@ export class Slider extends LitElement {
         onChange: () => {}
     }
 
-    // label, colorA, colorB = null, id, onChange = () => {}, classList = []
-    // id = typeface-weight-min
     constructor(label, value, min, max, step, id, onChange = () => {}, classList = []) {
         super();
         this.label = label;
         this.min = min;
         this.max = max;
-        console.log(`min=${min}. max=${max}`);
         this.step = step;
         this.id = id;
         this.value = value;

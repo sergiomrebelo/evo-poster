@@ -6,6 +6,7 @@ import {Divider} from "../Divider.js";
 import {ColorInput} from "../inputs/ColorInput.js";
 import {Checkbox} from "../inputs/Checkbox.js";
 import {Slider} from "../inputs/Slider.js";
+import {DropDownList} from "../inputs/DropDownList.js";
 
 export class GenerationPanel extends LitElement {
     constructor(params, restart) {
@@ -86,7 +87,11 @@ export class GenerationPanel extends LitElement {
                 }
             },
             textboxes: {
-                uppercase: new Checkbox(`uppercase`, false, `case`, (e) => {
+                align: new DropDownList(`Texbox alignment`, Params.textAlignmentTbOptions, 0, `texbox-align-list`, (e) => {
+                    this.params.typography.textAlignment = parseInt(e.target.value);
+                    this.restart();
+                }),
+                uppercase: new Checkbox(`Uppercase`, false, `case`, (e) => {
                     this.params.typography.uppercase = e.target.checked;
                     this.restart();
                 })
@@ -189,18 +194,23 @@ export class GenerationPanel extends LitElement {
                     ${this.fields.typography.weight.min}
                     ${this.fields.typography.weight.max}
                 </div>
-                <div class="row mt-4">
+                <div class="row my-4">
                     <small class="fw-bold col-12">Horizontal Motion</small>
                     ${this.fields.typography.stretch.min}
                     ${this.fields.typography.stretch.max}
                 </div>
+                <!-- Text alignment -->
+                <hr>
             </div>`;
     }
 
     #textBoxesFeatures = () => {
         return html`
             <div class="form-group row">
+                <h3 class="mb-3 fw-bold col-12">Text box features</h3>
+                ${this.fields.textboxes.align}
                 ${this.fields.textboxes.uppercase}
+                <hr class="mt-4">
             </div>`
     }
 
