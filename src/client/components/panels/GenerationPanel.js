@@ -14,7 +14,7 @@ export class GenerationPanel extends LitElement {
         params: {},
         changesInTypefaces: 0
     }
-    constructor(params, restart) {
+    constructor(params, restart, errorMessage) {
         super();
         // configuration params
         this.params = params;
@@ -24,6 +24,13 @@ export class GenerationPanel extends LitElement {
 
         // available fonts
         this.fonts = this.#getAvailableTypefaces();
+        this.params.typography.weight = this.fonts.weight;
+        this.params.typography.stretch = this.fonts.stretch;
+        this.params.typography.typefaces = this.fonts.typefaces;
+        this.changesInTypefaces = 0;
+
+        // error handler
+        this.errorMessage = errorMessage;
 
         // input fields
         this.fields = {
@@ -98,7 +105,25 @@ export class GenerationPanel extends LitElement {
                 verticalAlignment: new DropDownList(`Vertical alignment`, Params.textAlignmentOptions, 0, `vertica-align-list`, (e) => {
                     this.params.typography.verticalAlignment = parseInt(e.target.value);
                     this.restart();
-                }, ["mb-2"])
+                }, ["mb-2"]),
+                // constructor(label, value, id, onChange = () => {}, classList = [], mirror = null) {
+                typefaces: new TextInput(`Add Typeface`, "", `typefaces-add`, (e) => {
+                    const name = e.target.value;
+                    const current = this.params.typography.typefaces.map(e => e.family);
+                    if (Params.availableTypefaces.includes(name) && !current.includes(name)) {
+                        for (let f of this.fonts.typefaces) {
+                            if (f.family === name) {
+                                this.params.typography.typefaces.push(f)
+                                break;
+                            }
+                        }
+                        this.restart();
+                        this.changesInTypefaces++;
+                    } else {
+                        this.errorMessage.set({message: `Typeface ${name} is not available<br>available typefaces: ${Params.availableTypefaces}`});
+                        this.numberOfTypeface += 1;
+                    }
+                })
             },
             textboxes: {
                 align: new DropDownList(`Texbox alignment`, Params.textAlignmentTbOptions, 0, `texbox-align-list`, (e) => {
@@ -243,10 +268,44 @@ export class GenerationPanel extends LitElement {
             </div>`;
     }
 
+    #tag = (value = "", i) => {
+        return html`<span class="badge text-bg-secondary mr-2 typeface-badge-${value}"
+                          id="typeface-badge-${value}">${value}
+            <span role="button" @click="${() => {
+                if (this.params.typography.typefaces.length > 1) {
+                    this.params.typography.typefaces = this.params.typography.typefaces.filter((el) => {
+                        return el.family !== value;
+                    });
+                    this.changesInTypefaces++;
+                    this.restart();
+                } else {
+                    this.errorMessage.set({message: "You must select, at least, one typeface"});
+                }
+        }}">&times</span>
+        </span>`;
+    }
+
+    #getTypefaceTags = () => {
+        let tags = [];
+        for (let i = 0; i < this.params.typography.typefaces.length; i++) {
+            let f = this.params.typography.typefaces[i];
+            const tag = this.#tag(f.family, i);
+            tags.push(tag);
+        }
+        return tags;
+    }
+
     #posterTypographyFeatures = () => {
         return html`
             <div class="form-group row">
                 <h3 class="mb-3 fw-bold col-12">Typography</h3>
+                <div class="row form-group my-2" id="typeface-selector">
+                    <small class="fw-bold col-12">Typeface</small>
+                    <div class="typefaces-input my-2 bootstrap-tagsinput" id="typeface-tags-${this.numberOfTypeface}">
+                        ${this.#getTypefaceTags()}
+                    </div>
+                    ${this.fields.typography.typefaces}
+                </div>
                 <div class="row d-flex align-items-center">
                     ${this.fields.typography.color}
                     ${this.fields.typography.random}
@@ -304,13 +363,12 @@ export class GenerationPanel extends LitElement {
     render() {
 
         return html`
-            <div class="row form-group my-2" id="poster-features">
+            <div class="row form-group my-2 init-selector" id="poster-features">
                 <form>
                     ${this.#contentFeatures()}
                     ${Divider.get()}
                     ${this.#posterSizeFeatures()}
                     ${Divider.get()}
-                    <!-- typefaces -->
                     ${this.#posterTypographyFeatures()}
                     ${Divider.get()}
                     ${this.#textBoxesFeatures()}
