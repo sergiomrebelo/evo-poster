@@ -5,6 +5,7 @@ import {Params} from "../Params.js";
 import {TextInput} from "./inputs/TextInput.js";
 import {EvolutionPanel} from "./panels/EvolutionPanel.js";
 import {GenerationPanel} from "./panels/GenerationPanel.js";
+import {Checkbox} from "./inputs/Checkbox.js";
 
 export class EvolutionInterface extends LitElement {
     static properties = {
@@ -28,7 +29,8 @@ export class EvolutionInterface extends LitElement {
 
 
         // TODO: for to save the panels
-        this.generationPanel = new GenerationPanel(this.params, this.initPop);
+        console.log("pop outside", this.pop);
+        this.generationPanel = new GenerationPanel(this.params, this.initPop, this.pop);
         this.evolutionPanel = new EvolutionPanel();
     }
 
@@ -175,6 +177,18 @@ export class EvolutionInterface extends LitElement {
                             <div class="tab-pane fade show active" id="poster-tab-pane" role="tabpanel"
                                  aria-labelledby="poster-tab" tabindex="0">
                                 ${this.generationPanel}
+                                <div class="row">
+                                    <div class="col-12">
+                                        ${new Checkbox(`Show grid`, this.params.display.grid, `grid-display`, (e) => {
+                                            this.params.display.grid = e.target.checked;
+                                            this.pop.toggleGrid(this.params.display.grid);
+                                        })}
+                                    </div>
+                                </div>
+                                <!-- bt -->
+                                <div class="my-5"></div>
+                                
+                                
                                 <div class="row form-group my-2" id="poster-features">
                                     <form>
                                         <div class="form-group">
@@ -208,127 +222,8 @@ export class EvolutionInterface extends LitElement {
                                                        }}">
                                             </div>
                                         </div>
-                                        ${Divider.get()}
                                         
                                         
-                                        
-                                        <div class="form-group">
-                                            <small class="my-2">
-                                                <b>Background</b><br>
-                                                (Visual style of background)
-                                            </small>
-                                            <select
-                                                    class="form-select form-select-sm my-2" id="background-style-form"
-                                                    @change="${(e) => {
-                                                        const els = document.querySelectorAll(`.colour-background`);
-                                                        const randomColours = document.getElementById(`random-colour-background-check`);
-                                                        this.params.background.color.random = randomColours.checked;
-                                                        this.params.background.style = parseInt(e.target.value);
-                                                        if (!randomColours.checked) {
-                                                            const numberOfColours = Params.background.availableStyles[parseInt(e.target.value)][1];
-                                                            els.forEach((el, i) => {
-                                                                if (i < numberOfColours) {
-                                                                    el.disabled = false;
-                                                                } else {
-                                                                    el.disabled = true;
-                                                                }
-                                                            });
-                                                        }
-                                                        this.initPop();
-                                                    }}"
-                                            >
-                                                ${Params.background.availableStyles.map((x, i) =>
-                                                        html`
-                                                            <option value=${i}>${x[0]}</option>`)
-                                                }
-                                            </select>
-                                            <div class="my-2 align-items-baseline">
-                                                <input type="color"
-                                                       class="form-control form-control-color colour-picker d-inline-flex mr-2 colour-background"
-                                                       id="background-1-colour-picker"
-                                                       value="${this.params.background.color.valueA}"
-                                                       title="colour-background-1" disabled
-                                                       @change="${(e) => {
-                                                           if (this.params.background.color.valueA !== e.target.value) {
-                                                               this.params.background.color.valueA = e.target.value;
-                                                               this.initPop();
-                                                           }
-                                                       }}">
-                                                <input type="color"
-                                                       class="form-control form-control-color colour-picker mx-2 d-inline-flex colour-background"
-                                                       id="background-2-colour-picker"
-                                                       value="${this.params.background.color.valueB}"
-                                                       title="colour-background-2" disabled
-                                                       @change="${(e) => {
-                                                           if (this.params.background.color.valueB !== e.target.value) {
-                                                               this.params.background.color.valueB = e.target.value;
-                                                               this.initPop();
-                                                           }
-                                                       }}">
-                                                <div class="d-inline-flex flex-md-fill">
-                                                    <input class="form-check-input" type="checkbox"
-                                                           value="" id="random-colour-background-check" checked
-                                                           @change="${(e) => {
-                                                               const els = document.querySelectorAll(`.colour-background`);
-                                                               this.params.background.color.random = e.target.checked;
-                                                               if (!e.target.checked) {
-                                                                   const mainEl = document.querySelector(`#background-style-form`);
-                                                                   const numberOfColours = Params.background.availableStyles[parseInt(mainEl.value)][1];
-                                                                   els.forEach((el, i) => {
-                                                                       if (i < numberOfColours) {
-                                                                           el.disabled = false;
-                                                                           this.params.background.color.random = false;
-                                                                           /* el.classList.add( `d-inline-flex`);
-                                                                           el.classList.remove (`d-none`)*/
-                                                                       } else {
-                                                                           el.disabled = true;
-                                                                           /*el.classList.remove( `d-inline-flex`);
-                                                                           el.classList.add (`d-none`)*/
-                                                                       }
-                                                                   });
-
-                                                               } else {
-                                                                   els.forEach((el, i) => {
-                                                                       el.disabled = true;
-                                                                       /*el.classList.remove( `d-inline-flex`);
-                                                                       el.classList.add (`d-none`)*/
-                                                                   });
-                                                               }
-                                                               this.initPop();
-                                                           }}">
-                                                    <label class="form-check-label small px-2"
-                                                           for="debug-check">Random</label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        ${Divider.get()}
-                                        <div class="form-group">
-                                            <small class="my-2">
-                                                <b>Alignment</b><br>
-                                                (Text alignment on poster)
-                                            </small>
-                                            <select class="form-select form-select-sm my-2" id="background-style-form"
-                                                    @change="${(e) => {
-                                                        this.params.typography.verticalAlignment = parseInt(e.target.value);
-                                                        this.initPop();
-                                                    }}">
-                                                ${Params.textAlignmentOptions.map((x, i) =>
-                                                        html`
-                                                            <option value=${i}>${x[0]}</option>`)
-                                                }
-                                            </select>
-                                        </div>
-                                        ${Divider.get()}
-                                        <div class="com-group my-2">
-                                            <input class="form-check-input" type="checkbox" value="" id="debug-check"
-                                                   checked="${this.params.display.grid}"
-                                                   @change="${(e) => {
-                                                       this.params.display.grid = e.target.checked;
-                                                       this.pop.toggleGrid(this.params.display.grid);
-                                                   }}">
-                                            <label class="form-check-label small px-2" for="debug-check">Show
-                                                Grid</label>
-                                        </div>
                                     </form>
                                 </div>
                             </div>

@@ -26,17 +26,17 @@ export class ColorInput extends LitElement {
             <div class="input-group input-group-sm" id="${this.id}-inner">
                 ${this.showLabel ? html`<span class="input-group-text" id="${this.id}-colour-picker-label">${this.label}</span>` : nothing}
                 <input type="color"
-                       class="form-control form-control-color colour-picker mr-2 d-inline-flex"
-                       id="${this.id}-colour-picker"
+                       class="form-control form-control-color colour-picker mr-2 d-inline-flex ${this.id}-colour-picker"
+                       id="${this.id}-colour-picker-1"
                        value="${this.colorA}"
-                       title="colour-typography" 
+                       title="colour-typography" data-param="valueA"
                        disabled
                        @change="${this.onChange}">
                 ${this.colorB !== null ? html`<input type="color"
-                       class="form-control form-control-color colour-picker mr-2 d-inline-flex"
-                       id="${this.id}-colour-picker"
+                       class="form-control form-control-color colour-picker mr-2 d-inline-flex ${this.id}-colour-picker"
+                       id="${this.id}-colour-picker-2"
                        value="${this.colorB}"
-                       title="colour-typography"
+                       title="colour-typography" data-param="valueB"
                        disabled
                        @change="${this.onChange}">` : nothing}
             </div>

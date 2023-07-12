@@ -11,7 +11,8 @@ import {TextArea} from "../inputs/TextArea.js";
 
 export class GenerationPanel extends LitElement {
     static properties = {
-        params: {}
+        params: {},
+        changesInTypefaces: 0
     }
     constructor(params, restart) {
         super();
@@ -24,7 +25,6 @@ export class GenerationPanel extends LitElement {
         // available fonts
         this.fonts = this.#getAvailableTypefaces();
 
-        console.log ("sentences", this.params.sentences);
         // input fields
         this.fields = {
             content: new TextArea(`<b>Content</b> The text lines are defined by pilcrows (¶)`,
@@ -54,8 +54,7 @@ export class GenerationPanel extends LitElement {
                     },
                     ["col-8", "my-2"]),
                 random: new Checkbox(`Random`, true, `random-colour-typo`, async (e) => {
-                    console.log(`inside`);
-                    const el = document.getElementById(`typography-colour-picker`);
+                    const el = document.getElementById(`typography-colour-picker-1`);
                     this.params.typography.color.random = e.target.checked;
                     el.disabled = e.target.checked;
                     this.restart();
@@ -95,7 +94,11 @@ export class GenerationPanel extends LitElement {
                         }
                         this.restart();
                     }, ["my-2"]),
-                }
+                },
+                verticalAlignment: new DropDownList(`Vertical alignment`, Params.textAlignmentOptions, 0, `vertica-align-list`, (e) => {
+                    this.params.typography.verticalAlignment = parseInt(e.target.value);
+                    this.restart();
+                }, ["mb-2"])
             },
             textboxes: {
                 align: new DropDownList(`Texbox alignment`, Params.textAlignmentTbOptions, 0, `texbox-align-list`, (e) => {
@@ -106,10 +109,55 @@ export class GenerationPanel extends LitElement {
                     this.params.typography.uppercase = e.target.checked;
                     this.restart();
                 })
+            },
+            background: {
+                style: new DropDownList(`Background Style`, Params.background.availableStyles, 0, `background-style-list`, (e) => {
+                    const els = document.querySelectorAll(`.background-colour-picker`);
+                    const isRandom = document.getElementById(`bk-color-check`).checked;
+                    this.params.background.color.random = isRandom;
+                    this.params.background.style = parseInt(e.target.value);
+                    if (!isRandom) {
+                        const numberOfColours = Params.background.availableStyles[parseInt(e.target.value)][1];
+                        els.forEach((el, i) => {
+                            if (i < numberOfColours) {
+                                el.disabled = false;
+                            } else {
+                                el.disabled = true;
+                            }
+                        });
+                    }
+                    this.restart();
+                }, ["mb-2"]),
+                colors: new ColorInput(`Color`, this.params.background.color.valueA, this.params.background.color.valueB, `background`, (e) => {
+                    const attr = e.target.getAttribute("data-param");
+                    if (this.params["background"]["color"][attr] !== e.target.value) {
+                        this.params["background"]["color"][attr] = e.target.value;
+                    }
+                    this.restart();
+                }),
+                random: new Checkbox(`Random`, true, `bk-color`, (e) => {
+                    const els = document.querySelectorAll(`.background-colour-picker`);
+                    const isRandom = e.target.checked;
+                    this.params.background.color.random = isRandom;
+                    if (!isRandom) {
+                        const style = document.getElementById(`background-style-list-list`).value;
+                        const numberOfColours = Params.background.availableStyles[parseInt(style)][1];
+                        els.forEach((el, i) => {
+                            if (i < numberOfColours) {
+                                el.disabled = false;
+                                this.params.background.color.random = false;
+                            } else {
+                                el.disabled = true;
+                            }
+                        });
+                    } else {
+                        els.forEach((el) => el.disabled = true);
+                    }
+                    this.restart();
+                })
             }
         }
     }
-
 
 
     #getAvailableTypefaces = () => {
@@ -178,6 +226,7 @@ export class GenerationPanel extends LitElement {
         this.restart(true);
     }
 
+    // panel sections
     #posterSizeFeatures = () => {
         return html`
             <div class="form-group row">
@@ -202,17 +251,17 @@ export class GenerationPanel extends LitElement {
                     ${this.fields.typography.color}
                     ${this.fields.typography.random}
                 </div>
-                <div class="row mt-4">
+                <div class="row mt-2">
                     <small class="fw-bold col-12">Weight</small>
                     ${this.fields.typography.weight.min}
                     ${this.fields.typography.weight.max}
                 </div>
-                <div class="row my-4">
+                <div class="row my-2">
                     <small class="fw-bold col-12">Horizontal Motion</small>
                     ${this.fields.typography.stretch.min}
                     ${this.fields.typography.stretch.max}
                 </div>
-                <!-- Text alignment -->
+                ${this.fields.typography.verticalAlignment}
                 <hr>
             </div>`;
     }
@@ -228,11 +277,26 @@ export class GenerationPanel extends LitElement {
     }
 
     #contentFeatures = () => {
-        console.log("contentFeatures", this.params.sentences);
         this.fields.content.set(this.params.sentences);
 
         return html`<div class="form-group row">
             ${this.fields.content}
+            <hr class="mt-4">
+        </div>`;
+    }
+
+    #backgroundFeatures = () => {
+        return html`<div class="form-group row">
+            <h3 class="mb-3 fw-bold col-12">Background features</h3>
+            ${this.fields.background.style}
+            <div class="row d-flex align-items-center">
+                <div class="col-8">
+                    ${this.fields.background.colors}
+                </div>
+                <div class="col-4">
+                    ${this.fields.background.random}
+                </div>
+            </div>
             <hr class="mt-4">
         </div>`;
     }
@@ -250,6 +314,8 @@ export class GenerationPanel extends LitElement {
                     ${this.#posterTypographyFeatures()}
                     ${Divider.get()}
                     ${this.#textBoxesFeatures()}
+                    ${Divider.get()}
+                    ${this.#backgroundFeatures()}
                 </form>
             </div>`;
     }

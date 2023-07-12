@@ -13,6 +13,8 @@ export class DropDownList extends LitElement {
         this.init = init;
         this.onChange = onChange;
         this.classList.add(...classList);
+
+        console.log (`init= ${this.init} ${id}`)
     }
 
     render() {
@@ -21,7 +23,7 @@ export class DropDownList extends LitElement {
             <div class="col-12 my-2">
                 <select class="form-select form-select-sm" id="${this.id}-list" @change="${this.onChange}">
                     ${this.options.map ((x, i) => {
-                        return html`<option value=${i} selected="${(this.init === i)}">${x[0]}</option>`;
+                        return html`<option value=${i} ${(this.init === i) ? `selected` : nothing }>${x[0]}</option>`;
                     })}´
                 </select>
             </div>

@@ -20,7 +20,7 @@ export class Checkbox extends LitElement {
     render() {
         return html`<div>
             <input class="form-check-input" type="checkbox"
-                   id="${this.id}-check" ${this.checked ? `checked="true"` : nothing}
+                   id="${this.id}-check" checked="${this.checked}"
                    @change="${this.onChange}">
             <label class="form-check-label small px-2" for="${this.id}-check">${this.label}</label>
         </div>`;
