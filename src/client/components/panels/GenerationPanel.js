@@ -7,8 +7,12 @@ import {ColorInput} from "../inputs/ColorInput.js";
 import {Checkbox} from "../inputs/Checkbox.js";
 import {Slider} from "../inputs/Slider.js";
 import {DropDownList} from "../inputs/DropDownList.js";
+import {TextArea} from "../inputs/TextArea.js";
 
 export class GenerationPanel extends LitElement {
+    static properties = {
+        params: {}
+    }
     constructor(params, restart) {
         super();
         // configuration params
@@ -20,11 +24,18 @@ export class GenerationPanel extends LitElement {
         // available fonts
         this.fonts = this.#getAvailableTypefaces();
 
+        console.log ("sentences", this.params.sentences);
         // input fields
         this.fields = {
+            content: new TextArea(`<b>Content</b> The text lines are defined by pilcrows (¶)`,
+                this.params["sentences"], `text-area-content-`, (e) => {
+                    const textContent = e.target.value.split("¶")
+                    this.params["sentences"] = textContent.map(t => t.trim());
+                    this.restart();
+                }),
             size: {
                 width: new TextInput("Width", 1, `size-x`, this.#updateSize, ["col-8", "mb-2"]),
-                height: new TextInput("Height", Math.round(this.params.size.height / this.params.size.width * 100) / 100, `size-y`, this.#updateSize, ["col-8", "mb-2"]),
+                height: new TextInput("Height", Math.round(this.params["size"]["height"] / this.params["size"]["width"] * 100) / 100, `size-y`, this.#updateSize, ["col-8", "mb-2"]),
                 margins: {
                     left: new TextInput("Margins (ltrb)", this.params.size.margin[0], `size-mg-l`, this.#updateSize, ["col-8", "my-2"]),
                     top: new TextInput(null, this.params.size.margin[1], `size-mg-t`, this.#updateSize, ["col-4", "my-2"]),
@@ -90,7 +101,7 @@ export class GenerationPanel extends LitElement {
                 align: new DropDownList(`Texbox alignment`, Params.textAlignmentTbOptions, 0, `texbox-align-list`, (e) => {
                     this.params.typography.textAlignment = parseInt(e.target.value);
                     this.restart();
-                }),
+                }, ["mb-2"]),
                 uppercase: new Checkbox(`Uppercase`, false, `case`, (e) => {
                     this.params.typography.uppercase = e.target.checked;
                     this.restart();
@@ -98,6 +109,8 @@ export class GenerationPanel extends LitElement {
             }
         }
     }
+
+
 
     #getAvailableTypefaces = () => {
         const fonts = {
@@ -168,7 +181,7 @@ export class GenerationPanel extends LitElement {
     #posterSizeFeatures = () => {
         return html`
             <div class="form-group row">
-                <h3 class="mt-4 mb-4 fw-bold col-12">Posters size</h3>
+                <h3 class="fw-bold col-12">Posters size</h3>
                 ${this.fields.size.width}
                 ${this.fields.size.height}
                 <div class="row mt-2 mb-4">
@@ -214,10 +227,23 @@ export class GenerationPanel extends LitElement {
             </div>`
     }
 
+    #contentFeatures = () => {
+        console.log("contentFeatures", this.params.sentences);
+        this.fields.content.set(this.params.sentences);
+
+        return html`<div class="form-group row">
+            ${this.fields.content}
+            <hr class="mt-4">
+        </div>`;
+    }
+
     render() {
+
         return html`
             <div class="row form-group my-2" id="poster-features">
                 <form>
+                    ${this.#contentFeatures()}
+                    ${Divider.get()}
                     ${this.#posterSizeFeatures()}
                     ${Divider.get()}
                     <!-- typefaces -->

@@ -209,38 +209,9 @@ export class EvolutionInterface extends LitElement {
                                             </div>
                                         </div>
                                         ${Divider.get()}
-                                        <div class="form-group">
-                                            <small class="my-2">
-                                                <b>Texbox Alignment</b><br>
-                                            </small>
-                                            <select
-                                                    class="form-select form-select-sm my-2" id="texbox-align-style-form"
-                                                    @change="${(e) => {
-                                                        this.params.typography.textAlignment = parseInt(e.target.value);
-                                                        this.initPop();
-                                                    }}"
-                                            >
-                                                ${Params.textAlignmentTbOptions.map((x, i) =>
-                                                        html`
-                                                                <option value=${i}>${x[0]}</option>`)
-                                                }
-                                            </select>
-                                        </div>
-                                        ${Divider.get()}
-                                        <div class="form-group">
-                                            <small class="my-2">
-                                                <b>Content</b><br>
-                                                (each line of text must be defined using a semicolon)
-                                            </small>
-                                            <textarea class="form-control my-2" id="text-area-content-begin"
-                                                      rows="${this.params.sentences.length}"
-                                                      @change="${async (e) => {
-                                                          const textContent = e.target.value.split("¶")
-                                                          this.params["sentences"] = textContent.map(t => t.trim());
-                                                          this.initPop();
-                                                      }}">${this.params.sentences.join(`¶`)}</textarea>
-                                        </div>
-                                        ${Divider.get()}
+                                        
+                                        
+                                        
                                         <div class="form-group">
                                             <small class="my-2">
                                                 <b>Background</b><br>

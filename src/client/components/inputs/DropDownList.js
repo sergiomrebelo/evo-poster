@@ -5,13 +5,14 @@ export class DropDownList extends LitElement {
         label: "label"
     }
 
-    constructor(label = null, options = [["default", 0]], init = 0, id, onChange = () => {}) {
+    constructor(label = null, options = [["default", 0]], init = 0, id, onChange = () => {}, classList = []) {
         super();
         this.label = label;
         this.id = id;
         this.options = options;
         this.init = init;
         this.onChange = onChange;
+        this.classList.add(...classList);
     }
 
     render() {
