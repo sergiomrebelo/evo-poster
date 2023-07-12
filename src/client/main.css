@@ -156,6 +156,12 @@ init-form {
     overflow-x:hidden;
 }
 
+.disabled-inputs {
+    pointer-events: none;
+    opacity: 0.5;
+}
+
+
 /* header */
 #header-container {
     background: var(--main-bg-color);
@@ -164,3 +170,4 @@ init-form {
 header {
     height: var(--header-height);
 }
+

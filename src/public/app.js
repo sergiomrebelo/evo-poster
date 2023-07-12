@@ -143,15 +143,17 @@ const ae=2;class le{constructor(e){}get _$AU(){return this._$AM._$AU}_$AT(e,t,r)
                        value="${this.value}"
                        @change="${this.onChange}">
             </div>
-        </div>`}createRenderRoot(){return this}}customElements.define("text-input",pe);class fe extends re{static properties={};constructor(){super(),this.fields={populationSize:new pe("Population size",se.evolution.popSize,"pop-size",(e=>{console.log(e),console.log("changing pop size")}),["col-6","mb-2"]),numberOfGenerations:new pe("No. generations",se.evolution.noGen,"no-gen",(e=>{console.log(e),console.log("changing no gene")}),["col-6","mb-2"]),eliteSize:new pe("Elite size",se.evolution.eliteSize,"elite-size",(e=>{console.log(e),console.log("elite size")}),["col-6","mb-2"]),crossoverProbability:new pe("Crossover probability",se.evolution.crossoverProb,"crossover-probability",(e=>{console.log(e),console.log("crossover prob")}),["col-6","mb-2"]),mutationProbability:new pe("Mutation probability",se.evolution.mutationProb,"mutation-probability",(e=>{console.log(e),console.log("mutation prob")}),["col-6","mb-2"])}}render(){return U`
+        </div>`}createRenderRoot(){return this}}customElements.define("text-input",pe);class fe extends re{static properties={};constructor(){super(),this.fields={populationSize:new pe("Population size",se.evolution.popSize,"pop-size",(e=>{console.log(e),console.log("changing pop size")}),["col-12"]),numberOfGenerations:new pe("No. generations",se.evolution.noGen,"no-gen",(e=>{console.log(e),console.log("changing no gene")}),["col-12","my-2"]),eliteSize:new pe("Elite size",se.evolution.eliteSize,"elite-size",(e=>{console.log(e),console.log("elite size")}),["col-12","my-2"]),crossoverProbability:new pe("Crossover probability",se.evolution.crossoverProb,"crossover-probability",(e=>{console.log(e),console.log("crossover prob")}),["col-12","my-2"]),mutationProbability:new pe("Mutation probability",se.evolution.mutationProb,"mutation-probability",(e=>{console.log(e),console.log("mutation prob")}),["col-12","my-2"])}}render(){return U`
             <div id="evolution-panel-inner">
                 <h3>Evolutionary Setup</h3>
                 ${ne.get()}
-                ${this.fields.populationSize}
-                ${this.fields.numberOfGenerations}
-                ${this.fields.eliteSize}
-                ${this.fields.crossoverProbability}
-                ${this.fields.mutationProbability}
+                <div class="row">
+                    ${this.fields.populationSize}
+                    ${this.fields.numberOfGenerations}
+                    ${this.fields.eliteSize}
+                    ${this.fields.crossoverProbability}
+                    ${this.fields.mutationProbability}
+                </div>
                 <hr>
             </div>`}createRenderRoot(){return this}}customElements.define("evo-panel",fe);const me=(e,t=1)=>(e=parseFloat(e.replace(",",".")),isNaN(e)||null==e?t:e);class ye extends re{static properties={label:"label",showLabel:!0,colorA:"#fff",colorB:"#000",onChange:()=>{}};constructor(e,t,r=null,o,s=(()=>{}),n=[]){super(),this.classList.add(...n),this.colorA=t,this.colorB=r,this.id=o,this.disable=!0,this.showLabel=null!==e,this.label=this.showLabel?e:null,this.onChange=s}render(){return U`<div>
             <div class="input-group input-group-sm" id="${this.id}-inner">
@@ -200,7 +202,10 @@ const ae=2;class le{constructor(e){}get _$AU(){return this._$AM._$AU}_$AT(e,t,r)
                 <textarea class="form-control my-2" id="${this.id}-input" rows="${this.content.length}" 
                           @change="${this.onChange}">${this.content.join("¶")}</textarea>
             </div>
-        </div>`}createRenderRoot(){return this}}customElements.define("textarea-input",_e);class we extends re{static properties={params:{},changesInTypefaces:0};constructor(e,t,r){super(),this.params=e,this.restart=t,this.fonts=this.#t(),this.params.typography.weight=this.fonts.weight,this.params.typography.stretch=this.fonts.stretch,this.params.typography.typefaces=this.fonts.typefaces,this.changesInTypefaces=0,this.errorMessage=r,this.fields={content:new _e("<b>Content</b> The text lines are defined by pilcrows (¶)",this.params.sentences,"text-area-content-",(e=>{const t=e.target.value.split("¶");this.params.sentences=t.map((e=>e.trim())),this.restart()})),size:{width:new pe("Width",1,"size-x",this.#r,["col-8","mb-2"]),height:new pe("Height",Math.round(this.params.size.height/this.params.size.width*100)/100,"size-y",this.#r,["col-8","mb-2"]),margins:{left:new pe("Margins (ltrb)",this.params.size.margin[0],"size-mg-l",this.#r,["col-8","my-2"]),top:new pe(null,this.params.size.margin[1],"size-mg-t",this.#r,["col-4","my-2"]),right:new pe(null,this.params.size.margin[2],"size-mg-r",this.#r,["col-4"]),bottom:new pe(null,this.params.size.margin[3],"size-mg-b",this.#r,["col-4"])}},typography:{color:new ye("Main Colour",this.params.typography.color.value,null,"typography",(e=>{this.params.typography.color.value!==e.target.value&&(this.params.typography.color.value=e.target.value,this.restart())}),["col-8","my-2"]),random:new ge("Random",!0,"random-colour-typo",(async e=>{const t=document.getElementById("typography-colour-picker-1");this.params.typography.color.random=e.target.checked,t.disabled=e.target.checked,this.restart()}),["col-4"]),weight:{min:new ve("Min",this.fonts.weight.min,this.fonts.weight.min,this.fonts.weight.max,1,"typeface-weight-min",(e=>{this.params.typography.weight.min=parseInt(e.target.value),this.params.typography.weight.min>this.params.typography.weight.max&&(this.params.typography.weight.min=this.params.typography.weight.max,e.target.value=this.params.typography.weight.max),this.restart()}),["my-2"]),max:new ve("Max",this.fonts.weight.max,this.fonts.weight.min,this.fonts.weight.max,1,"typeface-weight-max",(e=>{this.params.typography.weight.max=parseInt(e.target.value),this.params.typography.weight.max<this.params.typography.weight.min&&(this.params.typography.weight.max=this.params.typography.weight.min,e.target.value=this.params.typography.weight.min),this.restart()}),["my-2"])},stretch:{min:new ve("Min",this.fonts.stretch.min,this.fonts.stretch.min,this.fonts.stretch.max,1,"typeface-stretch-min",(e=>{this.params.typography.stretch.min=parseInt(e.target.value),this.params.typography.stretch.min>this.params.typography.stretch.max&&(this.params.typography.stretch.min=this.params.typography.stretch.max,e.target.value=this.params.typography.stretch.max),this.restart()}),["my-2"]),max:new ve("Max",this.fonts.stretch.max,this.fonts.stretch.min,this.fonts.stretch.max,1,"typeface-stretch-max",(e=>{this.params.typography.stretch.max=parseInt(e.target.value),this.params.typography.stretch.max<this.params.typography.stretch.min&&(this.params.typography.stretch.max=this.params.typography.stretch.min,e.target.value=this.params.typography.stretch.max),this.restart()}),["my-2"])},verticalAlignment:new be("Vertical alignment",se.textAlignmentOptions,0,"vertica-align-list",(e=>{this.params.typography.verticalAlignment=parseInt(e.target.value),this.restart()}),["mb-2"]),typefaces:new pe("Add Typeface","","typefaces-add",(e=>{const t=e.target.value,r=this.params.typography.typefaces.map((e=>e.family));if(se.availableTypefaces.includes(t)&&!r.includes(t)){for(let e of this.fonts.typefaces)if(e.family===t){this.params.typography.typefaces.push(e);break}this.restart(),this.changesInTypefaces++}else this.errorMessage.set({message:`Typeface ${t} is not available<br>available typefaces: ${se.availableTypefaces}`}),this.numberOfTypeface+=1}))},textboxes:{align:new be("Texbox alignment",se.textAlignmentTbOptions,0,"texbox-align-list",(e=>{this.params.typography.textAlignment=parseInt(e.target.value),this.restart()}),["mb-2"]),uppercase:new ge("Uppercase",!1,"case",(e=>{this.params.typography.uppercase=e.target.checked,this.restart()}))},background:{style:new be("Background Style",se.background.availableStyles,0,"background-style-list",(e=>{const t=document.querySelectorAll(".background-colour-picker"),r=document.getElementById("bk-color-check").checked;if(this.params.background.color.random=r,this.params.background.style=parseInt(e.target.value),!r){const r=se.background.availableStyles[parseInt(e.target.value)][1];t.forEach(((e,t)=>{e.disabled=!(t<r)}))}this.restart()}),["mb-2"]),colors:new ye("Color",this.params.background.color.valueA,this.params.background.color.valueB,"background",(e=>{const t=e.target.getAttribute("data-param");this.params.background.color[t]!==e.target.value&&(this.params.background.color[t]=e.target.value),this.restart()})),random:new ge("Random",!0,"bk-color",(e=>{const t=document.querySelectorAll(".background-colour-picker"),r=e.target.checked;if(this.params.background.color.random=r,r)t.forEach((e=>e.disabled=!0));else{const e=document.getElementById("background-style-list-list").value,r=se.background.availableStyles[parseInt(e)][1];t.forEach(((e,t)=>{t<r?(e.disabled=!1,this.params.background.color.random=!1):e.disabled=!0}))}this.restart()}))}}}#t=()=>{const e={typefaces:[],weight:{min:Number.MAX_VALUE,max:Number.MIN_VALUE},stretch:{min:Number.MAX_VALUE,max:Number.MIN_VALUE}};for(let t of Array.from(document.fonts))if(se.availableTypefaces.includes(t.family)){let r=t.stretch.replaceAll("%","").split(" ").map((e=>parseInt(e)));e.stretch.min>r[0]&&(e.stretch.min=r[0]),e.stretch.max<r[1]&&(e.stretch.max=r[1]);let o=t.weight.split(" ").map((e=>parseInt(e)));e.weight.min>o[0]&&(e.weight.min=o[0]),e.weight.max<o[1]&&(e.weight.max=o[1]),e.typefaces.push(t)}return e};#r=()=>{let e=me(document.getElementById("size-x-input").value),t=me(document.getElementById("size-y-input").value),r=me(document.getElementById("size-mg-l-input").value,this.params.size.margin[0]),o=me(document.getElementById("size-mg-t-input").value,this.params.size.margin[1]),s=me(document.getElementById("size-mg-r-input").value,this.params.size.margin[2]),n=me(document.getElementById("size-mg-b-input").value,this.params.size.margin[3]);1!==e&&(t=Math.round(100*parseFloat(t/e))/100,e=1),this.params.size.width=se.visualisationGrid.width*e,this.params.size.height=se.visualisationGrid.width*t,this.params.size.margin=[r,o,s,n],document.getElementById("size-x-input").value=e,document.getElementById("size-y-input").value=t,document.getElementById("size-mg-l-input").value=r,document.getElementById("size-mg-t-input").value=o,document.getElementById("size-mg-r-input").value=s,document.getElementById("size-mg-b-input").value=n,this.restart(!0)};#o=()=>U`
+        </div>`}createRenderRoot(){return this}}customElements.define("textarea-input",_e);class we extends re{static properties={params:{},changesInTypefaces:0};constructor(e,t,r,o="poster-features"){super(),this.id=o,this.params=e,this.restart=t,this.fonts=this.#t(),this.params.typography.weight=this.fonts.weight,this.params.typography.stretch=this.fonts.stretch,this.params.typography.typefaces=this.fonts.typefaces,this.changesInTypefaces=0,this.errorMessage=r,this.fields={content:new _e("<b>Content</b> The text lines are defined by pilcrows (¶)",this.params.sentences,"text-area-content-",(e=>{const t=e.target.value.split("¶");this.params.sentences=t.map((e=>e.trim())),this.restart()})),size:{width:new pe("Width",1,"size-x",this.#r,["col-8","mb-2"]),height:new pe("Height",Math.round(this.params.size.height/this.params.size.width*100)/100,"size-y",this.#r,["col-8","mb-2"]),margins:{left:new pe("Margins (ltrb)",this.params.size.margin[0],"size-mg-l",this.#r,["col-8","my-2"]),top:new pe(null,this.params.size.margin[1],"size-mg-t",this.#r,["col-4","my-2"]),right:new pe(null,this.params.size.margin[2],"size-mg-r",this.#r,["col-4"]),bottom:new pe(null,this.params.size.margin[3],"size-mg-b",this.#r,["col-4"])}},typography:{color:new ye("Main Colour",this.params.typography.color.value,null,"typography",(e=>{this.params.typography.color.value!==e.target.value&&(this.params.typography.color.value=e.target.value,this.restart())}),["col-8","my-2"]),random:new ge("Random",!0,"random-colour-typo",(async e=>{const t=document.getElementById("typography-colour-picker-1");this.params.typography.color.random=e.target.checked,t.disabled=e.target.checked,this.restart()}),["col-4"]),weight:{min:new ve("Min",this.fonts.weight.min,this.fonts.weight.min,this.fonts.weight.max,1,"typeface-weight-min",(e=>{this.params.typography.weight.min=parseInt(e.target.value),this.params.typography.weight.min>this.params.typography.weight.max&&(this.params.typography.weight.min=this.params.typography.weight.max,e.target.value=this.params.typography.weight.max),this.restart()}),["my-2"]),max:new ve("Max",this.fonts.weight.max,this.fonts.weight.min,this.fonts.weight.max,1,"typeface-weight-max",(e=>{this.params.typography.weight.max=parseInt(e.target.value),this.params.typography.weight.max<this.params.typography.weight.min&&(this.params.typography.weight.max=this.params.typography.weight.min,e.target.value=this.params.typography.weight.min),this.restart()}),["my-2"])},stretch:{min:new ve("Min",this.fonts.stretch.min,this.fonts.stretch.min,this.fonts.stretch.max,1,"typeface-stretch-min",(e=>{this.params.typography.stretch.min=parseInt(e.target.value),this.params.typography.stretch.min>this.params.typography.stretch.max&&(this.params.typography.stretch.min=this.params.typography.stretch.max,e.target.value=this.params.typography.stretch.max),this.restart()}),["my-2"]),max:new ve("Max",this.fonts.stretch.max,this.fonts.stretch.min,this.fonts.stretch.max,1,"typeface-stretch-max",(e=>{this.params.typography.stretch.max=parseInt(e.target.value),this.params.typography.stretch.max<this.params.typography.stretch.min&&(this.params.typography.stretch.max=this.params.typography.stretch.min,e.target.value=this.params.typography.stretch.max),this.restart()}),["my-2"])},verticalAlignment:new be("Vertical alignment",se.textAlignmentOptions,0,"vertica-align-list",(e=>{this.params.typography.verticalAlignment=parseInt(e.target.value),this.restart()}),["mb-2"]),typefaces:new pe("Add Typeface","","typefaces-add",(e=>{const t=e.target.value,r=this.params.typography.typefaces.map((e=>e.family));if(se.availableTypefaces.includes(t)&&!r.includes(t)){for(let e of this.fonts.typefaces)if(e.family===t){this.params.typography.typefaces.push(e);break}this.restart(),this.changesInTypefaces++}else this.errorMessage.set({message:`Typeface ${t} is not available<br>available typefaces: ${se.availableTypefaces}`}),this.numberOfTypeface+=1}),["mb-2"])},textboxes:{align:new be("Texbox alignment",se.textAlignmentTbOptions,0,"texbox-align-list",(e=>{this.params.typography.textAlignment=parseInt(e.target.value),this.restart()}),["mb-2"]),uppercase:new ge("Uppercase",!1,"case",(e=>{this.params.typography.uppercase=e.target.checked,this.restart()}))},background:{style:new be("Background Style",se.background.availableStyles,0,"background-style-list",(e=>{const t=document.querySelectorAll(".background-colour-picker"),r=document.getElementById("bk-color-check").checked;if(this.params.background.color.random=r,this.params.background.style=parseInt(e.target.value),!r){const r=se.background.availableStyles[parseInt(e.target.value)][1];t.forEach(((e,t)=>{e.disabled=!(t<r)}))}this.restart()}),["mb-2"]),colors:new ye("Color",this.params.background.color.valueA,this.params.background.color.valueB,"background",(e=>{const t=e.target.getAttribute("data-param");this.params.background.color[t]!==e.target.value&&(this.params.background.color[t]=e.target.value),this.restart()})),random:new ge("Random",!0,"bk-color",(e=>{const t=document.querySelectorAll(".background-colour-picker"),r=e.target.checked;if(this.params.background.color.random=r,r)t.forEach((e=>e.disabled=!0));else{const e=document.getElementById("background-style-list-list").value,r=se.background.availableStyles[parseInt(e)][1];t.forEach(((e,t)=>{t<r?(e.disabled=!1,this.params.background.color.random=!1):e.disabled=!0}))}this.restart()}))}}}#t=()=>{const e={typefaces:[],weight:{min:Number.MAX_VALUE,max:Number.MIN_VALUE},stretch:{min:Number.MAX_VALUE,max:Number.MIN_VALUE}};for(let t of Array.from(document.fonts))if(se.availableTypefaces.includes(t.family)){let r=t.stretch.replaceAll("%","").split(" ").map((e=>parseInt(e)));e.stretch.min>r[0]&&(e.stretch.min=r[0]),e.stretch.max<r[1]&&(e.stretch.max=r[1]);let o=t.weight.split(" ").map((e=>parseInt(e)));e.weight.min>o[0]&&(e.weight.min=o[0]),e.weight.max<o[1]&&(e.weight.max=o[1]),e.typefaces.push(t)}return e};#r=()=>{let e=me(document.getElementById("size-x-input").value),t=me(document.getElementById("size-y-input").value),r=me(document.getElementById("size-mg-l-input").value,this.params.size.margin[0]),o=me(document.getElementById("size-mg-t-input").value,this.params.size.margin[1]),s=me(document.getElementById("size-mg-r-input").value,this.params.size.margin[2]),n=me(document.getElementById("size-mg-b-input").value,this.params.size.margin[3]);1!==e&&(t=Math.round(100*parseFloat(t/e))/100,e=1),this.params.size.width=se.visualisationGrid.width*e,this.params.size.height=se.visualisationGrid.width*t,this.params.size.margin=[r,o,s,n],document.getElementById("size-x-input").value=e,document.getElementById("size-y-input").value=t,document.getElementById("size-mg-l-input").value=r,document.getElementById("size-mg-t-input").value=o,document.getElementById("size-mg-r-input").value=s,document.getElementById("size-mg-b-input").value=n,this.restart(!0)};#o=(e="",t)=>U`<span class="badge text-bg-secondary mr-2 typeface-badge-${e}"
+                          id="typeface-badge-${e}">${e}
+            <span role="button" @click="${()=>{this.params.typography.typefaces.length>1?(this.params.typography.typefaces=this.params.typography.typefaces.filter((t=>t.family!==e)),this.changesInTypefaces++,this.restart()):this.errorMessage.set({message:"You must select, at least, one typeface"})}}">&times</span>
+        </span>`;#s=()=>{let e=[];for(let t=0;t<this.params.typography.typefaces.length;t++){let r=this.params.typography.typefaces[t];const o=this.#o(r.family,t);e.push(o)}return e};#n=()=>U`
             <div class="form-group row">
                 <h3 class="fw-bold col-12">Posters size</h3>
                 ${this.fields.size.width}
@@ -212,16 +217,13 @@ const ae=2;class le{constructor(e){}get _$AU(){return this._$AM._$AU}_$AT(e,t,r)
                     ${this.fields.size.margins.bottom}
                 </div>
                 <hr>
-            </div>`;#s=(e="",t)=>U`<span class="badge text-bg-secondary mr-2 typeface-badge-${e}"
-                          id="typeface-badge-${e}">${e}
-            <span role="button" @click="${()=>{this.params.typography.typefaces.length>1?(this.params.typography.typefaces=this.params.typography.typefaces.filter((t=>t.family!==e)),this.changesInTypefaces++,this.restart()):this.errorMessage.set({message:"You must select, at least, one typeface"})}}">&times</span>
-        </span>`;#n=()=>{let e=[];for(let t=0;t<this.params.typography.typefaces.length;t++){let r=this.params.typography.typefaces[t];const o=this.#s(r.family,t);e.push(o)}return e};#i=()=>U`
+            </div>`;#i=()=>U`
             <div class="form-group row">
                 <h3 class="mb-3 fw-bold col-12">Typography</h3>
                 <div class="row form-group my-2" id="typeface-selector">
                     <small class="fw-bold col-12">Typeface</small>
                     <div class="typefaces-input my-2 bootstrap-tagsinput" id="typeface-tags-${this.numberOfTypeface}">
-                        ${this.#n()}
+                        ${this.#s()}
                     </div>
                     ${this.fields.typography.typefaces}
                 </div>
@@ -263,11 +265,11 @@ const ae=2;class le{constructor(e){}get _$AU(){return this._$AM._$AU}_$AT(e,t,r)
             </div>
             <hr class="mt-4">
         </div>`;render(){return U`
-            <div class="row form-group my-2 init-selector" id="poster-features">
+            <div class="row form-group my-2 init-selector">
                 <form>
                     ${this.#l()}
                     ${ne.get()}
-                    ${this.#o()}
+                    ${this.#n()}
                     ${ne.get()}
                     ${this.#i()}
                     ${ne.get()}
@@ -275,55 +277,40 @@ const ae=2;class le{constructor(e){}get _$AU(){return this._$AM._$AU}_$AT(e,t,r)
                     ${ne.get()}
                     ${this.#c()}
                 </form>
-            </div>`}createRenderRoot(){return this}}customElements.define("generation-panel",we);class xe extends re{static properties={changesInTypefaces:0};constructor(e,t,r,o){super(),this.params=e,this.initPop=t,this.pop=r,this.errorMessage=o,this.generationPanel=new we(this.params,this.initPop,this.errorMessage),this.evolutionPanel=new fe}#u=(e,t,r=!1)=>U`<li class="nav-item" role="presentation">
-            <button class="nav-link ${r?"active":F}" id="${t}" data-bs-toggle="tab"  data-bs-target="${t}-pane"
-                    type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">${e}</button></li>`;render(){return U`
+            </div>`}createRenderRoot(){return this}}customElements.define("generation-panel",we);class xe extends re{static properties={};constructor(e,t,r,o){super(),this.params=e,this.initPop=t,this.pop=r,this.errorMessage=o,this.generationPanelID="poster-tab",this.evolutionPanelID="evolution-tab",this.refinePanelID="refine-tab",this.tabGeneration=this.#u("General",this.generationPanelID,!0),this.tabEvolution=this.#u("Evolution",this.evolutionPanelID,!1),this.tabRefine=this.#u("Refine",this.refinePanelID,!1),this.generationPanel=new we(this.params,this.initPop,this.errorMessage),this.evolutionPanel=new fe}#u=(e,t,r=!1)=>U`<li class="nav-item" role="presentation">
+            <button class="${r?"nav-link active":"nav-link disabled"}" id="${t}" data-bs-toggle="tab"  data-bs-target="#${t}-panel"
+                    type="button" role="tab" aria-controls="${t}-pane" aria-selected="true">${e}</button></li>`;render(){return U`
             <div class="backdrop z-1 opacity-fade show" id="evo-interface-backdrop"></div>
             <div class="wrapper initial-form-outer container-fluid show z-2" id="evo-interface-outer">
                 <section id="initialForm" class="initial-form-inner row">
                     <div class="offset-sm-6 col-12 col-sm-6 p-3 pt-5 collapse-horizontal collapse show" id="evo-interface-inner">
                         <ul class="nav nav-tabs" id="myTab" role="tablist">
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link active" id="poster-tab" data-bs-toggle="tab"
-                                        data-bs-target="#poster-tab-pane"
-                                        type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">
-                                    General
-                                </button>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="evolution-tab" data-bs-toggle="tab"
-                                        data-bs-target="#evolution-tab-pane"
-                                        type="button" role="tab" aria-controls="evolution-tab-pane" aria-selected="true">
-                                    Evolution
-                                </button>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="refine-tab" data-bs-toggle="tab"
-                                        data-bs-target="#refine-tab-pane"
-                                        type="button" role="tab" aria-controls="refine-tab-pane" aria-selected="true">
-                                    Refine
-                                </button>
-                            </li>
+                            ${this.tabGeneration}
+                            ${this.tabEvolution}
+                            ${this.tabRefine}
                         </ul>
                         <div class="tab-content m-3" id="tabs-contents">
-                            <div class="tab-pane fade show active" id="poster-tab-pane" role="tabpanel" aria-labelledby="poster-tab" tabindex="0">
+                            <div class="tab-pane fade show active" id="${this.generationPanelID}-panel" role="tabpanel" aria-labelledby="${this.generationPanelID}" tabindex="0">
                                 ${this.generationPanel}
                             </div>
-                            <div class="tab-pane fade" id="evolution-tab-pane" role="tabpanel" aria-labelledby="evolution-tab" tabindex="1">
+                            <div class="tab-pane fade" id="${this.evolutionPanelID}-panel" role="tabpanel" aria-labelledby="${this.evolutionPanelID}" tabindex="1">
                                ${this.evolutionPanel}
                             </div>
-                            <div class="tab-pane fade" id="refine-tab-pane" role="tabpanel" aria-labelledby="refine-tab" tabindex="2">
-                                <h2>Refine</h2>
+                            <div class="tab-pane fade" id="${this.refinePanelID}-panel" role="tabpanel" aria-labelledby="${this.refinePanelID}" tabindex="2">
+                                <p>TBD</p>
                             </div>
                         </div>
-                        
-                        <div class="row">
-                            <div class="col-12">
-                                ${new ge("Show grid",this.params.display.grid,"grid-display",(e=>{this.params.display.grid=e.target.checked,this.pop.toggleGrid(this.params.display.grid)}))}
-                            </div>
-                            ${ne.get()}
-                            <div class="col-6 mb-3">
-                                <button type="button" class="btn btn-primary">Evolve</button>
+                        <div class="m-3">
+                            <div class="row">
+                                <div class="col-12 px-2">
+                                    ${new ge("Show grid",this.params.display.grid,"grid-display",(e=>{this.params.display.grid=e.target.checked,this.pop.toggleGrid(this.params.display.grid)}))}
+                                </div>
+                                ${ne.get()}
+                                <div class="col-12 mb-3">
+                                    <button type="button" class="btn btn-primary mb-2" @click="${e=>{document.querySelectorAll(".init-selector").forEach((e=>{e.classList.add("disabled-inputs")})),document.getElementById(this.generationPanelID).classList.remove("active"),document.getElementById(this.evolutionPanelID).classList.remove("disabled"),document.getElementById(this.evolutionPanelID).classList.add("active"),document.getElementById(`${this.generationPanelID}-panel`).classList.remove("active","show"),document.getElementById(`${this.evolutionPanelID}-panel`).classList.add("active","show"),e.target.style.display="none",document.querySelectorAll(".evo-bts").forEach((e=>{e.classList.remove("d-none")}))}}">Evolve</button>
+                                    <button type="button" class="btn btn-primary mb-2 d-none evo-bts">Start</button>
+                                    <button type="button" class="btn btn-primary mx-2 mb-2 d-none evo-bts" disabled>Stop</button>
+                                </div>
                             </div>
                         </div>
                     </div>

@@ -14,8 +14,10 @@ export class GenerationPanel extends LitElement {
         params: {},
         changesInTypefaces: 0
     }
-    constructor(params, restart, errorMessage) {
+    constructor(params, restart, errorMessage, id = "poster-features") {
         super();
+
+        this.id = id;
         // configuration params
         this.params = params;
 
@@ -106,7 +108,6 @@ export class GenerationPanel extends LitElement {
                     this.params.typography.verticalAlignment = parseInt(e.target.value);
                     this.restart();
                 }, ["mb-2"]),
-                // constructor(label, value, id, onChange = () => {}, classList = [], mirror = null) {
                 typefaces: new TextInput(`Add Typeface`, "", `typefaces-add`, (e) => {
                     const name = e.target.value;
                     const current = this.params.typography.typefaces.map(e => e.family);
@@ -123,7 +124,7 @@ export class GenerationPanel extends LitElement {
                         this.errorMessage.set({message: `Typeface ${name} is not available<br>available typefaces: ${Params.availableTypefaces}`});
                         this.numberOfTypeface += 1;
                     }
-                })
+                }, ["mb-2"])
             },
             textboxes: {
                 align: new DropDownList(`Texbox alignment`, Params.textAlignmentTbOptions, 0, `texbox-align-list`, (e) => {
@@ -251,6 +252,33 @@ export class GenerationPanel extends LitElement {
         this.restart(true);
     }
 
+    #tag = (value = "", i) => {
+        return html`<span class="badge text-bg-secondary mr-2 typeface-badge-${value}"
+                          id="typeface-badge-${value}">${value}
+            <span role="button" @click="${() => {
+            if (this.params.typography.typefaces.length > 1) {
+                this.params.typography.typefaces = this.params.typography.typefaces.filter((el) => {
+                    return el.family !== value;
+                });
+                this.changesInTypefaces++;
+                this.restart();
+            } else {
+                this.errorMessage.set({message: "You must select, at least, one typeface"});
+            }
+        }}">&times</span>
+        </span>`;
+    }
+
+    #getTypefaceTags = () => {
+        let tags = [];
+        for (let i = 0; i < this.params.typography.typefaces.length; i++) {
+            let f = this.params.typography.typefaces[i];
+            const tag = this.#tag(f.family, i);
+            tags.push(tag);
+        }
+        return tags;
+    }
+
     // panel sections
     #posterSizeFeatures = () => {
         return html`
@@ -266,33 +294,6 @@ export class GenerationPanel extends LitElement {
                 </div>
                 <hr>
             </div>`;
-    }
-
-    #tag = (value = "", i) => {
-        return html`<span class="badge text-bg-secondary mr-2 typeface-badge-${value}"
-                          id="typeface-badge-${value}">${value}
-            <span role="button" @click="${() => {
-                if (this.params.typography.typefaces.length > 1) {
-                    this.params.typography.typefaces = this.params.typography.typefaces.filter((el) => {
-                        return el.family !== value;
-                    });
-                    this.changesInTypefaces++;
-                    this.restart();
-                } else {
-                    this.errorMessage.set({message: "You must select, at least, one typeface"});
-                }
-        }}">&times</span>
-        </span>`;
-    }
-
-    #getTypefaceTags = () => {
-        let tags = [];
-        for (let i = 0; i < this.params.typography.typefaces.length; i++) {
-            let f = this.params.typography.typefaces[i];
-            const tag = this.#tag(f.family, i);
-            tags.push(tag);
-        }
-        return tags;
     }
 
     #posterTypographyFeatures = () => {
@@ -363,7 +364,7 @@ export class GenerationPanel extends LitElement {
     render() {
 
         return html`
-            <div class="row form-group my-2 init-selector" id="poster-features">
+            <div class="row form-group my-2 init-selector">
                 <form>
                     ${this.#contentFeatures()}
                     ${Divider.get()}

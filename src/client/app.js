@@ -7,7 +7,7 @@ import {Params} from "./Params.js";
 import {InputForm} from "./components/InputForm.js";
 import {ResultsContainer} from "./components/ResultsContainer.js";
 import {ErrHandler} from "./components/ErrHandler.js";
-import {EvolutionInterface} from "./components/EvolutionInterface.js"
+import {EvolutionInterface} from "./components/Interface.js"
 import {Header} from "./components/Header.js";
 
 import Population from "./controllers/Population.js";
