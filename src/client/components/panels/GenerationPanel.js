@@ -84,6 +84,12 @@ export class GenerationPanel extends LitElement {
                         this.restart();
                     }, ["my-2"]),
                 }
+            },
+            textboxes: {
+                uppercase: new Checkbox(`uppercase`, false, `case`, (e) => {
+                    this.params.typography.uppercase = e.target.checked;
+                    this.restart();
+                })
             }
         }
     }
@@ -191,6 +197,13 @@ export class GenerationPanel extends LitElement {
             </div>`;
     }
 
+    #textBoxesFeatures = () => {
+        return html`
+            <div class="form-group row">
+                ${this.fields.textboxes.uppercase}
+            </div>`
+    }
+
     render() {
         return html`
             <div class="row form-group my-2" id="poster-features">
@@ -200,6 +213,7 @@ export class GenerationPanel extends LitElement {
                     <!-- typefaces -->
                     ${this.#posterTypographyFeatures()}
                     ${Divider.get()}
+                    ${this.#textBoxesFeatures()}
                 </form>
             </div>`;
     }
