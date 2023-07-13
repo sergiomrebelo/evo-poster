@@ -9,6 +9,7 @@ class Poster {
         this.n = n;
         this.generation = generation;
         this.ready = false;
+        this.fitness = 1;
 
         // define grid
         const grid = new Grid(
@@ -136,7 +137,7 @@ class Poster {
         if (this.#debug) {
             pg.textSize(10);
             pg.fill(0);
-            pg.text(`${this.id}+${this.genotype.typography.verticalAlignment}+style=${this.genotype.background.style}`, 20, 20);
+            pg.text(`${this.id}+${this.genotype.typography.verticalAlignment}+style=${this.genotype.background.style}\nfitness=${this.fitness}`, 20, 20);
         }
 
         if (this.#showGrid && this.#debug) {

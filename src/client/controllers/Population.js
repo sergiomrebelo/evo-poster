@@ -2,11 +2,15 @@ import {Params} from "../Params.js";
 import Poster from "./Poster.js";
 
 export class Population {
+    #typefaces;
+
     constructor(params) {
         this.size = params["evo"]["popSize"];
         this.params = params;
         this.population = [];
         this.generation = 0;
+        
+        this.#typefaces = [];
         this.updated = true;
 
         console.log("inside pop", params);
@@ -19,9 +23,15 @@ export class Population {
         for (let i=0; i<this.size; i++) {
             const poster = new Poster(i, this.generation, this.params);
             this.population.push(poster);
-        }
 
-        console.log(`pop size=${this.population.length}`);
+            // save typefaces used
+            const posterFonts = poster.genotype.textboxes.map((t) => t.typeface);
+            for (const f of posterFonts){
+                if (this.#typefaces.indexOf(f) === -1) {
+                    this.#typefaces.push(f);
+                }
+            }
+        }
     }
 
     toggleGrid = (show) => {
@@ -34,11 +44,11 @@ export class Population {
     draw = () => {
         this.updated = false;
 
-        // FIXME: check if typefaces are loaded
-        for (let font of this.params.typography.typefaces) {
-            const isLoaded = document.fonts.check(`12px ${font.family}`);
+        // verify if the necessary fonts are loaded
+        for (let font of this.#typefaces) {
+            const isLoaded = document.fonts.check(`12px ${font}`);
             if (!isLoaded) {
-                // this.updated = true;
+                this.updated = true;
             }
         }
 
