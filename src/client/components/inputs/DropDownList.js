@@ -13,8 +13,6 @@ export class DropDownList extends LitElement {
         this.init = init;
         this.onChange = onChange;
         this.classList.add(...classList);
-
-        console.log (`init= ${this.init} ${id}`)
     }
 
     render() {

@@ -1,6 +1,10 @@
 import {Params} from "../Params.js";
 import backgroundStyles from "./BackgroundStyles.js";
 
+import * as evaluator from "../../@evoposter/evaluator/src/index.mjs";
+
+
+
 class Poster {
     #showGrid = false;
     #debug = true;
@@ -9,7 +13,9 @@ class Poster {
         this.n = n;
         this.generation = generation;
         this.ready = false;
+
         this.fitness = 1;
+        this.sentencesLenght = [];
 
         // define grid
         const grid = new Grid(
@@ -117,9 +123,8 @@ class Poster {
         this.#showGrid = params.display.grid;
     }
 
-    draw = async (posX = 0, posY=0) => {
+    draw = async () => {
         this.ready = true;
-        push();
         const pg = createGraphics(this.genotype.size.width, this.genotype.size.height);
 
         // background
@@ -133,6 +138,9 @@ class Poster {
         // typesetting typography on poster
         await this.typeset(pg);
 
+        // evaluate the poster
+        await this.evaluate();
+
         // debug
         if (this.#debug) {
             pg.textSize(10);
@@ -145,16 +153,31 @@ class Poster {
         }
 
         // place graphics
-        const sideX = width / Math.floor(width/Params.visualisationGrid.width);
-        const sideY = this.genotype.grid.size.height + Params.visualisationGrid.marginY;
-        const x = posX * sideX + sideX/2;
-        const y = posY * sideY + sideY/2;
-        imageMode(CENTER);
-        image(pg, x, y);
-        pop();
+        // const sideX = width / Math.floor(width/Params.visualisationGrid.width);
+        // const sideY = this.genotype.grid.size.height + Params.visualisationGrid.marginY;
+        // const x = posX * sideX + sideX/2;
+        // const y = posY * sideY + sideY/2;
+        // imageMode(CENTER);
+        // image(pg, x, y);
+        // pop();
+
+        return pg;
+    }
+
+    evaluate = () => {
+        this.fitness = 1;
+
+        // constraint
+        const legibility = evaluator.legibility(this.sentencesLenght, this.genotype.grid.getAvailableWidth());
+        // returns a number between 0 and 0.5
+        // subtracted to fitness
+        this.fitness -= legibility;
+        // this.fitness = Math.round(this.fitness*100)/100;
     }
 
     typeset = async(pg) => {
+        this.sentencesLenght = [];
+
         pg.push();
         pg.translate(pg.width/2, pg.height/2);
         const ctx = pg.drawingContext;
@@ -184,6 +207,15 @@ class Poster {
             drawingContext.font = `${tb["weight"]} ${getFontStretchName(tb['font-stretch'])} ${tb["size"]}px ${tb["typeface"]}`;
             let content = tb["uppercase"] === true ? tb["content"].toUpperCase() : tb["content"];
             pg.text(content, xPos, yPos);
+
+            // const sentenceWidth = pg.textWidth (content);
+            const sentenceWidth = ctx.measureText(content).width;
+
+            // debug
+            // pg.textSize(10);
+            // pg.fill (0)
+            // pg.text(sentenceWidth, xPos, yPos+15);
+            this.sentencesLenght.push(sentenceWidth);
         }
         pg.pop();
     }
@@ -455,6 +487,15 @@ class Grid {
         }
         console.error(`this row do not exists in grid. requested number ${n}`);
         return 0;
+    }
+
+    getAvailableWidth = (margins = true) => {
+        if (margins) {
+            let availableWidth = this.size.width - (this.size.width * this.size.margin[0]) - (this.size.width * this.size.margin[2]);
+            return availableWidth;
+        } else {
+            return this.size.width;
+        }
     }
 
     width = (n, center = false, inMargin = false) => {

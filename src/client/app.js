@@ -33,7 +33,6 @@ window.draw = () => {
     if (window.app.screen < 3) return null;
     if (window.app.population.updated) {
         push();
-        translate(-width/2, -height/2);
         background(window.app.backgroundColor);
         window.app.population.draw();
         pop();

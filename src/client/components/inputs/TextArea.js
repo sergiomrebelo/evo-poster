@@ -16,8 +16,6 @@ export class TextArea extends LitElement {
         this.label = label;
         this.classList.add(...classList);
         this.onChange = onChange;
-
-        console.log(`inside`, label, content,  id, onChange,  classList);
     }
 
     set = (content) => {

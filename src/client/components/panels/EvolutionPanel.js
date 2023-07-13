@@ -46,11 +46,9 @@ export class EvolutionPanel extends LitElement {
 
     #validateValue = (value, current, min, max = null) => {
         let v = validateNumberInput(value, current);
-        console.log("max inside", max);
         if (current !== v) {
             if (max !== null) {
                 value = Math.min(max, value);
-                console.log("max inside 2", value);
             }
 
             current = Math.max(min, value);
