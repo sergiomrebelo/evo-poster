@@ -3,11 +3,14 @@ import Poster from "./Poster.js";
 
 export class Population {
     constructor(params) {
-        this.size = Params["evolution"]["popSize"];
+        this.size = params["evo"]["popSize"];
         this.params = params;
         this.population = [];
         this.generation = 0;
         this.updated = true;
+
+        console.log("inside pop", params);
+
         // this._data = data; // private variable new version
     }
 
@@ -17,6 +20,8 @@ export class Population {
             const poster = new Poster(i, this.generation, this.params);
             this.population.push(poster);
         }
+
+        console.log(`pop size=${this.population.length}`);
     }
 
     toggleGrid = (show) => {

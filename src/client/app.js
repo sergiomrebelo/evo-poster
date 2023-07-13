@@ -7,10 +7,13 @@ import {Params} from "./Params.js";
 import {InputForm} from "./components/InputForm.js";
 import {ResultsContainer} from "./components/ResultsContainer.js";
 import {ErrHandler} from "./components/ErrHandler.js";
-import {EvolutionInterface} from "./components/Interface.js"
+import {Interface} from "./components/Interface.js"
 import {Header} from "./components/Header.js";
 
 import Population from "./controllers/Population.js";
+
+// TODO: upload from package.json
+import {info} from "../@evoposter/evaluator/src/index.mjs";
 
 import 'bootstrap/scss/bootstrap.scss';
 import './main.css';
@@ -61,6 +64,13 @@ export class App extends LitElement {
         // evolution controllers
         // TODO: database
         this.config = {
+            evo: {
+                popSize: Params.evolution.popSize,
+                noGen: Params.evolution.noGen,
+                crossoverProb: Params.evolution.crossoverProb,
+                mutationProb: Params.evolution.mutationProb,
+                eliteSize: Params.evolution.eliteSize,
+            },
             size: {
                 width: Params.visualisationGrid.width,
                 height: Params.visualisationGrid.height,
@@ -100,7 +110,7 @@ export class App extends LitElement {
         this.resultsContainer = new ResultsContainer();
         this.inputForm = new InputForm(this.analyse, this.resultsContainer,  this.errorMessage);
         this.header = new Header();
-        this.initPopForm = new EvolutionInterface(this.config, this.#initPopulation, this.population, this.errorMessage);
+        this.initPopForm = new Interface(this.config, this.#initPopulation, this.population, this.errorMessage);
 
         // misc
         document.getElementById(`defaultCanvas0`).style.visibility = "visible";

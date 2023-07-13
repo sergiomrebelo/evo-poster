@@ -4,13 +4,13 @@ import {EvolutionPanel} from "./panels/EvolutionPanel.js";
 import {GenerationPanel} from "./panels/GenerationPanel.js";
 import {Checkbox} from "./inputs/Checkbox.js";
 
-export class EvolutionInterface extends LitElement {
+export class Interface extends LitElement {
     static properties = {}
 
     constructor(params, initFunction, pop, errorMessage) {
         super();
         this.params = params;
-        this.initPop = initFunction;
+        this.restart = initFunction;
         this.pop = pop;
         this.errorMessage = errorMessage;
 
@@ -23,8 +23,8 @@ export class EvolutionInterface extends LitElement {
         this.tabEvolution = this.#createTab(`Evolution`, this.evolutionPanelID, false);
         this.tabRefine = this.#createTab(`Refine`, this.refinePanelID, false);
         // panels
-        this.generationPanel = new GenerationPanel(this.params, this.initPop, this.errorMessage);
-        this.evolutionPanel = new EvolutionPanel();
+        this.generationPanel = new GenerationPanel(this.params, this.restart, this.errorMessage);
+        this.evolutionPanel = new EvolutionPanel(this.params, this.restart, this.errorMessage);
     }
 
     #createTab = (name, id, active = false) => {
@@ -101,4 +101,4 @@ export class EvolutionInterface extends LitElement {
     }
 }
 
-customElements.define('init-form', EvolutionInterface);
+customElements.define('init-form', Interface);
