@@ -20,7 +20,6 @@ const modes = [
 ]
 
 export const compute = (sentencesLength = [], minSize, mode= 'OVERSET', maxLimitScale= 2) => {
-    console.log ("minSize", minSize);
     let results = [];
     let max = minSize * maxLimitScale;
     for (let sentence of sentencesLength) {
@@ -32,7 +31,6 @@ export const compute = (sentencesLength = [], minSize, mode= 'OVERSET', maxLimit
 
     // calculate mean
     const value = arrMean([...results]);
-    console.log ("minSize", minSize, "value", value, sentencesLength);
     return value;
 }
 

@@ -191,7 +191,7 @@ export class App extends LitElement {
                                 class="btn btn-secondary my-2 nextBts">
                     New Analysis
                 </button>
-                <button type="button" @click="${this.setupEvolution}"
+                <button type="button" @click="${this.setupEvolution}" id="bt-start-evo"
                     class="btn btn-primary my-2 nextBts mx-3">
                     Next
                 </button>

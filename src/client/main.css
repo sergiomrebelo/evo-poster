@@ -135,14 +135,12 @@ h4 {
 .initial-form-inner {
     height: calc(100vh - var(--header-height));
     overflow-y:scroll;
-    overflow-x:hidden;
 }
 
 #evo-interface-inner {
     background: var(--main-bg-color);
     min-height: 100%;
     overflow-y:scroll;
-    overflow-x:hidden;
     margin-left: auto;
 }
 
@@ -153,7 +151,6 @@ h4 {
 init-form {
     min-height: 100vh;
     overflow-y:scroll;
-    overflow-x:hidden;
 }
 
 .disabled-inputs {
