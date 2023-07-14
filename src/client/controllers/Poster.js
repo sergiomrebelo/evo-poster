@@ -165,12 +165,13 @@ class Poster {
     }
 
     evaluate = () => {
-        this.fitness = 1;
+        this.fitness = 1; // multicreatira
 
         // constraint
-        const legibility = evaluator.legibility(this.sentencesLenght, this.genotype.grid.getAvailableWidth());
+        const legibility = evaluator.legibility(this.sentencesLenght, this.genotype.grid.getAvailableWidth(), `ATTEMPT_JUSTIFY`);
         // returns a number between 0 and 0.5
         // subtracted to fitness
+        // TODO: read paper
         this.fitness -= legibility;
         // this.fitness = Math.round(this.fitness*100)/100;
     }
