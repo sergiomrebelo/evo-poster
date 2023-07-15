@@ -8,6 +8,7 @@ export class Population {
         this.params = params;
         this.population = [];
         this.generation = 0;
+        this.ready = false;
         
         this.#typefaces = [];
         this.updated = true;
@@ -29,14 +30,18 @@ export class Population {
                 }
             }
         }
-        await this.draw();
+
+        // evaluate
+        this.evaluate();
+
+        this.updated = true;
     }
 
-   /* evaluate = async () => {
-        for (let ind of this.population) {
-            ind.evaluate();
-        }
-    } */
+    // evolve
+    evolve = () => {
+        // TODO
+    }
+
 
     toggleGrid = (show) => {
         for (let poster of this.population) {
@@ -45,15 +50,40 @@ export class Population {
         this.updated = true;
     }
 
-    draw = async () => {
-        this.updated = false;
+    // TODO: eval
+    evaluate = async () => {
+        // force evaluation
+        for (let individual of this.population) {
+            await individual.evaluate();
+        }
 
-        // verify if the necessary fonts are loaded
+        // sort by fitness
+        this.population = this.population.sort((a,b) => b.fitness - a.fitness);
+        console.log(this.population.map(ind => ind.fitness));
+
+        // update this.update
+    }
+
+
+    // verify if the necessary fonts are loaded
+    #checkTypeface = () => {
         for (let font of this.#typefaces) {
             const isLoaded = document.fonts.check(`12px ${font}`);
             if (!isLoaded) {
-                this.updated = true;
+                return false;
             }
+        }
+        return true;
+    }
+
+    // TODO: divide into two
+    draw = async () => {
+        this.updated = false;
+        const typefacesLoaded = this.#checkTypeface();
+        if (!typefacesLoaded || (typefacesLoaded && !this.ready)) {
+            this.updated = true;
+            this.evaluate();
+            this.ready = typefacesLoaded;
         }
 
         const n = this.population.length < Params.visiblePosters ? this.population.length : Params.visiblePosters;
@@ -61,12 +91,19 @@ export class Population {
         for (let i=0; i<this.population.length; i++) {
             const ind = this.population[i];
             if (!ind.ready) {
-                // check if individuals are loaded
                 this.updated = true;
             }
-            const pg = await ind.draw();
 
+            // ensure that phenotype is created
+            if (ind.phenotype === null) {
+                this.updated = true;
+                await ind.evaluate();
+            }
+
+            // display
             if (i < n) {
+                // get phenotype
+                let pg = ind.phenotype;
                 const sideX = width / Math.floor(width / Params.visualisationGrid.width);
                 const sideY = ind.genotype.grid.size.height + Params.visualisationGrid.marginY;
                 const x = posX * sideX + sideX / 2;
@@ -77,6 +114,8 @@ export class Population {
                 translate(-width / 2, -height / 2);
                 imageMode(CENTER);
                 image(pg, x, y);
+                textSize(10);
+                // text (`poster no.${i} (fitness: ${ind.fitness})`, x-textWidth(`poster no.${i} (fitness: ${ind.fitness})`)/2, y + pg.height/2+15);
                 pop();
 
                 posX += 1;
@@ -87,7 +126,7 @@ export class Population {
             }
         }
 
-        // await this.evaluate();
+        await this.evaluate();
     }
 }
 

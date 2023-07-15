@@ -7,7 +7,7 @@ import * as evaluator from "../../@evoposter/evaluator/src/index.mjs";
 
 class Poster {
     #showGrid = false;
-    #debug = true;
+    #debug = false;
     constructor(n, generation, params) {
         this.id = `${generation}-${n}`;
         this.n = n;
@@ -121,25 +121,25 @@ class Poster {
         }
 
         this.#showGrid = params.display.grid;
+        this.phenotype = null;
+        this.evaluate();
     }
 
+    // generate phenotype and evaluate poster
     draw = async () => {
         this.ready = true;
-        const pg = createGraphics(this.genotype.size.width, this.genotype.size.height);
+        this.phenotype = createGraphics(this.genotype.size.width, this.genotype.size.height);
 
         // background
         const backgroundStyleKey = Object.keys(backgroundStyles)[this.genotype.background.style-1];
         const backgroundFunction =  backgroundStyles[backgroundStyleKey];
-        backgroundFunction(pg, this.genotype.background.colors[0], this.genotype.background.colors[1]);
+        backgroundFunction(this.phenotype, this.genotype.background.colors[0], this.genotype.background.colors[1]);
 
         // place images
-        this.ready = await this.#placeImages(pg);
+        this.ready = await this.#placeImages(this.phenotype);
 
         // typesetting typography on poster
-        await this.typeset(pg);
-
-        // evaluate the poster
-        await this.evaluate();
+        await this.typeset(this.phenotype);
 
         // debug
         if (this.#debug) {
@@ -148,8 +148,8 @@ class Poster {
             pg.text(`${this.id}+${this.genotype.typography.verticalAlignment}+style=${this.genotype.background.style}\nfitness=${this.fitness}`, 20, 20);
         }
 
-        if (this.#showGrid && this.#debug) {
-            this.genotype.grid.display(pg);
+        if (this.#showGrid || this.#debug) {
+            this.genotype.grid.display(this.phenotype);
         }
 
         // place graphics
@@ -161,14 +161,15 @@ class Poster {
         // image(pg, x, y);
         // pop();
 
-        return pg;
+        return this.phenotype;
     }
 
-    evaluate = () => {
+    evaluate = async () => {
+        this.phenotype = await this.draw();
         this.fitness = 1; // multicreatira
 
         // constraint
-        const legibility = evaluator.legibility(this.sentencesLenght, this.genotype.grid.getAvailableWidth(), `ATTEMPT_JUSTIFY`);
+        const legibility = evaluator.legibility(this.sentencesLenght, this.genotype.grid.getAvailableWidth(), `OVERSET`);
         // returns a number between 0 and 0.5
         // subtracted to fitness
         // TODO: read paper
