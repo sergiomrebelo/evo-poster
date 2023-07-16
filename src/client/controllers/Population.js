@@ -7,7 +7,7 @@ export class Population {
         this.size = params["evo"]["popSize"];
         this.params = params;
         this.population = [];
-        this.generation = 0;
+        this.generations = 0;
         this.ready = false;
         
         this.#typefaces = [];
@@ -18,10 +18,12 @@ export class Population {
 
     initialisation = async () => {
         this.updated = true;
-        for (let i=0; i<this.size; i++) {
-            const poster = new Poster(i, this.generation, this.params);
-            this.population.push(poster);
+        this.generations = 0;
 
+        // init individuals
+        for (let i=0; i<this.size; i++) {
+            const poster = new Poster(i, this.generations, this.params);
+            this.population.push(poster);
             // save typefaces used
             const posterFonts = poster.genotype.textboxes.map((t) => t.typeface);
             for (const f of posterFonts){
@@ -33,13 +35,39 @@ export class Population {
 
         // evaluate
         this.evaluate();
-
         this.updated = true;
+
+        // testing
+        this.evolve();
     }
 
     // evolve
     evolve = () => {
-        // TODO
+        const offspring = [];
+
+        console.log(this.params["evo"]);
+
+        // copy the elite to next generation
+        const eliteSize = parseInt(this.params["evo"]["eliteSize"]);
+        for (let i=0; i<eliteSize; i++) {
+            offspring.push(this.copy(this.population[i]));
+        }
+
+        // crossover
+        for (let i = eliteSize; i < this.params["evo"]["popSize"]; i++) {
+            if (Math.random() <= this.params["evo"]["crossoverProb"]) {
+                const parentA = this.tournament();
+                const parentB = this.tournament();
+                // croosover method
+                // TODO: replace parentA
+                const child = parentA;
+                offspring.push(child);
+            } else {
+                const ind = this.tournament();
+                offspring.push(ind);
+            }
+        }
+
     }
 
 
@@ -52,19 +80,36 @@ export class Population {
 
     // TODO: eval
     evaluate = async () => {
-        // force evaluation
+        // force evaluation of individuals
         for (let individual of this.population) {
             await individual.evaluate();
         }
 
-        // sort by fitness
+        // sort individuals in the population by fitness (fittest first)
         this.population = this.population.sort((a,b) => b.fitness - a.fitness);
-        console.log(this.population.map(ind => ind.fitness));
-
-        // update this.update
+        // console.log(this.population.map(ind => ind.fitness));
     }
 
+    copy = (obj) => {
+        return Object.assign({}, obj);
+    }
 
+    tournament = (size = 4) => {
+        let pool = [];
+        for (let i = 0; i < size; i++) {
+            const r = Math.round(Math.random()*(this.population.length-1));
+            pool.push(this.population[r]);
+        }
+        let fittest = pool[0];
+        for (let i=1; i <pool.length; i++) {
+            if (pool[i].fitness > fittest.fitness) {
+                fittest = pool[i];
+            }
+        }
+        return fittest;
+    }
+
+    // draw auxiliar function
     // verify if the necessary fonts are loaded
     #checkTypeface = () => {
         for (let font of this.#typefaces) {
@@ -76,7 +121,6 @@ export class Population {
         return true;
     }
 
-    // TODO: divide into two
     draw = async () => {
         this.updated = false;
         const typefacesLoaded = this.#checkTypeface();
