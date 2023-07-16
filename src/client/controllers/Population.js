@@ -68,6 +68,21 @@ export class Population {
             }
         }
 
+        // mutation
+
+        // replace the individuals in the population with the new offspring
+        this.population = offspring;
+
+        // evaluate
+        this.evaluate();
+
+        this.generations++;
+        this.updated = true;
+        // this.evolve();
+
+        setTimeout ( () => {
+            this.evolve();
+        }, 10)
     }
 
 
