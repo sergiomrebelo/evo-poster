@@ -8,7 +8,7 @@ import * as evaluator from "../../@evoposter/evaluator/src/index.mjs";
 class Poster {
     #showGrid = false;
     #debug = false;
-    constructor(n, generation, params) {
+    constructor(n, generation, params = null, genotype = null) {
         this.id = `${generation}-${n}`;
         this.n = n;
         this.generation = generation;
@@ -17,6 +17,61 @@ class Poster {
         this.fitness = 1;
         this.sentencesLenght = [];
 
+        this.genotype = (genotype === null) ? this.#generateGenotype(params) : genotype;
+
+        this.#showGrid = params !== null ? params.display.grid : true;
+        this.phenotype = null;
+        this.evaluate();
+    }
+
+    copy = () => {
+        const gridData = this.genotype["grid"];
+        const grid = new Grid(
+            JSON.parse(JSON.stringify(gridData.size)),
+            JSON.parse(JSON.stringify(gridData.v)),
+            JSON.parse(JSON.stringify(gridData.h)),
+            JSON.parse(JSON.stringify(gridData.gwper)),
+            JSON.parse(JSON.stringify(gridData.ghper)),
+        );
+
+        const size = JSON.parse(JSON.stringify(this.genotype["size"]));
+        const textboxes = JSON.parse(JSON.stringify(this.genotype["textboxes"]));
+        for (let i in textboxes) {
+            textboxes[i]["color"] = color(this.genotype["textboxes"][i]["color"]);
+        }
+        const background = JSON.parse(JSON.stringify(this.genotype["background"]));
+        background["colors"][0] = color(this.genotype["background"]["colors"][0]);
+        background["colors"][1] = color(this.genotype["background"]["colors"][1]);
+
+        console.log ("img", this.genotype["images"]);
+        let images = [];
+        for (let img of this.genotype["images"]) {
+            const p = {
+                "scale": img["scale"],
+                "src": img["src"],
+                "x": img["x"],
+                "y": img["y"]
+            }
+            images.push(p);
+        }
+
+        const typography = JSON.parse(JSON.stringify(this.genotype["typography"]));
+
+        const genotypeCopy = {
+            grid: grid,
+            textboxes: textboxes,
+            size: size,
+            background: background,
+            typography: typography,
+            images: images
+        }
+
+        return new Poster(this.n, this.generation, null, genotypeCopy);
+    }
+
+
+
+    #generateGenotype = (params) => {
         // define grid
         const grid = new Grid(
             {
@@ -52,7 +107,6 @@ class Poster {
             let selectedStretch = params.typography.stretch.min+Math.round(Math.random()*(params.typography.stretch.max));
             selectedStretch = Math.max(stretchDefaultParams[0], Math.min(selectedStretch, stretchDefaultParams[1]));
 
-
             // define initial size
             let size = Math.round(grid.rows.l[0]);
             size += Math.round(-(size*Params.typography.range)+(Math.random()*(size*Params.typography.range)));
@@ -62,8 +116,8 @@ class Poster {
             );
 
             let alignment = params.typography.textAlignment === 0 ?
-                    Math.round(1+Math.random()*(Params.textAlignmentTbOptions.length-2)) :
-                    params.typography.textAlignment;
+                Math.round(1+Math.random()*(Params.textAlignmentTbOptions.length-2)) :
+                params.typography.textAlignment;
 
             textboxes.push({
                 "content": sentence,
@@ -98,7 +152,7 @@ class Poster {
         }
 
         // create genotype
-        this.genotype = {
+        return {
             grid: grid,
             textboxes: textboxes,
             size: {
@@ -119,16 +173,13 @@ class Poster {
             },
             images: images
         }
-
-        this.#showGrid = params.display.grid;
-        this.phenotype = null;
-        this.evaluate();
     }
 
     // generate phenotype and evaluate poster
     draw = async () => {
         this.ready = true;
         this.phenotype = createGraphics(this.genotype.size.width, this.genotype.size.height);
+        this.phenotype.id = this.n;
 
         // background
         const backgroundStyleKey = Object.keys(backgroundStyles)[this.genotype.background.style-1];
@@ -247,6 +298,7 @@ class Poster {
             show = !this.#showGrid;
         }
         this.#showGrid = show;
+        this.draw();
     }
 }
 
@@ -282,8 +334,10 @@ class Grid {
         // this._size = Object.assign({}, size.margin);
         this.v = v;
         this.h = h;
-        this.gapw = this.size.width * gwper;
-        this.gaph = this.size.height * ghper;
+        this.gwper = gwper;
+        this.ghper = ghper;
+        this.gapw = this.size.width * this.gwper;
+        this.gaph = this.size.height * this.ghper;
 
         this.regular = true;
         this.verticalSpace = [];
@@ -315,6 +369,16 @@ class Grid {
             columns: this.columns,
             rows: this.rows
         }
+    }
+
+    copy = () => {
+        return new Grid (
+            JSON.parse(JSON.stringify(this.size)),
+            JSON.parse(JSON.stringify(this.v)),
+            JSON.parse(JSON.stringify(this.h)),
+            JSON.parse(JSON.stringify(this.gwper)),
+            JSON.parse(JSON.stringify(this.ghper))
+        );
     }
 
     updateMarginsBasedOnSize = (updateDirection = 0, size = 1, nLines, max = this.size.height) => {
@@ -539,6 +603,7 @@ class Grid {
     }
 
     display = (pg, margins = true, cols = true, rows = true) => {
+        pg.push();
         pg.translate(this.size.width/2, this.size.height/2);
         // columns
         if (cols) this.#displayCols(pg);
@@ -546,6 +611,7 @@ class Grid {
         if (rows) this.#displayRows(pg);
         // display margins
         if (margins) this.#displayMargins(pg);
+        pg.pop();
     }
 
     #displayMargins = (pg, c = '#0000ff') => {
@@ -553,6 +619,12 @@ class Grid {
         pg.stroke(c);
         pg.rectMode(CORNER);
         pg.noFill();
+        /*pg.rect(
+            this.rows.x.left,
+            this.columns.y.top,
+            (this.size.width - (this.marginsPos.left + this.marginsPos.right)),
+            (this.size.height - (this.marginsPos.top + this.marginsPos.bottom))
+        );*/
         pg.rect(
             this.rows.x.left,
             this.columns.y.top,

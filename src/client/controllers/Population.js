@@ -20,6 +20,8 @@ export class Population {
         this.updated = true;
         this.generations = 0;
 
+        this.#cleanGraphics();
+
         // init individuals
         for (let i=0; i<this.size; i++) {
             const poster = new Poster(i, this.generations, this.params);
@@ -38,29 +40,29 @@ export class Population {
         this.updated = true;
 
         // testing
-        this.evolve();
+        // this.evolve();
     }
 
     // evolve
     evolve = () => {
+        this.#cleanGraphics();
         const offspring = [];
 
-        console.log(this.params["evo"]);
-
         // copy the elite to next generation
-        const eliteSize = parseInt(this.params["evo"]["eliteSize"]);
+        // checked (it's works)
+        /* const eliteSize = parseInt(this.params["evo"]["eliteSize"]);
         for (let i=0; i<eliteSize; i++) {
             offspring.push(this.copy(this.population[i]));
-        }
+        }*/
 
         // crossover
-        for (let i = eliteSize; i < this.params["evo"]["popSize"]; i++) {
+        // eliteSize
+        for (let i = 0; i < this.params["evo"]["popSize"]; i++) {
             if (Math.random() <= this.params["evo"]["crossoverProb"]) {
-                const parentA = this.tournament();
-                const parentB = this.tournament();
-                // croosover method
-                // TODO: replace parentA
-                const child = parentA;
+                const parentA = this.tournament(2);
+                const parentB = this.tournament(2);
+                // crossover method
+                const child = this.uniformCrossover(parentA, parentB);
                 offspring.push(child);
             } else {
                 const ind = this.tournament();
@@ -80,9 +82,49 @@ export class Population {
         this.updated = true;
         // this.evolve();
 
-        setTimeout ( () => {
-            this.evolve();
-        }, 10)
+        // setTimeout ( () => {
+            // this.evolve();
+        // }, 10)
+    }
+
+    uniformCrossover = (parentA, parentB) => {
+        const child = parentA.copy();
+        parentB = parentB.copy();
+        // size is fixed
+        // grid
+        if (Math.random() > 0.5) {
+            child.genotype["grid"] = parentB.genotype["grid"];
+            // grid is defined based on the verticalAlignment
+            child.genotype["typography"]["verticalAlignment"] = parentB.genotype["background"]["verticalAlignment"];
+        }
+        // textboxes
+        for (const i in child.genotype["textboxes"]) {
+            if (Math.random() > 0.5) {
+                child.genotype["textboxes"][i] = parentB.genotype["textboxes"][i];
+            }
+        }
+        // background
+        // style
+        if (Math.random() > 0.5) {
+            child.genotype["background"]["style"] = parentB.genotype["background"]["style"];
+        }
+        // colours
+        for (let i in child.genotype["background"]["colors"]) {
+            if (Math.random() > 0.5) {
+                child.genotype["background"]["colors"][i] = parentB.genotype["background"]["colors"][i];
+            }
+        }
+        // typography
+        if (Math.random() > 0.5) {
+            child.genotype["typography"]["color"] = parentB.genotype["typography"]["color"];
+        }
+        //images
+        for (const i in child.genotype["images"]) {
+            if (Math.random() > 0.5) {
+                child.genotype["images"][i] = parentB.genotype["images"][i];
+            }
+        }
+        return child;
     }
 
 
@@ -106,10 +148,12 @@ export class Population {
     }
 
     copy = (obj) => {
-        return Object.assign({}, obj);
+        // loadash
+        // return Object.assign({}, obj);
+        return JSON.parse(JSON.stringify(obj));
     }
 
-    tournament = (size = 4) => {
+    tournament = (size = 2) => {
         let pool = [];
         for (let i = 0; i < size; i++) {
             const r = Math.round(Math.random()*(this.population.length-1));
@@ -124,7 +168,7 @@ export class Population {
         return fittest;
     }
 
-    // draw auxiliar function
+    // draw() auxiliar function
     // verify if the necessary fonts are loaded
     #checkTypeface = () => {
         for (let font of this.#typefaces) {
@@ -136,14 +180,26 @@ export class Population {
         return true;
     }
 
+    // draw auxiliar function
+    // clean old files
+    #cleanGraphics = () => {
+        const graphics = document.querySelectorAll(`canvas:not(#defaultCanvas0)`);
+        graphics.forEach((el) => {
+            el.remove();
+        });
+    }
+
     draw = async () => {
         this.updated = false;
+        console.log(`this.population`, this.population.length);
         const typefacesLoaded = this.#checkTypeface();
         if (!typefacesLoaded || (typefacesLoaded && !this.ready)) {
             this.updated = true;
-            this.evaluate();
+            await this.evaluate();
             this.ready = typefacesLoaded;
         }
+
+        console.log(typefacesLoaded, this.ready);
 
         const n = this.population.length < Params.visiblePosters ? this.population.length : Params.visiblePosters;
         let posX = 0, posY = 0;
@@ -176,6 +232,9 @@ export class Population {
                 textSize(10);
                 // text (`poster no.${i} (fitness: ${ind.fitness})`, x-textWidth(`poster no.${i} (fitness: ${ind.fitness})`)/2, y + pg.height/2+15);
                 pop();
+
+                // remove the graphics from canvas and free the resources
+                pg.remove();
 
                 posX += 1;
                 if (posX % Math.floor(width / Params.visualisationGrid.width) === 0) { // (Params.visualisationGrid.cols-1)

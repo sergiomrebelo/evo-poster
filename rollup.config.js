@@ -42,7 +42,6 @@ export default [
                 extractAssets: false
             }),
             summary(),
-            livereload(),
             url({
                 include: ['**/*.woff', '**/*.woff2', '**/*.ttf'],
                 limit: Infinity,

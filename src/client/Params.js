@@ -22,14 +22,14 @@ export class Params {
     static imageMaxSize = 1024;
 
     static evolution = {
-        popSize: 10,
+        popSize: 30,
         noGen: 100,
         crossoverProb: 0.85,
         mutationProb: 0.2,
         eliteSize: 1
     }
 
-    static visiblePosters = 10;
+    static visiblePosters = 30;
 
 
 
