@@ -43,7 +43,6 @@ class Poster {
         background["colors"][0] = color(this.genotype["background"]["colors"][0]);
         background["colors"][1] = color(this.genotype["background"]["colors"][1]);
 
-        console.log ("img", this.genotype["images"]);
         let images = [];
         for (let img of this.genotype["images"]) {
             const p = {

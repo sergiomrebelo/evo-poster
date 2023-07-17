@@ -61,7 +61,7 @@ export class App extends LitElement {
         this.evolving = false;
 
         // evolution controllers
-        // TODO: database
+        //
         this.config = {
             evo: {
                 popSize: Params.evolution.popSize,
@@ -83,7 +83,8 @@ export class App extends LitElement {
                     random: true,
                     valueA: Params.background.defaultColors[0],
                     valueB: Params.background.defaultColors[1]
-                }
+                },
+                lock: [false, false]
             },
             typography: {
                 verticalAlignment: 0,
@@ -96,7 +97,8 @@ export class App extends LitElement {
                 weight: null,
                 stretch: null,
                 uppercase: false,
-                texboxAlignment: 0
+                texboxAlignment: 0,
+                lock: [false, false, false, false, false, false, false, false]
             },
             display: {
                 grid: true

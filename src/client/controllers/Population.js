@@ -13,6 +13,11 @@ export class Population {
         this.#typefaces = [];
         this.updated = true;
 
+        this.log = {
+            config: this.params,
+            generations: []
+        };
+
         // this._data = data; // private variable new version
     }
 
@@ -45,25 +50,25 @@ export class Population {
 
     // evolve
     evolve = () => {
+
         this.#cleanGraphics();
         const offspring = [];
 
         // copy the elite to next generation
-        // checked (it's works)
-        /* const eliteSize = parseInt(this.params["evo"]["eliteSize"]);
+        const eliteSize = parseInt(this.params["evo"]["eliteSize"]);
         for (let i=0; i<eliteSize; i++) {
-            offspring.push(this.copy(this.population[i]));
-        }*/
+            offspring.push(this.population[i].copy());
+        }
 
         // crossover
-        // eliteSize
-        for (let i = 0; i < this.params["evo"]["popSize"]; i++) {
+        for (let i = eliteSize; i < this.params["evo"]["popSize"]; i++) {
             if (Math.random() <= this.params["evo"]["crossoverProb"]) {
                 const parentA = this.tournament(2);
                 const parentB = this.tournament(2);
                 // crossover method
                 const child = this.uniformCrossover(parentA, parentB);
-                offspring.push(child);
+                // offspring.push(child);
+                offspring.push(parentA);
             } else {
                 const ind = this.tournament();
                 offspring.push(ind);
@@ -71,6 +76,9 @@ export class Population {
         }
 
         // mutation
+        for (let i = eliteSize; i < offspring.length; i++) {
+            this.mutate(offspring[i]);
+        }
 
         // replace the individuals in the population with the new offspring
         this.population = offspring;
@@ -78,13 +86,22 @@ export class Population {
         // evaluate
         this.evaluate();
 
-        this.generations++;
-        this.updated = true;
         // this.evolve();
 
         // setTimeout ( () => {
             // this.evolve();
         // }, 10)
+
+        // log config data to file
+        if (this.generations === 0)  {
+            this.log["config"] = this.params;
+        }
+        // TODO log generation data
+        // this.log["generations"]
+
+
+        this.generations++;
+        this.updated = true;
     }
 
     uniformCrossover = (parentA, parentB) => {
@@ -125,6 +142,22 @@ export class Population {
             }
         }
         return child;
+    }
+
+    mutate = (ind) => {
+        // console.log(`mutate`, ind, this.params["background"]["style"], this.params["background"]["lock"][0]);
+        // mutate background style
+        if (Math.random() < this.params["evo"]["mutationProb"] && !this.params["background"]["lock"][0]) {
+            ind.genotype["background"]["style"] = Math.round(1+Math.random()*2);
+        }
+        // mutate colours
+        if (Math.random() < this.params["evo"]["mutationProb"] && !this.params["background"]["lock"][1]) {
+            for (let i in ind.genotype["background"]["colors"]) {
+                ind.genotype["background"]["colors"][i] = color (Math.random()*255, Math.random()*255, Math.random()*255);
+            }
+        }
+
+        // Math.random() > parseFloat(this.params["evo"]["mutationProb"]) &&
     }
 
 

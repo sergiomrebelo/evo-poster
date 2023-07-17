@@ -143,6 +143,7 @@ export class GenerationPanel extends LitElement {
                     const isRandom = document.getElementById(`bk-color-check`).checked;
                     this.params.background.color.random = isRandom;
                     this.params.background.style = parseInt(e.target.value);
+                    this.params.background.lock[0] = (this.params.background.style !== 0);
                     if (!isRandom) {
                         const numberOfColours = Params.background.availableStyles[parseInt(e.target.value)][1];
                         els.forEach((el, i) => {
@@ -166,6 +167,7 @@ export class GenerationPanel extends LitElement {
                     const els = document.querySelectorAll(`.background-colour-picker`);
                     const isRandom = e.target.checked;
                     this.params.background.color.random = isRandom;
+                    this.params.background.lock[1] = !isRandom;
                     if (!isRandom) {
                         const style = document.getElementById(`background-style-list-list`).value;
                         const numberOfColours = Params.background.availableStyles[parseInt(style)][1];

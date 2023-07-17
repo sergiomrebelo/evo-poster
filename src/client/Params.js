@@ -25,7 +25,7 @@ export class Params {
         popSize: 30,
         noGen: 100,
         crossoverProb: 0.85,
-        mutationProb: 0.2,
+        mutationProb: 0.05,
         eliteSize: 1
     }
 
