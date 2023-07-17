@@ -182,7 +182,7 @@ export class App extends LitElement {
         let numberOfPosters = Params.visiblePosters > Params.populationSize ? Params.populationSize : Params.visiblePosters;
         let h = Math.ceil(numberOfPosters / Math.floor(windowWidth/this.config.size.width));
         h *= (this.config.size.height + (Params.visualisationGrid.marginY*2));
-        createCanvas(windowWidth, h, WEBGL);
+        createCanvas(windowWidth, h); //WEBGL
         loop();
     }
 

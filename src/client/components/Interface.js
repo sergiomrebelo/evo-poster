@@ -5,14 +5,18 @@ import {GenerationPanel} from "./panels/GenerationPanel.js";
 import {Checkbox} from "./inputs/Checkbox.js";
 
 export class Interface extends LitElement {
-    static properties = {}
+    static properties = {
+        evolving: false
+    }
 
-    constructor(params, initFunction, pop, errorMessage) {
+    constructor(params, initFunction, pop, errorMessage, initEvolution) {
         super();
         this.params = params;
         this.restart = initFunction;
         this.pop = pop;
         this.errorMessage = errorMessage;
+        this.initEvolution = initEvolution;
+        this.evolving = false;
 
         // ui
         this.generationPanelID = "poster-tab";
@@ -24,7 +28,7 @@ export class Interface extends LitElement {
         this.tabRefine = this.#createTab(`Refine`, this.refinePanelID, false);
         // panels
         this.generationPanel = new GenerationPanel(this.params, this.restart, this.errorMessage);
-        this.evolutionPanel = new EvolutionPanel(this.params, this.restart, this.errorMessage);
+        this.evolutionPanel = new EvolutionPanel(this.params, this.restart, this.errorMessage, this.pop);
     }
 
     #createTab = (name, id, active = false) => {
@@ -86,8 +90,24 @@ export class Interface extends LitElement {
                                         });
                                         
                                     }}">Evolve</button>
-                                    <button type="button" class="btn btn-primary mb-2 d-none evo-bts">Start</button>
-                                    <button type="button" class="btn btn-primary mx-2 mb-2 d-none evo-bts" disabled>Stop</button>
+                                    <button type="button" class="btn btn-primary mb-2 d-none evo-bts" ?disabled="${this.evolving}"
+                                            @click="${(e) => {
+                                                this.pop.evolving = true;
+                                                this.pop.evolve();
+                                                this.evolving = true;
+                                                this.pop.pause = false;
+                                                document.querySelectorAll(`.evolution-locked`).forEach((el) => {
+                                                    el.disabled = true;
+                                                    el.classList.add("disabled-inputs");
+                                                });
+                                                e.target.disabled = true;
+                                    }}">Start</button>
+                                    <button type="button" id="stop-evolving" class="btn btn-primary mx-2 mb-2 d-none evo-bts" ?disabled="${!this.evolving}"
+                                            @click="${(e) => {
+                                                this.pop.evolving = false;
+                                                this.pop.pause = true;
+                                                this.evolving = false;
+                                    }}">Stop</button>
                                 </div>
                             </div>
                         </div>

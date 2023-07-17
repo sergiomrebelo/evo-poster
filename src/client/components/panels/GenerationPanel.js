@@ -13,6 +13,7 @@ export class GenerationPanel extends LitElement {
     static properties = {
         params: {},
         changesInTypefaces: 0
+
     }
     constructor(params, restart, errorMessage, id = "poster-features") {
         super();
@@ -67,6 +68,7 @@ export class GenerationPanel extends LitElement {
                     const el = document.getElementById(`typography-colour-picker-1`);
                     this.params.typography.color.random = e.target.checked;
                     el.disabled = e.target.checked;
+                    this.params.typography.lock[1] = !e.target.checked;
                     this.restart();
                 }, ["col-4"]),
                 weight: {
@@ -130,9 +132,10 @@ export class GenerationPanel extends LitElement {
             textboxes: {
                 align: new DropDownList(`Texbox alignment`, Params.textAlignmentTbOptions, 0, `texbox-align-list`, (e) => {
                     this.params.typography.textAlignment = parseInt(e.target.value);
+                    this.params.typography.lock[7] = e.target.value !== 0;
                     this.restart();
                 }, ["mb-2"]),
-                uppercase: new Checkbox(`Uppercase`, false, `case`, (e) => {
+                uppercase: new Checkbox(`Uppercase`, this.params.typography.uppercase, `case`, (e) => {
                     this.params.typography.uppercase = e.target.checked;
                     this.restart();
                 })

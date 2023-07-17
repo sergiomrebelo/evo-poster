@@ -1,6 +1,9 @@
 import {Params} from "../Params.js";
 import Poster from "./Poster.js";
 
+const SIZE_MUTATION_ADJUST = 5;
+const LEADING = 1.35;
+
 export class Population {
     #typefaces;
     constructor(params) {
@@ -9,6 +12,8 @@ export class Population {
         this.population = [];
         this.generations = 0;
         this.ready = false;
+        this.evolving = false;
+        this.pause = false;
         
         this.#typefaces = [];
         this.updated = true;
@@ -49,9 +54,11 @@ export class Population {
     }
 
     // evolve
-    evolve = () => {
+    evolve = async () => {
 
-        this.#cleanGraphics();
+        await this.#cleanGraphics();
+        document.getElementById(`generation-number`).textContent=this.generations;
+
         const offspring = [];
 
         // copy the elite to next generation
@@ -66,7 +73,7 @@ export class Population {
                 const parentA = this.tournament(2);
                 const parentB = this.tournament(2);
                 // crossover method
-                const child = this.uniformCrossover(parentA, parentB);
+                const child = await this.uniformCrossover(parentA, parentB);
                 // offspring.push(child);
                 offspring.push(parentA);
             } else {
@@ -77,20 +84,15 @@ export class Population {
 
         // mutation
         for (let i = eliteSize; i < offspring.length; i++) {
-            this.mutate(offspring[i]);
+            await this.mutate(offspring[i]);
         }
 
         // replace the individuals in the population with the new offspring
         this.population = offspring;
 
         // evaluate
-        this.evaluate();
+        await this.evaluate();
 
-        // this.evolve();
-
-        // setTimeout ( () => {
-            // this.evolve();
-        // }, 10)
 
         // log config data to file
         if (this.generations === 0)  {
@@ -99,9 +101,15 @@ export class Population {
         // TODO log generation data
         // this.log["generations"]
 
-
         this.generations++;
         this.updated = true;
+
+        if(this.generations < this.params["evo"]["noGen"] && !this.pause) {
+            // to be possible to visualise the posters
+            setTimeout(() => {
+                this.evolve();
+            }, 100);
+        }
     }
 
     uniformCrossover = (parentA, parentB) => {
@@ -145,19 +153,85 @@ export class Population {
     }
 
     mutate = (ind) => {
-        // console.log(`mutate`, ind, this.params["background"]["style"], this.params["background"]["lock"][0]);
         // mutate background style
-        if (Math.random() < this.params["evo"]["mutationProb"] && !this.params["background"]["lock"][0]) {
+        let prob = this.params["evo"]["mutationProb"];
+
+        if (Math.random() < prob && !this.params["background"]["lock"][0]) {
             ind.genotype["background"]["style"] = Math.round(1+Math.random()*2);
         }
         // mutate colours
-        if (Math.random() < this.params["evo"]["mutationProb"] && !this.params["background"]["lock"][1]) {
+        if (Math.random() < prob && !this.params["background"]["lock"][1]) {
             for (let i in ind.genotype["background"]["colors"]) {
                 ind.genotype["background"]["colors"][i] = color (Math.random()*255, Math.random()*255, Math.random()*255);
             }
         }
 
-        // Math.random() > parseFloat(this.params["evo"]["mutationProb"]) &&
+        // textboxes features
+        for (let i in ind.genotype.textboxes) {
+            let tb = ind.genotype.textboxes[i];
+            // textAlignment
+            if (Math.random() < prob && !this.params["typography"]["lock"][7]) {
+                tb["textAlignment"] = Math.round(1+Math.random()*2);
+            }
+            // typography colour
+            if (Math.random() < prob && !this.params["typography"]["lock"][1]) {
+                tb["color"] = color (Math.random()*255, Math.random()*255, Math.random()*255);
+            }
+            // size
+            if (Math.random() < prob) {
+                let next = Math.round(tb["size"] + -SIZE_MUTATION_ADJUST+(Math.random()*SIZE_MUTATION_ADJUST));
+                // check if inside font thresholds
+                const maxFontSize =  Params.typography.maxSize * ind.genotype["size"]["height"];
+                const minFontSize = Params.typography.minSize * ind.genotype["size"]["height"];
+                next = Math.min(Math.max(next, minFontSize), maxFontSize);
+
+                // TODO: adjust grid globally
+                // TODO: error on centre
+
+                tb["size"] = next;
+                ind.genotype["grid"].defineRow(i, tb["size"] , ind.genotype["typography"]["verticalAlignment"]);
+            }
+            // typeface
+            // typeface is not lock because user.
+            // This array stores the available typefaces
+            let selectedTypeface = 0;
+            for (let i = 0; i<this.params["typography"]["typefaces"].length; i++) {
+                if (tb["typeface"] === this.params["typography"]["typefaces"][i].family) {
+                    selectedTypeface = i;
+                    break;
+                }
+            }
+            if (Math.random() < prob && this.params["typography"]["typefaces"].length > 1) {
+                const r = Math.round(Math.random()*(this.params["typography"]["typefaces"].length-1));
+                selectedTypeface = r;
+                tb["typeface"] = this.params["typography"]["typefaces"][r].family;
+            }
+            // based on the selected typeface
+            // weight
+            if (Math.random() < prob) {
+                const availableWeights = this.params["typography"]["typefaces"][selectedTypeface]["weight"].split(" ");
+                const minWeight = Math.max(parseInt(availableWeights[0]), this.params["typography"]["weight"]["min"]);
+                const maxWeight = Math.min(parseInt(availableWeights[1]), this.params["typography"]["weight"]["max"]);
+                tb["weight"] = Math.round(Math.random() * (maxWeight - minWeight) + minWeight);
+            }
+            // strech
+            if (Math.random() < prob) {
+                let availableStretchRaw = this.params["typography"]["typefaces"][selectedTypeface]["weight"].replace("%", "");
+                let availableStretch = availableStretchRaw.split(" ");
+                const minStretch = Math.max(parseInt(availableStretch[0]), this.params["typography"]["stretch"]["min"]);
+                const maxStretch = Math.min(parseInt(availableStretch[1]), this.params["typography"]["stretch"]["max"]);
+                tb["stretch"] = Math.round(Math.random() * (maxStretch - minStretch) + minStretch);
+            }
+            // uppercase not mutates
+        }
+
+        for (let img of ind.genotype["images"]) {
+            if (Math.random() < prob) {
+                img["scale"] = Math.random();
+                img["x"] = Math.random();
+                img["y"] = Math.random();
+            }
+        }
     }
 
 
@@ -224,15 +298,16 @@ export class Population {
 
     draw = async () => {
         this.updated = false;
-        console.log(`this.population`, this.population.length);
-        const typefacesLoaded = this.#checkTypeface();
+        // console.log(`this.population`, this.population.length);
+        // TODO:
+        /* const typefacesLoaded = this.#checkTypeface();
         if (!typefacesLoaded || (typefacesLoaded && !this.ready)) {
             this.updated = true;
             await this.evaluate();
             this.ready = typefacesLoaded;
-        }
+        }*/
 
-        console.log(typefacesLoaded, this.ready);
+        // console.log(typefacesLoaded, this.ready);
 
         const n = this.population.length < Params.visiblePosters ? this.population.length : Params.visiblePosters;
         let posX = 0, posY = 0;
@@ -259,7 +334,7 @@ export class Population {
 
                 // draw posters on canvas
                 push();
-                translate(-width / 2, -height / 2);
+                // translate(-width / 2, -height / 2);
                 imageMode(CENTER);
                 image(pg, x, y);
                 textSize(10);

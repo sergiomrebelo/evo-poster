@@ -68,8 +68,6 @@ class Poster {
         return new Poster(this.n, this.generation, null, genotypeCopy);
     }
 
-
-
     #generateGenotype = (params) => {
         // define grid
         const grid = new Grid(
@@ -114,9 +112,9 @@ class Poster {
                 Math.min(Math.round(params.size.height * Params.typography.maxSize), size)
             );
 
-            let alignment = params.typography.textAlignment === 0 ?
-                Math.round(1+Math.random()*(Params.textAlignmentTbOptions.length-2)) :
-                params.typography.textAlignment;
+            let alignment = params.typography.verticalAlignment === 0 ?
+                Math.round(Math.random() * (Params.textAlignmentOptions.length-2) + 1) :
+                params.typography.verticalAlignment;
 
             textboxes.push({
                 "content": sentence,
@@ -219,7 +217,7 @@ class Poster {
         this.fitness = 1; // multicreatira
 
         // constraint
-        const legibility = evaluator.legibility(this.sentencesLenght, this.genotype.grid.getAvailableWidth(), `OVERSET`);
+        const legibility = evaluator.legibility(this.sentencesLenght, this.genotype.grid.getAvailableWidth(), `JUSTIFY`);
         // returns a number between 0 and 0.5
         // subtracted to fitness
         // TODO: read paper
@@ -416,12 +414,23 @@ class Grid {
         }
     }
 
-    defineRow = (id, size) => {
+    defineRow = (id, size, align) => {
         this.regular = false;
         const init = this.rows.l[id];
         this.rows.l[id] = size;
-        const dif = (this.rows.l[id]-init);
-        this.size.margin[3] -= dif;
+        let dif = this.rows.l[id]-init;
+        // center: update the two margins
+        dif = (align === 2) ? dif/2 : dif;
+        const percent = (this.marginsPos.bottom - dif) / this.size.height;
+        if (align <= 2) {
+            // top and center
+            this.size.margin[3] = (this.marginsPos.bottom - dif) / this.size.height;
+        }
+        if (align >= 2){
+            // button and center
+            this.size.margin[1] = (this.marginsPos.top - dif) / this.size.height;
+        }
+
         this.def();
     }
 

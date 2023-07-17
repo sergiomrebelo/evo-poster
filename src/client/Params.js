@@ -22,10 +22,10 @@ export class Params {
     static imageMaxSize = 1024;
 
     static evolution = {
-        popSize: 30,
-        noGen: 100,
-        crossoverProb: 0.85,
-        mutationProb: 0.05,
+        popSize: 10,
+        noGen: 1000,
+        crossoverProb: 0.75,
+        mutationProb: 0.10,
         eliteSize: 1
     }
 
@@ -41,7 +41,7 @@ export class Params {
         defaultColor: `#000000`,
         range: 0.1,
         maxSize: 0.95,
-        minSize: 0.03
+        minSize: 0.05
     }
 
     static background = {

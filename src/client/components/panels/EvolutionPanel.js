@@ -5,14 +5,18 @@ import {Params} from "../../Params.js";
 import {validateNumberInput} from "../inputs/utils.js";
 
 export class EvolutionPanel extends LitElement {
-    static properties = {}
+    static properties = {
+        generations: 0,
+    }
 
-    constructor(params, restart, errorMessage) {
+    constructor(params, restart, errorMessage, pop) {
         super();
 
         this.params = params;
         this.restart = restart;
         this.errorMessage = errorMessage;
+
+        // this.generations = pop.generations;
 
         this.fields = {
             populationSize: new TextInput("Population size", params["evo"]["popSize"], `pop-size`, (e) => {
@@ -60,6 +64,12 @@ export class EvolutionPanel extends LitElement {
     render() {
         return html`
             <div id="evolution-panel-inner">
+                <div class="row mb-2">
+                    <div class="col-12">
+                        <p>generation no. <span class="fw-bold" id="generation-number">0</span></p>
+                    </div>
+                    <hr>
+                </div>
                 <h3>Evolutionary Setup</h3>
                 ${Divider.get()}
                 <div class="row">
