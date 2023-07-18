@@ -10,8 +10,6 @@ import {ErrHandler} from "./components/ErrHandler.js";
 import {Interface} from "./components/Interface.js"
 import {Header} from "./components/Header.js";
 
-import {scheme} from "./controllers/ColorGenerator.js"
-
 import Population from "./controllers/Population.js";
 
 // TODO: upload from package.json
@@ -21,9 +19,7 @@ import 'bootstrap/scss/bootstrap.scss';
 import './main.css';
 
 // TODO: separe app.js from entry point
-window.preload = () => {
-    console.log (scheme());
-}
+window.preload = () => {}
 
 window.setup = () => {
     window.app = document.createElement(`app-evo`); // create app
@@ -49,7 +45,12 @@ window.windowResized = () => {
     if (window.app.screen < 2) return null;
 }
 
-window.keyPressed = () => {}
+window.keyPressed = () => {
+    if (window.app.screen < 2) return null;
+    if (key.toUpperCase() === 'S') {
+        window.app.save();
+    }
+}
 
 export class App extends LitElement {
     static properties = {
@@ -202,6 +203,10 @@ export class App extends LitElement {
                     Next
                 </button>
             </div>`;
+    }
+
+    save () {
+        this.population.saveRaster();
     }
 
     render() {

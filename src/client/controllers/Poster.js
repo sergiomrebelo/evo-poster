@@ -2,6 +2,7 @@ import {Params} from "../Params.js";
 import backgroundStyles from "./BackgroundStyles.js";
 
 import * as evaluator from "../../@evoposter/evaluator/src/index.mjs";
+import {randomScheme} from "./ColorGenerator.js";
 
 
 
@@ -69,6 +70,8 @@ class Poster {
     }
 
     #generateGenotype = (params) => {
+        const colorScheme = randomScheme();
+
         // define grid
         const grid = new Grid(
             {
@@ -123,7 +126,7 @@ class Poster {
                 "alignment": alignment,
                 "size": size,
                 "typeface": params.typography.typefaces[selectedTypeface].family,
-                "color": params.typography.color.random ? color(random(255), random(255), random(255)) : color(params.typography.color.value),
+                "color": params.typography.color.random ? colorScheme.baseColour : color(params.typography.color.value),
                 "uppercase": params.typography.uppercase
             });
 
@@ -160,8 +163,8 @@ class Poster {
             background: {
                 style: params.background.style === 0 ? Math.round(1+Math.random()*(Params.background.availableStyles.length-2)) : params.background.style,
                 colors: [
-                    params.background.color.random ? color(random(255), random(255), random(255)) : color(params.background.color.valueA),
-                    params.background.color.random ? color(random(255), random(255), random(255)) : color(params.background.color.valueB)
+                    params.background.color.random ? colorScheme.colorA : color(params.background.color.valueA),
+                    params.background.color.random ? colorScheme.colorB : color(params.background.color.valueB)
                 ]
             },
             typography: {

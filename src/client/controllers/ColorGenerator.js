@@ -1,11 +1,11 @@
 import {harmony, analogue, complement, triad } from 'simpler-color';
 
 export const randomScheme = () => {
-    return complementAndAnalogueScheme();
+    const baseColour = randomColour();
+    return complementAndAnalogueScheme(baseColour);
 }
 
-export const complementAndAnalogueScheme = () => {
-    const baseColour = randomColour();
+export const complementAndAnalogueScheme = (baseColour) => {
     const colorA = complement(baseColour, 1);
     const colorB = analogue(colorA, Math.round(-2+(Math.random()*4)));
     return {
@@ -16,9 +16,7 @@ export const complementAndAnalogueScheme = () => {
 }
 
 
-export const complementAndTriadScheme = () => {
-    console.log(`complementAndTriadScheme`);
-    const baseColour = randomColour();
+export const complementAndTriadScheme = (baseColour) => {
     const colorA = complement(baseColour, 1);
     const colorB = triad(colorA, Math.round(1+Math.random()));
     return {
@@ -28,8 +26,7 @@ export const complementAndTriadScheme = () => {
     }
 }
 
-export const triadScheme = () => {
-    const baseColour = randomColour();
+export const triadScheme = (baseColour) => {
     const colorA = triad(baseColour, 1);
     const colorB = triad(baseColour, 2);
 
@@ -40,9 +37,15 @@ export const triadScheme = () => {
     }
 }
 
-export const harmonyScheme = () => {
-    const baseColour = randomColour();
-    return harmony(baseColour);
+export const harmonyScheme = (baseColour) => {
+    const res = harmony(baseColour);
+    return {
+        baseColour: baseColour,
+        colorA: res.accent,
+        colorB: res.secondary,
+        colorC: res.neutral,
+        colorD: res.error,
+    }
 }
 
 export const randomColour = () => {
@@ -52,4 +55,4 @@ export const randomColour = () => {
 }
 
 
-export default scheme;
+export default randomScheme;

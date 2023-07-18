@@ -354,6 +354,13 @@ export class Population {
 
         await this.evaluate();
     }
+
+    saveRaster = () => {
+        for (let i in this.population) {
+            const ind = this.population[i];
+            save(ind.phenotype, `${Date.now()}-${this.generations}-${i}`);
+        }
+    }
 }
 
 export default Population;
