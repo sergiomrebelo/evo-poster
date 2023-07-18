@@ -19,30 +19,40 @@ export class EvolutionPanel extends LitElement {
         // this.generations = pop.generations;
 
         this.fields = {
-            populationSize: new TextInput("Population size", params["evo"]["popSize"] ? params["evo"]["popSize"] : 0, `pop-size`, (e) => {
-                params["evo"]["popSize"] = this.#validateValue(e.target.value, this.params["evo"]["popSize"],  2);
-                e.target.value = params["evo"]["popSize"];
-                this.restart();
-            }, ["col-12", "evolution-locked"]),
-            numberOfGenerations: new TextInput("No. generations", params["evo"]["noGen"] ? params["evo"]["noGen"] : 0, "no-gen", (e) => {
-                params["evo"]["noGen"] = this.#validateValue(e.target.value, this.params["evo"]["noGen"],  2);
-                e.target.value = params["evo"]["popSize"];
-            }, ["col-12", "my-2"]),
-            eliteSize: new TextInput("Elite size", params["evo"]["eliteSize"] ? params["evo"]["eliteSize"] : 0, "elite-size", (e) => {
-                let max = Math.round(parseInt(params["evo"]["popSize"])/2);
-                params["evo"]["eliteSize"] = this.#validateValue(e.target.value, this.params["evo"]["eliteSize"], 0, max);
-                if (parseInt(e.target.value) > max) {
-                    this.errorMessage.set({message: `elite size must be in the maximum half of the full population`});
+            populationSize: new TextInput("Population size", params["evo"] ? params["evo"]["popSize"] : 0, `pop-size`, (e) => {
+                if (params["evo"]) {
+                    params["evo"]["popSize"] = this.#validateValue(e.target.value, this.params["evo"]["popSize"], 2);
+                    e.target.value = params["evo"]["popSize"];
+                    this.restart();
                 }
-                e.target.value = params["evo"]["eliteSize"];
+            }, ["col-12", "evolution-locked"]),
+            numberOfGenerations: new TextInput("No. generations", params["evo"] ? params["evo"]["noGen"] : 0, "no-gen", (e) => {
+                if (params["evo"]) {
+                    params["evo"]["noGen"] = this.#validateValue(e.target.value, this.params["evo"]["noGen"], 2);
+                    e.target.value = params["evo"]["popSize"];
+                }
             }, ["col-12", "my-2"]),
-            crossoverProbability: new TextInput("Crossover probability", params["evo"]["crossoverProb"] ? params["evo"]["crossoverProb"] : 1, "crossover-probability", (e) => {
-                params["evo"]["crossoverProb"] = this.#validateValue(e.target.value, params["evo"]["crossoverProb"],  0, 1);
-                e.target.value = params["evo"]["crossoverProb"];
+            eliteSize: new TextInput("Elite size", params["evo"] ? params["evo"]["eliteSize"] : 0, "elite-size", (e) => {
+                if (params["evo"]) {
+                    let max = Math.round(parseInt(params["evo"]["popSize"]) / 2);
+                    params["evo"]["eliteSize"] = this.#validateValue(e.target.value, this.params["evo"]["eliteSize"], 0, max);
+                    if (parseInt(e.target.value) > max) {
+                        this.errorMessage.set({message: `elite size must be in the maximum half of the full population`});
+                    }
+                    e.target.value = params["evo"]["eliteSize"];
+                }
             }, ["col-12", "my-2"]),
-            mutationProbability: new TextInput("Mutation probability", params["evo"]["mutationProb"] ? params["evo"]["mutationProb"] : 0, "mutation-probability", (e) => {
-                params["evo"]["mutationProb"] = this.#validateValue(e.target.value, params["evo"]["mutationProb"],  0, 1);
-                e.target.value = params["evo"]["mutationProb"];
+            crossoverProbability: new TextInput("Crossover probability", params["evo"] ? params["evo"]["crossoverProb"] : 1, "crossover-probability", (e) => {
+                if (params["evo"]) {
+                    params["evo"]["crossoverProb"] = this.#validateValue(e.target.value, params["evo"]["crossoverProb"], 0, 1);
+                    e.target.value = params["evo"]["crossoverProb"];
+                }
+            }, ["col-12", "my-2"]),
+            mutationProbability: new TextInput("Mutation probability", params["evo"] ? params["evo"]["mutationProb"] : 0, "mutation-probability", (e) => {
+                if (params["evo"]) {
+                    params["evo"]["mutationProb"] = this.#validateValue(e.target.value, params["evo"]["mutationProb"], 0, 1);
+                    e.target.value = params["evo"]["mutationProb"];
+                }
             }, ["col-12", "my-2"])
         }
     }

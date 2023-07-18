@@ -41,7 +41,7 @@ export class GenerationPanel extends LitElement {
 
         // input fields
         // TODO: refactor to list or array
-        const sentences = this.params["sentences"] ? this.params["sentences"] : [];
+        const sentences = this.params ? this.params["sentences"] : [];
         this.fields = {
             content: new TextArea(`<b>Content</b> The text lines are defined by pilcrows (¶)`,
                 sentences, `text-area-content`, (e) => {

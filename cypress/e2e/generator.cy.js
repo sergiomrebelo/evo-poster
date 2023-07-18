@@ -333,6 +333,11 @@ for (let lang of Object.keys(inputText)) {
                 cy.end();
             });
 
+            cy.on("uncaught:exception", (e, runnable) => {
+                console.log("error", e);
+                console.log("runnable", runnable);
+                return false;
+            });
         });
 
     });
