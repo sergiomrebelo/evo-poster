@@ -70,7 +70,7 @@ export class Interface extends LitElement {
                                 </div>
                                 ${Divider.get()}
                                 <div class="col-12 mb-3">
-                                    <button type="button" class="btn btn-primary mb-2" @click="${(e) => {
+                                    <button type="button" id="evolve-bt" class="btn btn-primary mb-2" @click="${(e) => {
                                         // lock interface evo
                                         document.querySelectorAll(`.init-selector`).forEach((el) => {
                                             el.classList.add("disabled-inputs");
@@ -90,7 +90,7 @@ export class Interface extends LitElement {
                                         });
                                         
                                     }}">Evolve</button>
-                                    <button type="button" class="btn btn-primary mb-2 d-none evo-bts" ?disabled="${this.evolving}"
+                                    <button type="button" id="start-bt" class="btn btn-primary mb-2 d-none evo-bts" ?disabled="${this.evolving}"
                                             @click="${(e) => {
                                                 this.pop.evolving = true;
                                                 this.pop.evolve();
