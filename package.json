@@ -54,6 +54,7 @@
     "rollup-plugin-livereload": "^2.0.5",
     "rollup-plugin-scss": "^4.0.0",
     "rollup-plugin-summary": "^2.0.0",
-    "sass": "^1.63.6"
+    "sass": "^1.63.6",
+    "simpler-color": "^1.0.1"
   }
 }

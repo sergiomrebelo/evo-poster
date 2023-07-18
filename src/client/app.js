@@ -10,6 +10,8 @@ import {ErrHandler} from "./components/ErrHandler.js";
 import {Interface} from "./components/Interface.js"
 import {Header} from "./components/Header.js";
 
+import {scheme} from "./controllers/ColorGenerator.js"
+
 import Population from "./controllers/Population.js";
 
 // TODO: upload from package.json
@@ -19,7 +21,9 @@ import 'bootstrap/scss/bootstrap.scss';
 import './main.css';
 
 // TODO: separe app.js from entry point
-window.preload = () => {}
+window.preload = () => {
+    console.log (scheme());
+}
 
 window.setup = () => {
     window.app = document.createElement(`app-evo`); // create app
