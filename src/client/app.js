@@ -179,7 +179,7 @@ export class App extends LitElement {
 
     #initCanvas = () => {
         // calculate the height of canvas
-        let numberOfPosters = Params.visiblePosters > Params.populationSize ? Params.populationSize : Params.visiblePosters;
+        let numberOfPosters = Params.visiblePosters > Params["evolution"]["popSize"] ? Params["evolution"]["popSize"] : Params.visiblePosters;
         let h = Math.ceil(numberOfPosters / Math.floor(windowWidth/this.config.size.width));
         h *= (this.config.size.height + (Params.visualisationGrid.marginY*2));
         createCanvas(windowWidth, h); //WEBGL

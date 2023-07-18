@@ -29,7 +29,7 @@ export class Params {
         eliteSize: 1
     }
 
-    static visiblePosters = 30;
+    static visiblePosters = 10;
 
 
 

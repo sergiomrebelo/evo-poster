@@ -37,6 +37,7 @@ export class GenerationPanel extends LitElement {
 
         // input fields
         // TODO: refactor to list or array
+        console.log ("initial-${}", this.params.typography.uppercase)
         this.fields = {
             content: new TextArea(`<b>Content</b> The text lines are defined by pilcrows (¶)`,
                 this.params["sentences"], `text-area-content`, (e) => {
@@ -107,7 +108,7 @@ export class GenerationPanel extends LitElement {
                         this.restart();
                     }, ["my-2"]),
                 },
-                verticalAlignment: new DropDownList(`Vertical alignment`, Params.textAlignmentOptions, 0, `vertica-align-list`, (e) => {
+                verticalAlignment: new DropDownList(`Vertical alignment`, Params.textAlignmentOptions, 0, `vertical-align`, (e) => {
                     this.params.typography.verticalAlignment = parseInt(e.target.value);
                     this.restart();
                 }, ["mb-2"]),
@@ -130,7 +131,7 @@ export class GenerationPanel extends LitElement {
                 }, ["mb-2"])
             },
             textboxes: {
-                align: new DropDownList(`Texbox alignment`, Params.textAlignmentTbOptions, 0, `texbox-align-list`, (e) => {
+                align: new DropDownList(`Texbox alignment`, Params.textAlignmentTbOptions, 0, `texbox-align`, (e) => {
                     this.params.typography.textAlignment = parseInt(e.target.value);
                     this.params.typography.lock[7] = e.target.value !== 0;
                     this.restart();
@@ -141,7 +142,7 @@ export class GenerationPanel extends LitElement {
                 })
             },
             background: {
-                style: new DropDownList(`Background Style`, Params.background.availableStyles, 0, `background-style-list`, (e) => {
+                style: new DropDownList(`Background Style`, Params.background.availableStyles, 0, `background-style`, (e) => {
                     const els = document.querySelectorAll(`.background-colour-picker`);
                     const isRandom = document.getElementById(`bk-color-check`).checked;
                     this.params.background.color.random = isRandom;
@@ -172,7 +173,7 @@ export class GenerationPanel extends LitElement {
                     this.params.background.color.random = isRandom;
                     this.params.background.lock[1] = !isRandom;
                     if (!isRandom) {
-                        const style = document.getElementById(`background-style-list-list`).value;
+                        const style = document.getElementById(`background-style-list`).value;
                         const numberOfColours = Params.background.availableStyles[parseInt(style)][1];
                         els.forEach((el, i) => {
                             if (i < numberOfColours) {
