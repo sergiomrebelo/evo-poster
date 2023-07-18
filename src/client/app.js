@@ -94,8 +94,8 @@ export class App extends LitElement {
                 },
                 textAlignment: 0,
                 typefaces: [],
-                weight: null,
-                stretch: null,
+                weight: 100,
+                stretch: 200,
                 uppercase: false,
                 texboxAlignment: 0,
                 lock: [false, false, false, false, false, false, false, false]

@@ -27,9 +27,13 @@ export class GenerationPanel extends LitElement {
 
         // available fonts
         this.fonts = this.#getAvailableTypefaces();
-        this.params.typography.weight = this.fonts.weight;
-        this.params.typography.stretch = this.fonts.stretch;
-        this.params.typography.typefaces = this.fonts.typefaces;
+        if (this.params) {
+            if (this.params["typography"]) {
+                this.params["typography"]["weight"] && (this.params["typography"]["weight"] = this.fonts["weight"]);
+                this.params["typography"]["stretch"] && (this.params["typography"]["stretch"]  = this.fonts["stretch"] );
+                this.params["typography"]["typefaces"] && (this.params["typography"]["typefaces"]  = this.fonts["typefaces"] );
+            }
+        }
         this.changesInTypefaces = 0;
 
         // error handler
@@ -37,12 +41,12 @@ export class GenerationPanel extends LitElement {
 
         // input fields
         // TODO: refactor to list or array
-        console.log ("initial-${}", this.params.typography.uppercase)
+        const sentences = this.params["sentences"] ? this.params["sentences"] : [];
         this.fields = {
             content: new TextArea(`<b>Content</b> The text lines are defined by pilcrows (¶)`,
-                this.params["sentences"], `text-area-content`, (e) => {
+                sentences, `text-area-content`, (e) => {
                     const textContent = e.target.value.split("¶")
-                    this.params["sentences"] = textContent.map(t => t.trim());
+                    this.params["sentences"] && (this.params["sentences"] = textContent.map(t => t.trim()));
                     this.restart();
                 }),
             size: {
@@ -278,10 +282,12 @@ export class GenerationPanel extends LitElement {
 
     #getTypefaceTags = () => {
         let tags = [];
-        for (let i = 0; i < this.params.typography.typefaces.length; i++) {
-            let f = this.params.typography.typefaces[i];
-            const tag = this.#tag(f.family, i);
-            tags.push(tag);
+        if (this.params !== undefined) {
+            for (let i = 0; i < this.params.typography.typefaces.length; i++) {
+                let f = this.params.typography.typefaces[i];
+                const tag = this.#tag(f.family, i);
+                tags.push(tag);
+            }
         }
         return tags;
     }
