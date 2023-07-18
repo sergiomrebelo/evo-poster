@@ -1,0 +1,16 @@
+{
+  "name": "@evoposter/evaluator",
+  "version": "0.0.1",
+  "description": "set of metric for evaluation of poster designs",
+  "main": "src/index.mjs",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sergiomrebelo/evo-poster.git"
+  },
+  "author": "Sérgio M. Rebelo <sergiorebelo@me.com> (https://sergiorebelo.work/)",
+  "license": "ISC"
+}

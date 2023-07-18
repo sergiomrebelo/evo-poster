@@ -1,5 +1,69 @@
 :root {
     --main-bg-color: #f3f3f3;
+    --header-height: 70px;
+}
+
+@font-face {
+    font-family: 'Amstelvar';
+    src: url('./assets/Amstelvar-Roman[wdth,wght,opsz].ttf') format('truetype-variations');
+    font-weight: 100 900;
+    font-stretch: 50% 125%;
+    --in-canvas: true;
+}
+
+@font-face {
+    font-family: 'Anybody';
+    src: url('./assets/Anybody[slnt,wdth,wght].ttf') format('truetype-variations');
+    font-weight: 100 900;
+    font-stretch: 10% 400%;
+    --in-canvas: true;
+}
+
+@font-face {
+    font-family: 'Barlow';
+    src: url('./assets/BarlowGX.ttf') format('truetype-variations');
+    font-weight: 22 188;
+    font-stretch: 300% 500%;
+    --in-canvas: true;
+}
+
+@font-face {
+    font-family: 'Cabin';
+    src: url('./assets/Cabin[wdth,wght].ttf') format('truetype-variations');
+    font-weight: 95 128;
+    font-stretch: 0% 100%;
+    --in-canvas: true;
+}
+
+@font-face {
+    font-family: 'Emberly';
+    src: url('./assets/Emberly[wdth,wght].ttf') format('truetype-variations');
+    font-weight: 100 900;
+    font-stretch: 75% 100%;
+    --in-canvas: true;
+}
+
+@font-face {
+    font-family: 'Epilogue';
+    src: url('./assets/Epilogue[wght].ttf') format('truetype-variations');
+    font-weight: 100 900;
+    --in-canvas: true;
+}
+
+@font-face {
+    font-family: 'IBMPlexSans';
+    src: url('./assets/IBMPlexSansVar-Roman.ttf') format('truetype-variations');
+    font-weight: 100 700;
+    font-stretch: 85% 100%;
+    --in-canvas: true;
+}
+
+@font-face {
+    font-family: 'Inconsolata';
+    src: url('./assets/Inconsolata[wdth,wght].ttf') format('truetype-variations');
+    font-weight: 275 900;
+    font-stretch: 50% 200%;
+    --in-canvas: true;
 }
 
 
@@ -17,6 +81,7 @@ body > * {
     order: 1;
 }
 
+
 #error-handle {
     order: 0;
 }
@@ -24,6 +89,7 @@ body > * {
 #error-handle-inner {
     padding-bottom: 0 !important;
     margin-bottom: 0 !important;
+    z-index: 1000;
 }
 
 .mr-2 {
@@ -43,6 +109,62 @@ h4 {
     margin-bottom: 1.35em;
 }
 
-.p5Canvas {
-    /*display: none;*/
+.p5Canvas {}
+
+#evo-interface-outer {
+    position: fixed;
+    right:0;
+    top:var(--header-height);
 }
+
+.backdrop {
+    background: rgba(0,0,0, 0.5);
+    overflow:hidden;
+    height: 100vh;
+    width: 1000vw;
+    position: fixed;
+    top:0;
+    transition: opacity 0.3s ease-in;
+    opacity: 0;
+}
+
+.backdrop.show {
+    opacity: 1;
+}
+
+.initial-form-inner {
+    height: calc(100vh - var(--header-height));
+    overflow-y:scroll;
+}
+
+#evo-interface-inner {
+    background: var(--main-bg-color);
+    min-height: 100%;
+    overflow-y:scroll;
+    margin-left: auto;
+}
+
+.mg-input {
+    max-width: 20px;
+}
+
+init-form {
+    min-height: 100vh;
+    overflow-y:scroll;
+}
+
+.disabled-inputs {
+    pointer-events: none;
+    opacity: 0.5;
+}
+
+
+/* header */
+#header-container {
+    background: var(--main-bg-color);
+}
+
+header {
+    height: var(--header-height);
+}
+
