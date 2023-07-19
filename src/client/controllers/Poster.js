@@ -75,7 +75,6 @@ class Poster {
         const colorScheme = randomScheme();
 
         // define grid
-        console.log("size before", params.size);
         const grid = new Grid(
             {
                 width: params.size.width,
@@ -96,19 +95,19 @@ class Poster {
 
         for (let i in params["sentences"]) {
             const sentence = params["sentences"][i]
-            const selectedTypeface = Math.round(Math.random()*(params["typography"]["typefaces"]["typefaces"].length-1));
+            const selectedTypeface = Math.round(Math.random()*(params["typography"]["typefaces"].length-1));
             // stretch values
-            let stretchDefaultParams = params["typography"]["typefaces"]["typefaces"][selectedTypeface]["stretch"];
+            let stretchDefaultParams = params["typography"]["typefaces"][selectedTypeface]["stretch"];
             stretchDefaultParams.map((v) => !isNaN(v) ? parseInt(v) : 100);
             if (stretchDefaultParams.length < 2) {
                 stretchDefaultParams.push(100);
             }
             // weight valuers
-            let weightDefaultParams = params["typography"]["typefaces"]["typefaces"][selectedTypeface]["weight"];
+            let weightDefaultParams = params["typography"]["typefaces"][selectedTypeface]["weight"];
             // selected values
-            let selectedWeight = Math.round((Math.random() * (params["typography"]["typefaces"]["weight"]["max"] - params["typography"]["typefaces"]["weight"]["min"])) + params["typography"]["typefaces"]["weight"]["min"]);
+            let selectedWeight = Math.round((Math.random() * (params["typography"]["weight"]["max"] - params["typography"]["weight"]["min"])) + params["typography"]["weight"]["min"]);
             selectedWeight = Math.max(weightDefaultParams[0], Math.min(selectedWeight, weightDefaultParams[1]));
-            let selectedStretch = Math.round((Math.random() * (params["typography"]["typefaces"]["stretch"]["max"] - params["typography"]["typefaces"]["stretch"]["min"])) + params["typography"]["typefaces"]["stretch"]["min"]);
+            let selectedStretch = Math.round((Math.random() * (params["typography"]["stretch"]["max"] - params["typography"]["stretch"]["min"])) + params["typography"]["stretch"]["min"]);
             selectedStretch = Math.max(stretchDefaultParams[0], Math.min(selectedStretch, stretchDefaultParams[1]));
 
             // define initial size
@@ -121,9 +120,9 @@ class Poster {
             );
             grid.defineRow(i, size * leading, alignment);
 
-            const alignmentLine = params.typography.verticalAlignment === 0 ?
-                Math.round(Math.random() * (Params.textAlignmentOptions.length-2) + 1) :
-                params.typography.verticalAlignment;
+            const alignmentLine = params.typography.textAlignment === 0 ?
+                Math.round(Math.random() * (Params.textAlignmentTbOptions.length-2) + 1) :
+                params.typography.textAlignment;
 
             textboxes.push({
                 "content": sentence,
@@ -131,14 +130,14 @@ class Poster {
                 "font-stretch": selectedStretch,
                 "alignment": alignmentLine,
                 "size": size,
-                "typeface": params["typography"]["typefaces"]["typefaces"][selectedTypeface]["family"],
+                "typeface": params["typography"]["typefaces"][selectedTypeface]["family"],
                 "color": params.typography.color.random ? colorScheme.baseColour : color(params.typography.color.value),
                 "uppercase": params.typography.uppercase
             });
         }
 
         const images = [];
-        console.log(`params.images`, params.images);
+        // console.log(`params.images`, params.images);
         for (let input of params.images) {
             const src = input.src;
             const img = loadImage(src, async (img) => {

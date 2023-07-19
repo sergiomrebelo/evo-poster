@@ -66,7 +66,6 @@ export class App extends LitElement {
         this.evolving = false;
 
         const fonts = this.#getAvailableTypefaces();
-        console.log(fonts);
         // evolution controllers
         //
         this.config = {
@@ -100,9 +99,9 @@ export class App extends LitElement {
                     value: Params.typography.defaultColor,
                 },
                 textAlignment: 0,
-                typefaces: fonts,
-                weight: 100,
-                stretch: 200,
+                typefaces: fonts.typefaces,
+                weight: fonts.weight,
+                stretch: fonts.stretch,
                 uppercase: false,
                 texboxAlignment: 0,
                 lock: [false, false, false, false, false, false, false, false]
@@ -111,6 +110,7 @@ export class App extends LitElement {
                 grid: true
             }
         }
+
         this.population = null;
 
         // ui components

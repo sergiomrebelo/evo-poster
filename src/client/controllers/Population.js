@@ -115,6 +115,7 @@ export class Population {
     uniformCrossover = (parentA, parentB) => {
         const child = parentA.copy();
         parentB = parentB.copy();
+        // text align
         if (Math.random() > 0.5) {
             child.genotype["grid"] = parentB.genotype["grid"];
             // grid is defined based on the verticalAlignment
@@ -188,6 +189,10 @@ export class Population {
             ind.genotype["background"]["style"] = Math.round(1+Math.random()*2);
         }
 
+        if (Math.random() < prob) {
+            ind.genotype["typography"]["verticalAlignment"] = Math.round(1+Math.random()*2);
+        }
+
         // textboxes features
         let sizeChanged = false;
         for (let i in ind.genotype.textboxes) {
@@ -201,17 +206,17 @@ export class Population {
             // typeface
             // get current typeface
             let selectedTypeface = 0;
-            for (let i = 0; i<this.params["typography"]["typefaces"]["typefaces"].length; i++) {
-                if (tb["typeface"] === this.params["typography"]["typefaces"]["typefaces"][i].family) {
+            for (let i = 0; i<this.params["typography"]["typefaces"].length; i++) {
+                if (tb["typeface"] === this.params["typography"]["typefaces"][i].family) {
                     selectedTypeface = i;
                     break;
                 }
             }
             // mutate a new typeface
-            if (Math.random() < prob && this.params["typography"]["typefaces"]["typefaces"].length > 1) {
-                const r = Math.round(Math.random()*(this.params["typography"]["typefaces"]["typefaces"].length-1));
+            if (Math.random() < prob && this.params["typography"]["typefaces"].length > 1) {
+                const r = Math.round(Math.random()*(this.params["typography"]["typefaces"].length-1));
                 selectedTypeface = r;
-                tb["typeface"] = this.params["typography"]["typefaces"]["typefaces"][r]["family"];
+                tb["typeface"] = this.params["typography"]["typefaces"][r]["family"];
             }
 
             if (Math.random() < prob*2) {
@@ -222,22 +227,23 @@ export class Population {
                 sizeChanged = true;
             }
 
-            // based on the selected typeface
+
             // weight
-            /*if (Math.random() < prob) {
-                const availableWeights = this.params["typography"]["typefaces"][selectedTypeface]["weight"].split(" ");
+            if (Math.random() < prob) {
+                const availableWeights = this.params["typography"]["typefaces"][selectedTypeface]["weight"];
                 const minWeight = Math.max(parseInt(availableWeights[0]), this.params["typography"]["weight"]["min"]);
                 const maxWeight = Math.min(parseInt(availableWeights[1]), this.params["typography"]["weight"]["max"]);
                 tb["weight"] = Math.round(Math.random() * (maxWeight - minWeight) + minWeight);
+                console.log (availableWeights, minWeight, maxWeight, this.params["typography"], tb["weight"]);
             }
+
             // strech
-            if (Math.random() < prob) {
-                let availableStretchRaw = this.params["typography"]["typefaces"][selectedTypeface]["weight"].replace("%", "");
-                let availableStretch = availableStretchRaw.split(" ");
+            /*if (Math.random() < prob) {
+                let availableStretch = this.params["typography"]["typefaces"]["typefaces"][selectedTypeface]["stretch"];
                 const minStretch = Math.max(parseInt(availableStretch[0]), this.params["typography"]["stretch"]["min"]);
                 const maxStretch = Math.min(parseInt(availableStretch[1]), this.params["typography"]["stretch"]["max"]);
                 tb["stretch"] = Math.round(Math.random() * (maxStretch - minStretch) + minStretch);
-            }
+            }*/
             // uppercase not mutates*/
         }
 
