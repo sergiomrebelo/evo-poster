@@ -16,21 +16,21 @@ export class Params {
 
     static availableTypefacesInfo = {
         'Amstelvar':{
-            leading: 1.1
+            leading: 1.05
         }, 'Anybody':{
-            leading: 1.1
+            leading: 1.05
         }, 'Barlow':{
-            leading: 1.1
+            leading: 1.05
         }, 'Cabin':{
-            leading: 1.1
+            leading: 1.05
         }, 'Emberly':{
-            leading: 1.1
+            leading: 1.05
         }, 'Epilogue':{
-            leading: 1.1
+            leading: 1.05
         }, 'IBMPlexSans':{
-            leading: 1.1
+            leading: 1.05
         }, 'Inconsolata':{
-            leading: 1.1
+            leading: 1.05
         }
     }
 

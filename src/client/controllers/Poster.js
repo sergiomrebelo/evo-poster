@@ -24,8 +24,6 @@ class Poster {
         this.maxFontSize = Params.typography.maxSize * h;
         this.minFontSize = Params.typography.minSize * h;
 
-
-
         this.genotype = (genotype === null) ? this.#generateGenotype(params) : genotype;
 
         this.#showGrid = params !== null ? params.display.grid : true;
@@ -39,6 +37,7 @@ class Poster {
             JSON.parse(JSON.stringify(gridData.size)),
             JSON.parse(JSON.stringify(gridData.v)),
             JSON.parse(JSON.stringify(gridData.h)),
+            JSON.parse(JSON.stringify(gridData.defaultMargins)),
             JSON.parse(JSON.stringify(gridData.gwper)),
             JSON.parse(JSON.stringify(gridData.ghper)),
         );
@@ -76,6 +75,7 @@ class Poster {
         const colorScheme = randomScheme();
 
         // define grid
+        console.log("size before", params.size);
         const grid = new Grid(
             {
                 width: params.size.width,
@@ -83,7 +83,8 @@ class Poster {
                 margin: params.size.margin
             },
             2,
-            params.sentences.length
+            params.sentences.length,
+            JSON.parse(JSON.stringify(params.size.margin))
         );
 
         // define texboxes
@@ -328,13 +329,13 @@ const getFontStretchName = (value) => {
 }
 
 class Grid {
-    constructor(size, v = 12, h = 24, gwper = 0.03, ghper = null) {
+    constructor(size, v = 12, h = 24, defaultMargins, gwper = 0.03, ghper = null) {
         if (ghper === null) {
             ghper = gwper;
         }
         this.pos = createVector(size.width/2,size.height/2);
         this.size = JSON.parse(JSON.stringify(size));
-        // this._size = Object.assign({}, size.margin);
+        this.defaultMargins = defaultMargins;
         this.v = v;
         this.h = h;
         this.gwper = gwper;
@@ -364,6 +365,7 @@ class Grid {
         return {
             pos: [this.pos.x, this.pos.y, this.pos.z],
             size: this.size,
+            defaultMargins: this.defaultMargins,
             v: this.v,
             h: this.h,
             gapw: this.gapw,
@@ -379,6 +381,7 @@ class Grid {
             JSON.parse(JSON.stringify(this.size)),
             JSON.parse(JSON.stringify(this.v)),
             JSON.parse(JSON.stringify(this.h)),
+            JSON.parse(JSON.stringify(this.defaultMargins)),
             JSON.parse(JSON.stringify(this.gwper)),
             JSON.parse(JSON.stringify(this.ghper))
         );
@@ -405,6 +408,15 @@ class Grid {
         if ((updateDirection === 0 || updateDirection === 2) && this.size.margin[3] < max) {
             this.size.margin[3] = this.size.margin[3] + inc;
         }
+        this.def();
+    }
+
+    resetMargins = () => {
+        this.size.margin = this.defaultMargins;
+        this.marginsPos.left = this.size.margin[0] * this.size.width;
+        this.marginsPos.top = this.size.margin[1] * this.size.height;
+        this.marginsPos.right = this.size.margin[2] * this.size.width;
+        this.marginsPos.bottom = this.size.margin[3] * this.size.height;
         this.def();
     }
 

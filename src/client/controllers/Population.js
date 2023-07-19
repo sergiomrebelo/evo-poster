@@ -84,7 +84,7 @@ export class Population {
 
         // mutation
         for (let i = eliteSize; i < offspring.length; i++) {
-            // await this.mutate(offspring[i]);
+            await this.mutate(offspring[i]);
         }
 
         // replace the individuals in the population with the new offspring
@@ -127,8 +127,11 @@ export class Population {
             }
         }
         // force update size
+        child.genotype["grid"].resetMargins();
         for (const i in child.genotype["textboxes"]) {
-            child.genotype["grid"].defineRow(i, child.genotype["textboxes"][i]["size"], 1);
+            const tb = child.genotype["textboxes"][i];
+            const leading = Params.availableTypefacesInfo[tb["typeface"]].leading;
+            child.genotype["grid"].defineRow(i, (tb["size"] * leading), child.genotype["typography"]["verticalAlignment"]);
         }
         // background
         // style
@@ -151,7 +154,6 @@ export class Population {
                 child.genotype["textboxes"][i]["color"] = c;
             }
         }
-
         //images
         for (const i in child.genotype["images"]) {
             if (Math.random() > 0.5) {
@@ -187,6 +189,7 @@ export class Population {
         }
 
         // textboxes features
+        let sizeChanged = false;
         for (let i in ind.genotype.textboxes) {
             let tb = ind.genotype.textboxes[i];
 
@@ -196,42 +199,32 @@ export class Population {
             }
 
             // typeface
-            // typeface is not lock because user.
-            // This array stores the available typefaces
+            // get current typeface
             let selectedTypeface = 0;
-            for (let i = 0; i<this.params["typography"]["typefaces"].length; i++) {
-                if (tb["typeface"] === this.params["typography"]["typefaces"][i].family) {
+            for (let i = 0; i<this.params["typography"]["typefaces"]["typefaces"].length; i++) {
+                if (tb["typeface"] === this.params["typography"]["typefaces"]["typefaces"][i].family) {
                     selectedTypeface = i;
                     break;
                 }
             }
-            // get info about the most typeface
-            if (Math.random() < prob && this.params["typography"]["typefaces"].length > 1) {
-                const r = Math.round(Math.random()*(this.params["typography"]["typefaces"].length-1));
+            // mutate a new typeface
+            if (Math.random() < prob && this.params["typography"]["typefaces"]["typefaces"].length > 1) {
+                const r = Math.round(Math.random()*(this.params["typography"]["typefaces"]["typefaces"].length-1));
                 selectedTypeface = r;
-                tb["typeface"] = this.params["typography"]["typefaces"][r].family;
+                tb["typeface"] = this.params["typography"]["typefaces"]["typefaces"][r]["family"];
             }
 
-            // TODO: size
-            if (Math.random() < prob) {
-                const leading = Params.availableTypefacesInfo[Params.availableTypefaces[selectedTypeface]]["leading"];
+            if (Math.random() < prob*2) {
                 let size = Math.round(tb["size"] + -SIZE_MUTATION_ADJUST+(Math.random()*SIZE_MUTATION_ADJUST));
                 // check if inside typeface min and max thresholds
                 size = Math.min(Math.max(size, ind.minFontSize), ind.maxFontSize);
                 tb["size"] = size;
-                console.log("verticalAlignment", ind.genotype["typography"]["verticalAlignment"]);
-                // check if the poster content is inside of canvas
-                // console.log(ind.genotype["grid"]);
-                // opt 1 -> reset margins
-                // opt 2 -> reset grid
-                // console.log("verticalAlignment", ind.genotype["typography"]["verticalAlignment"]);
-                // tb["size"] = next * leading;
-                // ind.genotype["grid"].defineRow(i, tb["size"] * leading, ind.genotype["typography"]["verticalAlignment"]);*/
+                sizeChanged = true;
             }
 
             // based on the selected typeface
             // weight
-            if (Math.random() < prob) {
+            /*if (Math.random() < prob) {
                 const availableWeights = this.params["typography"]["typefaces"][selectedTypeface]["weight"].split(" ");
                 const minWeight = Math.max(parseInt(availableWeights[0]), this.params["typography"]["weight"]["min"]);
                 const maxWeight = Math.min(parseInt(availableWeights[1]), this.params["typography"]["weight"]["max"]);
@@ -245,8 +238,19 @@ export class Population {
                 const maxStretch = Math.min(parseInt(availableStretch[1]), this.params["typography"]["stretch"]["max"]);
                 tb["stretch"] = Math.round(Math.random() * (maxStretch - minStretch) + minStretch);
             }
-            // uppercase not mutates
+            // uppercase not mutates*/
         }
+
+        // reset grid
+        if (sizeChanged) {
+            ind.genotype["grid"].resetMargins();
+            for (let i in ind.genotype["textboxes"]) {
+                const tb = ind.genotype["textboxes"][i];
+                const leading = Params.availableTypefacesInfo[tb["typeface"]].leading;
+                ind.genotype["grid"].defineRow(i, (tb["size"] * leading), ind.genotype["typography"]["verticalAlignment"]);
+            }
+        }
+
 
         for (let img of ind.genotype["images"]) {
             if (Math.random() < prob) {
