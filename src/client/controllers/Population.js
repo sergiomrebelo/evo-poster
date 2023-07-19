@@ -1,5 +1,6 @@
 import {Params} from "../Params.js";
 import Poster from "./Poster.js";
+import {randomScheme} from "./ColorGenerator.js";
 
 const SIZE_MUTATION_ADJUST = 5;
 const LEADING = 1.35;
@@ -55,7 +56,7 @@ export class Population {
 
     // evolve
     evolve = async () => {
-
+        // clean graphics hidden on canvas
         await this.#cleanGraphics();
         document.getElementById(`generation-number`).textContent=this.generations;
 
@@ -70,12 +71,11 @@ export class Population {
         // crossover
         for (let i = eliteSize; i < this.params["evo"]["popSize"]; i++) {
             if (Math.random() <= this.params["evo"]["crossoverProb"]) {
-                const parentA = this.tournament(2);
-                const parentB = this.tournament(2);
+                const parentA = this.tournament(5);
+                const parentB = this.tournament(5);
                 // crossover method
                 const child = await this.uniformCrossover(parentA, parentB);
-                // offspring.push(child);
-                offspring.push(parentA);
+                offspring.push(child);
             } else {
                 const ind = this.tournament();
                 offspring.push(ind);
@@ -105,7 +105,7 @@ export class Population {
         this.updated = true;
 
         if(this.generations < this.params["evo"]["noGen"] && !this.pause) {
-            // to be possible to visualise the posters
+            // need to possible to visualise the posters evolving
             setTimeout(() => {
                 this.evolve();
             }, 100);
@@ -125,8 +125,9 @@ export class Population {
         // textboxes
         for (const i in child.genotype["textboxes"]) {
             if (Math.random() > 0.5) {
-                child.genotype["textboxes"][i] = parentB.genotype["textboxes"][i];
+                child.genotype["textboxes"][i] = child.genotype["textboxes"][i];
             }
+            // designed to maintain the colour scheme
         }
         // background
         // style
@@ -134,15 +135,15 @@ export class Population {
             child.genotype["background"]["style"] = parentB.genotype["background"]["style"];
         }
         // colours
-        for (let i in child.genotype["background"]["colors"]) {
-            if (Math.random() > 0.5) {
-                child.genotype["background"]["colors"][i] = parentB.genotype["background"]["colors"][i];
+        // designed to maintain the colour scheme
+        if (Math.random() > 0.5) {
+            // child.genotype["background"]["colors"][0] = parentB.genotype["background"]["colors"][0];
+            // child.genotype["background"]["colors"][1] = parentB.genotype["background"]["colors"][1];
+            for (const i in child.genotype["textboxes"]) {
+               //  child.genotype["textboxes"][i]["color"] = parentB.genotype["textboxes"][i]["color"];
             }
         }
-        // typography
-        if (Math.random() > 0.5) {
-            child.genotype["typography"]["color"] = parentB.genotype["typography"]["color"];
-        }
+
         //images
         for (const i in child.genotype["images"]) {
             if (Math.random() > 0.5) {
@@ -156,14 +157,24 @@ export class Population {
         // mutate background style
         let prob = this.params["evo"]["mutationProb"];
 
+        // colours
+        if (Math.random() < prob) {
+            const colorScheme = randomScheme();
+            // mutate background colours
+            if (!this.params["background"]["lock"][1]) {
+                ind.genotype["background"]["colors"][0] = colorScheme.colorA;
+                ind.genotype["background"]["colors"][1] = colorScheme.colorB;
+            }
+            // typography colour
+            if (!this.params["typography"]["lock"][1]) {
+                for (let tb of ind.genotype.textboxes) {
+                    tb["color"] = colorScheme.baseColour;
+                }
+            }
+        }
+
         if (Math.random() < prob && !this.params["background"]["lock"][0]) {
             ind.genotype["background"]["style"] = Math.round(1+Math.random()*2);
-        }
-        // mutate colours
-        if (Math.random() < prob && !this.params["background"]["lock"][1]) {
-            for (let i in ind.genotype["background"]["colors"]) {
-                ind.genotype["background"]["colors"][i] = color (Math.random()*255, Math.random()*255, Math.random()*255);
-            }
         }
 
         // textboxes features
@@ -173,10 +184,7 @@ export class Population {
             if (Math.random() < prob && !this.params["typography"]["lock"][7]) {
                 tb["textAlignment"] = Math.round(1+Math.random()*2);
             }
-            // typography colour
-            if (Math.random() < prob && !this.params["typography"]["lock"][1]) {
-                tb["color"] = color (Math.random()*255, Math.random()*255, Math.random()*255);
-            }
+
             // size
             if (Math.random() < prob) {
                 let next = Math.round(tb["size"] + -SIZE_MUTATION_ADJUST+(Math.random()*SIZE_MUTATION_ADJUST));

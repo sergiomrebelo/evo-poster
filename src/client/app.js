@@ -36,7 +36,7 @@ window.draw = () => {
         background(window.app.backgroundColor);
         window.app.population.draw();
         pop();
-        console.log(`draw`);
+        // console.log(`draw`);
     }
 
 }
