@@ -26,14 +26,14 @@ export class GenerationPanel extends LitElement {
         this.restart = restart;
 
         // available fonts
-        this.fonts = this.#getAvailableTypefaces();
-        if (this.params) {
+        // this.fonts = this.#getAvailableTypefaces();
+        /* if (this.params) {
             if (this.params["typography"]) {
                 this.params["typography"]["weight"] && (this.params["typography"]["weight"] = this.fonts["weight"]);
                 this.params["typography"]["stretch"] && (this.params["typography"]["stretch"]  = this.fonts["stretch"] );
                 this.params["typography"]["typefaces"] && (this.params["typography"]["typefaces"]  = this.fonts["typefaces"] );
             }
-        }
+        }*/
         this.changesInTypefaces = 0;
 
         // error handler
@@ -77,7 +77,7 @@ export class GenerationPanel extends LitElement {
                     this.restart();
                 }, ["col-4"]),
                 weight: {
-                    min: new Slider(`Min`, this.fonts.weight.min, this.fonts.weight.min, this.fonts.weight.max, 1, `typeface-weight-min`, (e) => {
+                    min: new Slider(`Min`, this.params["typography"]["typefaces"]["weight"]["min"], this.params["typography"]["typefaces"]["weight"]["min"], this.params["typography"]["typefaces"]["weight"]["max"], 1, `typeface-weight-min`, (e) => {
                         this.params["typography"]["weight"]["min"] = parseInt(e.target.value);
                         if (this.params["typography"]["weight"]["min"] > this.params["typography"]["weight"]["max"]) {
                             this.params["typography"]["weight"]["min"] = this.params["typography"]["weight"]["max"];
@@ -85,7 +85,7 @@ export class GenerationPanel extends LitElement {
                         }
                         this.restart();
                     }, ["my-2"]),
-                    max: new Slider(`Max`, this.fonts.weight.max, this.fonts.weight.min, this.fonts.weight.max, 1, `typeface-weight-max`, (e) => {
+                    max: new Slider(`Max`, this.params["typography"]["typefaces"]["weight"]["max"], this.params["typography"]["typefaces"]["weight"]["min"], this.params["typography"]["typefaces"]["weight"]["max"], 1, `typeface-weight-max`, (e) => {
                         this.params["typography"]["weight"]["max"] = parseInt(e.target.value);
                         if (this.params["typography"]["weight"]["max"] < this.params["typography"]["weight"]["min"]) {
                             this.params["typography"]["weight"]["max"] = this.params["typography"]["weight"]["min"];
@@ -95,7 +95,7 @@ export class GenerationPanel extends LitElement {
                     }, ["my-2"])
                 },
                 stretch: {
-                    min: new Slider(`Min`, this.fonts.stretch.min, this.fonts.stretch.min, this.fonts.stretch.max, 1, `typeface-stretch-min`, (e) => {
+                    min: new Slider(`Min`, this.params["typography"]["typefaces"]["stretch"]["min"], this.params["typography"]["typefaces"]["stretch"]["min"], this.params["typography"]["typefaces"]["stretch"]["max"], 1, `typeface-stretch-min`, (e) => {
                         this.params["typography"]["stretch"]["min"] = parseInt(e.target.value);
                         if (this.params["typography"]["stretch"]["min"] > this.params["typography"]["stretch"]["max"]) {
                             this.params["typography"]["stretch"]["min"] = this.params["typography"]["stretch"]["max"];
@@ -103,7 +103,7 @@ export class GenerationPanel extends LitElement {
                         }
                         this.restart();
                     }, ["my-2"]),
-                    max: new Slider(`Max`, this.fonts.stretch.max, this.fonts.stretch.min, this.fonts.stretch.max, 1, `typeface-stretch-max`, (e) => {
+                    max: new Slider(`Max`, this.params["typography"]["typefaces"]["stretch"]["max"], this.params["typography"]["typefaces"]["stretch"]["min"], this.params["typography"]["typefaces"]["stretch"]["max"], 1, `typeface-stretch-max`, (e) => {
                         this.params["typography"]["stretch"]["max"] = parseInt(e.target.value);
                         if (this.params["typography"]["stretch"]["max"] < this.params["typography"]["stretch"]["min"]) {
                             this.params["typography"]["stretch"]["max"] = this.params["typography"]["stretch"]["min"];
@@ -197,41 +197,6 @@ export class GenerationPanel extends LitElement {
     }
 
 
-    #getAvailableTypefaces = () => {
-        const fonts = {
-            typefaces: [],
-            weight: {
-                min: Number.MAX_VALUE,
-                max: Number.MIN_VALUE
-            },
-            stretch: {
-                min: Number.MAX_VALUE,
-                max: Number.MIN_VALUE
-            }
-        }
-
-        for (let font of Array.from(document.fonts)) {
-            if (Params.availableTypefaces.includes(font.family)) {
-                let stretch = font.stretch.replaceAll(`%`, ``);
-                let stretchValues = stretch.split(" ").map((x) => parseInt(x));
-                if (fonts.stretch.min > stretchValues[0]) {
-                    fonts.stretch.min = stretchValues[0]
-                }
-                if (fonts.stretch.max < stretchValues[1]) {
-                    fonts.stretch.max = stretchValues[1]
-                }
-                let weightValues = font.weight.split(" ").map((x) => parseInt(x));
-                if (fonts.weight.min > weightValues[0]) {
-                    fonts.weight.min = weightValues[0]
-                }
-                if (fonts.weight.max < weightValues[1]) {
-                    fonts.weight.max = weightValues[1]
-                }
-                fonts.typefaces.push(font);
-            }
-        }
-        return fonts;
-    }
 
     #updateSize = () => {
         let width = validateNumberInput(document.getElementById(`size-x-input`).value);

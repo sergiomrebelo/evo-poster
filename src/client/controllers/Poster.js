@@ -14,9 +14,17 @@ class Poster {
         this.n = n;
         this.generation = generation;
         this.ready = false;
+        // ensure we use a deep copy of params
+        params = JSON.parse(JSON.stringify(params));
 
         this.fitness = 1;
         this.sentencesLenght = [];
+
+        const h = (genotype === null) ? params["size"]["height"] : genotype["size"]["height"];
+        this.maxFontSize = Params.typography.maxSize * h;
+        this.minFontSize = Params.typography.minSize * h;
+
+
 
         this.genotype = (genotype === null) ? this.#generateGenotype(params) : genotype;
 
@@ -34,7 +42,6 @@ class Poster {
             JSON.parse(JSON.stringify(gridData.gwper)),
             JSON.parse(JSON.stringify(gridData.ghper)),
         );
-
         const size = JSON.parse(JSON.stringify(this.genotype["size"]));
         const textboxes = JSON.parse(JSON.stringify(this.genotype["textboxes"]));
         for (let i in textboxes) {
@@ -43,7 +50,6 @@ class Poster {
         const background = JSON.parse(JSON.stringify(this.genotype["background"]));
         background["colors"][0] = color(this.genotype["background"]["colors"][0]);
         background["colors"][1] = color(this.genotype["background"]["colors"][1]);
-
         let images = [];
         for (let img of this.genotype["images"]) {
             const p = {
@@ -54,9 +60,7 @@ class Poster {
             }
             images.push(p);
         }
-
         const typography = JSON.parse(JSON.stringify(this.genotype["typography"]));
-
         const genotypeCopy = {
             grid: grid,
             textboxes: textboxes,
@@ -65,7 +69,6 @@ class Poster {
             typography: typography,
             images: images
         }
-
         return new Poster(this.n, this.generation, null, genotypeCopy);
     }
 
@@ -85,37 +88,39 @@ class Poster {
 
         // define texboxes
         const textboxes = [];
-        for (let sentence of params.sentences) {
-            const selectedTypeface = Math.round(Math.random()*(params.typography.typefaces.length-1));
-            let stretchDefaultParams = params.typography.typefaces[selectedTypeface]["stretch"]
-                .replaceAll("%", "").split(" ").map(
-                    (v) => {
-                        if (isNaN(v)) {
-                            v = 100;
-                        }
-                        return parseInt(v);
-                    });
 
+        const alignment = params.typography.verticalAlignment === 0 ?
+            Math.round(Math.random() * (Params.textAlignmentOptions.length-2) + 1) :
+            params.typography.verticalAlignment;
+
+        for (let i in params["sentences"]) {
+            const sentence = params["sentences"][i]
+            const selectedTypeface = Math.round(Math.random()*(params["typography"]["typefaces"]["typefaces"].length-1));
+            // stretch values
+            let stretchDefaultParams = params["typography"]["typefaces"]["typefaces"][selectedTypeface]["stretch"];
+            stretchDefaultParams.map((v) => !isNaN(v) ? parseInt(v) : 100);
             if (stretchDefaultParams.length < 2) {
                 stretchDefaultParams.push(100);
             }
-
-            let weightDefaultParams = params.typography.typefaces[selectedTypeface]["weight"].split(" ").map((v) => parseInt(v));
-            let selectedWeight = params.typography.weight.min+Math.round(Math.random()*(params.typography.weight.max));
+            // weight valuers
+            let weightDefaultParams = params["typography"]["typefaces"]["typefaces"][selectedTypeface]["weight"];
+            // selected values
+            let selectedWeight = Math.round((Math.random() * (params["typography"]["typefaces"]["weight"]["max"] - params["typography"]["typefaces"]["weight"]["min"])) + params["typography"]["typefaces"]["weight"]["min"]);
             selectedWeight = Math.max(weightDefaultParams[0], Math.min(selectedWeight, weightDefaultParams[1]));
-
-            let selectedStretch = params.typography.stretch.min+Math.round(Math.random()*(params.typography.stretch.max));
+            let selectedStretch = Math.round((Math.random() * (params["typography"]["typefaces"]["stretch"]["max"] - params["typography"]["typefaces"]["stretch"]["min"])) + params["typography"]["typefaces"]["stretch"]["min"]);
             selectedStretch = Math.max(stretchDefaultParams[0], Math.min(selectedStretch, stretchDefaultParams[1]));
 
             // define initial size
-            let size = Math.round(grid.rows.l[0]);
+            const leading = Params.availableTypefacesInfo[Params.availableTypefaces[selectedTypeface]]["leading"];
+            let size = Math.round(grid.rows.l[0]) / leading;
             size += Math.round(-(size*Params.typography.range)+(Math.random()*(size*Params.typography.range)));
             size = Math.max(
                 Math.round(params.size.height * Params.typography.minSize),
                 Math.min(Math.round(params.size.height * Params.typography.maxSize), size)
             );
+            grid.defineRow(i, size * leading, alignment);
 
-            let alignment = params.typography.verticalAlignment === 0 ?
+            const alignmentLine = params.typography.verticalAlignment === 0 ?
                 Math.round(Math.random() * (Params.textAlignmentOptions.length-2) + 1) :
                 params.typography.verticalAlignment;
 
@@ -123,26 +128,23 @@ class Poster {
                 "content": sentence,
                 "weight": selectedWeight,
                 "font-stretch": selectedStretch,
-                "alignment": alignment,
+                "alignment": alignmentLine,
                 "size": size,
-                "typeface": params.typography.typefaces[selectedTypeface].family,
+                "typeface": params["typography"]["typefaces"]["typefaces"][selectedTypeface]["family"],
                 "color": params.typography.color.random ? colorScheme.baseColour : color(params.typography.color.value),
                 "uppercase": params.typography.uppercase
             });
-
         }
 
         const images = [];
-
+        console.log(`params.images`, params.images);
         for (let input of params.images) {
             const src = input.src;
-
             const img = loadImage(src, async (img) => {
                 // resize image
                 await img.resize(0, params.size.height);
                 img.ready = true;
             });
-
             images.push({
                 x: Math.random(),
                 y: Math.random(),
@@ -150,6 +152,8 @@ class Poster {
                 src: img
             })
         }
+
+
 
         // create genotype
         return {
@@ -168,8 +172,7 @@ class Poster {
                 ]
             },
             typography: {
-                color: params.typography.color.random ? color(random(255), random(255), random(255)) : color(params.typography.color.value),
-                verticalAlignment: params.typography.verticalAlignment === 0 ? Math.round(1+(Math.random()*Params.textAlignmentTbOptions.length-2)) : params.typography.verticalAlignment
+                verticalAlignment: alignment
             },
             images: images
         }
@@ -330,7 +333,7 @@ class Grid {
             ghper = gwper;
         }
         this.pos = createVector(size.width/2,size.height/2);
-        this.size = size;
+        this.size = JSON.parse(JSON.stringify(size));
         // this._size = Object.assign({}, size.margin);
         this.v = v;
         this.h = h;

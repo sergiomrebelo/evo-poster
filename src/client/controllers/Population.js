@@ -84,7 +84,7 @@ export class Population {
 
         // mutation
         for (let i = eliteSize; i < offspring.length; i++) {
-            await this.mutate(offspring[i]);
+            // await this.mutate(offspring[i]);
         }
 
         // replace the individuals in the population with the new offspring
@@ -115,38 +115,21 @@ export class Population {
     uniformCrossover = (parentA, parentB) => {
         const child = parentA.copy();
         parentB = parentB.copy();
-        // size is fixed
-        // grid
         if (Math.random() > 0.5) {
             child.genotype["grid"] = parentB.genotype["grid"];
             // grid is defined based on the verticalAlignment
-            child.genotype["typography"]["verticalAlignment"] = parentB.genotype["background"]["verticalAlignment"];
+            child.genotype["typography"]["verticalAlignment"] = parentB.genotype["typography"]["verticalAlignment"];
         }
         // textboxes
         for (const i in child.genotype["textboxes"]) {
             if (Math.random() > 0.5) {
                 child.genotype["textboxes"][i] = parentB.genotype["textboxes"][i];
-                child.genotype["grid"].defineRow(i, child.genotype["textboxes"][i]["size"], child.genotype["typography"]["verticalAlignment"]);
-            }
-            // designed to maintain the colour scheme
-            let original = parentA.genotype["textboxes"][i]["color"];
-            let c;
-            if ( original["levels"]) {
-                c = color(original["levels"][0],original["levels"][1], original["levels"][2]);
-            } else {
-                c = color(original);
-            }
-
-            for (const i in child.genotype["textboxes"]) {
-                child.genotype["textboxes"][i]["color"] = c;
             }
         }
-
         // force update size
         for (const i in child.genotype["textboxes"]) {
-            child.genotype["grid"].defineRow(i, child.genotype["textboxes"][i]["size"], child.genotype["typography"]["verticalAlignment"]);
+            child.genotype["grid"].defineRow(i, child.genotype["textboxes"][i]["size"], 1);
         }
-
         // background
         // style
         if (Math.random() > 0.5) {
@@ -159,6 +142,13 @@ export class Population {
             child.genotype["background"]["colors"][1] = parentB.genotype["background"]["colors"][1];
             for (const i in child.genotype["textboxes"]) {
                child.genotype["textboxes"][i]["color"] = parentB.genotype["textboxes"][i]["color"];
+            }
+        } else {
+            // designed to maintain the colour scheme
+            let original = parentA.genotype["textboxes"][0]["color"];
+            let c = original["levels"] ? color(original["levels"][0],original["levels"][1], original["levels"][2]) : color(original);
+            for (const i in child.genotype["textboxes"]) {
+                child.genotype["textboxes"][i]["color"] = c;
             }
         }
 
@@ -175,6 +165,7 @@ export class Population {
         // mutate background style
         let prob = this.params["evo"]["mutationProb"];
 
+        // background
         // colours
         if (Math.random() < prob) {
             const colorScheme = randomScheme();
@@ -190,7 +181,7 @@ export class Population {
                 }
             }
         }
-
+        // style
         if (Math.random() < prob && !this.params["background"]["lock"][0]) {
             ind.genotype["background"]["style"] = Math.round(1+Math.random()*2);
         }
@@ -198,25 +189,12 @@ export class Population {
         // textboxes features
         for (let i in ind.genotype.textboxes) {
             let tb = ind.genotype.textboxes[i];
+
             // textAlignment
             if (Math.random() < prob && !this.params["typography"]["lock"][7]) {
                 tb["textAlignment"] = Math.round(1+Math.random()*2);
             }
 
-            // size
-            if (Math.random() < prob) {
-                let next = Math.round(tb["size"] + -SIZE_MUTATION_ADJUST+(Math.random()*SIZE_MUTATION_ADJUST));
-                // check if inside font thresholds
-                const maxFontSize =  Params.typography.maxSize * ind.genotype["size"]["height"];
-                const minFontSize = Params.typography.minSize * ind.genotype["size"]["height"];
-                next = Math.min(Math.max(next, minFontSize), maxFontSize);
-
-                // TODO: adjust grid globally
-                // TODO: error on centre
-
-                tb["size"] = next;
-                ind.genotype["grid"].defineRow(i, tb["size"] , ind.genotype["typography"]["verticalAlignment"]);
-            }
             // typeface
             // typeface is not lock because user.
             // This array stores the available typefaces
@@ -227,11 +205,30 @@ export class Population {
                     break;
                 }
             }
+            // get info about the most typeface
             if (Math.random() < prob && this.params["typography"]["typefaces"].length > 1) {
                 const r = Math.round(Math.random()*(this.params["typography"]["typefaces"].length-1));
                 selectedTypeface = r;
                 tb["typeface"] = this.params["typography"]["typefaces"][r].family;
             }
+
+            // TODO: size
+            if (Math.random() < prob) {
+                const leading = Params.availableTypefacesInfo[Params.availableTypefaces[selectedTypeface]]["leading"];
+                let size = Math.round(tb["size"] + -SIZE_MUTATION_ADJUST+(Math.random()*SIZE_MUTATION_ADJUST));
+                // check if inside typeface min and max thresholds
+                size = Math.min(Math.max(size, ind.minFontSize), ind.maxFontSize);
+                tb["size"] = size;
+                console.log("verticalAlignment", ind.genotype["typography"]["verticalAlignment"]);
+                // check if the poster content is inside of canvas
+                // console.log(ind.genotype["grid"]);
+                // opt 1 -> reset margins
+                // opt 2 -> reset grid
+                // console.log("verticalAlignment", ind.genotype["typography"]["verticalAlignment"]);
+                // tb["size"] = next * leading;
+                // ind.genotype["grid"].defineRow(i, tb["size"] * leading, ind.genotype["typography"]["verticalAlignment"]);*/
+            }
+
             // based on the selected typeface
             // weight
             if (Math.random() < prob) {

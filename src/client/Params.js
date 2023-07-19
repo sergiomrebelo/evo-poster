@@ -8,9 +8,31 @@ export class Params {
         'ta', 'te', 'th', 'tr', 'uk', 'ur', 'vi', 'cy'
     ];
 
+
+    // JOIN
     static availableTypefaces = [
         'Amstelvar', 'Anybody', 'Barlow', 'Cabin', 'Emberly', 'Epilogue', 'IBMPlexSans', 'Inconsolata'
     ]
+
+    static availableTypefacesInfo = {
+        'Amstelvar':{
+            leading: 1.1
+        }, 'Anybody':{
+            leading: 1.1
+        }, 'Barlow':{
+            leading: 1.1
+        }, 'Cabin':{
+            leading: 1.1
+        }, 'Emberly':{
+            leading: 1.1
+        }, 'Epilogue':{
+            leading: 1.1
+        }, 'IBMPlexSans':{
+            leading: 1.1
+        }, 'Inconsolata':{
+            leading: 1.1
+        }
+    }
 
     static visualisationGrid = {
         height: 423,
@@ -22,7 +44,7 @@ export class Params {
     static imageMaxSize = 1024;
 
     static evolution = {
-        popSize: 20,
+        popSize: 10,
         noGen: 1000,
         crossoverProb: 0.75,
         mutationProb: 0.30,
@@ -39,7 +61,7 @@ export class Params {
 
     static typography = {
         defaultColor: `#000000`,
-        range: 0.1,
+        range: 0.05,
         maxSize: 0.95,
         minSize: 0.05
     }

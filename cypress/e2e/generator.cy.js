@@ -58,8 +58,8 @@ const inputText = {
             },
             evo: {
                 popSize: {
-                    init: 20,
-                    testing: 10
+                    init: 10,
+                    testing: 20
                 },
                 noGen: {
                     init: 1000,
