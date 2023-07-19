@@ -39,8 +39,6 @@ export class GenerationPanel extends LitElement {
         // error handler
         this.errorMessage = errorMessage;
 
-        console.log (this.params["typography"]["stretch"], this.params["typography"]["weight"])
-
         // input fields
         // TODO: refactor to list or array
         const sentences = this.params ? this.params["sentences"] : [];

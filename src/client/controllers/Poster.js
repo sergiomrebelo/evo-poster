@@ -327,7 +327,7 @@ const getFontStretchName = (value) => {
     }
 }
 
-class Grid {
+export class Grid {
     constructor(size, v = 12, h = 24, defaultMargins, gwper = 0.03, ghper = null) {
         if (ghper === null) {
             ghper = gwper;
