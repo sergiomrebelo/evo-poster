@@ -54,7 +54,6 @@ export class Population {
 
     // evolve
     evolve = async () => {
-        console.log("params", this.params.size);
         // clean graphics hidden on canvas
         await this.#cleanGraphics();
         document.getElementById(`generation-number`).textContent=this.generations;
@@ -267,7 +266,6 @@ export class Population {
             }
         }
     }
-
 
     toggleGrid = (show) => {
         for (let poster of this.population) {
