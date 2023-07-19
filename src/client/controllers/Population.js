@@ -125,10 +125,28 @@ export class Population {
         // textboxes
         for (const i in child.genotype["textboxes"]) {
             if (Math.random() > 0.5) {
-                child.genotype["textboxes"][i] = child.genotype["textboxes"][i];
+                child.genotype["textboxes"][i] = parentB.genotype["textboxes"][i];
+                child.genotype["grid"].defineRow(i, child.genotype["textboxes"][i]["size"], child.genotype["typography"]["verticalAlignment"]);
             }
             // designed to maintain the colour scheme
+            let original = parentA.genotype["textboxes"][i]["color"];
+            let c;
+            if ( original["levels"]) {
+                c = color(original["levels"][0],original["levels"][1], original["levels"][2]);
+            } else {
+                c = color(original);
+            }
+
+            for (const i in child.genotype["textboxes"]) {
+                child.genotype["textboxes"][i]["color"] = c;
+            }
         }
+
+        // force update size
+        for (const i in child.genotype["textboxes"]) {
+            child.genotype["grid"].defineRow(i, child.genotype["textboxes"][i]["size"], child.genotype["typography"]["verticalAlignment"]);
+        }
+
         // background
         // style
         if (Math.random() > 0.5) {
@@ -137,10 +155,10 @@ export class Population {
         // colours
         // designed to maintain the colour scheme
         if (Math.random() > 0.5) {
-            // child.genotype["background"]["colors"][0] = parentB.genotype["background"]["colors"][0];
-            // child.genotype["background"]["colors"][1] = parentB.genotype["background"]["colors"][1];
+            child.genotype["background"]["colors"][0] = parentB.genotype["background"]["colors"][0];
+            child.genotype["background"]["colors"][1] = parentB.genotype["background"]["colors"][1];
             for (const i in child.genotype["textboxes"]) {
-               //  child.genotype["textboxes"][i]["color"] = parentB.genotype["textboxes"][i]["color"];
+               child.genotype["textboxes"][i]["color"] = parentB.genotype["textboxes"][i]["color"];
             }
         }
 
