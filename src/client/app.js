@@ -48,7 +48,7 @@ window.windowResized = () => {
 window.keyPressed = () => {
     if (window.app.screen < 2) return null;
     if (key.toUpperCase() === 'S') {
-        window.app.save();
+        // window.app.save();
     }
 }
 
