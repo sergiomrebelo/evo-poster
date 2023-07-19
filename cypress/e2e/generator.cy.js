@@ -74,8 +74,8 @@ const inputText = {
                     testing: 0.5
                 },
                 mutate: {
-                    init: 0.1,
-                    testing: 0.3
+                    init: 0.3,
+                    testing: 0.1
                 }
             },
             grid: true

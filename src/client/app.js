@@ -36,7 +36,7 @@ window.draw = () => {
         background(window.app.backgroundColor);
         window.app.population.draw();
         pop();
-        console.log(`draw`);
+        // console.log(`draw`);
     }
 
 }
@@ -45,7 +45,12 @@ window.windowResized = () => {
     if (window.app.screen < 2) return null;
 }
 
-window.keyPressed = () => {}
+window.keyPressed = () => {
+    if (window.app.screen < 2) return null;
+    if (key.toUpperCase() === 'S') {
+        // window.app.save();
+    }
+}
 
 export class App extends LitElement {
     static properties = {
@@ -60,6 +65,7 @@ export class App extends LitElement {
         this.screen = 0;
         this.evolving = false;
 
+        const fonts = this.#getAvailableTypefaces();
         // evolution controllers
         //
         this.config = {
@@ -93,9 +99,9 @@ export class App extends LitElement {
                     value: Params.typography.defaultColor,
                 },
                 textAlignment: 0,
-                typefaces: [],
-                weight: 100,
-                stretch: 200,
+                typefaces: fonts.typefaces,
+                weight: fonts.weight,
+                stretch: fonts.stretch,
                 uppercase: false,
                 texboxAlignment: 0,
                 lock: [false, false, false, false, false, false, false, false]
@@ -104,6 +110,7 @@ export class App extends LitElement {
                 grid: true
             }
         }
+
         this.population = null;
 
         // ui components
@@ -116,6 +123,47 @@ export class App extends LitElement {
         // misc
         document.getElementById(`defaultCanvas0`).style.visibility = "visible";
         this.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue('--main-bg-color');
+    }
+
+    #getAvailableTypefaces = () => {
+        const fonts = {
+            typefaces: [],
+            weight: {
+                min: Number.MAX_VALUE,
+                max: Number.MIN_VALUE
+            },
+            stretch: {
+                min: Number.MAX_VALUE,
+                max: Number.MIN_VALUE
+            }
+        }
+
+        for (let font of Array.from(document.fonts)) {
+            if (Params.availableTypefaces.includes(font.family)) {
+                let stretch = font.stretch.replaceAll(`%`, ``);
+                let stretchValues = stretch.split(" ").map((x) => parseInt(x));
+                if (fonts.stretch.min > stretchValues[0]) {
+                    fonts.stretch.min = stretchValues[0]
+                }
+                if (fonts.stretch.max < stretchValues[1]) {
+                    fonts.stretch.max = stretchValues[1]
+                }
+                let weightValues = font.weight.split(" ").map((x) => parseInt(x));
+                if (fonts.weight.min > weightValues[0]) {
+                    fonts.weight.min = weightValues[0]
+                }
+                if (fonts.weight.max < weightValues[1]) {
+                    fonts.weight.max = weightValues[1]
+                }
+                font.load();
+                fonts.typefaces.push({
+                    family: font.family,
+                    weight: weightValues,
+                    stretch: stretchValues
+                });
+            }
+        }
+        return fonts;
     }
 
     analyse = async () => {
@@ -140,7 +188,9 @@ export class App extends LitElement {
         e.preventDefault();
         this.screen = 2;
         // get images
-        this.config.images = document.querySelectorAll(`#input-images img`);
+        // TODO: error
+        this.config.images = Array.from(document.querySelectorAll(`#input-images img`));
+
 
         this.#initCanvas();
         this.#initPopulation();
@@ -198,6 +248,10 @@ export class App extends LitElement {
                     Next
                 </button>
             </div>`;
+    }
+
+    save () {
+        this.population.saveRaster();
     }
 
     render() {

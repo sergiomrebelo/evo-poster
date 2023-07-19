@@ -1,8 +1,10 @@
 import {Params} from "../Params.js";
-import Poster from "./Poster.js";
+import Poster, {Grid} from "./Poster.js";
+import {randomScheme} from "./ColorGenerator.js";
 
+// TODO: place in config file
 const SIZE_MUTATION_ADJUST = 5;
-const LEADING = 1.35;
+const TOURNAMENT_SIZE = 5;
 
 export class Population {
     #typefaces;
@@ -48,14 +50,12 @@ export class Population {
         // evaluate
         this.evaluate();
         this.updated = true;
-
-        // testing
-        // this.evolve();
     }
 
     // evolve
     evolve = async () => {
-
+        console.log("params", this.params.size);
+        // clean graphics hidden on canvas
         await this.#cleanGraphics();
         document.getElementById(`generation-number`).textContent=this.generations;
 
@@ -70,12 +70,12 @@ export class Population {
         // crossover
         for (let i = eliteSize; i < this.params["evo"]["popSize"]; i++) {
             if (Math.random() <= this.params["evo"]["crossoverProb"]) {
-                const parentA = this.tournament(2);
-                const parentB = this.tournament(2);
+
+                const parentA = this.tournament(TOURNAMENT_SIZE);
+                const parentB = this.tournament(TOURNAMENT_SIZE);
                 // crossover method
                 const child = await this.uniformCrossover(parentA, parentB);
-                // offspring.push(child);
-                offspring.push(parentA);
+                offspring.push(child);
             } else {
                 const ind = this.tournament();
                 offspring.push(ind);
@@ -93,7 +93,6 @@ export class Population {
         // evaluate
         await this.evaluate();
 
-
         // log config data to file
         if (this.generations === 0)  {
             this.log["config"] = this.params;
@@ -105,7 +104,7 @@ export class Population {
         this.updated = true;
 
         if(this.generations < this.params["evo"]["noGen"] && !this.pause) {
-            // to be possible to visualise the posters
+            // need to possible to visualise the posters evolving
             setTimeout(() => {
                 this.evolve();
             }, 100);
@@ -115,12 +114,11 @@ export class Population {
     uniformCrossover = (parentA, parentB) => {
         const child = parentA.copy();
         parentB = parentB.copy();
-        // size is fixed
-        // grid
+        // text align
         if (Math.random() > 0.5) {
-            child.genotype["grid"] = parentB.genotype["grid"];
+            // child.genotype["grid"] = parentB.genotype["grid"];
             // grid is defined based on the verticalAlignment
-            child.genotype["typography"]["verticalAlignment"] = parentB.genotype["background"]["verticalAlignment"];
+            child.genotype["typography"]["verticalAlignment"] = parentB.genotype["typography"]["verticalAlignment"];
         }
         // textboxes
         for (const i in child.genotype["textboxes"]) {
@@ -128,20 +126,34 @@ export class Population {
                 child.genotype["textboxes"][i] = parentB.genotype["textboxes"][i];
             }
         }
+        // force update size
+        // child.genotype["grid"].resetMargins();
+        child.genotype["grid"] = new Grid(this.params.size, 2, this.params.sentences.length, this.params.size.margin);
+        for (const i in child.genotype["textboxes"]) {
+            const tb = child.genotype["textboxes"][i];
+            const leading = Params.availableTypefacesInfo[tb["typeface"]].leading;
+            child.genotype["grid"].defineRow(i, (tb["size"] * leading), child.genotype["typography"]["verticalAlignment"]);
+        }
         // background
         // style
         if (Math.random() > 0.5) {
             child.genotype["background"]["style"] = parentB.genotype["background"]["style"];
         }
         // colours
-        for (let i in child.genotype["background"]["colors"]) {
-            if (Math.random() > 0.5) {
-                child.genotype["background"]["colors"][i] = parentB.genotype["background"]["colors"][i];
-            }
-        }
-        // typography
+        // designed to maintain the colour scheme
         if (Math.random() > 0.5) {
-            child.genotype["typography"]["color"] = parentB.genotype["typography"]["color"];
+            child.genotype["background"]["colors"][0] = parentB.genotype["background"]["colors"][0];
+            child.genotype["background"]["colors"][1] = parentB.genotype["background"]["colors"][1];
+            for (const i in child.genotype["textboxes"]) {
+               child.genotype["textboxes"][i]["color"] = parentB.genotype["textboxes"][i]["color"];
+            }
+        } else {
+            // designed to maintain the colour scheme
+            let original = parentA.genotype["textboxes"][0]["color"];
+            let c = original["levels"] ? color(original["levels"][0],original["levels"][1], original["levels"][2]) : color(original);
+            for (const i in child.genotype["textboxes"]) {
+                child.genotype["textboxes"][i]["color"] = c;
+            }
         }
         //images
         for (const i in child.genotype["images"]) {
@@ -156,44 +168,43 @@ export class Population {
         // mutate background style
         let prob = this.params["evo"]["mutationProb"];
 
-        if (Math.random() < prob && !this.params["background"]["lock"][0]) {
-            ind.genotype["background"]["style"] = Math.round(1+Math.random()*2);
-        }
-        // mutate colours
-        if (Math.random() < prob && !this.params["background"]["lock"][1]) {
-            for (let i in ind.genotype["background"]["colors"]) {
-                ind.genotype["background"]["colors"][i] = color (Math.random()*255, Math.random()*255, Math.random()*255);
+        // colours scheme
+        if (Math.random() < prob) {
+            const colorScheme = randomScheme();
+            // mutate background colours
+            if (!this.params["background"]["lock"][1]) {
+                ind.genotype["background"]["colors"][0] = colorScheme.colorA;
+                ind.genotype["background"]["colors"][1] = colorScheme.colorB;
+            }
+            // typography colour
+            if (!this.params["typography"]["lock"][1]) {
+                for (let tb of ind.genotype.textboxes) {
+                    tb["color"] = colorScheme.baseColour;
+                }
             }
         }
 
-        // textboxes features
+        // background style
+        if (Math.random() < prob && !this.params["background"]["lock"][0]) {
+            ind.genotype["background"]["style"] = Math.round(1+Math.random()*2);
+        }
+
+        // vertical alignment
+        if (Math.random() < prob) {
+            ind.genotype["typography"]["verticalAlignment"] = Math.round(1+Math.random()*2);
+        }
+
+        // textboxes
+        let sizeChanged = false;
         for (let i in ind.genotype.textboxes) {
             let tb = ind.genotype.textboxes[i];
+
             // textAlignment
             if (Math.random() < prob && !this.params["typography"]["lock"][7]) {
                 tb["textAlignment"] = Math.round(1+Math.random()*2);
             }
-            // typography colour
-            if (Math.random() < prob && !this.params["typography"]["lock"][1]) {
-                tb["color"] = color (Math.random()*255, Math.random()*255, Math.random()*255);
-            }
-            // size
-            if (Math.random() < prob) {
-                let next = Math.round(tb["size"] + -SIZE_MUTATION_ADJUST+(Math.random()*SIZE_MUTATION_ADJUST));
-                // check if inside font thresholds
-                const maxFontSize =  Params.typography.maxSize * ind.genotype["size"]["height"];
-                const minFontSize = Params.typography.minSize * ind.genotype["size"]["height"];
-                next = Math.min(Math.max(next, minFontSize), maxFontSize);
 
-                // TODO: adjust grid globally
-                // TODO: error on centre
-
-                tb["size"] = next;
-                ind.genotype["grid"].defineRow(i, tb["size"] , ind.genotype["typography"]["verticalAlignment"]);
-            }
-            // typeface
-            // typeface is not lock because user.
-            // This array stores the available typefaces
+            // get current typeface
             let selectedTypeface = 0;
             for (let i = 0; i<this.params["typography"]["typefaces"].length; i++) {
                 if (tb["typeface"] === this.params["typography"]["typefaces"][i].family) {
@@ -201,29 +212,52 @@ export class Population {
                     break;
                 }
             }
+
+            // typeface
             if (Math.random() < prob && this.params["typography"]["typefaces"].length > 1) {
                 const r = Math.round(Math.random()*(this.params["typography"]["typefaces"].length-1));
                 selectedTypeface = r;
-                tb["typeface"] = this.params["typography"]["typefaces"][r].family;
+                tb["typeface"] = this.params["typography"]["typefaces"][r]["family"];
             }
-            // based on the selected typeface
+
+            // size. double probability
+            if (Math.random() < prob*2) {
+                let size = Math.round(tb["size"] + -SIZE_MUTATION_ADJUST+(Math.random()*SIZE_MUTATION_ADJUST));
+                // check if inside typeface min and max thresholds
+                size = Math.min(Math.max(size, ind.minFontSize), ind.maxFontSize);
+                tb["size"] = size;
+                sizeChanged = true;
+            }
+
             // weight
             if (Math.random() < prob) {
-                const availableWeights = this.params["typography"]["typefaces"][selectedTypeface]["weight"].split(" ");
+                const availableWeights = this.params["typography"]["typefaces"][selectedTypeface]["weight"];
                 const minWeight = Math.max(parseInt(availableWeights[0]), this.params["typography"]["weight"]["min"]);
                 const maxWeight = Math.min(parseInt(availableWeights[1]), this.params["typography"]["weight"]["max"]);
                 tb["weight"] = Math.round(Math.random() * (maxWeight - minWeight) + minWeight);
             }
+
             // strech
             if (Math.random() < prob) {
-                let availableStretchRaw = this.params["typography"]["typefaces"][selectedTypeface]["weight"].replace("%", "");
-                let availableStretch = availableStretchRaw.split(" ");
+                let availableStretch = this.params["typography"]["typefaces"][selectedTypeface]["stretch"];
                 const minStretch = Math.max(parseInt(availableStretch[0]), this.params["typography"]["stretch"]["min"]);
                 const maxStretch = Math.min(parseInt(availableStretch[1]), this.params["typography"]["stretch"]["max"]);
                 tb["stretch"] = Math.round(Math.random() * (maxStretch - minStretch) + minStretch);
             }
-            // uppercase not mutates
+            // uppercase not mutates*/
         }
+
+        // reset grid
+        if (sizeChanged) {
+            // ind.genotype["grid"].resetMargins();
+            ind.genotype["grid"] = new Grid(this.params.size, 2, this.params.sentences.length, this.params.size.margin);
+            for (let i in ind.genotype["textboxes"]) {
+                const tb = ind.genotype["textboxes"][i];
+                const leading = Params.availableTypefacesInfo[tb["typeface"]].leading;
+                ind.genotype["grid"].defineRow(i, (tb["size"] * leading), ind.genotype["typography"]["verticalAlignment"]);
+            }
+        }
+
 
         for (let img of ind.genotype["images"]) {
             if (Math.random() < prob) {
@@ -353,6 +387,13 @@ export class Population {
         }
 
         await this.evaluate();
+    }
+
+    saveRaster = () => {
+        for (let i in this.population) {
+            const ind = this.population[i];
+            save(ind.phenotype, `${Date.now()}-${this.generations}-${i}`);
+        }
     }
 }
 

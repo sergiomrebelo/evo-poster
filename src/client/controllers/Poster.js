@@ -2,6 +2,7 @@ import {Params} from "../Params.js";
 import backgroundStyles from "./BackgroundStyles.js";
 
 import * as evaluator from "../../@evoposter/evaluator/src/index.mjs";
+import {randomScheme} from "./ColorGenerator.js";
 
 
 
@@ -13,9 +14,15 @@ class Poster {
         this.n = n;
         this.generation = generation;
         this.ready = false;
+        // ensure we use a deep copy of params
+        params = JSON.parse(JSON.stringify(params));
 
         this.fitness = 1;
         this.sentencesLenght = [];
+
+        const h = (genotype === null) ? params["size"]["height"] : genotype["size"]["height"];
+        this.maxFontSize = Params.typography.maxSize * h;
+        this.minFontSize = Params.typography.minSize * h;
 
         this.genotype = (genotype === null) ? this.#generateGenotype(params) : genotype;
 
@@ -30,10 +37,10 @@ class Poster {
             JSON.parse(JSON.stringify(gridData.size)),
             JSON.parse(JSON.stringify(gridData.v)),
             JSON.parse(JSON.stringify(gridData.h)),
+            JSON.parse(JSON.stringify(gridData.defaultMargins)),
             JSON.parse(JSON.stringify(gridData.gwper)),
             JSON.parse(JSON.stringify(gridData.ghper)),
         );
-
         const size = JSON.parse(JSON.stringify(this.genotype["size"]));
         const textboxes = JSON.parse(JSON.stringify(this.genotype["textboxes"]));
         for (let i in textboxes) {
@@ -42,7 +49,6 @@ class Poster {
         const background = JSON.parse(JSON.stringify(this.genotype["background"]));
         background["colors"][0] = color(this.genotype["background"]["colors"][0]);
         background["colors"][1] = color(this.genotype["background"]["colors"][1]);
-
         let images = [];
         for (let img of this.genotype["images"]) {
             const p = {
@@ -53,9 +59,7 @@ class Poster {
             }
             images.push(p);
         }
-
         const typography = JSON.parse(JSON.stringify(this.genotype["typography"]));
-
         const genotypeCopy = {
             grid: grid,
             textboxes: textboxes,
@@ -64,11 +68,12 @@ class Poster {
             typography: typography,
             images: images
         }
-
         return new Poster(this.n, this.generation, null, genotypeCopy);
     }
 
     #generateGenotype = (params) => {
+        const colorScheme = randomScheme();
+
         // define grid
         const grid = new Grid(
             {
@@ -77,69 +82,69 @@ class Poster {
                 margin: params.size.margin
             },
             2,
-            params.sentences.length
+            params.sentences.length,
+            JSON.parse(JSON.stringify(params.size.margin))
         );
 
         // define texboxes
         const textboxes = [];
-        for (let sentence of params.sentences) {
-            const selectedTypeface = Math.round(Math.random()*(params.typography.typefaces.length-1));
-            let stretchDefaultParams = params.typography.typefaces[selectedTypeface]["stretch"]
-                .replaceAll("%", "").split(" ").map(
-                    (v) => {
-                        if (isNaN(v)) {
-                            v = 100;
-                        }
-                        return parseInt(v);
-                    });
 
+        const alignment = params.typography.verticalAlignment === 0 ?
+            Math.round(Math.random() * (Params.textAlignmentOptions.length-2) + 1) :
+            params.typography.verticalAlignment;
+
+        for (let i in params["sentences"]) {
+            const sentence = params["sentences"][i]
+            const selectedTypeface = Math.round(Math.random()*(params["typography"]["typefaces"].length-1));
+            // stretch values
+            let stretchDefaultParams = params["typography"]["typefaces"][selectedTypeface]["stretch"];
+            stretchDefaultParams.map((v) => !isNaN(v) ? parseInt(v) : 100);
             if (stretchDefaultParams.length < 2) {
                 stretchDefaultParams.push(100);
             }
-
-            let weightDefaultParams = params.typography.typefaces[selectedTypeface]["weight"].split(" ").map((v) => parseInt(v));
-            let selectedWeight = params.typography.weight.min+Math.round(Math.random()*(params.typography.weight.max));
+            // weight valuers
+            let weightDefaultParams = params["typography"]["typefaces"][selectedTypeface]["weight"];
+            // selected values
+            let selectedWeight = Math.round((Math.random() * (params["typography"]["weight"]["max"] - params["typography"]["weight"]["min"])) + params["typography"]["weight"]["min"]);
             selectedWeight = Math.max(weightDefaultParams[0], Math.min(selectedWeight, weightDefaultParams[1]));
-
-            let selectedStretch = params.typography.stretch.min+Math.round(Math.random()*(params.typography.stretch.max));
+            let selectedStretch = Math.round((Math.random() * (params["typography"]["stretch"]["max"] - params["typography"]["stretch"]["min"])) + params["typography"]["stretch"]["min"]);
             selectedStretch = Math.max(stretchDefaultParams[0], Math.min(selectedStretch, stretchDefaultParams[1]));
 
             // define initial size
-            let size = Math.round(grid.rows.l[0]);
+            const leading = Params.availableTypefacesInfo[Params.availableTypefaces[selectedTypeface]]["leading"];
+            let size = Math.round(grid.rows.l[0]) / leading;
             size += Math.round(-(size*Params.typography.range)+(Math.random()*(size*Params.typography.range)));
             size = Math.max(
                 Math.round(params.size.height * Params.typography.minSize),
                 Math.min(Math.round(params.size.height * Params.typography.maxSize), size)
             );
+            grid.defineRow(i, size * leading, alignment);
 
-            let alignment = params.typography.verticalAlignment === 0 ?
-                Math.round(Math.random() * (Params.textAlignmentOptions.length-2) + 1) :
-                params.typography.verticalAlignment;
+            const alignmentLine = params.typography.textAlignment === 0 ?
+                Math.round(Math.random() * (Params.textAlignmentTbOptions.length-2) + 1) :
+                params.typography.textAlignment;
 
             textboxes.push({
                 "content": sentence,
                 "weight": selectedWeight,
                 "font-stretch": selectedStretch,
-                "alignment": alignment,
+                "alignment": alignmentLine,
                 "size": size,
-                "typeface": params.typography.typefaces[selectedTypeface].family,
-                "color": params.typography.color.random ? color(random(255), random(255), random(255)) : color(params.typography.color.value),
+                "typeface": params["typography"]["typefaces"][selectedTypeface]["family"],
+                "color": params.typography.color.random ? colorScheme.baseColour : color(params.typography.color.value),
                 "uppercase": params.typography.uppercase
             });
-
         }
 
         const images = [];
-
+        // console.log(`params.images`, params.images);
         for (let input of params.images) {
             const src = input.src;
-
             const img = loadImage(src, async (img) => {
                 // resize image
                 await img.resize(0, params.size.height);
                 img.ready = true;
             });
-
             images.push({
                 x: Math.random(),
                 y: Math.random(),
@@ -147,6 +152,8 @@ class Poster {
                 src: img
             })
         }
+
+
 
         // create genotype
         return {
@@ -160,13 +167,12 @@ class Poster {
             background: {
                 style: params.background.style === 0 ? Math.round(1+Math.random()*(Params.background.availableStyles.length-2)) : params.background.style,
                 colors: [
-                    params.background.color.random ? color(random(255), random(255), random(255)) : color(params.background.color.valueA),
-                    params.background.color.random ? color(random(255), random(255), random(255)) : color(params.background.color.valueB)
+                    params.background.color.random ? colorScheme.colorA : color(params.background.color.valueA),
+                    params.background.color.random ? colorScheme.colorB : color(params.background.color.valueB)
                 ]
             },
             typography: {
-                color: params.typography.color.random ? color(random(255), random(255), random(255)) : color(params.typography.color.value),
-                verticalAlignment: params.typography.verticalAlignment === 0 ? Math.round(1+(Math.random()*Params.textAlignmentTbOptions.length-2)) : params.typography.verticalAlignment
+                verticalAlignment: alignment
             },
             images: images
         }
@@ -321,14 +327,14 @@ const getFontStretchName = (value) => {
     }
 }
 
-class Grid {
-    constructor(size, v = 12, h = 24, gwper = 0.03, ghper = null) {
+export class Grid {
+    constructor(size, v = 12, h = 24, defaultMargins, gwper = 0.03, ghper = null) {
         if (ghper === null) {
             ghper = gwper;
         }
         this.pos = createVector(size.width/2,size.height/2);
-        this.size = size;
-        // this._size = Object.assign({}, size.margin);
+        this.size = JSON.parse(JSON.stringify(size));
+        this.defaultMargins = defaultMargins;
         this.v = v;
         this.h = h;
         this.gwper = gwper;
@@ -358,6 +364,7 @@ class Grid {
         return {
             pos: [this.pos.x, this.pos.y, this.pos.z],
             size: this.size,
+            defaultMargins: this.defaultMargins,
             v: this.v,
             h: this.h,
             gapw: this.gapw,
@@ -373,6 +380,7 @@ class Grid {
             JSON.parse(JSON.stringify(this.size)),
             JSON.parse(JSON.stringify(this.v)),
             JSON.parse(JSON.stringify(this.h)),
+            JSON.parse(JSON.stringify(this.defaultMargins)),
             JSON.parse(JSON.stringify(this.gwper)),
             JSON.parse(JSON.stringify(this.ghper))
         );
@@ -399,6 +407,15 @@ class Grid {
         if ((updateDirection === 0 || updateDirection === 2) && this.size.margin[3] < max) {
             this.size.margin[3] = this.size.margin[3] + inc;
         }
+        this.def();
+    }
+
+    resetMargins = () => {
+        this.size.margin = this.defaultMargins;
+        this.marginsPos.left = this.size.margin[0] * this.size.width;
+        this.marginsPos.top = this.size.margin[1] * this.size.height;
+        this.marginsPos.right = this.size.margin[2] * this.size.width;
+        this.marginsPos.bottom = this.size.margin[3] * this.size.height;
         this.def();
     }
 
