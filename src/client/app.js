@@ -12,13 +12,11 @@ import {Header} from "./components/Header.js";
 
 import Population from "./controllers/Population.js";
 
-// TODO: upload from package.json
 import {info} from "../@evoposter/evaluator/src/index.mjs";
 
 import 'bootstrap/scss/bootstrap.scss';
 import './main.css';
 
-// TODO: separe app.js from entry point
 window.preload = () => {}
 
 window.setup = () => {
@@ -47,9 +45,9 @@ window.windowResized = () => {
 
 window.keyPressed = () => {
     if (window.app.screen < 2) return null;
-    if (key.toUpperCase() === 'S') {
+    // if (key.toUpperCase() === 'S') {
         // window.app.save();
-    }
+    // }
 }
 
 export class App extends LitElement {

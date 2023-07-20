@@ -7,12 +7,14 @@
  * v0.0.1 July 2023
  */
 
-import * as Legibility from "./Legibility.mjs";
+import * as Legibility from "./constraints/Legibility.mjs";
+import * as GridAppropriateSize from "./constraints/GridAppropriateSize.mjs";
 
 export const info = () => {
     console.log ("Evaluator working");
 }
 
 export const legibility = Legibility.compute;
+export const gridAppropriateSize = GridAppropriateSize.compute;
 
 export { info as default };

@@ -13,7 +13,7 @@
  * v3.0.0 November 2023
  */
 
-import {arrMean, map} from "./utils.js";
+import {arrMean, map} from "../utils.js";
 
 const MAX_CONSTRAINT = 0.5;
 const WHITE_SPACE_FACTOR = 3;
@@ -71,3 +71,5 @@ const attemptJustify = (value, max) => {
     value = value >= 0 ? value/WHITE_SPACE_FACTOR : value;
     return justify(value, max);
 }
+
+export { compute as default };

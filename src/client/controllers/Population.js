@@ -2,7 +2,6 @@ import {Params} from "../Params.js";
 import Poster, {Grid} from "./Poster.js";
 import {randomScheme} from "./ColorGenerator.js";
 
-// TODO: place in config file
 const SIZE_MUTATION_ADJUST = 5;
 const TOURNAMENT_SIZE = 5;
 
@@ -96,8 +95,19 @@ export class Population {
         if (this.generations === 0)  {
             this.log["config"] = this.params;
         }
-        // TODO log generation data
-        // this.log["generations"]
+
+        // log population stats
+        const genData = [];
+        for (let ind of this.population) {
+            genData.push({
+                genotype: ind.genotype,
+                fitness: ind.fitness
+            })
+        }
+        this.log["generations"].push({
+            gen: this.generations,
+            data: genData
+        })
 
         this.generations++;
         this.updated = true;
@@ -107,6 +117,10 @@ export class Population {
             setTimeout(() => {
                 this.evolve();
             }, 100);
+        } else {
+            console.group (`stats`);
+            console.log (this.log);
+            console.groupEnd();
         }
     }
 
@@ -274,7 +288,7 @@ export class Population {
         this.updated = true;
     }
 
-    // TODO: eval
+
     evaluate = async () => {
         // force evaluation of individuals
         for (let individual of this.population) {
@@ -283,12 +297,9 @@ export class Population {
 
         // sort individuals in the population by fitness (fittest first)
         this.population = this.population.sort((a,b) => b.fitness - a.fitness);
-        // console.log(this.population.map(ind => ind.fitness));
     }
 
     copy = (obj) => {
-        // loadash
-        // return Object.assign({}, obj);
         return JSON.parse(JSON.stringify(obj));
     }
 
@@ -307,7 +318,7 @@ export class Population {
         return fittest;
     }
 
-    // draw() auxiliar function
+    // draw aux function
     // verify if the necessary fonts are loaded
     #checkTypeface = () => {
         for (let font of this.#typefaces) {
@@ -319,7 +330,7 @@ export class Population {
         return true;
     }
 
-    // draw auxiliar function
+    // draw aux function
     // clean old files
     #cleanGraphics = () => {
         const graphics = document.querySelectorAll(`canvas:not(#defaultCanvas0)`);
@@ -330,16 +341,13 @@ export class Population {
 
     draw = async () => {
         this.updated = false;
-        // console.log(`this.population`, this.population.length);
-        // TODO:
+        // commented by dev purposes
         /* const typefacesLoaded = this.#checkTypeface();
         if (!typefacesLoaded || (typefacesLoaded && !this.ready)) {
             this.updated = true;
             await this.evaluate();
             this.ready = typefacesLoaded;
-        }*/
-
-        // console.log(typefacesLoaded, this.ready);
+        } */
 
         const n = this.population.length < Params.visiblePosters ? this.population.length : Params.visiblePosters;
         let posX = 0, posY = 0;
@@ -370,11 +378,10 @@ export class Population {
                 imageMode(CENTER);
                 image(pg, x, y);
                 textSize(10);
-                // text (`poster no.${i} (fitness: ${ind.fitness})`, x-textWidth(`poster no.${i} (fitness: ${ind.fitness})`)/2, y + pg.height/2+15);
                 pop();
 
                 // remove the graphics from canvas and free the resources
-                pg.remove();
+                // pg.remove();
 
                 posX += 1;
                 if (posX % Math.floor(width / Params.visualisationGrid.width) === 0) { // (Params.visualisationGrid.cols-1)

@@ -154,7 +154,6 @@ class Poster {
         }
 
 
-
         // create genotype
         return {
             grid: grid,
@@ -222,13 +221,13 @@ class Poster {
         this.phenotype = await this.draw();
         this.fitness = 1; // multicreatira
 
-        // constraint
-        const legibility = evaluator.legibility(this.sentencesLenght, this.genotype.grid.getAvailableWidth(), `JUSTIFY`);
+        // constraints
+        const legibility = evaluator.legibility(this.sentencesLenght, this.genotype["grid"].getAvailableWidth(), `JUSTIFY`);
+        // const gridAppropriateness = evaluator.gridAppropriateSize(this.genotype["size"], this.genotype["grid"]);
+
         // returns a number between 0 and 0.5
         // subtracted to fitness
-        // TODO: read paper
         this.fitness -= legibility;
-        // this.fitness = Math.round(this.fitness*100)/100;
     }
 
     typeset = async(pg) => {
