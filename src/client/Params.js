@@ -9,7 +9,6 @@ export class Params {
     ];
 
 
-    // JOIN
     static availableTypefaces = [
         'Amstelvar', 'Anybody', 'Barlow', 'Cabin', 'Emberly', 'Epilogue', 'IBMPlexSans', 'Inconsolata'
     ]
@@ -45,7 +44,7 @@ export class Params {
 
     static evolution = {
         popSize: 10,
-        noGen: 1000,
+        noGen: 400,
         crossoverProb: 0.75,
         mutationProb: 0.30,
         eliteSize: 1
