@@ -59,7 +59,7 @@ const TESTING_PARAMS = [
     }
 ];
 
-describe(`Test the Grid Size Appropriateness metric`, () => {
+describe(`Testing GridSizeAppropriateness metric`, () => {
     for (let i in TESTING_PARAMS) {
         let params = TESTING_PARAMS[i];
         test(`Test ${i}`, async () => {

@@ -1,4 +1,6 @@
 /**
+ * Legibility
+ *
  * Measure the legibility of the text in the poster
  * it is related to the legibility of the sentence
  * and not the typeface shapes
@@ -44,6 +46,7 @@ export const compute = (sentencesLength = [], minSize, mode= 'OVERSET', maxLimit
 
     // calculate mean
     const mean = arrMean([...results]);
+
     return mean;
 }
 

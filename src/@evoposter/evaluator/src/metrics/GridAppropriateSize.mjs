@@ -19,9 +19,6 @@ export const compute = (
     rows = [], columns = [],
     margins = {left:0, top:0, right:0, bottom:0}
 ) => {
-    console.log ("EXAMPLE=", containerWidth, containerHeight, rows, columns, margins);
-
-
     let invalid = false;
     // debug
     let msg = "";

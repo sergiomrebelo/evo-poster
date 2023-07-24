@@ -222,13 +222,12 @@ class Poster {
         this.fitness = 1; // multicreatira
 
         // constraints
-        const legibility = evaluator.legibility(this.sentencesLenght, this.genotype["grid"].getAvailableWidth(), `JUSTIFY`);
+        const legibility = evaluator.legibility(this.sentencesLenght, this.genotype["grid"].getAvailableWidth(), `OVERSET`);
         const gridAppropriateness = evaluator.gridAppropriateSize(
             this.genotype["size"].width, this.genotype["size"].height,
             this.genotype["grid"].rows.l, this.genotype["grid"].columns.l, this.genotype["grid"].marginsPos
         );
-
-        console.log (`gridAppropriateness=${gridAppropriateness}`)
+        
 
         // returns a number between 0 and 0.5
         // subtracted to fitness
