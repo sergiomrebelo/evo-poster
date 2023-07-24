@@ -134,6 +134,7 @@ export class Population {
                 this.evolve();
             }, 100);
         } else {
+            this.evolving = false;
             console.group (`stats`);
             console.log (this.log);
             console.groupEnd();

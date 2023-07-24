@@ -41,6 +41,7 @@
     "bootstrap": "^5.3.0",
     "bootstrap-slider": "^11.0.2",
     "cypress": "^12.15.0",
+    "cypress-wait-until": "^2.0.0",
     "jest": "^29.5.0",
     "lit": "^2.7.5",
     "lodash.clonedeep": "^4.5.0",
