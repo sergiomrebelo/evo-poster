@@ -1,6 +1,6 @@
 import {html, LitElement} from "lit";
 import {TextInput} from "../inputs/TextInput.js";
-import {validateNumberInput} from "../inputs/utils.js"
+import {validateNumberInput} from "../../utils.js"
 import {Params} from "../../Params.js";
 import {Divider} from "../Divider.js";
 import {ColorInput} from "../inputs/ColorInput.js";

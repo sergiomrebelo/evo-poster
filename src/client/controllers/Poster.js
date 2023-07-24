@@ -5,7 +5,6 @@ import * as evaluator from "../../@evoposter/evaluator/src/index.mjs";
 import {randomScheme} from "./ColorGenerator.js";
 
 
-
 class Poster {
     #showGrid = false;
     #debug = false;
@@ -18,6 +17,7 @@ class Poster {
         params = JSON.parse(JSON.stringify(params));
 
         this.fitness = 1;
+        this.constraint = 0;
         this.sentencesLenght = [];
 
         const h = (genotype === null) ? params["size"]["height"] : genotype["size"]["height"];
@@ -219,7 +219,7 @@ class Poster {
 
     evaluate = async () => {
         this.phenotype = await this.draw();
-        this.fitness = 1; // multicreatira
+        this.fitness = 1;
 
         // constraints
         const legibility = evaluator.legibility(this.sentencesLenght, this.genotype["grid"].getAvailableWidth(), `OVERSET`);
@@ -227,11 +227,14 @@ class Poster {
             this.genotype["size"].width, this.genotype["size"].height,
             this.genotype["grid"].rows.l, this.genotype["grid"].columns.l, this.genotype["grid"].marginsPos
         );
-        
+        this.constraint = legibility + gridAppropriateness;
 
         // returns a number between 0 and 0.5
         // subtracted to fitness
-        this.fitness -= legibility;
+        return {
+            "fitness": this.fitness,
+            "constraints": this.constraint
+        }
     }
 
     typeset = async(pg) => {

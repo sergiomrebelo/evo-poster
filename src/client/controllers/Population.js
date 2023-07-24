@@ -1,6 +1,7 @@
 import {Params} from "../Params.js";
 import Poster, {Grid} from "./Poster.js";
 import {randomScheme} from "./ColorGenerator.js";
+import {swap} from "../utils.js";
 
 const SIZE_MUTATION_ADJUST = 5;
 const TOURNAMENT_SIZE = 5;
@@ -294,8 +295,57 @@ export class Population {
             await individual.evaluate();
         }
 
+        let fitness = this.population.map((ind) => ind.fitness);
+        let constraints = this.population.map((ind) => ind.constraint);
+
+        // const indices = await this.#stochasticRanking(fitness, constraints);
+        const indices = await this.#staticPenalty(fitness, constraints);
+
+        // sort population
+        const newPopulation = [];
+        for (let i=0; i<indices.length; i++) {
+            newPopulation.push(this.population[indices[i]].copy());
+        }
+        this.population = newPopulation;
+
+
         // sort individuals in the population by fitness (fittest first)
-        this.population = this.population.sort((a,b) => b.fitness - a.fitness);
+        // this.population = this.population.sort((a,b) => b.fitness - a.fitness);
+    }
+
+
+    #stochasticRanking = async (fitness, constraints, pF= 0.45) => { //0.45
+        let populationSize = this.population.length;
+        let indices = Array.from(Array(populationSize).keys())
+
+        for (let i=0; i<populationSize; i++) {
+            let noSwap = true;
+            for (let j=0; j<populationSize-1; j++) {
+                let u = Math.random();
+                if ((constraints[indices[j]] === 0 && constraints[indices[j + 1]] === 0) || u <= pF) {
+                    if (fitness[indices[j]] > fitness[indices[j + 1]]) {
+                        swap(indices, j, j + 1)
+                        noSwap = false;
+                    } else {
+                        if (constraints[indices[j]] > constraints[indices[j + 1]]) {
+                            swap(indices, j, j + 1)
+                            noSwap = false;
+                        }
+                    }
+                }
+            }
+            if (noSwap) {
+                break;
+            } else {
+                noSwap = true;
+            }
+        }
+
+        return indices;
+    }
+
+    #staticPenalty = async () => {
+        
     }
 
     copy = (obj) => {
