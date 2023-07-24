@@ -3,6 +3,8 @@
  * it is related to the legibility of the sentence
  * and not the typeface shapes
  *
+ * Expected return a value between 0 (good) and (1) bad
+ *
  * Sérgio M. Rebelo
  * CDV lab. (CMS, CISUC, Portugal)
  * srebelo[at]dei.uc.pt
@@ -15,7 +17,7 @@
 
 import {arrMean, map} from "../utils.js";
 
-const MAX_CONSTRAINT = 0.5;
+const MAX_CONSTRAINT = 1;
 const WHITE_SPACE_FACTOR = 3;
 
 const MODES = [`OVERSET`, `JUSTIFY`,`ATTEMPT_JUSTIFY`];

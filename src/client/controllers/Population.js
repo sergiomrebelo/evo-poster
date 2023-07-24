@@ -68,7 +68,6 @@ export class Population {
         // crossover
         for (let i = eliteSize; i < this.params["evo"]["popSize"]; i++) {
             if (Math.random() <= this.params["evo"]["crossoverProb"]) {
-
                 const parentA = this.tournament(TOURNAMENT_SIZE);
                 const parentB = this.tournament(TOURNAMENT_SIZE);
                 // crossover method

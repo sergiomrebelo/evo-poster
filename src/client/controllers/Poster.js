@@ -223,7 +223,12 @@ class Poster {
 
         // constraints
         const legibility = evaluator.legibility(this.sentencesLenght, this.genotype["grid"].getAvailableWidth(), `JUSTIFY`);
-        // const gridAppropriateness = evaluator.gridAppropriateSize(this.genotype["size"], this.genotype["grid"]);
+        const gridAppropriateness = evaluator.gridAppropriateSize(
+            this.genotype["size"].width, this.genotype["size"].height,
+            this.genotype["grid"].rows.l, this.genotype["grid"].columns.l, this.genotype["grid"].marginsPos
+        );
+
+        console.log (`gridAppropriateness=${gridAppropriateness}`)
 
         // returns a number between 0 and 0.5
         // subtracted to fitness
@@ -477,7 +482,11 @@ export class Grid {
         this.columns.y.bottom = (this.size.height / 2) - (this.marginsPos.bottom);
 
         const inc = (this.size.width - (this.marginsPos.left + this.marginsPos.right)) / this.v;
-        this.columns.l = inc;
+        let horizontalSpace = [];
+        for (let i=0; i<this.v; i++) {
+            horizontalSpace.push(inc);
+        }
+        this.columns.l = horizontalSpace;
 
         // start cod of x
         let x = -(this.size.width / 2) + this.marginsPos.left;

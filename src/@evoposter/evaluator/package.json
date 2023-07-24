@@ -12,5 +12,8 @@
     "url": "git+https://github.com/sergiomrebelo/evo-poster.git"
   },
   "author": "Sérgio M. Rebelo <sergiorebelo@me.com> (https://sergiorebelo.work/)",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "jest": "^29.6.1"
+  }
 }
