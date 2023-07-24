@@ -4,7 +4,7 @@
   "description": "set of metric for evaluation of poster designs",
   "main": "src/index.mjs",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "cross-env NODE_OPTIONS=--experimental-vm-modules npx jest"
   },
   "type": "module",
   "repository": {

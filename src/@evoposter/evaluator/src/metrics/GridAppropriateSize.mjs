@@ -27,15 +27,18 @@ export const compute = (
     let msg = "";
 
     // height calculation
-    let height = margins.top+margins.bottom;
+    let height = Math.abs(margins.top)+Math.abs(margins.bottom);
     for (let r of rows) {
         height = height + parseFloat(r);
     }
     // width calculation
-    let width = margins.left+margins.right;
+    let width = Math.abs(margins.left)+Math.abs(margins.right);
     for (let r of columns) {
         width = width + parseFloat(r);
     }
+
+    width = Math.round(width);
+    height = Math.round(height);
 
     if (height > containerHeight) {
         invalid = true;
