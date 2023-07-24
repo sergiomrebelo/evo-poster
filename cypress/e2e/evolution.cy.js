@@ -10,7 +10,7 @@ let checkingInterval;
 for (let i in TESTING_EXAMPLES) {
     let e = TESTING_EXAMPLES[i];
     describe(`testing no. ${i} (elitist Mode)`, () => {
-        before(() => {
+        beforeEach(() => {
             cy.visit(`http://localhost:8000`);
         });
 
