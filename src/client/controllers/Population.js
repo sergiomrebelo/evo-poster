@@ -81,7 +81,6 @@ export class Population {
         // this.population = newPopulation;
 
 
-
         // crossover
         for (let i = eliteSize; i < this.params["evo"]["popSize"]; i++) {
             if (Math.random() <= this.params["evo"]["crossoverProb"]) {
@@ -116,7 +115,9 @@ export class Population {
         for (let ind of this.population) {
             genData.push({
                 genotype: ind.genotype,
-                fitness: ind.fitness
+                fitness: ind.fitness,
+                constraint: ind.constraint,
+                metrics: ind.metrics
             })
         }
         this.log["generations"].push({
@@ -309,12 +310,10 @@ export class Population {
         for (let individual of this.population) {
             await individual.evaluate();
         }
-
-        // still sort the population based on staticPenalty
+        // sort the population based on staticPenalty
+        // enables visualisation and elite
         // sort individuals in the population by fitness (fittest first)
-        // this.population = this.population.sort((a,b) => b.fitness - a.fitness);
-
-        // TODO: const indices = await this.#staticPenalty(fitness, constraints);
+        await this.#staticPenalty();
     }
 
 
@@ -348,7 +347,7 @@ export class Population {
     }
 
     #staticPenalty = async () => {
-
+        this.population = this.population.sort((a,b) => (b.fitness-b.constraint) - (a.fitness-a.constraint));
     }
 
     copy = (obj) => {

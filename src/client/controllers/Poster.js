@@ -18,6 +18,11 @@ class Poster {
 
         this.fitness = 1;
         this.constraint = 0;
+
+        this.metrics = {
+            legibility: 1,
+            gridAppropriateness: 1
+        }
         this.sentencesLenght = [];
 
         const h = (genotype === null) ? params["size"]["height"] : genotype["size"]["height"];
@@ -228,6 +233,9 @@ class Poster {
             this.genotype["grid"].rows.l, this.genotype["grid"].columns.l, this.genotype["grid"].marginsPos
         );
         this.constraint = legibility + gridAppropriateness;
+
+        this.metrics["legibility"] = legibility;
+        this.metrics["gridAppropriateness"] = gridAppropriateness;
 
         // returns a number between 0 and 0.5
         // subtracted to fitness
