@@ -8,7 +8,8 @@ const TOURNAMENT_SIZE = 10;
 
 export class Population {
     #typefaces;
-    constructor(params) {
+    #data;
+    constructor(params, data) {
         this.size = params["evo"]["popSize"];
         this.params = params;
         this.population = [];
@@ -16,7 +17,9 @@ export class Population {
         this.ready = false;
         this.evolving = false;
         this.pause = false;
-        
+        this.#data = data;
+        this.targetSemanticLayout = this.#calculateSemanticTargetLayout(this.#data);
+
         this.#typefaces = [];
         this.updated = true;
 
@@ -25,7 +28,7 @@ export class Population {
             generations: []
         };
 
-        // this._data = data; // private variable new version
+        this.initialisation();
     }
 
     initialisation = async () => {
@@ -48,7 +51,7 @@ export class Population {
         }
 
         // evaluate
-        this.evaluate();
+        await this.evaluate();
         this.updated = true;
     }
 
@@ -103,6 +106,7 @@ export class Population {
         this.population = offspring;
 
         // evaluate
+        console.log ("evolve-eval");
         await this.evaluate();
 
         // log config data to file
@@ -305,18 +309,21 @@ export class Population {
         this.updated = true;
     }
 
-
     evaluate = async () => {
         // force evaluation of individuals
+        let i=0;
         for (let individual of this.population) {
-            await individual.evaluate();
+            console.group(i);
+            await individual.evaluate(this.targetSemanticLayout);
+            i++;
+            console.groupEnd();
         }
+
         // sort the population based on staticPenalty
         // enables visualisation and elite
         // sort individuals in the population by fitness (fittest first)
         await this.#staticPenalty();
     }
-
 
     #stochasticRanking = async (fitness, constraints, pF= 0.45) => { //0.45
         let populationSize = this.population.length;
@@ -428,7 +435,7 @@ export class Population {
             // ensure that phenotype is created
             if (ind.phenotype === null) {
                 this.updated = true;
-                await ind.evaluate();
+                await ind.evaluate(this.targetLayout);
             }
 
             // display
@@ -459,7 +466,7 @@ export class Population {
             }
         }
 
-        await this.evaluate();
+        // await this.evaluate();
     }
 
     saveRaster = () => {
@@ -467,6 +474,27 @@ export class Population {
             const ind = this.population[i];
             save(ind.phenotype, `${Date.now()}-${this.generations}-${i}`);
         }
+    }
+
+    #calculateSemanticTargetLayout = (data, emphasis= 0.5) => {
+        // emphasis is the min importance in layout of neutrals (between 0.1 and 1)
+        // emotional score is added to the emphasis
+        let dist = [];
+        for (let sentence of data["lexicon"]["sentences"]) {
+            let amount = sentence["emotions"]["data"]["recognisedEmotions"].length;
+            let emotions = sentence["emotions"]["data"]["recognisedEmotions"].map((e) => e[0]);
+            let score = sentence["emotions"]["data"]["recognisedEmotions"].reduce((accumulator, a) => {
+                return accumulator + a[1];
+            }, 0);
+            score +=emphasis;
+            dist.push([amount, emotions, score]);
+        }
+        const sum = sumArr(dist.map((d) => d[2]));
+        // normalised value
+        dist = dist.map((d) => {
+            return [d[0],d[1],d[2],Math.round(d[2]/sum*100)/100];
+        });
+        return dist;
     }
 }
 

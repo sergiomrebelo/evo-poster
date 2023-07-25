@@ -9,10 +9,7 @@ import {ResultsContainer} from "./components/ResultsContainer.js";
 import {ErrHandler} from "./components/ErrHandler.js";
 import {Interface} from "./components/Interface.js"
 import {Header} from "./components/Header.js";
-
 import Population from "./controllers/Population.js";
-
-import {info} from "../@evoposter/evaluator/src/index.mjs";
 
 import 'bootstrap/scss/bootstrap.scss';
 import './main.css';
@@ -34,7 +31,6 @@ window.draw = () => {
         background(window.app.backgroundColor);
         window.app.population.draw();
         pop();
-        // console.log(`draw`);
     }
 
 }
@@ -214,8 +210,8 @@ export class App extends LitElement {
             if (this.config["sentences"] == null) {
                 this.config["sentences"] = this.results.sentences;
             }
-            this.population = new Population(this.config);
-            this.population.initialisation();
+            this.population = new Population(this.config, this.results);
+            // this.population.initialisation();
             this.initPopForm.pop = this.population;
             this.screen = 3;
             this.header.showControls();

@@ -6,3 +6,7 @@ export const arrMean = (arr) => {
     const sum = arr.reduce((a, b) => a + b, 0);
     return (sum / arr.length) || 0;
 }
+
+export const arrSum = (arr) => {
+    return arr.reduce((partialSum, a) => partialSum + a, 0);
+}

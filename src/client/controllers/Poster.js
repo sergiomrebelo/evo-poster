@@ -3,6 +3,7 @@ import backgroundStyles from "./BackgroundStyles.js";
 
 import * as evaluator from "../../@evoposter/evaluator/src/index.mjs";
 import {randomScheme} from "./ColorGenerator.js";
+import {sumArr} from "../utils.js";
 
 
 class Poster {
@@ -33,7 +34,7 @@ class Poster {
 
         this.#showGrid = params !== null ? params.display.grid : true;
         this.phenotype = null;
-        this.evaluate();
+        // this.evaluate();
     }
 
     copy = () => {
@@ -182,7 +183,7 @@ class Poster {
         }
     }
 
-    // generate phenotype and evaluate poster
+    // generate phenotype
     draw = async () => {
         this.ready = true;
         this.phenotype = createGraphics(this.genotype.size.width, this.genotype.size.height);
@@ -222,9 +223,11 @@ class Poster {
         return this.phenotype;
     }
 
-    evaluate = async () => {
+    evaluate = async (dist) => {
         this.phenotype = await this.draw();
-        this.fitness = 1;
+        const layoutSemantics = evaluator.layoutSemantics(this.genotype["grid"]["rows"]["l"], dist, `RELATIVE`, this.genotype["size"]);
+
+        this.fitness = layoutSemantics;
 
         // constraints
         const legibility = evaluator.legibility(this.sentencesLenght, this.genotype["grid"].getAvailableWidth(), `OVERSET`);
@@ -315,7 +318,7 @@ class Poster {
             show = !this.#showGrid;
         }
         this.#showGrid = show;
-        this.draw();
+        this.draw(null, "n/d");
     }
 }
 
