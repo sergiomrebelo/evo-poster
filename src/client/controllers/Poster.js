@@ -226,6 +226,9 @@ class Poster {
     evaluate = async (dist) => {
         this.phenotype = await this.draw();
         const layoutSemantics = evaluator.layoutSemantics(this.genotype["grid"]["rows"]["l"], dist, `RELATIVE`, this.genotype["size"]);
+        const visualSemantics = evaluator.visualSemantics(this.genotype["textboxes"], dist);
+
+        console.log (`visualSemantics`, visualSemantics);
 
         this.fitness = layoutSemantics;
 

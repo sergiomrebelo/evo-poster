@@ -10,3 +10,11 @@ export const arrMean = (arr) => {
 export const arrSum = (arr) => {
     return arr.reduce((partialSum, a) => partialSum + a, 0);
 }
+
+export const arrMax = (arr) => {
+    return Math.max(...arr);
+}
+
+export const arrMin = (arr) => {
+    return Math.min(...arr);
+}
