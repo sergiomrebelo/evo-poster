@@ -19,6 +19,7 @@ export class Population {
         this.pause = false;
         this.#data = data;
         this.targetSemanticLayout = this.#calculateSemanticTargetLayout(this.#data);
+        console.log(`targetSemanticLayout`, this.targetSemanticLayout);
 
         this.#typefaces = [];
         this.updated = true;
@@ -106,7 +107,6 @@ export class Population {
         this.population = offspring;
 
         // evaluate
-        console.log ("evolve-eval");
         await this.evaluate();
 
         // log config data to file
@@ -311,12 +311,8 @@ export class Population {
 
     evaluate = async () => {
         // force evaluation of individuals
-        let i=0;
         for (let individual of this.population) {
-            console.group(i);
             await individual.evaluate(this.targetSemanticLayout);
-            i++;
-            console.groupEnd();
         }
 
         // sort the population based on staticPenalty
@@ -356,6 +352,9 @@ export class Population {
 
     #staticPenalty = async () => {
         this.population = this.population.sort((a,b) => (b.fitness-b.constraint) - (a.fitness-a.constraint));
+        // debug
+        // best individual fitness
+        console.log ("best individual=", this.population[0].fitness, this.population[0].constraint);
     }
 
     copy = (obj) => {
@@ -476,7 +475,7 @@ export class Population {
         }
     }
 
-    #calculateSemanticTargetLayout = (data, emphasis= 0.5) => {
+    #calculateSemanticTargetLayout = (data, emphasis= 0.1) => {
         // emphasis is the min importance in layout of neutrals (between 0.1 and 1)
         // emotional score is added to the emphasis
         let dist = [];
