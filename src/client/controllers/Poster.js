@@ -32,7 +32,8 @@ class Poster {
 
         this.genotype = (genotype === null) ? this.#generateGenotype(params) : genotype;
 
-        this.#showGrid = params !== null ? params.display.grid : true;
+        // TODO: grid -> Local sotrage
+        this.#showGrid = params !== null ? params.display.grid : false;
         this.phenotype = null;
         // this.evaluate();
     }
@@ -228,9 +229,10 @@ class Poster {
         const layoutSemantics = evaluator.layoutSemantics(this.genotype["grid"]["rows"]["l"], dist, `RELATIVE`, this.genotype["size"]);
         const visualSemantics = evaluator.visualSemantics(this.genotype["textboxes"], dist);
 
-        console.log (`visualSemantics`, visualSemantics);
+        // console.log (`visualSemantics`, visualSemantics);
 
-        this.fitness = layoutSemantics;
+        // this.fitness = layoutSemantics;
+        this.fitness = visualSemantics;
 
         // constraints
         const legibility = evaluator.legibility(this.sentencesLenght, this.genotype["grid"].getAvailableWidth(), `OVERSET`);
@@ -321,7 +323,7 @@ class Poster {
             show = !this.#showGrid;
         }
         this.#showGrid = show;
-        this.draw(null, "n/d");
+        this.draw();
     }
 }
 
