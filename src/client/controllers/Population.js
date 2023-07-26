@@ -254,8 +254,7 @@ export class Population {
                 tb["typeface"] = this.params["typography"]["typefaces"][r]["family"];
             }
 
-            // size. double probability
-            if (Math.random() < prob*2) {
+            if (Math.random() < prob) {
                 let size = Math.round(tb["size"] + -SIZE_MUTATION_ADJUST+(Math.random()*SIZE_MUTATION_ADJUST));
                 // check if inside typeface min and max thresholds
                 size = Math.min(Math.max(size, ind.minFontSize), ind.maxFontSize);
@@ -271,7 +270,7 @@ export class Population {
                 tb["weight"] = Math.round(Math.random() * (maxWeight - minWeight) + minWeight);
             }
 
-            // strech
+            // stretch
             if (Math.random() < prob) {
                 let availableStretch = this.params["typography"]["typefaces"][selectedTypeface]["stretch"];
                 const minStretch = Math.max(parseInt(availableStretch[0]), this.params["typography"]["stretch"]["min"]);
@@ -317,7 +316,7 @@ export class Population {
 
         // sort the population based on staticPenalty
         // enables visualisation and elite
-        // sort individuals in the population by fitness (fittest first)
+        // sort individuals in the population by fitness (the fittest first)
         await this.#staticPenalty();
     }
 
@@ -434,7 +433,7 @@ export class Population {
             // ensure that phenotype is created
             if (ind.phenotype === null) {
                 this.updated = true;
-                await ind.evaluate(this.targetLayout);
+                await ind.evaluate(this.targetSemanticLayout);
             }
 
             // display

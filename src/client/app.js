@@ -14,6 +14,7 @@ import Population from "./controllers/Population.js";
 import 'bootstrap/scss/bootstrap.scss';
 import './main.css';
 
+
 window.preload = () => {}
 
 window.setup = () => {
@@ -46,6 +47,8 @@ window.keyPressed = () => {
     // }
 }
 
+
+
 export class App extends LitElement {
     static properties = {
         screen: 0,
@@ -60,8 +63,8 @@ export class App extends LitElement {
         this.evolving = false;
 
         const fonts = this.#getAvailableTypefaces();
+
         // evolution controllers
-        //
         this.config = {
             evo: {
                 popSize: Params.evolution.popSize,
@@ -135,7 +138,11 @@ export class App extends LitElement {
         for (let font of Array.from(document.fonts)) {
             if (Params.availableTypefaces.includes(font.family)) {
                 let stretch = font.stretch.replaceAll(`%`, ``);
-                let stretchValues = stretch.split(" ").map((x) => parseInt(x));
+                let stretchValues = [100, 100];
+                if (stretch !== `normal`) {
+                    stretchValues = stretch.split(" ").map((x) => parseInt(x));
+                }
+
                 if (fonts.stretch.min > stretchValues[0]) {
                     fonts.stretch.min = stretchValues[0]
                 }

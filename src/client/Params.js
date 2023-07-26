@@ -45,8 +45,8 @@ export class Params {
     static evolution = {
         popSize: 50,
         noGen: 400,
-        crossoverProb: 0.75,
-        mutationProb: 0.30,
+        crossoverProb: 0.90,
+        mutationProb: 0.10,
         eliteSize: 1
     }
 

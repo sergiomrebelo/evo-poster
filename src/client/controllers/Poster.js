@@ -15,7 +15,7 @@ class Poster {
         this.generation = generation;
         this.ready = false;
         // ensure we use a deep copy of params
-        params = JSON.parse(JSON.stringify(params));
+        this.params = JSON.parse(JSON.stringify(params));
 
         this.fitness = 1;
         this.constraint = 0;
@@ -32,7 +32,6 @@ class Poster {
 
         this.genotype = (genotype === null) ? this.#generateGenotype(params) : genotype;
 
-        // TODO: grid -> Local sotrage
         this.#showGrid = params !== null ? params.display.grid : false;
         this.phenotype = null;
         // this.evaluate();
@@ -75,7 +74,7 @@ class Poster {
             typography: typography,
             images: images
         }
-        return new Poster(this.n, this.generation, null, genotypeCopy);
+        return new Poster(this.n, this.generation, this.params, genotypeCopy);
     }
 
     #generateGenotype = (params) => {
@@ -225,14 +224,16 @@ class Poster {
     }
 
     evaluate = async (dist) => {
+        // TODO: DIVIDE into parts
         this.phenotype = await this.draw();
-        const layoutSemantics = evaluator.layoutSemantics(this.genotype["grid"]["rows"]["l"], dist, `RELATIVE`, this.genotype["size"]);
-        const visualSemantics = evaluator.visualSemantics(this.genotype["textboxes"], dist);
+        const noCurrentTypefaces = this.params["typography"]["typefaces"].length;
 
-        // console.log (`visualSemantics`, visualSemantics);
+        const layoutSemantics = evaluator.layoutSemantics(this.genotype["grid"]["rows"]["l"], dist, `FIXED`, this.genotype["size"]);
+        const visualSemantics = evaluator.visualSemantics(this.genotype["textboxes"], dist, noCurrentTypefaces);
+        const justification = evaluator.legibility(this.sentencesLenght, this.genotype["grid"].getAvailableWidth(), `JUSTIFY`);
 
         // this.fitness = layoutSemantics;
-        this.fitness = visualSemantics;
+        this.fitness = (visualSemantics * 0.3 + layoutSemantics * 0.3 + justification * 0.4);
 
         // constraints
         const legibility = evaluator.legibility(this.sentencesLenght, this.genotype["grid"].getAvailableWidth(), `OVERSET`);
