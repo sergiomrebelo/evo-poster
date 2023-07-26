@@ -19,7 +19,7 @@ export class Population {
         this.pause = false;
         this.#data = data;
         this.targetSemanticLayout = this.#calculateSemanticTargetLayout(this.#data);
-        console.log(`targetSemanticLayout`, this.targetSemanticLayout);
+        // console.log(`targetSemanticLayout`, this.targetSemanticLayout);
 
         this.#typefaces = [];
         this.updated = true;
@@ -56,13 +56,13 @@ export class Population {
         this.updated = true;
     }
 
-    // evolve
     evolve = async () => {
+        const offspring = [];
+
         // clean graphics hidden on canvas
         await this.#cleanGraphics();
         document.getElementById(`generation-number`).textContent=this.generations;
 
-        const offspring = [];
 
         // copy the elite to next generation
         const eliteSize = parseInt(this.params["evo"]["eliteSize"]);
@@ -75,15 +75,6 @@ export class Population {
 
         // select the indices using Stochastic Ranking
         const rank = await this.#stochasticRanking(fitness, constraints);
-
-
-        // sort population
-        // const newPopulation = [];
-        // for (let i=0; i<indices.length; i++) {
-        // newPopulation.push(this.population[indices[i]].copy());
-        // }
-        // this.population = newPopulation;
-
 
         // crossover
         for (let i = eliteSize; i < this.params["evo"]["popSize"]; i++) {
@@ -353,7 +344,7 @@ export class Population {
         this.population = this.population.sort((a,b) => (b.fitness-b.constraint) - (a.fitness-a.constraint));
         // debug
         // best individual fitness
-        console.log ("best individual=", this.population[0].fitness, this.population[0].constraint);
+        // console.log ("best individual=", this.population[0].fitness, this.population[0].constraint);
     }
 
     copy = (obj) => {

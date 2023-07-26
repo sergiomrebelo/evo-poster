@@ -224,7 +224,6 @@ class Poster {
     }
 
     evaluate = async (dist) => {
-        // TODO: DIVIDE into parts
         this.phenotype = await this.draw();
         const noCurrentTypefaces = this.params["typography"]["typefaces"].length;
 
