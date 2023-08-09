@@ -232,7 +232,13 @@ class Poster {
         const justification = evaluator.legibility(this.sentencesLenght, this.genotype["grid"].getAvailableWidth(), `JUSTIFY`);
 
         // this.fitness = layoutSemantics;
-        this.fitness = (visualSemantics * 0.3 + layoutSemantics * 0.3 + justification * 0.4);
+        // this.fitness = (visualSemantics * 0.3 + layoutSemantics * 0.3 + justification * 0.4);
+        this.fitness = visualSemantics;
+
+        console.group();
+        console.log(JSON.stringify(this.genotype["textboxes"]), JSON.stringify(dist), JSON.stringify(noCurrentTypefaces));
+        console.log("visualSemantics", visualSemantics);
+        console.groupEnd();
 
         // constraints
         const legibility = evaluator.legibility(this.sentencesLenght, this.genotype["grid"].getAvailableWidth(), `OVERSET`);
