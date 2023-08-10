@@ -9,30 +9,6 @@ export class Params {
     ];
 
 
-    static availableTypefaces = [
-        'Amstelvar', 'Anybody', 'Barlow', 'Cabin', 'Emberly', 'Epilogue', 'IBMPlexSans', 'Inconsolata'
-    ]
-
-    static availableTypefacesInfo = {
-        'Amstelvar':{
-            leading: 1.05
-        }, 'Anybody':{
-            leading: 1.05
-        }, 'Barlow':{
-            leading: 1.05
-        }, 'Cabin':{
-            leading: 1.05
-        }, 'Emberly':{
-            leading: 1.05
-        }, 'Epilogue':{
-            leading: 1.05
-        }, 'IBMPlexSans':{
-            leading: 1.05
-        }, 'Inconsolata':{
-            leading: 1.05
-        }
-    }
-
     static visualisationGrid = {
         height: 423,
         width: 300,

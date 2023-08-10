@@ -10,9 +10,11 @@ import {ErrHandler} from "./components/ErrHandler.js";
 import {Interface} from "./components/Interface.js"
 import {Header} from "./components/Header.js";
 import Population from "./controllers/Population.js";
+import * as config from '../../evo-poster.config.js';
 
 import 'bootstrap/scss/bootstrap.scss';
 import './main.css';
+
 
 
 window.preload = () => {}
@@ -61,6 +63,7 @@ export class App extends LitElement {
         this.results = null;
         this.screen = 0;
         this.evolving = false;
+        this.params = config.default;
 
         const fonts = this.#getAvailableTypefaces();
 
@@ -136,7 +139,7 @@ export class App extends LitElement {
         }
 
         for (let font of Array.from(document.fonts)) {
-            if (Params.availableTypefaces.includes(font.family)) {
+            if (Object.keys(this.params.typography).includes(font.family)) {
                 let stretch = font.stretch.replaceAll(`%`, ``);
                 let stretchValues = [100, 100];
                 if (stretch !== `normal`) {
@@ -160,7 +163,9 @@ export class App extends LitElement {
                 fonts.typefaces.push({
                     family: font.family,
                     weight: weightValues,
-                    stretch: stretchValues
+                    stretch: stretchValues,
+                    tags: this.params.typography[font.family]["tags"],
+                    leading: this.params.typography[font.family]["leading"]
                 });
             }
         }

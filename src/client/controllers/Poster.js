@@ -4,6 +4,7 @@ import backgroundStyles from "./BackgroundStyles.js";
 import * as evaluator from "../../@evoposter/evaluator/src/index.mjs";
 import {randomScheme} from "./ColorGenerator.js";
 import {sumArr} from "../utils.js";
+import {semanticsEmphasis} from "../../@evoposter/evaluator/src/index.mjs";
 
 
 class Poster {
@@ -117,7 +118,7 @@ class Poster {
             selectedStretch = Math.max(stretchDefaultParams[0], Math.min(selectedStretch, stretchDefaultParams[1]));
 
             // define initial size
-            const leading = Params.availableTypefacesInfo[Params.availableTypefaces[selectedTypeface]]["leading"];
+            const leading = this.params.typography.typefaces[selectedTypeface]["leading"];
             let size = Math.round(grid.rows.l[0]) / leading;
             size += Math.round(-(size*Params.typography.range)+(Math.random()*(size*Params.typography.range)));
             size = Math.max(
@@ -223,22 +224,19 @@ class Poster {
         return this.phenotype;
     }
 
-    evaluate = async (dist) => {
+    evaluate = async (dist, emotionalData = {predominant: []}) => {
         this.phenotype = await this.draw();
         const noCurrentTypefaces = this.params["typography"]["typefaces"].length;
 
-        const layoutSemantics = evaluator.layoutSemantics(this.genotype["grid"]["rows"]["l"], dist, `FIXED`, this.genotype["size"]);
-        const visualSemantics = evaluator.visualSemantics(this.genotype["textboxes"], dist, noCurrentTypefaces);
-        const justification = evaluator.legibility(this.sentencesLenght, this.genotype["grid"].getAvailableWidth(), `JUSTIFY`);
+        // const layoutSemantics = evaluator.layoutSemantics(this.genotype["grid"]["rows"]["l"], dist, `FIXED`, this.genotype["size"]);
+        // const semanticsEmphasis = evaluator.semanticsEmphasis(this.genotype["textboxes"], dist, noCurrentTypefaces);
+        //  const justification = evaluator.legibility(this.sentencesLenght, this.genotype["grid"].getAvailableWidth(), `JUSTIFY`);
+        const visualSemantics = evaluator.semanticsVisuals(emotionalData, this.genotype["textboxes"], this.genotype.background.colors, this.params.typography.typefaces);
+
 
         // this.fitness = layoutSemantics;
         // this.fitness = (visualSemantics * 0.3 + layoutSemantics * 0.3 + justification * 0.4);
         this.fitness = visualSemantics;
-
-        console.group();
-        console.log(JSON.stringify(this.genotype["textboxes"]), JSON.stringify(dist), JSON.stringify(noCurrentTypefaces));
-        console.log("visualSemantics", visualSemantics);
-        console.groupEnd();
 
         // constraints
         const legibility = evaluator.legibility(this.sentencesLenght, this.genotype["grid"].getAvailableWidth(), `OVERSET`);

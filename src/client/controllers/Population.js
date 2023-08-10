@@ -19,7 +19,7 @@ export class Population {
         this.pause = false;
         this.#data = data;
         this.targetSemanticLayout = this.#calculateSemanticTargetLayout(this.#data);
-        // console.log(`targetSemanticLayout`, this.targetSemanticLayout);
+        this.emotionaData = this.#data["classification"]["emotions"]["data"];
 
         this.#typefaces = [];
         this.updated = true;
@@ -156,7 +156,8 @@ export class Population {
         child.genotype["grid"] = new Grid(this.params.size, 2, this.params.sentences.length, this.params.size.margin);
         for (const i in child.genotype["textboxes"]) {
             const tb = child.genotype["textboxes"][i];
-            const leading = Params.availableTypefacesInfo[tb["typeface"]].leading;
+            const typefaceIndex = this.params["typography"]["typefaces"].map(t => t.family).indexOf(tb["typeface"]);
+            const leading = this.params["typography"]["typefaces"][typefaceIndex]["leading"];
             child.genotype["grid"].defineRow(i, (tb["size"] * leading), child.genotype["typography"]["verticalAlignment"]);
         }
         // background
@@ -277,7 +278,8 @@ export class Population {
             ind.genotype["grid"] = new Grid(this.params.size, 2, this.params.sentences.length, this.params.size.margin);
             for (let i in ind.genotype["textboxes"]) {
                 const tb = ind.genotype["textboxes"][i];
-                const leading = Params.availableTypefacesInfo[tb["typeface"]].leading;
+                const typefaceIndex = this.params["typography"]["typefaces"].map(t => t.family).indexOf(tb["typeface"]);
+                const leading = this.params["typography"]["typefaces"][typefaceIndex]["leading"];
                 ind.genotype["grid"].defineRow(i, (tb["size"] * leading), ind.genotype["typography"]["verticalAlignment"]);
             }
         }
@@ -302,8 +304,12 @@ export class Population {
     evaluate = async () => {
         // force evaluation of individuals
         for (let individual of this.population) {
-            await individual.evaluate(this.targetSemanticLayout);
+            console.group ();
+            console.log (`# emotional data`, this.emotionaData);
+            await individual.evaluate(this.targetSemanticLayout, this.emotionaData);
+            console.groupEnd();
         }
+
 
         // sort the population based on staticPenalty
         // enables visualisation and elite
@@ -424,7 +430,8 @@ export class Population {
             // ensure that phenotype is created
             if (ind.phenotype === null) {
                 this.updated = true;
-                await ind.evaluate(this.targetSemanticLayout);
+                console.log (`outsite=${this.emotionaData}`);
+                await ind.evaluate(this.targetSemanticLayout, this.emotionaData);
             }
 
             // display
