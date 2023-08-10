@@ -19,13 +19,13 @@
 
 const MAX_COLOR_DISTANCE = 441.67;
 
-
-import * as config from "../../visual-semantics.config.js";
+import * as configurationFile from "../../visual-semantics.config.js";
 import {arrMean, colorDistance, hexToRGB, constraint} from "../utils.js";
 
 
-export const compute = async (data, textboxes, globalFeatures, typefaceData) => {
-    const emotion = data.predominant.emotion;
+export const compute = async (data, textboxes, background, typefaceData, config = configurationFile) => {
+
+    let emotion = data.predominant.emotion;
 
     if (config["default"][emotion] === undefined) return 1;
 
@@ -49,9 +49,10 @@ export const compute = async (data, textboxes, globalFeatures, typefaceData) => 
             }
             typefaceColorsDistances.push(typefaceColorsDist);
         }
+
         meanTypefaceColorDistance = typefaceColorsDistances.length < 1 ? 1 : arrMean(typefaceColorsDistances);
         meanTypefaceColorDistance /= MAX_COLOR_DISTANCE;
-        meanTypefaceColorDistance = constraint(meanTypefaceColorDistance, 0, 1);
+        meanTypefaceColorDistance = constraint(1-meanTypefaceColorDistance, 0, 1);
     }
 
     // background colour
@@ -59,7 +60,7 @@ export const compute = async (data, textboxes, globalFeatures, typefaceData) => 
     if (targetBackgroundColors !== undefined && targetBackgroundColors.length !== 0) {
         let backgroundColorsDistances = [];
         meanTypefaceBackgroundDistance = 0;
-        for (let c of globalFeatures) {
+        for (let c of background) {
             c = hexToRGB(c);
             let backgroundColorsDist = Number.MAX_VALUE;
             for (let targetColor of targetBackgroundColors) {
@@ -74,7 +75,7 @@ export const compute = async (data, textboxes, globalFeatures, typefaceData) => 
 
         meanTypefaceBackgroundDistance = meanTypefaceBackgroundDistance.length < 1 ? 1 : arrMean(backgroundColorsDistances);
         meanTypefaceBackgroundDistance /= MAX_COLOR_DISTANCE;
-        meanTypefaceBackgroundDistance = constraint(meanTypefaceBackgroundDistance, 0, 1);
+        meanTypefaceBackgroundDistance = constraint(1-meanTypefaceBackgroundDistance, 0, 1);
     }
 
     // typeface
@@ -98,6 +99,8 @@ export const compute = async (data, textboxes, globalFeatures, typefaceData) => 
     }
 
     return (meanTypefaceColorDistance + meanTypefaceBackgroundDistance + meanTypefaceError)/3;
+
+
 }
 
 

@@ -1,4 +1,4 @@
-import {visualSemantics} from '../../src/index.mjs'
+import {semanticsEmphasis} from '../../src/index.mjs'
 
 const TESTING_PARAMS = [
     {
@@ -60,11 +60,11 @@ const TESTING_PARAMS = [
 ];
 
 
-describe(`Testing Visual Semantics metric`, () => {
+describe(`Testing Semantics Emphasis metric`, () => {
     for (let i in TESTING_PARAMS) {
         let params = TESTING_PARAMS[i];
         test(`Test ${i}`, async () => {
-           const res = visualSemantics(
+           const res = semanticsEmphasis(
                 params.textboxes, params.dist, params.noTypefaces
             );
 

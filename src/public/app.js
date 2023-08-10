@@ -6098,6 +6098,11 @@ var visualSemantics_config = {
     }
 };
 
+var configurationFile = /*#__PURE__*/Object.freeze({
+  __proto__: null,
+  default: visualSemantics_config
+});
+
 /**
  * Semantic Visuals Measure
  *
@@ -6120,27 +6125,27 @@ var visualSemantics_config = {
 const MAX_COLOR_DISTANCE = 441.67;
 
 
-const compute = async (data, textboxes, globalFeatures, typefaceData) => {
-    const emotion = data.predominant.emotion;
+const compute = async (data, textboxes, background, typefaceData, config = configurationFile) => {
 
-    if (visualSemantics_config[emotion] === undefined) return 1;
+    let emotion = data.predominant.emotion;
 
-    const targetTypefaceColors = visualSemantics_config[emotion]["color"]["typography"];
-    const targetBackgroundColors = visualSemantics_config[emotion]["color"]["background"];
-    const targetTypographyFeatures = visualSemantics_config[emotion]["typefaces"];
+    if (config["default"][emotion] === undefined) return 1;
+
+    const targetTypefaceColors = config["default"][emotion]["color"]["typography"];
+    const targetBackgroundColors = config["default"][emotion]["color"]["background"];
+    const targetTypographyFeatures = config["default"][emotion]["typefaces"];
 
     // typography colour
     let meanTypefaceColorDistance = 1;
     if (targetTypefaceColors !== undefined && targetTypefaceColors.length > 0) {
         let typefaceColorsDistances = [];
         for (let t of textboxes) {
-            console.log (t);
+            console.log ("t===", t);
+            console.log (`t.color`, t.color);
             let c = hexToRGB(t.color);
-            console.log (`levels--c`, c);
             let typefaceColorsDist = Number.MAX_VALUE;
             for (let targetColor of targetTypefaceColors) {
                 targetColor = hexToRGB(targetColor);
-                console.log (`DISTANCE=`, c, targetColor);
                 let distance = colorDistance(c, targetColor);
                 if (distance < typefaceColorsDist) {
                     typefaceColorsDist = distance;
@@ -6148,9 +6153,10 @@ const compute = async (data, textboxes, globalFeatures, typefaceData) => {
             }
             typefaceColorsDistances.push(typefaceColorsDist);
         }
+
         meanTypefaceColorDistance = typefaceColorsDistances.length < 1 ? 1 : arrMean(typefaceColorsDistances);
         meanTypefaceColorDistance /= MAX_COLOR_DISTANCE;
-        meanTypefaceColorDistance = constraint(meanTypefaceColorDistance, 0, 1);
+        meanTypefaceColorDistance = constraint(1-meanTypefaceColorDistance, 0, 1);
     }
 
     // background colour
@@ -6158,7 +6164,8 @@ const compute = async (data, textboxes, globalFeatures, typefaceData) => {
     if (targetBackgroundColors !== undefined && targetBackgroundColors.length !== 0) {
         let backgroundColorsDistances = [];
         meanTypefaceBackgroundDistance = 0;
-        for (let c of globalFeatures) {
+        for (let c of background) {
+            console.log (`c.color`, c);
             c = hexToRGB(c);
             let backgroundColorsDist = Number.MAX_VALUE;
             for (let targetColor of targetBackgroundColors) {
@@ -6173,9 +6180,8 @@ const compute = async (data, textboxes, globalFeatures, typefaceData) => {
 
         meanTypefaceBackgroundDistance = meanTypefaceBackgroundDistance.length < 1 ? 1 : arrMean(backgroundColorsDistances);
         meanTypefaceBackgroundDistance /= MAX_COLOR_DISTANCE;
-        meanTypefaceBackgroundDistance = constraint(meanTypefaceBackgroundDistance, 0, 1);
+        meanTypefaceBackgroundDistance = constraint(1-meanTypefaceBackgroundDistance, 0, 1);
     }
-
 
     // typeface
     let meanTypefaceError = 1;
@@ -6197,7 +6203,11 @@ const compute = async (data, textboxes, globalFeatures, typefaceData) => {
         meanTypefaceError = constraint(meanTypefaceError, 0, 1);
     }
 
+    console.log ("VALUE", (meanTypefaceColorDistance + meanTypefaceBackgroundDistance + meanTypefaceError)/3, meanTypefaceColorDistance, meanTypefaceBackgroundDistance, meanTypefaceError);
+
     return (meanTypefaceColorDistance + meanTypefaceBackgroundDistance + meanTypefaceError)/3;
+
+
 };
 
 /**
@@ -6210,6 +6220,7 @@ const compute = async (data, textboxes, globalFeatures, typefaceData) => {
  */
 
 
+// constraints
 const legibility = compute$2;
 const gridAppropriateSize = compute$1;
 const semanticsVisuals = compute;

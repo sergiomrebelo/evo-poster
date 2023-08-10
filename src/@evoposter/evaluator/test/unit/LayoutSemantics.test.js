@@ -1,4 +1,4 @@
-import {layoutSemantics} from '../../src/index.mjs'
+import {semanticsLayout} from '../../src/index.mjs'
 
 const TESTING_PARAMS = [
     {
@@ -95,7 +95,7 @@ describe(`Testing Layout Semantics metric`, () => {
     for (let i in TESTING_PARAMS) {
         let params = TESTING_PARAMS[i];
         test(`Test ${i}`, async () => {
-            const res = layoutSemantics(
+            const res = semanticsLayout(
                 params.textboxesHeights, params.dist,
                 params.type, params.genotype
             );
