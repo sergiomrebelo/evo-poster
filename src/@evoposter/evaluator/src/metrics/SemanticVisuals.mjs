@@ -19,7 +19,7 @@
 
 const MAX_COLOR_DISTANCE = 441.67;
 
-import * as configurationFile from "../../visual-semantics.config.js";
+import * as configurationFile from "../../semantics-visual.config.js";
 import {arrMean, colorDistance, hexToRGB, constraint} from "../utils.js";
 
 

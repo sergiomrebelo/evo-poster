@@ -6060,7 +6060,7 @@ const compute$1 = (
     return invalid ? 1 : 0;
 };
 
-var visualSemantics_config = {
+var semanticsVisual_config = {
     anger : {
         color: {
             typography: [`#ff0000`, `#00ff00`],
@@ -6100,7 +6100,7 @@ var visualSemantics_config = {
 
 var configurationFile = /*#__PURE__*/Object.freeze({
   __proto__: null,
-  default: visualSemantics_config
+  default: semanticsVisual_config
 });
 
 /**
@@ -6140,8 +6140,6 @@ const compute = async (data, textboxes, background, typefaceData, config = confi
     if (targetTypefaceColors !== undefined && targetTypefaceColors.length > 0) {
         let typefaceColorsDistances = [];
         for (let t of textboxes) {
-            console.log ("t===", t);
-            console.log (`t.color`, t.color);
             let c = hexToRGB(t.color);
             let typefaceColorsDist = Number.MAX_VALUE;
             for (let targetColor of targetTypefaceColors) {
@@ -6165,7 +6163,6 @@ const compute = async (data, textboxes, background, typefaceData, config = confi
         let backgroundColorsDistances = [];
         meanTypefaceBackgroundDistance = 0;
         for (let c of background) {
-            console.log (`c.color`, c);
             c = hexToRGB(c);
             let backgroundColorsDist = Number.MAX_VALUE;
             for (let targetColor of targetBackgroundColors) {
@@ -6202,8 +6199,6 @@ const compute = async (data, textboxes, background, typefaceData, config = confi
         meanTypefaceError = fontsTags.length < 1 ? 1 : arrMean(fontsTags);
         meanTypefaceError = constraint(meanTypefaceError, 0, 1);
     }
-
-    console.log ("VALUE", (meanTypefaceColorDistance + meanTypefaceBackgroundDistance + meanTypefaceError)/3, meanTypefaceColorDistance, meanTypefaceBackgroundDistance, meanTypefaceError);
 
     return (meanTypefaceColorDistance + meanTypefaceBackgroundDistance + meanTypefaceError)/3;
 
