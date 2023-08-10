@@ -10,7 +10,8 @@
 import * as Legibility from "./metrics/Legibility.mjs";
 import * as GridAppropriateSize from "./metrics/GridAppropriateSize.mjs";
 import * as LayoutSemantics from "./metrics/LayoutSemantics.mjs";
-import * as VisualSemantics from "./metrics/VisualSemantics.mjs";
+import * as SemanticsEmphasis from "./metrics/SemanticsEmphasis.mjs";
+import * as SemanticsVisuals from "./metrics/SemanticVisuals.mjs";
 
 export const info = () => {
     console.log ("Evaluator working");
@@ -19,6 +20,7 @@ export const info = () => {
 export const legibility = Legibility.compute;
 export const gridAppropriateSize = GridAppropriateSize.compute;
 export const layoutSemantics = LayoutSemantics.compute;
-export const visualSemantics = VisualSemantics.compute;
+export const semanticsEmphasis = SemanticsEmphasis.compute;
+export const semanticsVisuals = SemanticsVisuals.compute;
 
 export { info as default };

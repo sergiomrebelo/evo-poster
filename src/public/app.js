@@ -5894,7 +5894,7 @@ const map = (value, minA, maxA, minB, maxB) => {
 };
 
 const constraint = (value, min, max) => {
-    return Math.min (max, Math.max(min, value));
+    return Math.min(max, Math.max(min, value));
 };
 
 const arrMean = (arr) => {
@@ -5902,7 +5902,16 @@ const arrMean = (arr) => {
     return (sum / arr.length) || 0;
 };
 
+
 const hexToRGB = (hex) => {
+    if (hex["levels"]) {
+        return {
+            r: parseInt(hex["levels"][0]),
+            g: parseInt(hex["levels"][1]),
+            b: parseInt(hex["levels"][2])
+        }
+    }
+
     let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
     return result ? {
         r: parseInt(result[1], 16),
@@ -6057,7 +6066,7 @@ var visualSemantics_config = {
             typography: [`#ff0000`, `#00ff00`],
             background: [`#ff0000`]
         },
-        typefaces: [`sans-serif`]
+        typefaces: [`sans-serif`, `neo-grotesque`]
     },
     joy: {
         color: {
@@ -6071,7 +6080,7 @@ var visualSemantics_config = {
             typography: [],
             background: [`#0000ff`, `#00ff00`]
         },
-        typefaces: [`grotesk`]
+        typefaces: [`neo-grotesque`]
     },
     sadness: {
         color: {
@@ -6108,31 +6117,30 @@ var visualSemantics_config = {
  * Version: 1.0.0 (November 2023)
  */
 
-
 const MAX_COLOR_DISTANCE = 441.67;
 
-const compute = async (data, textboxes, globalFeatures, systemTypefaceConfigs) => {
-    const emotion = data.predominant.emotion;
 
-    console.log(`EMOTIONS`, emotion);
-    console.log (`SYSTEM_TYPEFACE_CONFIG`, systemTypefaceConfigs);
+const compute = async (data, textboxes, globalFeatures, typefaceData) => {
+    const emotion = data.predominant.emotion;
 
     if (visualSemantics_config[emotion] === undefined) return 1;
 
     const targetTypefaceColors = visualSemantics_config[emotion]["color"]["typography"];
     const targetBackgroundColors = visualSemantics_config[emotion]["color"]["background"];
-    visualSemantics_config[emotion]["typefaces"];
+    const targetTypographyFeatures = visualSemantics_config[emotion]["typefaces"];
 
     // typography colour
-    // TODO function
     let meanTypefaceColorDistance = 1;
     if (targetTypefaceColors !== undefined && targetTypefaceColors.length > 0) {
         let typefaceColorsDistances = [];
         for (let t of textboxes) {
+            console.log (t);
             let c = hexToRGB(t.color);
+            console.log (`levels--c`, c);
             let typefaceColorsDist = Number.MAX_VALUE;
             for (let targetColor of targetTypefaceColors) {
                 targetColor = hexToRGB(targetColor);
+                console.log (`DISTANCE=`, c, targetColor);
                 let distance = colorDistance(c, targetColor);
                 if (distance < typefaceColorsDist) {
                     typefaceColorsDist = distance;
@@ -6146,7 +6154,6 @@ const compute = async (data, textboxes, globalFeatures, systemTypefaceConfigs) =
     }
 
     // background colour
-    // TODO: function
     let meanTypefaceBackgroundDistance = 1;
     if (targetBackgroundColors !== undefined && targetBackgroundColors.length !== 0) {
         let backgroundColorsDistances = [];
@@ -6170,7 +6177,27 @@ const compute = async (data, textboxes, globalFeatures, systemTypefaceConfigs) =
     }
 
 
-    return (meanTypefaceColorDistance + meanTypefaceBackgroundDistance)/3;
+    // typeface
+    let meanTypefaceError = 1;
+    if (targetTypographyFeatures !== undefined && targetTypographyFeatures.length > 0) {
+        let fontsTags = [];
+        for (let t of textboxes) {
+            let tbTagsValue = 0;
+            const typefaceIndex = typefaceData.map(t => t.family).indexOf(t["typeface"]);
+            const tags = typefaceData[typefaceIndex]["tags"];
+            for (let t of targetTypographyFeatures) {
+                if (tags.includes(t)) {
+                    tbTagsValue += (1/targetTypographyFeatures.length);
+                }
+            }
+            fontsTags.push(tbTagsValue);
+        }
+
+        meanTypefaceError = fontsTags.length < 1 ? 1 : arrMean(fontsTags);
+        meanTypefaceError = constraint(meanTypefaceError, 0, 1);
+    }
+
+    return (meanTypefaceColorDistance + meanTypefaceBackgroundDistance + meanTypefaceError)/3;
 };
 
 /**

@@ -1,5 +1,5 @@
 /**
- * Visual Semantics
+ * Semantics Emphasis on Visuals
  *
  * Measure the appropriate of the visual features
  * based on the importance of the content
