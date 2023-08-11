@@ -20,7 +20,9 @@ import {arrMean} from "../utils.js";
 const A = 10;
 
 export const compute = (heights) => {
-  heights = [100,100,100,100,100];
+    if (heights.length < 2) {
+        return 1;
+    }
 
     const histogram = heights;
 
@@ -33,8 +35,6 @@ export const compute = (heights) => {
     }
 
     const res = arrMean(results);
-
-    console.log (`res regularity=${res}`, results);
 
     return res;
 }

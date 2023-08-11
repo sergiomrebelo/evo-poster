@@ -24,6 +24,9 @@ const A = 10;
 const WEIGHTS = [.8, .2];
 
 export const compute = (sentenceWidth, textAlignment, weights = WEIGHTS) => {
+    if (sentenceWidth.length < 2) {
+        return 1;
+    }
 
     let histogram = sentenceWidth;
     let results = [];

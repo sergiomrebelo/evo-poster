@@ -6054,13 +6054,11 @@ const compute$1 = (
 const A = 10;
 
 const compute = (heights) => {
-  heights = [100,100,0,100,100];
-
+    if (heights.length < 2) {
+        return 1;
+    }
 
     const histogram = heights;
-
-
-
 
     let results = [];
 
@@ -6071,8 +6069,6 @@ const compute = (heights) => {
     }
 
     const res = arrMean(results);
-
-    console.log (`res regularity=${res}`, results);
 
     return res;
 };
