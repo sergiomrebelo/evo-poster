@@ -6063,9 +6063,6 @@ const compute = (sentenceWidth, textAlignment, weights = WEIGHTS) => {
     let histogram = sentenceWidth;
     let results = [];
 
-    histogram = [100,100,100,100];
-    textAlignment = [0,1,2,5];
-
     for (let i = 0; i<histogram.length-1; i++) {
         let z = Math.abs(histogram[i] - histogram [i+1]);
         let v = A / (A + z);
@@ -6076,12 +6073,12 @@ const compute = (sentenceWidth, textAlignment, weights = WEIGHTS) => {
     let availableTextAligns = textAlignment.filter((value, index, array) => array.indexOf(value) === index).length;
     let resTextAlign = 1/availableTextAligns;
 
-
+    // sum product
     let res = [resHistogramDif, resTextAlign].reduce((s, v, i) => s + v * weights[i], 0);
 
-    console.log (`res=${resHistogramDif}`, availableTextAligns, resTextAlign, res);
+    console.log (sentenceWidth, textAlignment, res);
 
-    return Math.random();
+    return res;
 };
 
 /**

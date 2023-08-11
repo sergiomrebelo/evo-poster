@@ -41,6 +41,8 @@ export const compute = (sentenceWidth, textAlignment, weights = WEIGHTS) => {
     // sum product
     let res = [resHistogramDif, resTextAlign].reduce((s, v, i) => s + v * weights[i], 0);
 
+    console.log (sentenceWidth, textAlignment, res);
+
     return res;
 }
 
