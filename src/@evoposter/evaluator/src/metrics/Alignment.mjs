@@ -1,8 +1,8 @@
 /**
  * Alignment metric
  *
- * Estimate if the vertical alignment of text boxes follows a regular pattern.
- * See Harrington et al. (2004).
+ * Estimate if the horizontal alignment of text boxes follows a regular pattern
+ * Based on Harrington et al. (2004).
  *
  * Include the check if the text Alignment is the same (part B).
  * User can modify the value of WEIGHTS when necessary.
@@ -40,8 +40,6 @@ export const compute = (sentenceWidth, textAlignment, weights = WEIGHTS) => {
 
     // sum product
     let res = [resHistogramDif, resTextAlign].reduce((s, v, i) => s + v * weights[i], 0);
-
-    console.log (sentenceWidth, textAlignment, res);
 
     return res;
 }

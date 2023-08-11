@@ -6037,11 +6037,9 @@ const compute$1 = (
 /**
  * Alignment metric
  *
- * Estimate if the vertical alignment of text boxes follows a regular pattern.
- * See Harrington et al. (2004).
+ * Estimate if the text boxes follows a regular vertical pattern
+ * Based on Harrington et al. (2004).
  *
- * Include the check if the text Alignment is the same (part B).
- * User can modify the value of WEIGHTS when necessary.
  *
  * return a value between 1 (good) and 0 (bad)
  *
@@ -6053,14 +6051,17 @@ const compute$1 = (
  * Version: 1.5.0 (November 2023)
  */
 
-
-// limit to the non-linear function
 const A = 10;
-const WEIGHTS = [.8, .2];
 
-const compute = (sentenceWidth, textAlignment, weights = WEIGHTS) => {
+const compute = (heights) => {
+  heights = [100,100,0,100,100];
 
-    let histogram = sentenceWidth;
+
+    const histogram = heights;
+
+
+
+
     let results = [];
 
     for (let i = 0; i<histogram.length-1; i++) {
@@ -6069,14 +6070,9 @@ const compute = (sentenceWidth, textAlignment, weights = WEIGHTS) => {
         results.push(v);
     }
 
-    let resHistogramDif = arrMean(results);
-    let availableTextAligns = textAlignment.filter((value, index, array) => array.indexOf(value) === index).length;
-    let resTextAlign = 1/availableTextAligns;
+    const res = arrMean(results);
 
-    // sum product
-    let res = [resHistogramDif, resTextAlign].reduce((s, v, i) => s + v * weights[i], 0);
-
-    console.log (sentenceWidth, textAlignment, res);
+    console.log (`res regularity=${res}`, results);
 
     return res;
 };
@@ -6094,9 +6090,7 @@ const compute = (sentenceWidth, textAlignment, weights = WEIGHTS) => {
 // constraints
 const legibility = compute$2;
 const gridAppropriateSize = compute$1;
-
-// aesthetics
-const alignment = compute;
+const regularity = compute;
 
 function clamp(value, min, max) {
   return Math.max(min, Math.min(value, max));
@@ -6804,12 +6798,12 @@ class Poster {
         //  const justification = evaluator.legibility(this.sentencesLenght, this.genotype["grid"].getAvailableWidth(), `JUSTIFY`);
         // const visualSemantics = evaluator.semanticsVisuals(emotionalData, this.genotype["textboxes"], this.genotype.background.colors, this.params.typography.typefaces);
 
-
-        const alignment$1 = alignment(this.sentencesLenght, this.genotype["textboxes"].map(tb => tb["alignment"]));
+        // const alignment = evaluator.alignment(this.sentencesLenght, this.genotype["textboxes"].map(tb => tb["alignment"]));
+        const regularity$1 = regularity(this.genotype["grid"]["rows"]["l"]);
 
         // this.fitness = layoutSemantics;
         // this.fitness = (visualSemantics * 0.3 + layoutSemantics * 0.3 + justification * 0.4);
-        this.fitness = alignment$1;
+        this.fitness = regularity$1;
 
         // constraints
         const legibility$1 = legibility(this.sentencesLenght, this.genotype["grid"].getAvailableWidth(), `OVERSET`);

@@ -226,12 +226,12 @@ class Poster {
         //  const justification = evaluator.legibility(this.sentencesLenght, this.genotype["grid"].getAvailableWidth(), `JUSTIFY`);
         // const visualSemantics = evaluator.semanticsVisuals(emotionalData, this.genotype["textboxes"], this.genotype.background.colors, this.params.typography.typefaces);
 
-
-        const alignment = evaluator.alignment(this.sentencesLenght, this.genotype["textboxes"].map(tb => tb["alignment"]));
+        // const alignment = evaluator.alignment(this.sentencesLenght, this.genotype["textboxes"].map(tb => tb["alignment"]));
+        const regularity = evaluator.regularity(this.genotype["grid"]["rows"]["l"]);
 
         // this.fitness = layoutSemantics;
         // this.fitness = (visualSemantics * 0.3 + layoutSemantics * 0.3 + justification * 0.4);
-        this.fitness = alignment;
+        this.fitness = regularity;
 
         // constraints
         const legibility = evaluator.legibility(this.sentencesLenght, this.genotype["grid"].getAvailableWidth(), `OVERSET`);
