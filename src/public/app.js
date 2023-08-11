@@ -16,7 +16,7 @@ const t$2=window,e$5=t$2.ShadowRoot&&(void 0===t$2.ShadyCSS||t$2.ShadyCSS.native
  * Copyright 2017 Google LLC
  * SPDX-License-Identifier: BSD-3-Clause
  */
-var t$1;const i$1=window,s$1=i$1.trustedTypes,e$3=s$1?s$1.createPolicy("lit-html",{createHTML:t=>t}):void 0,o$2="$lit$",n$1=`lit$${(Math.random()+"").slice(9)}$`,l$1="?"+n$1,h=`<${l$1}>`,r=document,d=()=>r.createComment(""),u=t=>null===t||"object"!=typeof t&&"function"!=typeof t,c=Array.isArray,v=t=>c(t)||"function"==typeof(null==t?void 0:t[Symbol.iterator]),a="[ \t\n\f\r]",f=/<(?:(!--|\/[^a-zA-Z])|(\/?[a-zA-Z][^>\s]*)|(\/?$))/g,_=/-->/g,m=/>/g,p=RegExp(`>|${a}(?:([^\\s"'>=/]+)(${a}*=${a}*(?:[^ \t\n\f\r"'\`<>=]|("|')|))|$)`,"g"),g=/'/g,$=/"/g,y=/^(?:script|style|textarea|title)$/i,w=t=>(i,...s)=>({_$litType$:t,strings:i,values:s}),x=w(1),T=Symbol.for("lit-noChange"),A=Symbol.for("lit-nothing"),E=new WeakMap,C=r.createTreeWalker(r,129,null,!1),P=(t,i)=>{const s=t.length-1,l=[];let r,d=2===i?"<svg>":"",u=f;for(let i=0;i<s;i++){const s=t[i];let e,c,v=-1,a=0;for(;a<s.length&&(u.lastIndex=a,c=u.exec(s),null!==c);)a=u.lastIndex,u===f?"!--"===c[1]?u=_:void 0!==c[1]?u=m:void 0!==c[2]?(y.test(c[2])&&(r=RegExp("</"+c[2],"g")),u=p):void 0!==c[3]&&(u=p):u===p?">"===c[0]?(u=null!=r?r:f,v=-1):void 0===c[1]?v=-2:(v=u.lastIndex-c[2].length,e=c[1],u=void 0===c[3]?p:'"'===c[3]?$:g):u===$||u===g?u=p:u===_||u===m?u=f:(u=p,r=void 0);const w=u===p&&t[i+1].startsWith("/>")?" ":"";d+=u===f?s+h:v>=0?(l.push(e),s.slice(0,v)+o$2+s.slice(v)+n$1+w):s+n$1+(-2===v?(l.push(void 0),i):w);}const c=d+(t[s]||"<?>")+(2===i?"</svg>":"");if(!Array.isArray(t)||!t.hasOwnProperty("raw"))throw Error("invalid template strings array");return [void 0!==e$3?e$3.createHTML(c):c,l]};class V{constructor({strings:t,_$litType$:i},e){let h;this.parts=[];let r=0,u=0;const c=t.length-1,v=this.parts,[a,f]=P(t,i);if(this.el=V.createElement(a,e),C.currentNode=this.el.content,2===i){const t=this.el.content,i=t.firstChild;i.remove(),t.append(...i.childNodes);}for(;null!==(h=C.nextNode())&&v.length<c;){if(1===h.nodeType){if(h.hasAttributes()){const t=[];for(const i of h.getAttributeNames())if(i.endsWith(o$2)||i.startsWith(n$1)){const s=f[u++];if(t.push(i),void 0!==s){const t=h.getAttribute(s.toLowerCase()+o$2).split(n$1),i=/([.?@])?(.*)/.exec(s);v.push({type:1,index:r,name:i[2],strings:t,ctor:"."===i[1]?k:"?"===i[1]?I:"@"===i[1]?L:R});}else v.push({type:6,index:r});}for(const i of t)h.removeAttribute(i);}if(y.test(h.tagName)){const t=h.textContent.split(n$1),i=t.length-1;if(i>0){h.textContent=s$1?s$1.emptyScript:"";for(let s=0;s<i;s++)h.append(t[s],d()),C.nextNode(),v.push({type:2,index:++r});h.append(t[i],d());}}}else if(8===h.nodeType)if(h.data===l$1)v.push({type:2,index:r});else {let t=-1;for(;-1!==(t=h.data.indexOf(n$1,t+1));)v.push({type:7,index:r}),t+=n$1.length-1;}r++;}}static createElement(t,i){const s=r.createElement("template");return s.innerHTML=t,s}}function N(t,i,s=t,e){var o,n,l,h;if(i===T)return i;let r=void 0!==e?null===(o=s._$Co)||void 0===o?void 0:o[e]:s._$Cl;const d=u(i)?void 0:i._$litDirective$;return (null==r?void 0:r.constructor)!==d&&(null===(n=null==r?void 0:r._$AO)||void 0===n||n.call(r,!1),void 0===d?r=void 0:(r=new d(t),r._$AT(t,s,e)),void 0!==e?(null!==(l=(h=s)._$Co)&&void 0!==l?l:h._$Co=[])[e]=r:s._$Cl=r),void 0!==r&&(i=N(t,r._$AS(t,i.values),r,e)),i}class S{constructor(t,i){this._$AV=[],this._$AN=void 0,this._$AD=t,this._$AM=i;}get parentNode(){return this._$AM.parentNode}get _$AU(){return this._$AM._$AU}u(t){var i;const{el:{content:s},parts:e}=this._$AD,o=(null!==(i=null==t?void 0:t.creationScope)&&void 0!==i?i:r).importNode(s,!0);C.currentNode=o;let n=C.nextNode(),l=0,h=0,d=e[0];for(;void 0!==d;){if(l===d.index){let i;2===d.type?i=new M(n,n.nextSibling,this,t):1===d.type?i=new d.ctor(n,d.name,d.strings,this,t):6===d.type&&(i=new z(n,this,t)),this._$AV.push(i),d=e[++h];}l!==(null==d?void 0:d.index)&&(n=C.nextNode(),l++);}return C.currentNode=r,o}v(t){let i=0;for(const s of this._$AV)void 0!==s&&(void 0!==s.strings?(s._$AI(t,s,i),i+=s.strings.length-2):s._$AI(t[i])),i++;}}class M{constructor(t,i,s,e){var o;this.type=2,this._$AH=A,this._$AN=void 0,this._$AA=t,this._$AB=i,this._$AM=s,this.options=e,this._$Cp=null===(o=null==e?void 0:e.isConnected)||void 0===o||o;}get _$AU(){var t,i;return null!==(i=null===(t=this._$AM)||void 0===t?void 0:t._$AU)&&void 0!==i?i:this._$Cp}get parentNode(){let t=this._$AA.parentNode;const i=this._$AM;return void 0!==i&&11===(null==t?void 0:t.nodeType)&&(t=i.parentNode),t}get startNode(){return this._$AA}get endNode(){return this._$AB}_$AI(t,i=this){t=N(this,t,i),u(t)?t===A||null==t||""===t?(this._$AH!==A&&this._$AR(),this._$AH=A):t!==this._$AH&&t!==T&&this._(t):void 0!==t._$litType$?this.g(t):void 0!==t.nodeType?this.$(t):v(t)?this.T(t):this._(t);}k(t){return this._$AA.parentNode.insertBefore(t,this._$AB)}$(t){this._$AH!==t&&(this._$AR(),this._$AH=this.k(t));}_(t){this._$AH!==A&&u(this._$AH)?this._$AA.nextSibling.data=t:this.$(r.createTextNode(t)),this._$AH=t;}g(t){var i;const{values:s,_$litType$:e}=t,o="number"==typeof e?this._$AC(t):(void 0===e.el&&(e.el=V.createElement(e.h,this.options)),e);if((null===(i=this._$AH)||void 0===i?void 0:i._$AD)===o)this._$AH.v(s);else {const t=new S(o,this),i=t.u(this.options);t.v(s),this.$(i),this._$AH=t;}}_$AC(t){let i=E.get(t.strings);return void 0===i&&E.set(t.strings,i=new V(t)),i}T(t){c(this._$AH)||(this._$AH=[],this._$AR());const i=this._$AH;let s,e=0;for(const o of t)e===i.length?i.push(s=new M(this.k(d()),this.k(d()),this,this.options)):s=i[e],s._$AI(o),e++;e<i.length&&(this._$AR(s&&s._$AB.nextSibling,e),i.length=e);}_$AR(t=this._$AA.nextSibling,i){var s;for(null===(s=this._$AP)||void 0===s||s.call(this,!1,!0,i);t&&t!==this._$AB;){const i=t.nextSibling;t.remove(),t=i;}}setConnected(t){var i;void 0===this._$AM&&(this._$Cp=t,null===(i=this._$AP)||void 0===i||i.call(this,t));}}class R{constructor(t,i,s,e,o){this.type=1,this._$AH=A,this._$AN=void 0,this.element=t,this.name=i,this._$AM=e,this.options=o,s.length>2||""!==s[0]||""!==s[1]?(this._$AH=Array(s.length-1).fill(new String),this.strings=s):this._$AH=A;}get tagName(){return this.element.tagName}get _$AU(){return this._$AM._$AU}_$AI(t,i=this,s,e){const o=this.strings;let n=!1;if(void 0===o)t=N(this,t,i,0),n=!u(t)||t!==this._$AH&&t!==T,n&&(this._$AH=t);else {const e=t;let l,h;for(t=o[0],l=0;l<o.length-1;l++)h=N(this,e[s+l],i,l),h===T&&(h=this._$AH[l]),n||(n=!u(h)||h!==this._$AH[l]),h===A?t=A:t!==A&&(t+=(null!=h?h:"")+o[l+1]),this._$AH[l]=h;}n&&!e&&this.j(t);}j(t){t===A?this.element.removeAttribute(this.name):this.element.setAttribute(this.name,null!=t?t:"");}}class k extends R{constructor(){super(...arguments),this.type=3;}j(t){this.element[this.name]=t===A?void 0:t;}}const H=s$1?s$1.emptyScript:"";class I extends R{constructor(){super(...arguments),this.type=4;}j(t){t&&t!==A?this.element.setAttribute(this.name,H):this.element.removeAttribute(this.name);}}class L extends R{constructor(t,i,s,e,o){super(t,i,s,e,o),this.type=5;}_$AI(t,i=this){var s;if((t=null!==(s=N(this,t,i,0))&&void 0!==s?s:A)===T)return;const e=this._$AH,o=t===A&&e!==A||t.capture!==e.capture||t.once!==e.once||t.passive!==e.passive,n=t!==A&&(e===A||o);o&&this.element.removeEventListener(this.name,this,e),n&&this.element.addEventListener(this.name,this,t),this._$AH=t;}handleEvent(t){var i,s;"function"==typeof this._$AH?this._$AH.call(null!==(s=null===(i=this.options)||void 0===i?void 0:i.host)&&void 0!==s?s:this.element,t):this._$AH.handleEvent(t);}}class z{constructor(t,i,s){this.element=t,this.type=6,this._$AN=void 0,this._$AM=i,this.options=s;}get _$AU(){return this._$AM._$AU}_$AI(t){N(this,t);}}const j=i$1.litHtmlPolyfillSupport;null==j||j(V,M),(null!==(t$1=i$1.litHtmlVersions)&&void 0!==t$1?t$1:i$1.litHtmlVersions=[]).push("2.7.4");const B=(t,i,s)=>{var e,o;const n=null!==(e=null==s?void 0:s.renderBefore)&&void 0!==e?e:i;let l=n._$litPart$;if(void 0===l){const t=null!==(o=null==s?void 0:s.renderBefore)&&void 0!==o?o:null;n._$litPart$=l=new M(i.insertBefore(d(),t),t,void 0,null!=s?s:{});}return l._$AI(t),l};
+var t$1;const i$1=window,s$1=i$1.trustedTypes,e$3=s$1?s$1.createPolicy("lit-html",{createHTML:t=>t}):void 0,o$2="$lit$",n$1=`lit$${(Math.random()+"").slice(9)}$`,l$1="?"+n$1,h=`<${l$1}>`,r=document,d=()=>r.createComment(""),u=t=>null===t||"object"!=typeof t&&"function"!=typeof t,c=Array.isArray,v=t=>c(t)||"function"==typeof(null==t?void 0:t[Symbol.iterator]),a="[ \t\n\f\r]",f=/<(?:(!--|\/[^a-zA-Z])|(\/?[a-zA-Z][^>\s]*)|(\/?$))/g,_=/-->/g,m=/>/g,p=RegExp(`>|${a}(?:([^\\s"'>=/]+)(${a}*=${a}*(?:[^ \t\n\f\r"'\`<>=]|("|')|))|$)`,"g"),g=/'/g,$=/"/g,y=/^(?:script|style|textarea|title)$/i,w=t=>(i,...s)=>({_$litType$:t,strings:i,values:s}),x=w(1),T=Symbol.for("lit-noChange"),A$1=Symbol.for("lit-nothing"),E=new WeakMap,C=r.createTreeWalker(r,129,null,!1),P=(t,i)=>{const s=t.length-1,l=[];let r,d=2===i?"<svg>":"",u=f;for(let i=0;i<s;i++){const s=t[i];let e,c,v=-1,a=0;for(;a<s.length&&(u.lastIndex=a,c=u.exec(s),null!==c);)a=u.lastIndex,u===f?"!--"===c[1]?u=_:void 0!==c[1]?u=m:void 0!==c[2]?(y.test(c[2])&&(r=RegExp("</"+c[2],"g")),u=p):void 0!==c[3]&&(u=p):u===p?">"===c[0]?(u=null!=r?r:f,v=-1):void 0===c[1]?v=-2:(v=u.lastIndex-c[2].length,e=c[1],u=void 0===c[3]?p:'"'===c[3]?$:g):u===$||u===g?u=p:u===_||u===m?u=f:(u=p,r=void 0);const w=u===p&&t[i+1].startsWith("/>")?" ":"";d+=u===f?s+h:v>=0?(l.push(e),s.slice(0,v)+o$2+s.slice(v)+n$1+w):s+n$1+(-2===v?(l.push(void 0),i):w);}const c=d+(t[s]||"<?>")+(2===i?"</svg>":"");if(!Array.isArray(t)||!t.hasOwnProperty("raw"))throw Error("invalid template strings array");return [void 0!==e$3?e$3.createHTML(c):c,l]};class V{constructor({strings:t,_$litType$:i},e){let h;this.parts=[];let r=0,u=0;const c=t.length-1,v=this.parts,[a,f]=P(t,i);if(this.el=V.createElement(a,e),C.currentNode=this.el.content,2===i){const t=this.el.content,i=t.firstChild;i.remove(),t.append(...i.childNodes);}for(;null!==(h=C.nextNode())&&v.length<c;){if(1===h.nodeType){if(h.hasAttributes()){const t=[];for(const i of h.getAttributeNames())if(i.endsWith(o$2)||i.startsWith(n$1)){const s=f[u++];if(t.push(i),void 0!==s){const t=h.getAttribute(s.toLowerCase()+o$2).split(n$1),i=/([.?@])?(.*)/.exec(s);v.push({type:1,index:r,name:i[2],strings:t,ctor:"."===i[1]?k:"?"===i[1]?I:"@"===i[1]?L:R});}else v.push({type:6,index:r});}for(const i of t)h.removeAttribute(i);}if(y.test(h.tagName)){const t=h.textContent.split(n$1),i=t.length-1;if(i>0){h.textContent=s$1?s$1.emptyScript:"";for(let s=0;s<i;s++)h.append(t[s],d()),C.nextNode(),v.push({type:2,index:++r});h.append(t[i],d());}}}else if(8===h.nodeType)if(h.data===l$1)v.push({type:2,index:r});else {let t=-1;for(;-1!==(t=h.data.indexOf(n$1,t+1));)v.push({type:7,index:r}),t+=n$1.length-1;}r++;}}static createElement(t,i){const s=r.createElement("template");return s.innerHTML=t,s}}function N(t,i,s=t,e){var o,n,l,h;if(i===T)return i;let r=void 0!==e?null===(o=s._$Co)||void 0===o?void 0:o[e]:s._$Cl;const d=u(i)?void 0:i._$litDirective$;return (null==r?void 0:r.constructor)!==d&&(null===(n=null==r?void 0:r._$AO)||void 0===n||n.call(r,!1),void 0===d?r=void 0:(r=new d(t),r._$AT(t,s,e)),void 0!==e?(null!==(l=(h=s)._$Co)&&void 0!==l?l:h._$Co=[])[e]=r:s._$Cl=r),void 0!==r&&(i=N(t,r._$AS(t,i.values),r,e)),i}class S{constructor(t,i){this._$AV=[],this._$AN=void 0,this._$AD=t,this._$AM=i;}get parentNode(){return this._$AM.parentNode}get _$AU(){return this._$AM._$AU}u(t){var i;const{el:{content:s},parts:e}=this._$AD,o=(null!==(i=null==t?void 0:t.creationScope)&&void 0!==i?i:r).importNode(s,!0);C.currentNode=o;let n=C.nextNode(),l=0,h=0,d=e[0];for(;void 0!==d;){if(l===d.index){let i;2===d.type?i=new M(n,n.nextSibling,this,t):1===d.type?i=new d.ctor(n,d.name,d.strings,this,t):6===d.type&&(i=new z(n,this,t)),this._$AV.push(i),d=e[++h];}l!==(null==d?void 0:d.index)&&(n=C.nextNode(),l++);}return C.currentNode=r,o}v(t){let i=0;for(const s of this._$AV)void 0!==s&&(void 0!==s.strings?(s._$AI(t,s,i),i+=s.strings.length-2):s._$AI(t[i])),i++;}}class M{constructor(t,i,s,e){var o;this.type=2,this._$AH=A$1,this._$AN=void 0,this._$AA=t,this._$AB=i,this._$AM=s,this.options=e,this._$Cp=null===(o=null==e?void 0:e.isConnected)||void 0===o||o;}get _$AU(){var t,i;return null!==(i=null===(t=this._$AM)||void 0===t?void 0:t._$AU)&&void 0!==i?i:this._$Cp}get parentNode(){let t=this._$AA.parentNode;const i=this._$AM;return void 0!==i&&11===(null==t?void 0:t.nodeType)&&(t=i.parentNode),t}get startNode(){return this._$AA}get endNode(){return this._$AB}_$AI(t,i=this){t=N(this,t,i),u(t)?t===A$1||null==t||""===t?(this._$AH!==A$1&&this._$AR(),this._$AH=A$1):t!==this._$AH&&t!==T&&this._(t):void 0!==t._$litType$?this.g(t):void 0!==t.nodeType?this.$(t):v(t)?this.T(t):this._(t);}k(t){return this._$AA.parentNode.insertBefore(t,this._$AB)}$(t){this._$AH!==t&&(this._$AR(),this._$AH=this.k(t));}_(t){this._$AH!==A$1&&u(this._$AH)?this._$AA.nextSibling.data=t:this.$(r.createTextNode(t)),this._$AH=t;}g(t){var i;const{values:s,_$litType$:e}=t,o="number"==typeof e?this._$AC(t):(void 0===e.el&&(e.el=V.createElement(e.h,this.options)),e);if((null===(i=this._$AH)||void 0===i?void 0:i._$AD)===o)this._$AH.v(s);else {const t=new S(o,this),i=t.u(this.options);t.v(s),this.$(i),this._$AH=t;}}_$AC(t){let i=E.get(t.strings);return void 0===i&&E.set(t.strings,i=new V(t)),i}T(t){c(this._$AH)||(this._$AH=[],this._$AR());const i=this._$AH;let s,e=0;for(const o of t)e===i.length?i.push(s=new M(this.k(d()),this.k(d()),this,this.options)):s=i[e],s._$AI(o),e++;e<i.length&&(this._$AR(s&&s._$AB.nextSibling,e),i.length=e);}_$AR(t=this._$AA.nextSibling,i){var s;for(null===(s=this._$AP)||void 0===s||s.call(this,!1,!0,i);t&&t!==this._$AB;){const i=t.nextSibling;t.remove(),t=i;}}setConnected(t){var i;void 0===this._$AM&&(this._$Cp=t,null===(i=this._$AP)||void 0===i||i.call(this,t));}}class R{constructor(t,i,s,e,o){this.type=1,this._$AH=A$1,this._$AN=void 0,this.element=t,this.name=i,this._$AM=e,this.options=o,s.length>2||""!==s[0]||""!==s[1]?(this._$AH=Array(s.length-1).fill(new String),this.strings=s):this._$AH=A$1;}get tagName(){return this.element.tagName}get _$AU(){return this._$AM._$AU}_$AI(t,i=this,s,e){const o=this.strings;let n=!1;if(void 0===o)t=N(this,t,i,0),n=!u(t)||t!==this._$AH&&t!==T,n&&(this._$AH=t);else {const e=t;let l,h;for(t=o[0],l=0;l<o.length-1;l++)h=N(this,e[s+l],i,l),h===T&&(h=this._$AH[l]),n||(n=!u(h)||h!==this._$AH[l]),h===A$1?t=A$1:t!==A$1&&(t+=(null!=h?h:"")+o[l+1]),this._$AH[l]=h;}n&&!e&&this.j(t);}j(t){t===A$1?this.element.removeAttribute(this.name):this.element.setAttribute(this.name,null!=t?t:"");}}class k extends R{constructor(){super(...arguments),this.type=3;}j(t){this.element[this.name]=t===A$1?void 0:t;}}const H=s$1?s$1.emptyScript:"";class I extends R{constructor(){super(...arguments),this.type=4;}j(t){t&&t!==A$1?this.element.setAttribute(this.name,H):this.element.removeAttribute(this.name);}}class L extends R{constructor(t,i,s,e,o){super(t,i,s,e,o),this.type=5;}_$AI(t,i=this){var s;if((t=null!==(s=N(this,t,i,0))&&void 0!==s?s:A$1)===T)return;const e=this._$AH,o=t===A$1&&e!==A$1||t.capture!==e.capture||t.once!==e.once||t.passive!==e.passive,n=t!==A$1&&(e===A$1||o);o&&this.element.removeEventListener(this.name,this,e),n&&this.element.addEventListener(this.name,this,t),this._$AH=t;}handleEvent(t){var i,s;"function"==typeof this._$AH?this._$AH.call(null!==(s=null===(i=this.options)||void 0===i?void 0:i.host)&&void 0!==s?s:this.element,t):this._$AH.handleEvent(t);}}class z{constructor(t,i,s){this.element=t,this.type=6,this._$AN=void 0,this._$AM=i,this.options=s;}get _$AU(){return this._$AM._$AU}_$AI(t){N(this,t);}}const j=i$1.litHtmlPolyfillSupport;null==j||j(V,M),(null!==(t$1=i$1.litHtmlVersions)&&void 0!==t$1?t$1:i$1.litHtmlVersions=[]).push("2.7.4");const B=(t,i,s)=>{var e,o;const n=null!==(e=null==s?void 0:s.renderBefore)&&void 0!==e?e:i;let l=n._$litPart$;if(void 0===l){const t=null!==(o=null==s?void 0:s.renderBefore)&&void 0!==o?o:null;n._$litPart$=l=new M(i.insertBefore(d(),t),t,void 0,null!=s?s:{});}return l._$AI(t),l};
 
 /**
  * @license
@@ -4770,7 +4770,7 @@ const t={ATTRIBUTE:1,CHILD:2,PROPERTY:3,BOOLEAN_ATTRIBUTE:4,EVENT:5,ELEMENT:6},e
  * @license
  * Copyright 2017 Google LLC
  * SPDX-License-Identifier: BSD-3-Clause
- */let e$1 = class e extends i{constructor(i){if(super(i),this.et=A,i.type!==t.CHILD)throw Error(this.constructor.directiveName+"() can only be used in child bindings")}render(r){if(r===A||null==r)return this.ft=void 0,this.et=r;if(r===T)return r;if("string"!=typeof r)throw Error(this.constructor.directiveName+"() called with a non-string value");if(r===this.et)return this.ft;this.et=r;const s=[r];return s.raw=s,this.ft={_$litType$:this.constructor.resultType,strings:s,values:[]}}};e$1.directiveName="unsafeHTML",e$1.resultType=1;const o=e$2(e$1);
+ */let e$1 = class e extends i{constructor(i){if(super(i),this.et=A$1,i.type!==t.CHILD)throw Error(this.constructor.directiveName+"() can only be used in child bindings")}render(r){if(r===A$1||null==r)return this.ft=void 0,this.et=r;if(r===T)return r;if("string"!=typeof r)throw Error(this.constructor.directiveName+"() called with a non-string value");if(r===this.et)return this.ft;this.et=r;const s=[r];return s.raw=s,this.ft={_$litType$:this.constructor.resultType,strings:s,values:[]}}};e$1.directiveName="unsafeHTML",e$1.resultType=1;const o=e$2(e$1);
 
 class ResultsContainer extends s {
     static properties = {
@@ -4962,10 +4962,10 @@ class TextInput extends s {
     render() {
         return x`<div>
             <div class="input-group input-group-sm" id="${this.id}-inner">
-                ${this.showLabel ? x`<span class="input-group-text" id="${this.id}-input-label">${this.label}</span>` : A}
+                ${this.showLabel ? x`<span class="input-group-text" id="${this.id}-input-label">${this.label}</span>` : A$1}
                 <input type="text" class="form-control" id="${this.id}-input"
-                       placeholder="${this.showLabel ? this.label : A}"
-                       data-mirror="${this.mirror !== null ? this.mirror : A}"
+                       placeholder="${this.showLabel ? this.label : A$1}"
+                       data-mirror="${this.mirror !== null ? this.mirror : A$1}"
                        value="${this.value}"
                        @change="${this.onChange}">
             </div>
@@ -5135,7 +5135,7 @@ class ColorInput extends s {
     render() {
         return x`<div>
             <div class="input-group input-group-sm" id="${this.id}-inner">
-                ${this.showLabel ? x`<span class="input-group-text" id="${this.id}-colour-picker-label">${this.label}</span>` : A}
+                ${this.showLabel ? x`<span class="input-group-text" id="${this.id}-colour-picker-label">${this.label}</span>` : A$1}
                 <input type="color"
                        class="form-control form-control-color colour-picker mr-2 d-inline-flex ${this.id}-colour-picker"
                        id="${this.id}-colour-picker-1"
@@ -5149,7 +5149,7 @@ class ColorInput extends s {
                        value="${this.colorB}"
                        title="colour-typography" data-param="valueB"
                        disabled
-                       @change="${this.onChange}">` : A}
+                       @change="${this.onChange}">` : A$1}
             </div>
         </div>`;
     }
@@ -5274,7 +5274,7 @@ class DropDownList extends s {
             <div class="col-12 my-2">
                 <select class="form-select form-select-sm" id="${this.id}-list" @change="${this.onChange}">
                     ${this.options.map ((x$1, i) => {
-                        return x`<option value=${i} ${(this.init === i) ? `selected` : A }>${x$1[0]}</option>`;
+                        return x`<option value=${i} ${(this.init === i) ? `selected` : A$1 }>${x$1[0]}</option>`;
                     })}´
                 </select>
             </div>
@@ -5843,7 +5843,7 @@ class Header extends s {
                             }}">
                         <span class="navbar-toggler-icon"></span>
                     </button>
-                </div>`: A}
+                </div>`: A$1}
             </header>
             <hr>
         </nav>`;
@@ -5893,35 +5893,9 @@ const map = (value, minA, maxA, minB, maxB) => {
     return minB + (maxB - minB) * ((value - minA) / (maxA - minA));
 };
 
-const constraint = (value, min, max) => {
-    return Math.min(max, Math.max(min, value));
-};
-
 const arrMean = (arr) => {
     const sum = arr.reduce((a, b) => a + b, 0);
     return (sum / arr.length) || 0;
-};
-
-
-const hexToRGB = (hex) => {
-    if (hex["levels"]) {
-        return {
-            r: parseInt(hex["levels"][0]),
-            g: parseInt(hex["levels"][1]),
-            b: parseInt(hex["levels"][2])
-        }
-    }
-
-    let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-    return result ? {
-        r: parseInt(result[1], 16),
-        g: parseInt(result[2], 16),
-        b: parseInt(result[3], 16)
-    } : null;
-};
-
-const colorDistance = (a, b) => {
-    return Math.sqrt(Math.pow(a.r - b.r, 2) + Math.pow(a.g - b.g, 2) + Math.pow(a.b - b.b, 2));
 };
 
 /**
@@ -6060,149 +6034,54 @@ const compute$1 = (
     return invalid ? 1 : 0;
 };
 
-var semanticsVisual_config = {
-    anger : {
-        color: {
-            typography: [`#ff0000`, `#00ff00`],
-            background: [`#ff0000`]
-        },
-        typefaces: [`sans-serif`, `neo-grotesque`]
-    },
-    joy: {
-        color: {
-            typography: [],
-            background: [`#ffff00`, `#00ff00`]
-        },
-        typefaces: [`sans-serif`, `serif`]
-    },
-    trust: {
-        color: {
-            typography: [],
-            background: [`#0000ff`, `#00ff00`]
-        },
-        typefaces: [`neo-grotesque`]
-    },
-    sadness: {
-        color: {
-            typography: [],
-            background: [`#0071b6`]
-        },
-        typefaces: []
-    },
-    disgust: {
-        color: {
-            typography: [`#800080`],
-            background: []
-        },
-        typefaces: []
-    }
-};
-
-var configurationFile = /*#__PURE__*/Object.freeze({
-  __proto__: null,
-  default: semanticsVisual_config
-});
-
 /**
- * Semantic Visuals Measure
+ * Alignment metric
  *
- * This function assesses the appropriateness of visual features (type design and colour)
- * based on the emotions collected. It takes into account the configuration file "visual-semantics.config.js".
+ * Estimate if the vertical alignment of text boxes follows a regular pattern.
+ * See Harrington et al. (2004).
  *
- * The function returns the mean difference between all textboxes,
- * yielding a value between 1 (good) and 0 (bad).
- * If there is no information pertaining to a particular emotion, the value defaults to 1.
+ * Include the check if the text Alignment is the same (part B).
+ * User can modify the value of WEIGHTS when necessary.
  *
- * As of now, the function exclusively considers the predominant emotions from ML analysis.
+ * return a value between 1 (good) and 0 (bad)
  *
  * Author: Sérgio M. Rebelo
  * CDV lab. (CMS, CISUC, Portugal)
  * Contact: srebelo[at]dei.uc.pt
  *
- * Version: 1.0.0 (November 2023)
+ * Version 1.0.0 (March 2020)
+ * Version: 1.5.0 (November 2023)
  */
 
-const MAX_COLOR_DISTANCE = 441.67;
 
+// limit to the non-linear function
+const A = 10;
+const WEIGHTS = [.8, .2];
 
-const compute = async (data, textboxes, background, typefaceData, config = configurationFile) => {
+const compute = (sentenceWidth, textAlignment, weights = WEIGHTS) => {
 
-    let emotion = data.predominant.emotion;
+    let histogram = sentenceWidth;
+    let results = [];
 
-    if (config["default"][emotion] === undefined) return 1;
+    histogram = [100,100,100,100];
+    textAlignment = [0,1,2,5];
 
-    const targetTypefaceColors = config["default"][emotion]["color"]["typography"];
-    const targetBackgroundColors = config["default"][emotion]["color"]["background"];
-    const targetTypographyFeatures = config["default"][emotion]["typefaces"];
-
-    // typography colour
-    let meanTypefaceColorDistance = 1;
-    if (targetTypefaceColors !== undefined && targetTypefaceColors.length > 0) {
-        let typefaceColorsDistances = [];
-        for (let t of textboxes) {
-            let c = hexToRGB(t.color);
-            let typefaceColorsDist = Number.MAX_VALUE;
-            for (let targetColor of targetTypefaceColors) {
-                targetColor = hexToRGB(targetColor);
-                let distance = colorDistance(c, targetColor);
-                if (distance < typefaceColorsDist) {
-                    typefaceColorsDist = distance;
-                }
-            }
-            typefaceColorsDistances.push(typefaceColorsDist);
-        }
-
-        meanTypefaceColorDistance = typefaceColorsDistances.length < 1 ? 1 : arrMean(typefaceColorsDistances);
-        meanTypefaceColorDistance /= MAX_COLOR_DISTANCE;
-        meanTypefaceColorDistance = constraint(1-meanTypefaceColorDistance, 0, 1);
+    for (let i = 0; i<histogram.length-1; i++) {
+        let z = Math.abs(histogram[i] - histogram [i+1]);
+        let v = A / (A + z);
+        results.push(v);
     }
 
-    // background colour
-    let meanTypefaceBackgroundDistance = 1;
-    if (targetBackgroundColors !== undefined && targetBackgroundColors.length !== 0) {
-        let backgroundColorsDistances = [];
-        meanTypefaceBackgroundDistance = 0;
-        for (let c of background) {
-            c = hexToRGB(c);
-            let backgroundColorsDist = Number.MAX_VALUE;
-            for (let targetColor of targetBackgroundColors) {
-                targetColor = hexToRGB(targetColor);
-                let distance = colorDistance(c, targetColor);
-                if (distance < backgroundColorsDist) {
-                    backgroundColorsDist = distance;
-                }
-            }
-            backgroundColorsDistances.push(backgroundColorsDist);
-        }
-
-        meanTypefaceBackgroundDistance = meanTypefaceBackgroundDistance.length < 1 ? 1 : arrMean(backgroundColorsDistances);
-        meanTypefaceBackgroundDistance /= MAX_COLOR_DISTANCE;
-        meanTypefaceBackgroundDistance = constraint(1-meanTypefaceBackgroundDistance, 0, 1);
-    }
-
-    // typeface
-    let meanTypefaceError = 1;
-    if (targetTypographyFeatures !== undefined && targetTypographyFeatures.length > 0) {
-        let fontsTags = [];
-        for (let t of textboxes) {
-            let tbTagsValue = 0;
-            const typefaceIndex = typefaceData.map(t => t.family).indexOf(t["typeface"]);
-            const tags = typefaceData[typefaceIndex]["tags"];
-            for (let t of targetTypographyFeatures) {
-                if (tags.includes(t)) {
-                    tbTagsValue += (1/targetTypographyFeatures.length);
-                }
-            }
-            fontsTags.push(tbTagsValue);
-        }
-
-        meanTypefaceError = fontsTags.length < 1 ? 1 : arrMean(fontsTags);
-        meanTypefaceError = constraint(meanTypefaceError, 0, 1);
-    }
-
-    return (meanTypefaceColorDistance + meanTypefaceBackgroundDistance + meanTypefaceError)/3;
+    let resHistogramDif = arrMean(results);
+    let availableTextAligns = textAlignment.filter((value, index, array) => array.indexOf(value) === index).length;
+    let resTextAlign = 1/availableTextAligns;
 
 
+    let res = [resHistogramDif, resTextAlign].reduce((s, v, i) => s + v * weights[i], 0);
+
+    console.log (`res=${resHistogramDif}`, availableTextAligns, resTextAlign, res);
+
+    return Math.random();
 };
 
 /**
@@ -6218,7 +6097,9 @@ const compute = async (data, textboxes, background, typefaceData, config = confi
 // constraints
 const legibility = compute$2;
 const gridAppropriateSize = compute$1;
-const semanticsVisuals = compute;
+
+// aesthetics
+const alignment = compute;
 
 function clamp(value, min, max) {
   return Math.max(min, Math.min(value, max));
@@ -6901,13 +6782,6 @@ class Poster {
         // typesetting typography on poster
         await this.typeset(this.phenotype);
 
-        // debug
-        if (this.#debug) {
-            pg.textSize(10);
-            pg.fill(0);
-            pg.text(`${this.id}+${this.genotype.typography.verticalAlignment}+style=${this.genotype.background.style}\nfitness=${this.fitness}`, 20, 20);
-        }
-
         if (this.#showGrid || this.#debug) {
             this.genotype.grid.display(this.phenotype);
         }
@@ -6931,12 +6805,14 @@ class Poster {
         // const layoutSemantics = evaluator.layoutSemantics(this.genotype["grid"]["rows"]["l"], dist, `FIXED`, this.genotype["size"]);
         // const semanticsEmphasis = evaluator.semanticsEmphasis(this.genotype["textboxes"], dist, noCurrentTypefaces);
         //  const justification = evaluator.legibility(this.sentencesLenght, this.genotype["grid"].getAvailableWidth(), `JUSTIFY`);
-        const visualSemantics = semanticsVisuals(emotionalData, this.genotype["textboxes"], this.genotype.background.colors, this.params.typography.typefaces);
+        // const visualSemantics = evaluator.semanticsVisuals(emotionalData, this.genotype["textboxes"], this.genotype.background.colors, this.params.typography.typefaces);
 
+
+        const alignment$1 = alignment(this.sentencesLenght, this.genotype["textboxes"].map(tb => tb["alignment"]));
 
         // this.fitness = layoutSemantics;
         // this.fitness = (visualSemantics * 0.3 + layoutSemantics * 0.3 + justification * 0.4);
-        this.fitness = visualSemantics;
+        this.fitness = alignment$1;
 
         // constraints
         const legibility$1 = legibility(this.sentencesLenght, this.genotype["grid"].getAvailableWidth(), `OVERSET`);
@@ -6994,9 +6870,9 @@ class Poster {
             const sentenceWidth = ctx.measureText(content).width;
 
             // debug
-            // pg.textSize(10);
-            // pg.fill (0)
-            // pg.text(sentenceWidth, xPos, yPos+15);
+            pg.textSize(10);
+            pg.fill (0);
+            pg.text(sentenceWidth, xPos, yPos+15);
             this.sentencesLenght.push(sentenceWidth);
         }
         pg.pop();
@@ -7731,10 +7607,7 @@ class Population {
     evaluate = async () => {
         // force evaluation of individuals
         for (let individual of this.population) {
-            console.group ();
-            console.log (`# emotional data`, this.emotionaData);
             await individual.evaluate(this.targetSemanticLayout, this.emotionaData);
-            console.groupEnd();
         }
 
 
@@ -8224,14 +8097,14 @@ class App extends s {
         return x`
             ${this.errorMessage}
             ${this.header}
-            ${this.screen === 3 ? this.initPopForm : A}
+            ${this.screen === 3 ? this.initPopForm : A$1}
             ${this.screen < 2 ? 
                 x`<div id="input-module" class="container-fluid">
                     ${this.resultsContainer}
                     ${this.inputForm}
-                    ${this.screen === 1 ? this.#nextBts() : A}
+                    ${this.screen === 1 ? this.#nextBts() : A$1}
                 </div>` :
-            A }
+            A$1 }
         `;
     }
 

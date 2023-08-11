@@ -4,7 +4,7 @@ import backgroundStyles from "./BackgroundStyles.js";
 import * as evaluator from "../../@evoposter/evaluator/src/index.mjs";
 import {randomScheme} from "./ColorGenerator.js";
 import {sumArr} from "../utils.js";
-import {semanticsEmphasis} from "../../@evoposter/evaluator/src/index.mjs";
+import {alignment, semanticsEmphasis} from "../../@evoposter/evaluator/src/index.mjs";
 
 
 class Poster {
@@ -201,13 +201,6 @@ class Poster {
         // typesetting typography on poster
         await this.typeset(this.phenotype);
 
-        // debug
-        if (this.#debug) {
-            pg.textSize(10);
-            pg.fill(0);
-            pg.text(`${this.id}+${this.genotype.typography.verticalAlignment}+style=${this.genotype.background.style}\nfitness=${this.fitness}`, 20, 20);
-        }
-
         if (this.#showGrid || this.#debug) {
             this.genotype.grid.display(this.phenotype);
         }
@@ -231,12 +224,14 @@ class Poster {
         // const layoutSemantics = evaluator.layoutSemantics(this.genotype["grid"]["rows"]["l"], dist, `FIXED`, this.genotype["size"]);
         // const semanticsEmphasis = evaluator.semanticsEmphasis(this.genotype["textboxes"], dist, noCurrentTypefaces);
         //  const justification = evaluator.legibility(this.sentencesLenght, this.genotype["grid"].getAvailableWidth(), `JUSTIFY`);
-        const visualSemantics = evaluator.semanticsVisuals(emotionalData, this.genotype["textboxes"], this.genotype.background.colors, this.params.typography.typefaces);
+        // const visualSemantics = evaluator.semanticsVisuals(emotionalData, this.genotype["textboxes"], this.genotype.background.colors, this.params.typography.typefaces);
 
+
+        const alignment = evaluator.alignment(this.sentencesLenght, this.genotype["textboxes"].map(tb => tb["alignment"]));
 
         // this.fitness = layoutSemantics;
         // this.fitness = (visualSemantics * 0.3 + layoutSemantics * 0.3 + justification * 0.4);
-        this.fitness = visualSemantics;
+        this.fitness = alignment;
 
         // constraints
         const legibility = evaluator.legibility(this.sentencesLenght, this.genotype["grid"].getAvailableWidth(), `OVERSET`);
@@ -294,9 +289,9 @@ class Poster {
             const sentenceWidth = ctx.measureText(content).width;
 
             // debug
-            // pg.textSize(10);
-            // pg.fill (0)
-            // pg.text(sentenceWidth, xPos, yPos+15);
+            pg.textSize(10);
+            pg.fill (0)
+            pg.text(sentenceWidth, xPos, yPos+15);
             this.sentencesLenght.push(sentenceWidth);
         }
         pg.pop();

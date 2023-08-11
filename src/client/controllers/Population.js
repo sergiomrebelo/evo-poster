@@ -304,10 +304,7 @@ export class Population {
     evaluate = async () => {
         // force evaluation of individuals
         for (let individual of this.population) {
-            console.group ();
-            console.log (`# emotional data`, this.emotionaData);
             await individual.evaluate(this.targetSemanticLayout, this.emotionaData);
-            console.groupEnd();
         }
 
 
