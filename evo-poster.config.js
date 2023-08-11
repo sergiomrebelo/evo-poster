@@ -50,6 +50,13 @@ const TYPEFACES = {
     }
 }
 
+const COLOR = {
+    MIN_CONTRAST: 2.5,
+    MAX_COLOR_SCHEME_ATTEMPT: 200,
+}
+
+
 export default {
-    typography: TYPEFACES !== undefined ? TYPEFACES : {}
+    typography: TYPEFACES !== undefined ? TYPEFACES : {},
+    color: COLOR !== undefined ? COLOR : {}
 }

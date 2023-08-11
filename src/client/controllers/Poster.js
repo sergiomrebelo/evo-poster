@@ -2,9 +2,12 @@ import {Params} from "../Params.js";
 import backgroundStyles from "./BackgroundStyles.js";
 
 import * as evaluator from "../../@evoposter/evaluator/src/index.mjs";
-import {randomScheme} from "./ColorGenerator.js";
+import {randomScheme, contrastChecker} from "./ColorGenerator.js";
 import {sumArr} from "../utils.js";
 import {alignment, semanticsEmphasis, whiteSpaceFraction} from "../../@evoposter/evaluator/src/index.mjs";
+
+import * as config from './../../../evo-poster.config.js';
+const MAX_COLOR_SCHEME_ATTEMPT = config["default"]["COLOR"] !== undefined ? config["default"]["COLOR"]["MAX_COLOR_SCHEME_ATTEMPT"] : 200;
 
 
 class Poster {
@@ -79,8 +82,16 @@ class Poster {
         return new Poster(this.n, this.generation, this.params, genotypeCopy);
     }
 
-    #generateGenotype = (params) => {
-        const colorScheme = randomScheme();
+    #generateGenotype = (params, ) => {
+        // generate scheme
+        let colorContrast = false;
+        let colorScheme;
+        let colorAttempt = 0;
+        while (!colorContrast || colorAttempt > MAX_COLOR_SCHEME_ATTEMPT) {
+            colorScheme = randomScheme();
+            colorContrast = contrastChecker(colorScheme["baseColour"], colorScheme["colorA"], colorScheme["colorB"]);
+            colorAttempt++;
+        }
 
         // define grid
         const grid = new Grid(

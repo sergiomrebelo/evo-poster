@@ -5899,7 +5899,7 @@ const arrMean = (arr) => {
 };
 
 
-const hexToRGB = (hex) => {
+const hexToRGB$1 = (hex) => {
     if (hex["levels"]) {
         return {
             r: parseInt(hex["levels"][0]),
@@ -6081,17 +6081,12 @@ const OPTIMAL  = .5;
 const MIN_DISTANCE = 10;
 
 const compute = (img, color, amount = null, optimal = OPTIMAL) => {
+    if (amount === null) {
+        color = hexToRGB$1(color);
+        amount = percentTypographyColor(img, color, img.pixelDensity());
+    }
 
-    console.group();
-    console.log ("COLOR", color);
-
-    color = hexToRGB(color);
-    amount = amount === null ? percentTypographyColor(img, color, img.pixelDensity()) : amount;
     const res = 1-4*Math.pow((amount - optimal), 2);
-
-    console.log ("AMOUNT", amount);
-    console.log ("RES", res);
-    console.groupEnd();
 
     return res;
 };
@@ -6595,13 +6590,87 @@ const complement = (baseColor, key) => {
 
 var complement$1 = complement;
 
+const TYPEFACES = {
+    Amstelvar: {
+        leading: 1.05,
+        tags: [`serif`],
+        axes: [`wght`, `wdth`],
+        url: `https://github.com/googlefonts/amstelvar`
+    },
+    Anybody: {
+        leading: 1.05,
+        tags: [`sans-serif`, `90s`, `europe`],
+        axes: [`wght`, `wdth`],
+        url: `https://github.com/Etcetera-Type-Co/Anybody`,
+    },
+    Barlow: {
+        leading: 1.05,
+        tags: [`sans-serif`, `gothic`, `monoline`, `neo-grotesque`],
+        axes: [`wght`, `wdth`],
+        url: `https://tribby.com/fonts/barlow/`,
+    },
+    Cabin: {
+        leading: 1.05,
+        tags: [`sans-serif`, `gothic`, `soft-corners`],
+        axes: [`wght`],
+        url: `https://fonts.google.com/specimen/Cabin`,
+    },
+    Emberly: {
+        leading: 1.05,
+        tags: [`serif`, `didone`],
+        axes: [`wght`, `wdth`],
+        url: `https://www.behance.net/gallery/87667103/Emberly-Free-Typeface-54-Styles`,
+    },
+    Epilogue: {
+        leading: 1.05,
+        tags: [`sans-serif`],
+        axes: [`wght`, `wdth`],
+        url: `https://etceteratype.co/epilogue`,
+    },
+    IBMPlexSans: {
+        leading: 1.05,
+        tags: [`sans-serif`],
+        axes: [`wght`, `wdth`],
+        url: `https://fonts.google.com/specimen/IBM+Plex+Sans`,
+    },
+    Inconsolata: {
+        leading: 1.05,
+        tags: [`sans-serif`, `mono`],
+        axes: [`wght`, `wdth`],
+        url: `https://fonts.google.com/specimen/Inconsolata`,
+
+    }
+};
+
+const COLOR = {
+    MIN_CONTRAST: 2.5,
+    MAX_COLOR_SCHEME_ATTEMPT: 200,
+};
+
+
+var evoPoster_config = {
+    typography: TYPEFACES !== undefined ? TYPEFACES : {},
+    color: COLOR !== undefined ? COLOR : {}
+};
+
+const MIN_CONTRAST = evoPoster_config.color !== null ? evoPoster_config.color.MIN_CONTRAST : 10;
+
 const randomScheme = () => {
     const baseColour = randomColour();
     return complementAndAnalogueScheme(baseColour);
 };
 
+const contrastChecker = (baseColor, colorA, colorB) => {
+    const baseColorLuminance = luminance(baseColor);
+    const colorALuminance = luminance(colorA);
+    const colorBLuminance = luminance(colorB);
+    const min = Math.min(contrastRatio(baseColorLuminance, colorALuminance), contrastRatio(baseColorLuminance, colorBLuminance));
+    return min > MIN_CONTRAST;
+};
+
 const complementAndAnalogueScheme = (baseColour) => {
     const colorA = complement$1(baseColour, 1);
+
     const colorB = analogue$1(colorA, Math.round(-2+(Math.random()*4)));
     return {
         baseColour: baseColour,
@@ -6615,6 +6684,38 @@ const randomColour = () => {
     const hex = color.map ((v) => v.toString(16).padStart(2, '0'));
     return `#${hex.join("")}`;
 };
+
+
+
+const hexToRGB = (hex) => {
+    let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result ? {
+        r: parseInt(result[1], 16),
+        g: parseInt(result[2], 16),
+        b: parseInt(result[3], 16)
+    } : null;
+};
+
+const luminance = (c) => {
+    c = hexToRGB(c);
+    let [lumR, lumG, lumB] = Object.keys(c).map(key => {
+        let proportion = c[key] / 255;
+        return proportion <= 0.03928
+            ? proportion / 12.92
+            : Math.pow((proportion + 0.055) / 1.055, 2.4);
+    });
+    return 0.2126 * lumR + 0.7152 * lumG + 0.0722 * lumB;
+};
+
+const contrastRatio = (luminance1, luminance2) => {
+    let lighterLum = Math.max(luminance1, luminance2);
+    let darkerLum = Math.min(luminance1, luminance2);
+
+    return (lighterLum + 0.05) / (darkerLum + 0.05);
+};
+
+const MAX_COLOR_SCHEME_ATTEMPT$1 = evoPoster_config["COLOR"] !== undefined ? evoPoster_config["COLOR"]["MAX_COLOR_SCHEME_ATTEMPT"] : 200;
+
 
 class Poster {
     #showGrid = false;
@@ -6688,8 +6789,16 @@ class Poster {
         return new Poster(this.n, this.generation, this.params, genotypeCopy);
     }
 
-    #generateGenotype = (params) => {
-        const colorScheme = randomScheme();
+    #generateGenotype = (params, ) => {
+        // generate scheme
+        let colorContrast = false;
+        let colorScheme;
+        let colorAttempt = 0;
+        while (!colorContrast || colorAttempt > MAX_COLOR_SCHEME_ATTEMPT$1) {
+            colorScheme = randomScheme();
+            colorContrast = contrastChecker(colorScheme["baseColour"], colorScheme["colorA"], colorScheme["colorB"]);
+            colorAttempt++;
+        }
 
         // define grid
         const grid = new Grid(
@@ -7338,6 +7447,7 @@ class Grid {
 
 const SIZE_MUTATION_ADJUST = 5;
 const TOURNAMENT_SIZE = 10;
+const MAX_COLOR_SCHEME_ATTEMPT = evoPoster_config["COLOR"] !== undefined ? evoPoster_config["COLOR"]["MAX_COLOR_SCHEME_ATTEMPT"] : 200;
 
 class Population {
     #typefaces;
@@ -7529,7 +7639,15 @@ class Population {
 
         // colours scheme
         if (Math.random() < prob) {
-            const colorScheme = randomScheme();
+            let colorContrast = false;
+            let colorScheme;
+            let colorAttempt = 0;
+            while (!colorContrast || colorAttempt > MAX_COLOR_SCHEME_ATTEMPT) {
+                colorScheme = randomScheme();
+                colorContrast = contrastChecker(colorScheme["baseColour"], colorScheme["colorA"], colorScheme["colorB"]);
+                colorAttempt++;
+            }
+
             // mutate background colours
             if (!this.params["background"]["lock"][1]) {
                 ind.genotype["background"]["colors"][0] = colorScheme.colorA;
@@ -7823,62 +7941,6 @@ class Population {
         return dist;
     }
 }
-
-const TYPEFACES = {
-    Amstelvar: {
-        leading: 1.05,
-        tags: [`serif`],
-        axes: [`wght`, `wdth`],
-        url: `https://github.com/googlefonts/amstelvar`
-    },
-    Anybody: {
-        leading: 1.05,
-        tags: [`sans-serif`, `90s`, `europe`],
-        axes: [`wght`, `wdth`],
-        url: `https://github.com/Etcetera-Type-Co/Anybody`,
-    },
-    Barlow: {
-        leading: 1.05,
-        tags: [`sans-serif`, `gothic`, `monoline`, `neo-grotesque`],
-        axes: [`wght`, `wdth`],
-        url: `https://tribby.com/fonts/barlow/`,
-    },
-    Cabin: {
-        leading: 1.05,
-        tags: [`sans-serif`, `gothic`, `soft-corners`],
-        axes: [`wght`],
-        url: `https://fonts.google.com/specimen/Cabin`,
-    },
-    Emberly: {
-        leading: 1.05,
-        tags: [`serif`, `didone`],
-        axes: [`wght`, `wdth`],
-        url: `https://www.behance.net/gallery/87667103/Emberly-Free-Typeface-54-Styles`,
-    },
-    Epilogue: {
-        leading: 1.05,
-        tags: [`sans-serif`],
-        axes: [`wght`, `wdth`],
-        url: `https://etceteratype.co/epilogue`,
-    },
-    IBMPlexSans: {
-        leading: 1.05,
-        tags: [`sans-serif`],
-        axes: [`wght`, `wdth`],
-        url: `https://fonts.google.com/specimen/IBM+Plex+Sans`,
-    },
-    Inconsolata: {
-        leading: 1.05,
-        tags: [`sans-serif`, `mono`],
-        axes: [`wght`, `wdth`],
-        url: `https://fonts.google.com/specimen/Inconsolata`,
-
-    }
-};
-
-var evoPoster_config = {
-    typography: TYPEFACES !== undefined ? TYPEFACES : {}
-};
 
 window.preload = () => {};
 

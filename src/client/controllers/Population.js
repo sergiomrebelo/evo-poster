@@ -1,10 +1,14 @@
 import {Params} from "../Params.js";
 import Poster, {Grid} from "./Poster.js";
-import {randomScheme} from "./ColorGenerator.js";
+import {contrastChecker, randomScheme} from "./ColorGenerator.js";
 import {shuffleArr, sumArr, sus, swap} from "../utils.js";
+
+import * as config from './../../../evo-poster.config.js';
+
 
 const SIZE_MUTATION_ADJUST = 5;
 const TOURNAMENT_SIZE = 10;
+const MAX_COLOR_SCHEME_ATTEMPT = config["default"]["COLOR"] !== undefined ? config["default"]["COLOR"]["MAX_COLOR_SCHEME_ATTEMPT"] : 200;
 
 export class Population {
     #typefaces;
@@ -196,7 +200,15 @@ export class Population {
 
         // colours scheme
         if (Math.random() < prob) {
-            const colorScheme = randomScheme();
+            let colorContrast = false;
+            let colorScheme;
+            let colorAttempt = 0;
+            while (!colorContrast || colorAttempt > MAX_COLOR_SCHEME_ATTEMPT) {
+                colorScheme = randomScheme();
+                colorContrast = contrastChecker(colorScheme["baseColour"], colorScheme["colorA"], colorScheme["colorB"]);
+                colorAttempt++;
+            }
+
             // mutate background colours
             if (!this.params["background"]["lock"][1]) {
                 ind.genotype["background"]["colors"][0] = colorScheme.colorA;
