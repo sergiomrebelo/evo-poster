@@ -4,7 +4,7 @@ import backgroundStyles from "./BackgroundStyles.js";
 import * as evaluator from "../../@evoposter/evaluator/src/index.mjs";
 import {randomScheme} from "./ColorGenerator.js";
 import {sumArr} from "../utils.js";
-import {alignment, semanticsEmphasis} from "../../@evoposter/evaluator/src/index.mjs";
+import {alignment, semanticsEmphasis, whiteSpaceFraction} from "../../@evoposter/evaluator/src/index.mjs";
 
 
 class Poster {
@@ -26,6 +26,7 @@ class Poster {
             gridAppropriateness: 1
         }
         this.sentencesLenght = [];
+
 
         const h = (genotype === null) ? params["size"]["height"] : genotype["size"]["height"];
         this.maxFontSize = Params.typography.maxSize * h;
@@ -202,7 +203,8 @@ class Poster {
         await this.typeset(this.phenotype);
 
         if (this.#showGrid || this.#debug) {
-            this.genotype.grid.display(this.phenotype);
+            // GRID
+            // this.genotype.grid.display(this.phenotype);
         }
 
         // place graphics
@@ -227,11 +229,14 @@ class Poster {
         // const visualSemantics = evaluator.semanticsVisuals(emotionalData, this.genotype["textboxes"], this.genotype.background.colors, this.params.typography.typefaces);
 
         // const alignment = evaluator.alignment(this.sentencesLenght, this.genotype["textboxes"].map(tb => tb["alignment"]));
-        const regularity = evaluator.regularity(this.genotype["grid"]["rows"]["l"]);
+        // const regularity = evaluator.regularity(this.genotype["grid"]["rows"]["l"]);
+
+        // textboxes have the same typography colour
+        const whiteSpace = evaluator.whiteSpaceFraction(this.phenotype, this.genotype["textboxes"][0]["color"]);
 
         // this.fitness = layoutSemantics;
         // this.fitness = (visualSemantics * 0.3 + layoutSemantics * 0.3 + justification * 0.4);
-        this.fitness = regularity;
+        this.fitness = whiteSpace;
 
         // constraints
         const legibility = evaluator.legibility(this.sentencesLenght, this.genotype["grid"].getAvailableWidth(), `OVERSET`);

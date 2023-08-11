@@ -14,6 +14,7 @@ import * as SemanticsEmphasis from "./metrics/SemanticsEmphasis.mjs";
 import * as SemanticsVisuals from "./metrics/SemanticVisuals.mjs";
 import * as Alignment from "./metrics/Alignment.mjs";
 import * as Regularity from "./metrics/Regularity.mjs";
+import * as WhiteSpaceFraction from "./metrics/WhiteSpaceFraction.mjs";
 
 export const info = () => {
     console.log ("Evaluator working");
@@ -31,5 +32,6 @@ export const semanticsVisuals = SemanticsVisuals.compute;
 // aesthetics
 export const alignment = Alignment.compute;
 export const regularity = Regularity.compute;
+export const whiteSpaceFraction = WhiteSpaceFraction.compute;
 
 export { info as default };

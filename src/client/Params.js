@@ -10,16 +10,16 @@ export class Params {
 
 
     static visualisationGrid = {
-        height: 423,
-        width: 300,
-        marginY: 20,
+        height: 141,
+        width: 100,
+        marginY: 10,
         posterMargins: [.05, .05, .05, .05],
     }
 
     static imageMaxSize = 1024;
 
     static evolution = {
-        popSize: 50,
+        popSize: 30,
         noGen: 400,
         crossoverProb: 0.90,
         mutationProb: 0.10,
