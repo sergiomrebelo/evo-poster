@@ -6080,13 +6080,18 @@ const compute$1 = (
 const OPTIMAL  = .5;
 const MIN_DISTANCE = 10;
 
-const compute = (img, color, optimal = OPTIMAL) => {
-    color = hexToRGB(color);
-    const amount = percentTypographyColor(img, color, img.pixelDensity());
+const compute = (img, color, amount = null, optimal = OPTIMAL) => {
 
+    console.group();
+    console.log ("COLOR", color);
+
+    color = hexToRGB(color);
+    amount = amount === null ? percentTypographyColor(img, color, img.pixelDensity()) : amount;
     const res = 1-4*Math.pow((amount - optimal), 2);
 
-    console.log ("amount", amount,  "res", res);
+    console.log ("AMOUNT", amount);
+    console.log ("RES", res);
+    console.groupEnd();
 
     return res;
 };

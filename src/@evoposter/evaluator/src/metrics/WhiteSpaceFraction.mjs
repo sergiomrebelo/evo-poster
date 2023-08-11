@@ -24,13 +24,11 @@ import {colorDistance, hexToRGB} from "../utils.js";
 const OPTIMAL  = .5;
 const MIN_DISTANCE = 10;
 
-export const compute = (img, color, optimal = OPTIMAL) => {
-
-    console.log ("img", img);
-    console.log ("color", color);
-
-    color = hexToRGB(color);
-    const amount = percentTypographyColor(img, color, img.pixelDensity());
+export const compute = (img, color, amount = null, optimal = OPTIMAL) => {
+    if (amount === null) {
+        color = hexToRGB(color);
+        amount = percentTypographyColor(img, color, img.pixelDensity());
+    }
 
     const res = 1-4*Math.pow((amount - optimal), 2);
 
