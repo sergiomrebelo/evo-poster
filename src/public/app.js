@@ -6101,7 +6101,7 @@ const compute = (typefaces, availableTypefaces, mode = `BOTH`) => {
 
     const res = [typefaceFactor, categoriesFactor].reduce((s, v, i) => s + v * weights[i], 0);
 
-    console.log (categories,usedTypefaces, mode, res);
+    console.log (typefaces, mode, res);
 
     return res;
 };
