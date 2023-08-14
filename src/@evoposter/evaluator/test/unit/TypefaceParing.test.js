@@ -182,6 +182,12 @@ const TESTING_PARAMS = [
         mode: `CATEGORY`,
         res: 1,
         valid: true,
+    },
+    {
+        typefaces: ["Anybody", "Barlow"],
+        mode: `CATEGORY`,
+        res: 0.5,
+        valid: false,
     }
 ];
 

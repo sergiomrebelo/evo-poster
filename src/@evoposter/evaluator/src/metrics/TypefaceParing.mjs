@@ -24,8 +24,10 @@ import {arrUnique} from "../utils.js";
  * Updated Version: 1.5.0 (November 2023)
  */
 
+const AVAILABLE_MODES = [`BOTH`, `TYPE_FAMILY`, `CATEGORY`];
+
 export const compute = (typefaces, availableTypefaces, mode = `BOTH`) => {
-    if (![`BOTH`, `TYPE_FAMILY`, `CATEGORY`].includes(mode))  {
+    if (!AVAILABLE_MODES.includes(mode))  {
         mode = `BOTH`;
     }
 
@@ -62,8 +64,6 @@ export const compute = (typefaces, availableTypefaces, mode = `BOTH`) => {
     }
 
     const res = [typefaceFactor, categoriesFactor].reduce((s, v, i) => s + v * weights[i], 0);
-
-    console.log (typefaces, mode, res);
 
     return res;
 }

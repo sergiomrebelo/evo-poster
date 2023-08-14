@@ -5898,8 +5898,8 @@ const arrMean = (arr) => {
     return (sum / arr.length) || 0;
 };
 
-const arrUnique = (arr) => {
-    return arr.filter((value, index, array) => array.indexOf(value) === index);
+const arrSum = (arr) => {
+    return arr.reduce((partialSum, a) => partialSum + a, 0);
 };
 
 /**
@@ -6039,71 +6039,127 @@ const compute$1 = (
 };
 
 /**
- * Typeface Pairing Metric
+ * Visual Balance metric
  *
- * Checks if the employed typefaces pair well together.
- * Since each typeface is related to a line of text,
- * this metric considers the typeface name and the classification.
- * Typefaces should be included in the configuration file with corresponding classification values.
+ * Estimate the visual balance (centred or left-right) of the composition.
+ * Based on Harrington et al. (2004)
  *
- * It had three modes:
- * TYPEFACE: values the use of the same typeface
- * CATEGORY: values the use of typefaces in the same category
- * BOTH: values both
- *
- *
- * Returns a value between 1 (good) and 0 (bad) to indicate compatibility.
  *
  * Author: Sérgio M. Rebelo
  * CDV lab. (CMS, CISUC, Portugal)
  * Contact: srebelo[at]dei.uc.pt
  *
  * Version 1.0.0 (March 2020)
- * Updated Version: 1.5.0 (November 2023)
+ * Version: 1.5.0 (November 2023)
  */
 
-const compute = (typefaces, availableTypefaces, mode = `BOTH`) => {
-    if (![`BOTH`, `TYPE_FAMILY`, `CATEGORY`].includes(mode))  {
-        mode = `BOTH`;
+// visual center factor
+// By default, the visual center is taken to be offset a twentieth of the page height towards the top
+const VISUAL_CENTER_FT = 20;
+
+const compute = async (img = null, size, rows, heights, widths, visualWeights = null) => {
+    const dx = size["width"];
+    const dy = size["height"];
+
+    const vw = visualWeights === null ? await visualWeight(img, rows, widths, heights) : visualWeights;
+    const bo = balanceCenter(vw, widths, heights);
+    const vo = visualCenter(dx, dy);
+
+    // calculate central Balance
+    let cb = Math.pow(((bo.x-vo.x)/dx), 2) + Math.pow(((bo.y-vo.y)/dy), 2);
+    cb = 1-Math.pow(Math.abs(cb/2), 1/2);
+
+    console.log (`SIZE`, size);
+    console.log (`ROWS`, rows);
+    console.log (`heights`, heights);
+    console.log (`widths`, widths);
+    console.log (`visualWeights`, vw);
+    console.log (`cb=${cb}`);
+
+    return cb;
+};
+
+
+const balanceCenter = (vws, widths, heights) => {
+    // get text box center
+    const vc = [];
+    for (let i in heights) {
+        vc.push(visualCenter(widths[i], heights[i]));
     }
 
-    let weights = [.5, .5]; // heights to BOTH mode
-    if (mode === `TYPE_FAMILY`) {
-        weights = [1, 0];
-    } else if (mode === `CATEGORY`) {
-        weights = [0, 1];
+    // get page balance center
+    let posX = 0, posY = 0;
+    const m = arrSum(vws);
+
+    for (let i in vws) {
+        posX += vc[i].x*vws[i];
+        posY += vc[i].y*vws[i];
     }
 
-    let categories = [];
-    let usedTypefaces = arrUnique(typefaces);
-    let categoriesFactor = 0, typefaceFactor = 0;
+    posX /= m;
+    posY /= m;
 
-    if (mode !== `TYPE_FAMILY`) {
-        const typefacesNames = availableTypefaces.map(a => a["family"]);
-        const typefacesClassification = availableTypefaces.map(a => a["category"]);
+    return {
+        x: posX,
+        y: posY
+    }
+};
 
-        for (let typeface of usedTypefaces) {
-            const index = typefacesNames.indexOf(typeface);
-            if (index === -1) {
-                categories.push(`undefined`);
-            } else {
-                categories.push(typefacesClassification[index]);
-            }
+
+/**
+* Calculate the visual centre of a element
+* The visual center lies halfway between the left and right edges
+* the visual center is taken to be offset a twentieth of the page height towards the top
+*/
+const visualCenter = (width, height) => {
+    return {
+        x: width/2,
+        y: height/2 - (height/VISUAL_CENTER_FT)
+    }
+};
+
+/**
+ * calculate the visual weight of a object
+ * visual weight = area x optical density
+ */
+const visualWeight = async (img, rows, widths, heights) => {
+    let areas = [];
+    let opticalDensity = [];
+
+    for (let i in widths) {
+
+        // compute areas
+        areas.push(widths[i] * heights[i]);
+
+        // compute visual weight
+        const rendering = await img.get(
+            0,
+            img.height/2 + rows["center"][i],
+            img.width,
+            rows["l"][i]
+        );
+
+        await rendering.loadPixels();
+
+        let r = 0, g = 0, b = 0;
+        const realPixelsSize = rendering.pixels.length/4;
+
+        for (let i=0; i < rendering.pixels.length; i+=4) {
+            r += rendering.pixels[i];
+            g += rendering.pixels[i+1];
+            b += rendering.pixels[i+2];
         }
 
-        categories = arrUnique(categories);
-        categoriesFactor = 1/categories.length;
+        r = Math.round(r/realPixelsSize);
+        g = Math.round(g/realPixelsSize);
+        b = Math.round(b/realPixelsSize);
+
+        const avgLuma = (0.2126*r + 0.7152*g + 0.0722*b);
+        const t = avgLuma / 255;
+        opticalDensity.push(-Math.log10(t));
     }
 
-    if (mode !== `CATEGORY`) {
-        typefaceFactor = 1 / usedTypefaces.length;
-    }
-
-    const res = [typefaceFactor, categoriesFactor].reduce((s, v, i) => s + v * weights[i], 0);
-
-    console.log (typefaces, mode, res);
-
-    return res;
+    return areas.map((a, i) => a * opticalDensity[i]);
 };
 
 /**
@@ -6119,7 +6175,7 @@ const compute = (typefaces, availableTypefaces, mode = `BOTH`) => {
 // constraints
 const legibility = compute$2;
 const gridAppropriateSize = compute$1;
-const typefaceParing = compute;
+const visualBalance = compute;
 
 function clamp(value, min, max) {
   return Math.max(min, Math.min(value, max));
@@ -6750,7 +6806,7 @@ class Poster {
             legibility: 1,
             gridAppropriateness: 1
         };
-        this.sentencesLenght = [];
+        this.sentencesLength = [];
 
 
         const h = (genotype === null) ? params["size"]["height"] : genotype["size"]["height"];
@@ -6955,22 +7011,29 @@ class Poster {
 
         // const layoutSemantics = evaluator.layoutSemantics(this.genotype["grid"]["rows"]["l"], dist, `FIXED`, this.genotype["size"]);
         // const semanticsEmphasis = evaluator.semanticsEmphasis(this.genotype["textboxes"], dist, noCurrentTypefaces);
-        //  const justification = evaluator.legibility(this.sentencesLenght, this.genotype["grid"].getAvailableWidth(), `JUSTIFY`);
+        //  const justification = evaluator.legibility(this.sentencesLength, this.genotype["grid"].getAvailableWidth(), `JUSTIFY`);
         // const visualSemantics = evaluator.semanticsVisuals(emotionalData, this.genotype["textboxes"], this.genotype.background.colors, this.params.typography.typefaces);
 
-        // const alignment = evaluator.alignment(this.sentencesLenght, this.genotype["textboxes"].map(tb => tb["alignment"]));
+        // const alignment = evaluator.alignment(this.sentencesLength, this.genotype["textboxes"].map(tb => tb["alignment"]));
         // const regularity = evaluator.regularity(this.genotype["grid"]["rows"]["l"]);
 
         // textboxes have the same typography colour
         // const whiteSpace = evaluator.whiteSpaceFraction(this.phenotype, this.genotype["textboxes"][0]["color"]);
-        const typefaceParing$1 = typefaceParing(this.genotype["textboxes"].map(gene => gene["typeface"]), this.params["typography"]["typefaces"]);
+        //const typefaceParing = evaluator.typefaceParing(this.genotype["textboxes"].map(gene => gene["typeface"]), this.params["typography"]["typefaces"]);
+        const balance = visualBalance(
+            this.phenotype,
+            this.genotype["size"],
+            this.genotype["grid"]["rows"],
+            this.genotype["textboxes"].map(tb => tb.size),
+            this.sentencesLength
+        );
 
         // this.fitness = layoutSemantics;
         // this.fitness = (visualSemantics * 0.3 + layoutSemantics * 0.3 + justification * 0.4);
-        this.fitness = typefaceParing$1;
+        this.fitness = balance;
 
         // constraints
-        const legibility$1 = legibility(this.sentencesLenght, this.genotype["grid"].getAvailableWidth(), `OVERSET`);
+        const legibility$1 = legibility(this.sentencesLength, this.genotype["grid"].getAvailableWidth(), `OVERSET`);
         const gridAppropriateness = gridAppropriateSize(
             this.genotype["size"].width, this.genotype["size"].height,
             this.genotype["grid"].rows.l, this.genotype["grid"].columns.l, this.genotype["grid"].marginsPos
@@ -6989,7 +7052,7 @@ class Poster {
     }
 
     typeset = async(pg) => {
-        this.sentencesLenght = [];
+        this.sentencesLength = [];
 
         pg.push();
         pg.translate(pg.width/2, pg.height/2);
@@ -7028,7 +7091,7 @@ class Poster {
             pg.textSize(10);
             pg.fill (0);
             pg.text(sentenceWidth, xPos, yPos+15);
-            this.sentencesLenght.push(sentenceWidth);
+            this.sentencesLength.push(sentenceWidth);
         }
         pg.pop();
     }

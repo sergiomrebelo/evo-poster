@@ -28,7 +28,7 @@ class Poster {
             legibility: 1,
             gridAppropriateness: 1
         }
-        this.sentencesLenght = [];
+        this.sentencesLength = [];
 
 
         const h = (genotype === null) ? params["size"]["height"] : genotype["size"]["height"];
@@ -236,22 +236,29 @@ class Poster {
 
         // const layoutSemantics = evaluator.layoutSemantics(this.genotype["grid"]["rows"]["l"], dist, `FIXED`, this.genotype["size"]);
         // const semanticsEmphasis = evaluator.semanticsEmphasis(this.genotype["textboxes"], dist, noCurrentTypefaces);
-        //  const justification = evaluator.legibility(this.sentencesLenght, this.genotype["grid"].getAvailableWidth(), `JUSTIFY`);
+        //  const justification = evaluator.legibility(this.sentencesLength, this.genotype["grid"].getAvailableWidth(), `JUSTIFY`);
         // const visualSemantics = evaluator.semanticsVisuals(emotionalData, this.genotype["textboxes"], this.genotype.background.colors, this.params.typography.typefaces);
 
-        // const alignment = evaluator.alignment(this.sentencesLenght, this.genotype["textboxes"].map(tb => tb["alignment"]));
+        // const alignment = evaluator.alignment(this.sentencesLength, this.genotype["textboxes"].map(tb => tb["alignment"]));
         // const regularity = evaluator.regularity(this.genotype["grid"]["rows"]["l"]);
 
         // textboxes have the same typography colour
         // const whiteSpace = evaluator.whiteSpaceFraction(this.phenotype, this.genotype["textboxes"][0]["color"]);
-        const typefaceParing = evaluator.typefaceParing(this.genotype["textboxes"].map(gene => gene["typeface"]), this.params["typography"]["typefaces"]);
+        //const typefaceParing = evaluator.typefaceParing(this.genotype["textboxes"].map(gene => gene["typeface"]), this.params["typography"]["typefaces"]);
+        const balance = evaluator.visualBalance(
+            this.phenotype,
+            this.genotype["size"],
+            this.genotype["grid"]["rows"],
+            this.genotype["textboxes"].map(tb => tb.size),
+            this.sentencesLength
+        );
 
         // this.fitness = layoutSemantics;
         // this.fitness = (visualSemantics * 0.3 + layoutSemantics * 0.3 + justification * 0.4);
-        this.fitness = typefaceParing;
+        this.fitness = balance;
 
         // constraints
-        const legibility = evaluator.legibility(this.sentencesLenght, this.genotype["grid"].getAvailableWidth(), `OVERSET`);
+        const legibility = evaluator.legibility(this.sentencesLength, this.genotype["grid"].getAvailableWidth(), `OVERSET`);
         const gridAppropriateness = evaluator.gridAppropriateSize(
             this.genotype["size"].width, this.genotype["size"].height,
             this.genotype["grid"].rows.l, this.genotype["grid"].columns.l, this.genotype["grid"].marginsPos
@@ -270,7 +277,7 @@ class Poster {
     }
 
     typeset = async(pg) => {
-        this.sentencesLenght = [];
+        this.sentencesLength = [];
 
         pg.push();
         pg.translate(pg.width/2, pg.height/2);
@@ -309,7 +316,7 @@ class Poster {
             pg.textSize(10);
             pg.fill (0)
             pg.text(sentenceWidth, xPos, yPos+15);
-            this.sentencesLenght.push(sentenceWidth);
+            this.sentencesLength.push(sentenceWidth);
         }
         pg.pop();
     }
