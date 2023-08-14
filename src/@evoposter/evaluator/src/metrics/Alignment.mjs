@@ -38,10 +38,12 @@ export const compute = (sentenceWidth, textAlignment, weights = WEIGHTS) => {
     }
 
     let resHistogramDif = arrMean(results);
+    // TODO: change
     let availableTextAligns = textAlignment.filter((value, index, array) => array.indexOf(value) === index).length;
     let resTextAlign = 1/availableTextAligns;
 
     // sum product
+    // change
     let res = [resHistogramDif, resTextAlign].reduce((s, v, i) => s + v * weights[i], 0);
 
     return res;

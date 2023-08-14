@@ -165,6 +165,7 @@ export class App extends LitElement {
                     weight: weightValues,
                     stretch: stretchValues,
                     tags: this.params.typography[font.family]["tags"],
+                    category: this.params.typography[font.family]["category"],
                     leading: this.params.typography[font.family]["leading"]
                 });
             }

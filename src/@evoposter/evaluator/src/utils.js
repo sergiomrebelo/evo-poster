@@ -23,6 +23,9 @@ export const arrMin = (arr) => {
     return Math.min(...arr);
 }
 
+export const arrUnique = (arr) => {
+    return arr.filter((value, index, array) => array.indexOf(value) === index);
+}
 
 export const hexToRGB = (hex) => {
     if (hex["levels"]) {

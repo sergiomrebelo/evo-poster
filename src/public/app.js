@@ -5898,26 +5898,8 @@ const arrMean = (arr) => {
     return (sum / arr.length) || 0;
 };
 
-
-const hexToRGB$1 = (hex) => {
-    if (hex["levels"]) {
-        return {
-            r: parseInt(hex["levels"][0]),
-            g: parseInt(hex["levels"][1]),
-            b: parseInt(hex["levels"][2])
-        }
-    }
-
-    let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-    return result ? {
-        r: parseInt(result[1], 16),
-        g: parseInt(result[2], 16),
-        b: parseInt(result[3], 16)
-    } : null;
-};
-
-const colorDistance = (a, b) => {
-    return Math.sqrt(Math.pow(a.r - b.r, 2) + Math.pow(a.g - b.g, 2) + Math.pow(a.b - b.b, 2));
+const arrUnique = (arr) => {
+    return arr.filter((value, index, array) => array.indexOf(value) === index);
 };
 
 /**
@@ -6057,56 +6039,71 @@ const compute$1 = (
 };
 
 /**
- * White Space Fraction metric
+ * Typeface Pairing Metric
  *
- * Assess the white space factor, i.e. the amount of the result that is background.
- * Based on Harrington et al. (2004).
+ * Checks if the employed typefaces pair well together.
+ * Since each typeface is related to a line of text,
+ * this metric considers the typeface name and the classification.
+ * Typefaces should be included in the configuration file with corresponding classification values.
  *
- * Traditionally, white space (including margins) should total about half of the total page area.
+ * It had three modes:
+ * TYPEFACE: values the use of the same typeface
+ * CATEGORY: values the use of typefaces in the same category
+ * BOTH: values both
  *
- * We decided made this in other way, using the pixels of image that are equals to background color
  *
- * return a value between 1 (good) and 0 (bad)
- * in first version, we used a no-linear method and onlyy works with solid backgrounds
+ * Returns a value between 1 (good) and 0 (bad) to indicate compatibility.
  *
  * Author: Sérgio M. Rebelo
  * CDV lab. (CMS, CISUC, Portugal)
  * Contact: srebelo[at]dei.uc.pt
  *
  * Version 1.0.0 (March 2020)
- * Version: 1.5.0 (November 2023)
+ * Updated Version: 1.5.0 (November 2023)
  */
 
-const OPTIMAL  = .5;
-const MIN_DISTANCE = 10;
-
-const compute = (img, color, amount = null, optimal = OPTIMAL) => {
-    if (amount === null) {
-        color = hexToRGB$1(color);
-        amount = percentTypographyColor(img, color, img.pixelDensity());
+const compute = (typefaces, availableTypefaces, mode = `BOTH`) => {
+    if (![`BOTH`, `TYPE_FAMILY`, `CATEGORY`].includes(mode))  {
+        mode = `BOTH`;
     }
 
-    const res = 1-4*Math.pow((amount - optimal), 2);
+    let weights = [.5, .5]; // heights to BOTH mode
+    if (mode === `TYPE_FAMILY`) {
+        weights = [1, 0];
+    } else if (mode === `CATEGORY`) {
+        weights = [0, 1];
+    }
+
+    let categories = [];
+    let usedTypefaces = arrUnique(typefaces);
+    let categoriesFactor = 0, typefaceFactor = 0;
+
+    if (mode !== `TYPE_FAMILY`) {
+        const typefacesNames = availableTypefaces.map(a => a["family"]);
+        const typefacesClassification = availableTypefaces.map(a => a["category"]);
+
+        for (let typeface of usedTypefaces) {
+            const index = typefacesNames.indexOf(typeface);
+            if (index === -1) {
+                categories.push(`undefined`);
+            } else {
+                categories.push(typefacesClassification[index]);
+            }
+        }
+
+        categories = arrUnique(categories);
+        categoriesFactor = 1/categories.length;
+    }
+
+    if (mode !== `CATEGORY`) {
+        typefaceFactor = 1 / usedTypefaces.length;
+    }
+
+    const res = [typefaceFactor, categoriesFactor].reduce((s, v, i) => s + v * weights[i], 0);
+
+    console.log (categories,usedTypefaces, mode, res);
 
     return res;
-};
-
-const percentTypographyColor = (img, c, d=1) => {
-    let amount = 0;
-    let size = img.width * d * img.height * d ;
-    img.loadPixels();
-    for (let i = 0; i < 4 * size; i += 4) {
-        let current = {
-            r: img.pixels[i],
-            g: img.pixels[i+1],
-            b: img.pixels[i+2]
-        };
-        const distance = colorDistance(current, c);
-        if (distance < MIN_DISTANCE) {
-            amount++;
-        }
-    }
-    return amount/size;
 };
 
 /**
@@ -6122,7 +6119,7 @@ const percentTypographyColor = (img, c, d=1) => {
 // constraints
 const legibility = compute$2;
 const gridAppropriateSize = compute$1;
-const whiteSpaceFraction = compute;
+const typefaceParing = compute;
 
 function clamp(value, min, max) {
   return Math.max(min, Math.min(value, max));
@@ -6594,50 +6591,68 @@ const TYPEFACES = {
     Amstelvar: {
         leading: 1.05,
         tags: [`serif`],
-        axes: [`wght`, `wdth`],
-        url: `https://github.com/googlefonts/amstelvar`
+        axes: [`wght`, `wdth`, `opsz`],
+        url: `https://github.com/googlefonts/amstelvar`,
+        category: `serif`,
+        path: `./assets/Amstelvar-Roman[wdth,wght,opsz].ttf`,
+        format: `truetype-variations`,
+        weight: {
+            min: 100,
+            max: 900
+        },
+        stretch: {
+            min: 50,
+            max: 125,
+        }
     },
     Anybody: {
         leading: 1.05,
         tags: [`sans-serif`, `90s`, `europe`],
         axes: [`wght`, `wdth`],
         url: `https://github.com/Etcetera-Type-Co/Anybody`,
+        category: `sans-serif`,
     },
     Barlow: {
         leading: 1.05,
         tags: [`sans-serif`, `gothic`, `monoline`, `neo-grotesque`],
         axes: [`wght`, `wdth`],
         url: `https://tribby.com/fonts/barlow/`,
+        category: `sans-serif`,
     },
     Cabin: {
         leading: 1.05,
         tags: [`sans-serif`, `gothic`, `soft-corners`],
         axes: [`wght`],
         url: `https://fonts.google.com/specimen/Cabin`,
+        category: `sans-serif`,
     },
     Emberly: {
         leading: 1.05,
         tags: [`serif`, `didone`],
         axes: [`wght`, `wdth`],
         url: `https://www.behance.net/gallery/87667103/Emberly-Free-Typeface-54-Styles`,
+        category: `serif`,
     },
     Epilogue: {
         leading: 1.05,
         tags: [`sans-serif`],
         axes: [`wght`, `wdth`],
         url: `https://etceteratype.co/epilogue`,
+        category: `sans-serif`,
     },
     IBMPlexSans: {
         leading: 1.05,
         tags: [`sans-serif`],
         axes: [`wght`, `wdth`],
         url: `https://fonts.google.com/specimen/IBM+Plex+Sans`,
+        category: `sans-serif`,
     },
     Inconsolata: {
         leading: 1.05,
         tags: [`sans-serif`, `mono`],
         axes: [`wght`, `wdth`],
         url: `https://fonts.google.com/specimen/Inconsolata`,
+        category: `nonospace`,
 
     }
 };
@@ -6947,11 +6962,12 @@ class Poster {
         // const regularity = evaluator.regularity(this.genotype["grid"]["rows"]["l"]);
 
         // textboxes have the same typography colour
-        const whiteSpace = whiteSpaceFraction(this.phenotype, this.genotype["textboxes"][0]["color"]);
+        // const whiteSpace = evaluator.whiteSpaceFraction(this.phenotype, this.genotype["textboxes"][0]["color"]);
+        const typefaceParing$1 = typefaceParing(this.genotype["textboxes"].map(gene => gene["typeface"]), this.params["typography"]["typefaces"]);
 
         // this.fitness = layoutSemantics;
         // this.fitness = (visualSemantics * 0.3 + layoutSemantics * 0.3 + justification * 0.4);
-        this.fitness = whiteSpace;
+        this.fitness = typefaceParing$1;
 
         // constraints
         const legibility$1 = legibility(this.sentencesLenght, this.genotype["grid"].getAvailableWidth(), `OVERSET`);
@@ -8090,6 +8106,7 @@ class App extends s {
                     weight: weightValues,
                     stretch: stretchValues,
                     tags: this.params.typography[font.family]["tags"],
+                    category: this.params.typography[font.family]["category"],
                     leading: this.params.typography[font.family]["leading"]
                 });
             }

@@ -243,11 +243,12 @@ class Poster {
         // const regularity = evaluator.regularity(this.genotype["grid"]["rows"]["l"]);
 
         // textboxes have the same typography colour
-        const whiteSpace = evaluator.whiteSpaceFraction(this.phenotype, this.genotype["textboxes"][0]["color"]);
+        // const whiteSpace = evaluator.whiteSpaceFraction(this.phenotype, this.genotype["textboxes"][0]["color"]);
+        const typefaceParing = evaluator.typefaceParing(this.genotype["textboxes"].map(gene => gene["typeface"]), this.params["typography"]["typefaces"]);
 
         // this.fitness = layoutSemantics;
         // this.fitness = (visualSemantics * 0.3 + layoutSemantics * 0.3 + justification * 0.4);
-        this.fitness = whiteSpace;
+        this.fitness = typefaceParing;
 
         // constraints
         const legibility = evaluator.legibility(this.sentencesLenght, this.genotype["grid"].getAvailableWidth(), `OVERSET`);
