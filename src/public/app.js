@@ -4532,6 +4532,7 @@ class Params {
 
     static imageMaxSize = 1024;
 
+    // REMOVE
     static evolution = {
         popSize: 30,
         noGen: 400,
@@ -4541,6 +4542,7 @@ class Params {
     }
 
     static visiblePosters = 10;
+
 
 
 
@@ -5537,12 +5539,13 @@ var evoPoster_config = {
     color: COLOR !== undefined ? COLOR : {},
     evaluation: EVALUATION !== undefined ? EVALUATION : {},
     display: {
-        GRID: true
+        GRID: true,
+        VISIBLE_POSTERS: 30
     },
     evo: EVO !== undefined ? EVO : {},
     log: {
         SAVE_LOG: true,
-        SAVE_IMAGES: `GENERATION` // `GENERATION`, `END`, `BEST-GENERATION`, `NO`
+        SAVE_IMAGES: `END` // `GENERATION`, `END`, `BEST-GENERATION`, `NO`
     }
 };
 
@@ -7452,7 +7455,10 @@ class Grid {
 
 const SIZE_MUTATION_ADJUST = 5;
 const TOURNAMENT_SIZE = 10;
-const MAX_COLOR_SCHEME_ATTEMPT = evoPoster_config["COLOR"] !== undefined ? evoPoster_config["COLOR"]["MAX_COLOR_SCHEME_ATTEMPT"] : 200;
+const MAX_COLOR_SCHEME_ATTEMPT = evoPoster_config["color"] !== undefined ? evoPoster_config["color"]["MAX_COLOR_SCHEME_ATTEMPT"] : 200;
+const SAVE_LOG = evoPoster_config["log"] !== undefined ? evoPoster_config["log"]["SAVE_LOG"] : true;
+const SAVE_IMAGES = evoPoster_config["log"] !== undefined ? evoPoster_config["log"]["SAVE_IMAGES"] : `NO`;
+const VISIBLE_POSTERS = evoPoster_config["display"] !== undefined ? evoPoster_config["display"]["VISIBLE_POSTERS"] : 10;
 
 class Population {
     #typefaces;
@@ -7462,6 +7468,7 @@ class Population {
         this.params = params;
         this.population = [];
         this.generations = 0;
+        this.id = Date.now();
         this.ready = false;
         this.evolving = false;
         this.pause = false;
@@ -7577,30 +7584,40 @@ class Population {
         this.updated = true;
 
         if(this.generations < this.params["evo"]["noGen"] && !this.pause) {
+            let ms = 100;
+
+            if (SAVE_IMAGES === `GENERATION` &&  SAVE_LOG) {
+                console.log (`this.population size`, this.population.length);
+                this.saveRaster(this.population.length);
+                ms = 2000;
+            } else if (SAVE_IMAGES === `BEST-GENERATION` &&  SAVE_LOG) {
+                this.saveRaster(1);
+            }
             // need to possible to visualise the posters evolving
             setTimeout(() => {
                 this.evolve();
-            }, 100);
+            }, ms);
         } else {
             this.evolving = false;
-
-            console.log("this.log", this.log);
-
-            // only if succefully
-            await fetch(`/insert`, {
-                method: "POST",
-                mode: "cors",
-                cache: "no-cache",
-                credentials: "same-origin",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                redirect: "follow",
-                referrerPolicy: "no-referrer",
-                body: JSON.stringify(this.log),
-            }).then ((data) => {
-                console.log ("inserted", data);
-            }).catch((err) => console.error(err));
+            if (!this.pause && SAVE_LOG) {
+                if (SAVE_IMAGES === `END`) {
+                    this.saveRaster(this.population.length);
+                }
+                await fetch(`/insert`, {
+                    method: "POST",
+                    mode: "cors",
+                    cache: "no-cache",
+                    credentials: "same-origin",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    redirect: "follow",
+                    referrerPolicy: "no-referrer",
+                    body: JSON.stringify(this.log),
+                }).then((data) => {
+                    console.log(`log data saved to file`);
+                }).catch((err) => console.error(err));
+            }
 
 
             console.group (`stats`);
@@ -7894,7 +7911,7 @@ class Population {
             this.ready = typefacesLoaded;
         } */
 
-        const n = this.population.length < Params.visiblePosters ? this.population.length : Params.visiblePosters;
+        const n = this.population.length < VISIBLE_POSTERS ? this.population.length : VISIBLE_POSTERS;
         let posX = 0, posY = 0;
         for (let i=0; i<this.population.length; i++) {
             const ind = this.population[i];
@@ -7938,10 +7955,10 @@ class Population {
 
     }
 
-    saveRaster = () => {
-        for (let i in this.population) {
+    saveRaster = async (size = this.population.length) => {
+        for (let i=0; i<size; i++) {
             const ind = this.population[i];
-            save(ind.phenotype, `${Date.now()}-${this.generations}-${i}`);
+            await save(ind.phenotype, `${this.id}-${this.generations}-${i}`);
         }
     }
 
@@ -8215,6 +8232,7 @@ class App extends s$1 {
 
     #initCanvas = () => {
         // calculate the height of canvas
+        // HERE
         let numberOfPosters = Params.visiblePosters;
         let h = Math.ceil(numberOfPosters / Math.floor(windowWidth/this.config.size.width));
         h *= (this.config.size.height + (Params.visualisationGrid.marginY*2));

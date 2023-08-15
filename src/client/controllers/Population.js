@@ -8,7 +8,10 @@ import * as config from './../../../evo-poster.config.js';
 
 const SIZE_MUTATION_ADJUST = 5;
 const TOURNAMENT_SIZE = 10;
-const MAX_COLOR_SCHEME_ATTEMPT = config["default"]["COLOR"] !== undefined ? config["default"]["COLOR"]["MAX_COLOR_SCHEME_ATTEMPT"] : 200;
+const MAX_COLOR_SCHEME_ATTEMPT = config["default"]["color"] !== undefined ? config["default"]["color"]["MAX_COLOR_SCHEME_ATTEMPT"] : 200;
+const SAVE_LOG = config["default"]["log"] !== undefined ? config["default"]["log"]["SAVE_LOG"] : true;
+const SAVE_IMAGES = config["default"]["log"] !== undefined ? config["default"]["log"]["SAVE_IMAGES"] : `NO`;
+const VISIBLE_POSTERS = config["default"]["display"] !== undefined ? config["default"]["display"]["VISIBLE_POSTERS"] : 10;
 
 export class Population {
     #typefaces;
@@ -18,6 +21,7 @@ export class Population {
         this.params = params;
         this.population = [];
         this.generations = 0;
+        this.id = Date.now();
         this.ready = false;
         this.evolving = false;
         this.pause = false;
@@ -133,14 +137,25 @@ export class Population {
         this.updated = true;
 
         if(this.generations < this.params["evo"]["noGen"] && !this.pause) {
+            let ms = 100;
+
+            if (SAVE_IMAGES === `GENERATION` &&  SAVE_LOG) {
+                console.log (`this.population size`, this.population.length);
+                this.saveRaster(this.population.length);
+                ms = 2000;
+            } else if (SAVE_IMAGES === `BEST-GENERATION` &&  SAVE_LOG) {
+                this.saveRaster(1);
+            }
             // need to possible to visualise the posters evolving
             setTimeout(() => {
                 this.evolve();
-            }, 100);
+            }, ms);
         } else {
             this.evolving = false;
-
-            if (!this.pause) {
+            if (!this.pause && SAVE_LOG) {
+                if (SAVE_IMAGES === `END`) {
+                    this.saveRaster(this.population.length);
+                }
                 await fetch(`/insert`, {
                     method: "POST",
                     mode: "cors",
@@ -153,10 +168,11 @@ export class Population {
                     referrerPolicy: "no-referrer",
                     body: JSON.stringify(this.log),
                 }).then((data) => {
-                    console.log("inserted", data);
+                    console.log(`log data saved to file`);
                 }).catch((err) => console.error(err));
             }
-            
+
+
             console.group (`stats`);
             console.log (this.log);
             console.groupEnd();
@@ -448,7 +464,7 @@ export class Population {
             this.ready = typefacesLoaded;
         } */
 
-        const n = this.population.length < Params.visiblePosters ? this.population.length : Params.visiblePosters;
+        const n = this.population.length < VISIBLE_POSTERS ? this.population.length : VISIBLE_POSTERS;
         let posX = 0, posY = 0;
         for (let i=0; i<this.population.length; i++) {
             const ind = this.population[i];
@@ -492,10 +508,10 @@ export class Population {
 
     }
 
-    saveRaster = () => {
-        for (let i in this.population) {
+    saveRaster = async (size = this.population.length) => {
+        for (let i=0; i<size; i++) {
             const ind = this.population[i];
-            save(ind.phenotype, `${Date.now()}-${this.generations}-${i}`);
+            await save(ind.phenotype, `${this.id}-${this.generations}-${i}`);
         }
     }
 

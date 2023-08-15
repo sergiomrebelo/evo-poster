@@ -18,6 +18,7 @@ export class Params {
 
     static imageMaxSize = 1024;
 
+    // REMOVE
     static evolution = {
         popSize: 30,
         noGen: 400,
@@ -27,6 +28,7 @@ export class Params {
     }
 
     static visiblePosters = 10;
+
 
 
 

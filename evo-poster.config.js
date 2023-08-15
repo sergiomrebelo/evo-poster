@@ -106,11 +106,12 @@ export default {
     color: COLOR !== undefined ? COLOR : {},
     evaluation: EVALUATION !== undefined ? EVALUATION : {},
     display: {
-        GRID: true
+        GRID: true,
+        VISIBLE_POSTERS: 30
     },
     evo: EVO !== undefined ? EVO : {},
     log: {
         SAVE_LOG: true,
-        SAVE_IMAGES: `GENERATION` // `GENERATION`, `END`, `BEST-GENERATION`, `NO`
+        SAVE_IMAGES: `END` // `GENERATION`, `END`, `BEST-GENERATION`, `NO`
     }
 }
