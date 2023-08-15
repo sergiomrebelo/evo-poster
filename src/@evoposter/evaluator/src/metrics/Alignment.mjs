@@ -17,11 +17,11 @@
  * Version: 1.5.0 (November 2023)
  */
 
-import {arrMean} from "../utils.js";
+import {arrMean, arrUnique, sumProduct} from "../utils.js";
+import {ALIGNMENT} from "../metrics.config.js";
 
-// limit to the non-linear function
-const A = 10;
-const WEIGHTS = [.8, .2];
+const A = ALIGNMENT["A"]
+const WEIGHTS = ALIGNMENT["WEIGHTS"];
 
 export const compute = (sentenceWidth, textAlignment, weights = WEIGHTS) => {
     if (sentenceWidth.length < 2) {
@@ -38,14 +38,10 @@ export const compute = (sentenceWidth, textAlignment, weights = WEIGHTS) => {
     }
 
     let resHistogramDif = arrMean(results);
-    // TODO: change
-    let availableTextAligns = textAlignment.filter((value, index, array) => array.indexOf(value) === index).length;
+    let availableTextAligns = arrUnique(textAlignment).length;
     let resTextAlign = 1/availableTextAligns;
 
-    // sum product
-    // change
-    let res = [resHistogramDif, resTextAlign].reduce((s, v, i) => s + v * weights[i], 0);
-
+    let res = sumProduct([resHistogramDif, resTextAlign], weights);
     return res;
 }
 

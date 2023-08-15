@@ -1,4 +1,4 @@
-const TYPEFACES = {
+export const TYPEFACES = {
     Amstelvar: {
         leading: 1.05,
         tags: [`serif`],
@@ -68,13 +68,36 @@ const TYPEFACES = {
     }
 }
 
-const COLOR = {
+export const COLOR = {
     MIN_CONTRAST: 2.5,
     MAX_COLOR_SCHEME_ATTEMPT: 200,
 }
 
+export const EVALUATION = {
+    GLOBAL_WEIGHTS: {
+        SEMANTICS: 0.5,
+        AESTHETICS: 0.5
+    },
+    MODES: {
+        SEMANTICS_VISUALS: `FIXED`
+    },
+    SEMANTICS_WEIGHTS: {
+        EMPHASIS: 0.5,
+        LAYOUT: 0.5,
+        VISUALS: 0
+    },
+    AESTHETICS_WEIGHTS: {
+        ALIGNMENT: 0.1,
+        REGULARITY: 0.1,
+        JUSTIFICATION: 0.3,
+        TYPEFACE_PARING: 0.1,
+        WHITE_BALANCE_FRACTION: 0.2,
+        BALANCE: 0.2
+    }
+}
 
 export default {
     typography: TYPEFACES !== undefined ? TYPEFACES : {},
-    color: COLOR !== undefined ? COLOR : {}
+    color: COLOR !== undefined ? COLOR : {},
+    evaluation: EVALUATION !== undefined ? EVALUATION : {}
 }

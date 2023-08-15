@@ -24,9 +24,11 @@
  * v1.0.0 November 2023
  */
 import {arrMax, arrMean, arrMin, arrSum, constraint, map} from "../utils.js";
+import {SEMANTICS_EMPHASIS} from "../metrics.config.js";
 
-let MIN_RANGE = 50;
-let THRESHOLD_VALID = 0.2;
+let MIN_RANGE = SEMANTICS_EMPHASIS["MIN_RANGE"];
+let THRESHOLD_VALID = SEMANTICS_EMPHASIS["THRESHOLD_VALID"];
+let AVAILABLE_MODES = SEMANTICS_EMPHASIS["MODES"];
 
 // by tradition, use more that a method to emphasize
 // the text is considered "typecrime".
@@ -111,7 +113,7 @@ const checkDifferenceUniqueFeatures = (currentFeatures, dist) => {
 }
 
 const checkDifferenceVariableFeature = (currentFeatures, dist, mode = `DIF`) => {
-    if (mode !== `MIN` && mode !== `DIF`) {
+    if (!AVAILABLE_MODES.includes(mode)) {
         mode = `DIF`;
     }
     // max feature range

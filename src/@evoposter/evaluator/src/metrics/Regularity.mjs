@@ -1,5 +1,3 @@
-import {arrMean} from "../utils.js";
-
 /**
  * Alignment metric
  *
@@ -17,7 +15,10 @@ import {arrMean} from "../utils.js";
  * Version: 1.5.0 (November 2023)
  */
 
-const A = 10;
+import {arrMean} from "../utils.js";
+import {REGULARITY} from "../metrics.config.js";
+
+const A = REGULARITY["A"];
 
 export const compute = (heights) => {
     if (heights.length < 2) {

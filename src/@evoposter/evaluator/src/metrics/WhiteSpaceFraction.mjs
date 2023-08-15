@@ -1,4 +1,5 @@
 import {colorDistance, hexToRGB} from "../utils.js";
+import {WHITE_SPACE_FRACTION} from "../metrics.config.js";
 
 /**
  * White Space Fraction metric
@@ -21,8 +22,8 @@ import {colorDistance, hexToRGB} from "../utils.js";
  * Version: 1.5.0 (November 2023)
  */
 
-const OPTIMAL  = .5;
-const MIN_DISTANCE = 10;
+const OPTIMAL = WHITE_SPACE_FRACTION["OPTIMAL"];
+const MIN_DISTANCE = WHITE_SPACE_FRACTION["MIN_DISTANCE"];
 
 export const compute = (img, color, amount = null, optimal = OPTIMAL) => {
     if (amount === null) {

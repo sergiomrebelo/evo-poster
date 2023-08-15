@@ -18,13 +18,17 @@
  */
 
 import {arrMean, map} from "../utils.js";
+import {LEGIBILITY} from "../metrics.config.js";
 
-const MAX_CONSTRAINT = 1;
-const WHITE_SPACE_FACTOR = 3;
+const MAX_CONSTRAINT = LEGIBILITY["MAX_CONSTRAINT"];
+const WHITE_SPACE_FACTOR = LEGIBILITY["WHITE_SPACE_FACTOR"];
+const DEFAULT_MAX_LIMIT_SCALE = LEGIBILITY["DEFAULT_MAX_LIMIT_SCALE"];
+const AVAILABLE_MODES = LEGIBILITY ["MODES"]
 
-const MODES = [`OVERSET`, `JUSTIFY`,`ATTEMPT_JUSTIFY`];
-
-export const compute = (sentencesLength = [], minSize, mode= 'OVERSET', maxLimitScale= 1) => {
+export const compute = (sentencesLength = [], minSize, mode= 'OVERSET', maxLimitScale= DEFAULT_MAX_LIMIT_SCALE) => {
+    if (!AVAILABLE_MODES.includes(mode)) {
+        mode = `OVERSET`;
+    }
     let results = [];
     let max = minSize * maxLimitScale;
     for (let sentence of sentencesLength) {

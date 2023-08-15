@@ -1,4 +1,5 @@
 import {arrUnique} from "../utils.js";
+import {TYPEFACE_PARING} from "../metrics.config.js";
 
 /**
  * Typeface Pairing Metric
@@ -24,7 +25,7 @@ import {arrUnique} from "../utils.js";
  * Updated Version: 1.5.0 (November 2023)
  */
 
-const AVAILABLE_MODES = [`BOTH`, `TYPE_FAMILY`, `CATEGORY`];
+const AVAILABLE_MODES = TYPEFACE_PARING["MODES"]
 
 export const compute = (typefaces, availableTypefaces, mode = `BOTH`) => {
     if (!AVAILABLE_MODES.includes(mode))  {

@@ -12,13 +12,11 @@
  * v1.0.0 November 2023
  */
 
-const DEBUG = true;
+import * as CONFIG from "../metrics.config.js";
 
-export const compute = (
-    containerWidth, containerHeight,
-    rows = [], columns = [],
-    margins = {left:0, top:0, right:0, bottom:0}
-) => {
+const DEBUG = CONFIG["default"]["DEBUG"];
+
+export const compute = (containerWidth, containerHeight, rows = [], columns = [], margins = {left:0, top:0, right:0, bottom:0}) => {
     let invalid = false;
     // debug
     let msg = "";

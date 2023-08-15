@@ -14,10 +14,11 @@
  */
 
 import {arrSum} from "../utils.js";
+import {VISUAL_BALANCE} from "../metrics.config.js";
 
 // visual center factor
 // By default, the visual center is taken to be offset a twentieth of the page height towards the top
-const VISUAL_CENTER_FT = 20;
+const VISUAL_CENTER_FT = VISUAL_BALANCE["VISUAL_CENTER_FT"];
 
 export const compute = async (img = null, size, rows, widths, heights, visualWeights = null) => {
     const dx = size["width"];

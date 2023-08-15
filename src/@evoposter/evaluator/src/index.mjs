@@ -30,22 +30,6 @@ export const whiteSpaceFraction = WhiteSpaceFraction.compute;
 export const typefaceParing = TypefaceParing.compute;
 export const visualBalance = VisualBalance.compute;
 
-
-export default {
-    ["constraints"]: {
-        ["legibility"]: legibility,
-        ["gridAppropriateSize"]: gridAppropriateSize,
-    },
-    ["semantics"]: {
-        ["layout"]: semanticsLayout,
-        ["emphasis"]: semanticsEmphasis,
-        ["visuals"]: semanticsVisuals,
-    },
-    ["aesthetics"]: {
-        ["alignment"]: alignment,
-        ["regularity"]: regularity,
-        ["whiteSpaceFraction"]: whiteSpaceFraction,
-        ["typefaceParing"]: typefaceParing,
-        ["visualBalance"]: visualBalance
-    }
+export default () => {
+    console.log (`@evo-poster · evaluator v2.00`)
 }

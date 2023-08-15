@@ -17,7 +17,9 @@
  * Version: 1.0.0 (November 2023)
  */
 
-const MAX_COLOR_DISTANCE = 441.67;
+import {SEMANTICS_VISUALS} from "../metrics.config.js";
+
+const MAX_COLOR_DISTANCE = SEMANTICS_VISUALS["MAX_COLOR_DISTANCE"];
 
 import * as configurationFile from "../../semantics-visual.config.js";
 import {arrMean, colorDistance, hexToRGB, constraint} from "../utils.js";

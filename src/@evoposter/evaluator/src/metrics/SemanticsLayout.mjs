@@ -22,14 +22,13 @@
  */
 
 import {arrMean, arrSum} from "../utils.js";
+import {SEMANTICS_LAYOUT} from "../metrics.config.js";
 
+const AVAILABLE_MODES = SEMANTICS_LAYOUT["MODES"];
 
-let dist = null;
-
-export const compute = (textboxesHeights = [], dist, mode=`RELATIVE`, size = {height: 100, margin:[0,0,0,0]}) => {
-
+export const compute = (textboxesHeights = [], dist = null, mode=`RELATIVE`, size = {height: 100, margin:[0,0,0,0]}) => {
     // mode validation
-    if (mode !== `RELATIVE` && mode !== `FIXED`) mode = `RELATIVE`;
+    if (!AVAILABLE_MODES.includes(mode)) mode = `RELATIVE`;
 
     // define max height
     let height = 0;
