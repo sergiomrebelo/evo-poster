@@ -14,7 +14,7 @@ import * as config from '../../evo-poster.config.js';
 
 import 'bootstrap/scss/bootstrap.scss';
 import './main.css';
-
+import {arrSum} from "@evoposter/evaluator/src/utils.js";
 
 
 window.preload = () => {}
@@ -67,6 +67,27 @@ export class App extends LitElement {
 
         const fonts = this.#getAvailableTypefaces();
 
+
+        let evaluationWeights = [
+            config["default"]["evaluation"]["GLOBAL_WEIGHTS"]["SEMANTICS"],
+            config["default"]["evaluation"]["GLOBAL_WEIGHTS"]["AESTHETICS"]
+        ];
+
+        let semanticsWeights = [
+            config["default"]["evaluation"]["SEMANTICS_WEIGHTS"]["EMPHASIS"],
+            config["default"]["evaluation"]["SEMANTICS_WEIGHTS"]["LAYOUT"],
+            config["default"]["evaluation"]["SEMANTICS_WEIGHTS"]["VISUALS"]
+        ];
+
+        let aestheticsWeights = [
+            config["default"]["evaluation"]["AESTHETICS_WEIGHTS"]["ALIGNMENT"],
+            config["default"]["evaluation"]["AESTHETICS_WEIGHTS"]["REGULARITY"],
+            config["default"]["evaluation"]["AESTHETICS_WEIGHTS"]["JUSTIFICATION"],
+            config["default"]["evaluation"]["AESTHETICS_WEIGHTS"]["TYPEFACE_PARING"],
+            config["default"]["evaluation"]["AESTHETICS_WEIGHTS"]["WHITE_BALANCE_FRACTION"],
+            config["default"]["evaluation"]["AESTHETICS_WEIGHTS"]["BALANCE"]
+        ]
+
         // evolution controllers
         this.config = {
             evo: {
@@ -75,6 +96,14 @@ export class App extends LitElement {
                 crossoverProb: Params.evolution.crossoverProb,
                 mutationProb: Params.evolution.mutationProb,
                 eliteSize: Params.evolution.eliteSize,
+            },
+            evaluation: {
+                weights: evaluationWeights.map((x) => x/arrSum(evaluationWeights)),
+                aestheticsWeights: aestheticsWeights.map ((x) => x/arrSum(aestheticsWeights)),
+                semanticsWeights: semanticsWeights.map((x) => x/arrSum(semanticsWeights)),
+                modes: {
+                    semanticsVisuals: config["default"]["evaluation"]["MODES"]["SEMANTICS_VISUALS"]
+                }
             },
             size: {
                 width: Params.visualisationGrid.width,

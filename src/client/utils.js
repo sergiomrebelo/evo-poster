@@ -37,3 +37,7 @@ export const shuffleArr = (arr) => {
 export default () => {
     console.log (`default export utils`);
 }
+
+export const sumProduct = (arr, weights) => {
+    return arr.reduce((s, v, i) => s + v * weights[i], 0);
+}

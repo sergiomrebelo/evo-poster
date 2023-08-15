@@ -3,26 +3,26 @@
  * Copyright 2019 Google LLC
  * SPDX-License-Identifier: BSD-3-Clause
  */
-const t$2=window,e$5=t$2.ShadowRoot&&(void 0===t$2.ShadyCSS||t$2.ShadyCSS.nativeShadow)&&"adoptedStyleSheets"in Document.prototype&&"replace"in CSSStyleSheet.prototype,s$3=Symbol(),n$3=new WeakMap;let o$4 = class o{constructor(t,e,n){if(this._$cssResult$=!0,n!==s$3)throw Error("CSSResult is not constructable. Use `unsafeCSS` or `css` instead.");this.cssText=t,this.t=e;}get styleSheet(){let t=this.o;const s=this.t;if(e$5&&void 0===t){const e=void 0!==s&&1===s.length;e&&(t=n$3.get(s)),void 0===t&&((this.o=t=new CSSStyleSheet).replaceSync(this.cssText),e&&n$3.set(s,t));}return t}toString(){return this.cssText}};const r$2=t=>new o$4("string"==typeof t?t:t+"",void 0,s$3),S$1=(s,n)=>{e$5?s.adoptedStyleSheets=n.map((t=>t instanceof CSSStyleSheet?t:t.styleSheet)):n.forEach((e=>{const n=document.createElement("style"),o=t$2.litNonce;void 0!==o&&n.setAttribute("nonce",o),n.textContent=e.cssText,s.appendChild(n);}));},c$1=e$5?t=>t:t=>t instanceof CSSStyleSheet?(t=>{let e="";for(const s of t.cssRules)e+=s.cssText;return r$2(e)})(t):t;
+const t$3=window,e$6=t$3.ShadowRoot&&(void 0===t$3.ShadyCSS||t$3.ShadyCSS.nativeShadow)&&"adoptedStyleSheets"in Document.prototype&&"replace"in CSSStyleSheet.prototype,s$4=Symbol(),n$4=new WeakMap;let o$4 = class o{constructor(t,e,n){if(this._$cssResult$=!0,n!==s$4)throw Error("CSSResult is not constructable. Use `unsafeCSS` or `css` instead.");this.cssText=t,this.t=e;}get styleSheet(){let t=this.o;const s=this.t;if(e$6&&void 0===t){const e=void 0!==s&&1===s.length;e&&(t=n$4.get(s)),void 0===t&&((this.o=t=new CSSStyleSheet).replaceSync(this.cssText),e&&n$4.set(s,t));}return t}toString(){return this.cssText}};const r$3=t=>new o$4("string"==typeof t?t:t+"",void 0,s$4),S$2=(s,n)=>{e$6?s.adoptedStyleSheets=n.map((t=>t instanceof CSSStyleSheet?t:t.styleSheet)):n.forEach((e=>{const n=document.createElement("style"),o=t$3.litNonce;void 0!==o&&n.setAttribute("nonce",o),n.textContent=e.cssText,s.appendChild(n);}));},c$2=e$6?t=>t:t=>t instanceof CSSStyleSheet?(t=>{let e="";for(const s of t.cssRules)e+=s.cssText;return r$3(e)})(t):t;
 
 /**
  * @license
  * Copyright 2017 Google LLC
  * SPDX-License-Identifier: BSD-3-Clause
- */var s$2;const e$4=window,r$1=e$4.trustedTypes,h$1=r$1?r$1.emptyScript:"",o$3=e$4.reactiveElementPolyfillSupport,n$2={toAttribute(t,i){switch(i){case Boolean:t=t?h$1:null;break;case Object:case Array:t=null==t?t:JSON.stringify(t);}return t},fromAttribute(t,i){let s=t;switch(i){case Boolean:s=null!==t;break;case Number:s=null===t?null:Number(t);break;case Object:case Array:try{s=JSON.parse(t);}catch(t){s=null;}}return s}},a$1=(t,i)=>i!==t&&(i==i||t==t),l$2={attribute:!0,type:String,converter:n$2,reflect:!1,hasChanged:a$1},d$1="finalized";let u$1 = class u extends HTMLElement{constructor(){super(),this._$Ei=new Map,this.isUpdatePending=!1,this.hasUpdated=!1,this._$El=null,this.u();}static addInitializer(t){var i;this.finalize(),(null!==(i=this.h)&&void 0!==i?i:this.h=[]).push(t);}static get observedAttributes(){this.finalize();const t=[];return this.elementProperties.forEach(((i,s)=>{const e=this._$Ep(s,i);void 0!==e&&(this._$Ev.set(e,s),t.push(e));})),t}static createProperty(t,i=l$2){if(i.state&&(i.attribute=!1),this.finalize(),this.elementProperties.set(t,i),!i.noAccessor&&!this.prototype.hasOwnProperty(t)){const s="symbol"==typeof t?Symbol():"__"+t,e=this.getPropertyDescriptor(t,s,i);void 0!==e&&Object.defineProperty(this.prototype,t,e);}}static getPropertyDescriptor(t,i,s){return {get(){return this[i]},set(e){const r=this[t];this[i]=e,this.requestUpdate(t,r,s);},configurable:!0,enumerable:!0}}static getPropertyOptions(t){return this.elementProperties.get(t)||l$2}static finalize(){if(this.hasOwnProperty(d$1))return !1;this[d$1]=!0;const t=Object.getPrototypeOf(this);if(t.finalize(),void 0!==t.h&&(this.h=[...t.h]),this.elementProperties=new Map(t.elementProperties),this._$Ev=new Map,this.hasOwnProperty("properties")){const t=this.properties,i=[...Object.getOwnPropertyNames(t),...Object.getOwnPropertySymbols(t)];for(const s of i)this.createProperty(s,t[s]);}return this.elementStyles=this.finalizeStyles(this.styles),!0}static finalizeStyles(i){const s=[];if(Array.isArray(i)){const e=new Set(i.flat(1/0).reverse());for(const i of e)s.unshift(c$1(i));}else void 0!==i&&s.push(c$1(i));return s}static _$Ep(t,i){const s=i.attribute;return !1===s?void 0:"string"==typeof s?s:"string"==typeof t?t.toLowerCase():void 0}u(){var t;this._$E_=new Promise((t=>this.enableUpdating=t)),this._$AL=new Map,this._$Eg(),this.requestUpdate(),null===(t=this.constructor.h)||void 0===t||t.forEach((t=>t(this)));}addController(t){var i,s;(null!==(i=this._$ES)&&void 0!==i?i:this._$ES=[]).push(t),void 0!==this.renderRoot&&this.isConnected&&(null===(s=t.hostConnected)||void 0===s||s.call(t));}removeController(t){var i;null===(i=this._$ES)||void 0===i||i.splice(this._$ES.indexOf(t)>>>0,1);}_$Eg(){this.constructor.elementProperties.forEach(((t,i)=>{this.hasOwnProperty(i)&&(this._$Ei.set(i,this[i]),delete this[i]);}));}createRenderRoot(){var t;const s=null!==(t=this.shadowRoot)&&void 0!==t?t:this.attachShadow(this.constructor.shadowRootOptions);return S$1(s,this.constructor.elementStyles),s}connectedCallback(){var t;void 0===this.renderRoot&&(this.renderRoot=this.createRenderRoot()),this.enableUpdating(!0),null===(t=this._$ES)||void 0===t||t.forEach((t=>{var i;return null===(i=t.hostConnected)||void 0===i?void 0:i.call(t)}));}enableUpdating(t){}disconnectedCallback(){var t;null===(t=this._$ES)||void 0===t||t.forEach((t=>{var i;return null===(i=t.hostDisconnected)||void 0===i?void 0:i.call(t)}));}attributeChangedCallback(t,i,s){this._$AK(t,s);}_$EO(t,i,s=l$2){var e;const r=this.constructor._$Ep(t,s);if(void 0!==r&&!0===s.reflect){const h=(void 0!==(null===(e=s.converter)||void 0===e?void 0:e.toAttribute)?s.converter:n$2).toAttribute(i,s.type);this._$El=t,null==h?this.removeAttribute(r):this.setAttribute(r,h),this._$El=null;}}_$AK(t,i){var s;const e=this.constructor,r=e._$Ev.get(t);if(void 0!==r&&this._$El!==r){const t=e.getPropertyOptions(r),h="function"==typeof t.converter?{fromAttribute:t.converter}:void 0!==(null===(s=t.converter)||void 0===s?void 0:s.fromAttribute)?t.converter:n$2;this._$El=r,this[r]=h.fromAttribute(i,t.type),this._$El=null;}}requestUpdate(t,i,s){let e=!0;void 0!==t&&(((s=s||this.constructor.getPropertyOptions(t)).hasChanged||a$1)(this[t],i)?(this._$AL.has(t)||this._$AL.set(t,i),!0===s.reflect&&this._$El!==t&&(void 0===this._$EC&&(this._$EC=new Map),this._$EC.set(t,s))):e=!1),!this.isUpdatePending&&e&&(this._$E_=this._$Ej());}async _$Ej(){this.isUpdatePending=!0;try{await this._$E_;}catch(t){Promise.reject(t);}const t=this.scheduleUpdate();return null!=t&&await t,!this.isUpdatePending}scheduleUpdate(){return this.performUpdate()}performUpdate(){var t;if(!this.isUpdatePending)return;this.hasUpdated,this._$Ei&&(this._$Ei.forEach(((t,i)=>this[i]=t)),this._$Ei=void 0);let i=!1;const s=this._$AL;try{i=this.shouldUpdate(s),i?(this.willUpdate(s),null===(t=this._$ES)||void 0===t||t.forEach((t=>{var i;return null===(i=t.hostUpdate)||void 0===i?void 0:i.call(t)})),this.update(s)):this._$Ek();}catch(t){throw i=!1,this._$Ek(),t}i&&this._$AE(s);}willUpdate(t){}_$AE(t){var i;null===(i=this._$ES)||void 0===i||i.forEach((t=>{var i;return null===(i=t.hostUpdated)||void 0===i?void 0:i.call(t)})),this.hasUpdated||(this.hasUpdated=!0,this.firstUpdated(t)),this.updated(t);}_$Ek(){this._$AL=new Map,this.isUpdatePending=!1;}get updateComplete(){return this.getUpdateComplete()}getUpdateComplete(){return this._$E_}shouldUpdate(t){return !0}update(t){void 0!==this._$EC&&(this._$EC.forEach(((t,i)=>this._$EO(i,this[i],t))),this._$EC=void 0),this._$Ek();}updated(t){}firstUpdated(t){}};u$1[d$1]=!0,u$1.elementProperties=new Map,u$1.elementStyles=[],u$1.shadowRootOptions={mode:"open"},null==o$3||o$3({ReactiveElement:u$1}),(null!==(s$2=e$4.reactiveElementVersions)&&void 0!==s$2?s$2:e$4.reactiveElementVersions=[]).push("1.6.2");
+ */var s$3;const e$5=window,r$2=e$5.trustedTypes,h$1=r$2?r$2.emptyScript:"",o$3=e$5.reactiveElementPolyfillSupport,n$3={toAttribute(t,i){switch(i){case Boolean:t=t?h$1:null;break;case Object:case Array:t=null==t?t:JSON.stringify(t);}return t},fromAttribute(t,i){let s=t;switch(i){case Boolean:s=null!==t;break;case Number:s=null===t?null:Number(t);break;case Object:case Array:try{s=JSON.parse(t);}catch(t){s=null;}}return s}},a$2=(t,i)=>i!==t&&(i==i||t==t),l$3={attribute:!0,type:String,converter:n$3,reflect:!1,hasChanged:a$2},d$1="finalized";let u$1 = class u extends HTMLElement{constructor(){super(),this._$Ei=new Map,this.isUpdatePending=!1,this.hasUpdated=!1,this._$El=null,this.u();}static addInitializer(t){var i;this.finalize(),(null!==(i=this.h)&&void 0!==i?i:this.h=[]).push(t);}static get observedAttributes(){this.finalize();const t=[];return this.elementProperties.forEach(((i,s)=>{const e=this._$Ep(s,i);void 0!==e&&(this._$Ev.set(e,s),t.push(e));})),t}static createProperty(t,i=l$3){if(i.state&&(i.attribute=!1),this.finalize(),this.elementProperties.set(t,i),!i.noAccessor&&!this.prototype.hasOwnProperty(t)){const s="symbol"==typeof t?Symbol():"__"+t,e=this.getPropertyDescriptor(t,s,i);void 0!==e&&Object.defineProperty(this.prototype,t,e);}}static getPropertyDescriptor(t,i,s){return {get(){return this[i]},set(e){const r=this[t];this[i]=e,this.requestUpdate(t,r,s);},configurable:!0,enumerable:!0}}static getPropertyOptions(t){return this.elementProperties.get(t)||l$3}static finalize(){if(this.hasOwnProperty(d$1))return !1;this[d$1]=!0;const t=Object.getPrototypeOf(this);if(t.finalize(),void 0!==t.h&&(this.h=[...t.h]),this.elementProperties=new Map(t.elementProperties),this._$Ev=new Map,this.hasOwnProperty("properties")){const t=this.properties,i=[...Object.getOwnPropertyNames(t),...Object.getOwnPropertySymbols(t)];for(const s of i)this.createProperty(s,t[s]);}return this.elementStyles=this.finalizeStyles(this.styles),!0}static finalizeStyles(i){const s=[];if(Array.isArray(i)){const e=new Set(i.flat(1/0).reverse());for(const i of e)s.unshift(c$2(i));}else void 0!==i&&s.push(c$2(i));return s}static _$Ep(t,i){const s=i.attribute;return !1===s?void 0:"string"==typeof s?s:"string"==typeof t?t.toLowerCase():void 0}u(){var t;this._$E_=new Promise((t=>this.enableUpdating=t)),this._$AL=new Map,this._$Eg(),this.requestUpdate(),null===(t=this.constructor.h)||void 0===t||t.forEach((t=>t(this)));}addController(t){var i,s;(null!==(i=this._$ES)&&void 0!==i?i:this._$ES=[]).push(t),void 0!==this.renderRoot&&this.isConnected&&(null===(s=t.hostConnected)||void 0===s||s.call(t));}removeController(t){var i;null===(i=this._$ES)||void 0===i||i.splice(this._$ES.indexOf(t)>>>0,1);}_$Eg(){this.constructor.elementProperties.forEach(((t,i)=>{this.hasOwnProperty(i)&&(this._$Ei.set(i,this[i]),delete this[i]);}));}createRenderRoot(){var t;const s=null!==(t=this.shadowRoot)&&void 0!==t?t:this.attachShadow(this.constructor.shadowRootOptions);return S$2(s,this.constructor.elementStyles),s}connectedCallback(){var t;void 0===this.renderRoot&&(this.renderRoot=this.createRenderRoot()),this.enableUpdating(!0),null===(t=this._$ES)||void 0===t||t.forEach((t=>{var i;return null===(i=t.hostConnected)||void 0===i?void 0:i.call(t)}));}enableUpdating(t){}disconnectedCallback(){var t;null===(t=this._$ES)||void 0===t||t.forEach((t=>{var i;return null===(i=t.hostDisconnected)||void 0===i?void 0:i.call(t)}));}attributeChangedCallback(t,i,s){this._$AK(t,s);}_$EO(t,i,s=l$3){var e;const r=this.constructor._$Ep(t,s);if(void 0!==r&&!0===s.reflect){const h=(void 0!==(null===(e=s.converter)||void 0===e?void 0:e.toAttribute)?s.converter:n$3).toAttribute(i,s.type);this._$El=t,null==h?this.removeAttribute(r):this.setAttribute(r,h),this._$El=null;}}_$AK(t,i){var s;const e=this.constructor,r=e._$Ev.get(t);if(void 0!==r&&this._$El!==r){const t=e.getPropertyOptions(r),h="function"==typeof t.converter?{fromAttribute:t.converter}:void 0!==(null===(s=t.converter)||void 0===s?void 0:s.fromAttribute)?t.converter:n$3;this._$El=r,this[r]=h.fromAttribute(i,t.type),this._$El=null;}}requestUpdate(t,i,s){let e=!0;void 0!==t&&(((s=s||this.constructor.getPropertyOptions(t)).hasChanged||a$2)(this[t],i)?(this._$AL.has(t)||this._$AL.set(t,i),!0===s.reflect&&this._$El!==t&&(void 0===this._$EC&&(this._$EC=new Map),this._$EC.set(t,s))):e=!1),!this.isUpdatePending&&e&&(this._$E_=this._$Ej());}async _$Ej(){this.isUpdatePending=!0;try{await this._$E_;}catch(t){Promise.reject(t);}const t=this.scheduleUpdate();return null!=t&&await t,!this.isUpdatePending}scheduleUpdate(){return this.performUpdate()}performUpdate(){var t;if(!this.isUpdatePending)return;this.hasUpdated,this._$Ei&&(this._$Ei.forEach(((t,i)=>this[i]=t)),this._$Ei=void 0);let i=!1;const s=this._$AL;try{i=this.shouldUpdate(s),i?(this.willUpdate(s),null===(t=this._$ES)||void 0===t||t.forEach((t=>{var i;return null===(i=t.hostUpdate)||void 0===i?void 0:i.call(t)})),this.update(s)):this._$Ek();}catch(t){throw i=!1,this._$Ek(),t}i&&this._$AE(s);}willUpdate(t){}_$AE(t){var i;null===(i=this._$ES)||void 0===i||i.forEach((t=>{var i;return null===(i=t.hostUpdated)||void 0===i?void 0:i.call(t)})),this.hasUpdated||(this.hasUpdated=!0,this.firstUpdated(t)),this.updated(t);}_$Ek(){this._$AL=new Map,this.isUpdatePending=!1;}get updateComplete(){return this.getUpdateComplete()}getUpdateComplete(){return this._$E_}shouldUpdate(t){return !0}update(t){void 0!==this._$EC&&(this._$EC.forEach(((t,i)=>this._$EO(i,this[i],t))),this._$EC=void 0),this._$Ek();}updated(t){}firstUpdated(t){}};u$1[d$1]=!0,u$1.elementProperties=new Map,u$1.elementStyles=[],u$1.shadowRootOptions={mode:"open"},null==o$3||o$3({ReactiveElement:u$1}),(null!==(s$3=e$5.reactiveElementVersions)&&void 0!==s$3?s$3:e$5.reactiveElementVersions=[]).push("1.6.2");
 
 /**
  * @license
  * Copyright 2017 Google LLC
  * SPDX-License-Identifier: BSD-3-Clause
  */
-var t$1;const i$1=window,s$1=i$1.trustedTypes,e$3=s$1?s$1.createPolicy("lit-html",{createHTML:t=>t}):void 0,o$2="$lit$",n$1=`lit$${(Math.random()+"").slice(9)}$`,l$1="?"+n$1,h=`<${l$1}>`,r=document,d=()=>r.createComment(""),u=t=>null===t||"object"!=typeof t&&"function"!=typeof t,c=Array.isArray,v=t=>c(t)||"function"==typeof(null==t?void 0:t[Symbol.iterator]),a="[ \t\n\f\r]",f=/<(?:(!--|\/[^a-zA-Z])|(\/?[a-zA-Z][^>\s]*)|(\/?$))/g,_=/-->/g,m=/>/g,p=RegExp(`>|${a}(?:([^\\s"'>=/]+)(${a}*=${a}*(?:[^ \t\n\f\r"'\`<>=]|("|')|))|$)`,"g"),g=/'/g,$=/"/g,y=/^(?:script|style|textarea|title)$/i,w=t=>(i,...s)=>({_$litType$:t,strings:i,values:s}),x=w(1),T=Symbol.for("lit-noChange"),A=Symbol.for("lit-nothing"),E=new WeakMap,C=r.createTreeWalker(r,129,null,!1),P=(t,i)=>{const s=t.length-1,l=[];let r,d=2===i?"<svg>":"",u=f;for(let i=0;i<s;i++){const s=t[i];let e,c,v=-1,a=0;for(;a<s.length&&(u.lastIndex=a,c=u.exec(s),null!==c);)a=u.lastIndex,u===f?"!--"===c[1]?u=_:void 0!==c[1]?u=m:void 0!==c[2]?(y.test(c[2])&&(r=RegExp("</"+c[2],"g")),u=p):void 0!==c[3]&&(u=p):u===p?">"===c[0]?(u=null!=r?r:f,v=-1):void 0===c[1]?v=-2:(v=u.lastIndex-c[2].length,e=c[1],u=void 0===c[3]?p:'"'===c[3]?$:g):u===$||u===g?u=p:u===_||u===m?u=f:(u=p,r=void 0);const w=u===p&&t[i+1].startsWith("/>")?" ":"";d+=u===f?s+h:v>=0?(l.push(e),s.slice(0,v)+o$2+s.slice(v)+n$1+w):s+n$1+(-2===v?(l.push(void 0),i):w);}const c=d+(t[s]||"<?>")+(2===i?"</svg>":"");if(!Array.isArray(t)||!t.hasOwnProperty("raw"))throw Error("invalid template strings array");return [void 0!==e$3?e$3.createHTML(c):c,l]};class V{constructor({strings:t,_$litType$:i},e){let h;this.parts=[];let r=0,u=0;const c=t.length-1,v=this.parts,[a,f]=P(t,i);if(this.el=V.createElement(a,e),C.currentNode=this.el.content,2===i){const t=this.el.content,i=t.firstChild;i.remove(),t.append(...i.childNodes);}for(;null!==(h=C.nextNode())&&v.length<c;){if(1===h.nodeType){if(h.hasAttributes()){const t=[];for(const i of h.getAttributeNames())if(i.endsWith(o$2)||i.startsWith(n$1)){const s=f[u++];if(t.push(i),void 0!==s){const t=h.getAttribute(s.toLowerCase()+o$2).split(n$1),i=/([.?@])?(.*)/.exec(s);v.push({type:1,index:r,name:i[2],strings:t,ctor:"."===i[1]?k:"?"===i[1]?I:"@"===i[1]?L:R});}else v.push({type:6,index:r});}for(const i of t)h.removeAttribute(i);}if(y.test(h.tagName)){const t=h.textContent.split(n$1),i=t.length-1;if(i>0){h.textContent=s$1?s$1.emptyScript:"";for(let s=0;s<i;s++)h.append(t[s],d()),C.nextNode(),v.push({type:2,index:++r});h.append(t[i],d());}}}else if(8===h.nodeType)if(h.data===l$1)v.push({type:2,index:r});else {let t=-1;for(;-1!==(t=h.data.indexOf(n$1,t+1));)v.push({type:7,index:r}),t+=n$1.length-1;}r++;}}static createElement(t,i){const s=r.createElement("template");return s.innerHTML=t,s}}function N(t,i,s=t,e){var o,n,l,h;if(i===T)return i;let r=void 0!==e?null===(o=s._$Co)||void 0===o?void 0:o[e]:s._$Cl;const d=u(i)?void 0:i._$litDirective$;return (null==r?void 0:r.constructor)!==d&&(null===(n=null==r?void 0:r._$AO)||void 0===n||n.call(r,!1),void 0===d?r=void 0:(r=new d(t),r._$AT(t,s,e)),void 0!==e?(null!==(l=(h=s)._$Co)&&void 0!==l?l:h._$Co=[])[e]=r:s._$Cl=r),void 0!==r&&(i=N(t,r._$AS(t,i.values),r,e)),i}class S{constructor(t,i){this._$AV=[],this._$AN=void 0,this._$AD=t,this._$AM=i;}get parentNode(){return this._$AM.parentNode}get _$AU(){return this._$AM._$AU}u(t){var i;const{el:{content:s},parts:e}=this._$AD,o=(null!==(i=null==t?void 0:t.creationScope)&&void 0!==i?i:r).importNode(s,!0);C.currentNode=o;let n=C.nextNode(),l=0,h=0,d=e[0];for(;void 0!==d;){if(l===d.index){let i;2===d.type?i=new M(n,n.nextSibling,this,t):1===d.type?i=new d.ctor(n,d.name,d.strings,this,t):6===d.type&&(i=new z(n,this,t)),this._$AV.push(i),d=e[++h];}l!==(null==d?void 0:d.index)&&(n=C.nextNode(),l++);}return C.currentNode=r,o}v(t){let i=0;for(const s of this._$AV)void 0!==s&&(void 0!==s.strings?(s._$AI(t,s,i),i+=s.strings.length-2):s._$AI(t[i])),i++;}}class M{constructor(t,i,s,e){var o;this.type=2,this._$AH=A,this._$AN=void 0,this._$AA=t,this._$AB=i,this._$AM=s,this.options=e,this._$Cp=null===(o=null==e?void 0:e.isConnected)||void 0===o||o;}get _$AU(){var t,i;return null!==(i=null===(t=this._$AM)||void 0===t?void 0:t._$AU)&&void 0!==i?i:this._$Cp}get parentNode(){let t=this._$AA.parentNode;const i=this._$AM;return void 0!==i&&11===(null==t?void 0:t.nodeType)&&(t=i.parentNode),t}get startNode(){return this._$AA}get endNode(){return this._$AB}_$AI(t,i=this){t=N(this,t,i),u(t)?t===A||null==t||""===t?(this._$AH!==A&&this._$AR(),this._$AH=A):t!==this._$AH&&t!==T&&this._(t):void 0!==t._$litType$?this.g(t):void 0!==t.nodeType?this.$(t):v(t)?this.T(t):this._(t);}k(t){return this._$AA.parentNode.insertBefore(t,this._$AB)}$(t){this._$AH!==t&&(this._$AR(),this._$AH=this.k(t));}_(t){this._$AH!==A&&u(this._$AH)?this._$AA.nextSibling.data=t:this.$(r.createTextNode(t)),this._$AH=t;}g(t){var i;const{values:s,_$litType$:e}=t,o="number"==typeof e?this._$AC(t):(void 0===e.el&&(e.el=V.createElement(e.h,this.options)),e);if((null===(i=this._$AH)||void 0===i?void 0:i._$AD)===o)this._$AH.v(s);else {const t=new S(o,this),i=t.u(this.options);t.v(s),this.$(i),this._$AH=t;}}_$AC(t){let i=E.get(t.strings);return void 0===i&&E.set(t.strings,i=new V(t)),i}T(t){c(this._$AH)||(this._$AH=[],this._$AR());const i=this._$AH;let s,e=0;for(const o of t)e===i.length?i.push(s=new M(this.k(d()),this.k(d()),this,this.options)):s=i[e],s._$AI(o),e++;e<i.length&&(this._$AR(s&&s._$AB.nextSibling,e),i.length=e);}_$AR(t=this._$AA.nextSibling,i){var s;for(null===(s=this._$AP)||void 0===s||s.call(this,!1,!0,i);t&&t!==this._$AB;){const i=t.nextSibling;t.remove(),t=i;}}setConnected(t){var i;void 0===this._$AM&&(this._$Cp=t,null===(i=this._$AP)||void 0===i||i.call(this,t));}}class R{constructor(t,i,s,e,o){this.type=1,this._$AH=A,this._$AN=void 0,this.element=t,this.name=i,this._$AM=e,this.options=o,s.length>2||""!==s[0]||""!==s[1]?(this._$AH=Array(s.length-1).fill(new String),this.strings=s):this._$AH=A;}get tagName(){return this.element.tagName}get _$AU(){return this._$AM._$AU}_$AI(t,i=this,s,e){const o=this.strings;let n=!1;if(void 0===o)t=N(this,t,i,0),n=!u(t)||t!==this._$AH&&t!==T,n&&(this._$AH=t);else {const e=t;let l,h;for(t=o[0],l=0;l<o.length-1;l++)h=N(this,e[s+l],i,l),h===T&&(h=this._$AH[l]),n||(n=!u(h)||h!==this._$AH[l]),h===A?t=A:t!==A&&(t+=(null!=h?h:"")+o[l+1]),this._$AH[l]=h;}n&&!e&&this.j(t);}j(t){t===A?this.element.removeAttribute(this.name):this.element.setAttribute(this.name,null!=t?t:"");}}class k extends R{constructor(){super(...arguments),this.type=3;}j(t){this.element[this.name]=t===A?void 0:t;}}const H=s$1?s$1.emptyScript:"";class I extends R{constructor(){super(...arguments),this.type=4;}j(t){t&&t!==A?this.element.setAttribute(this.name,H):this.element.removeAttribute(this.name);}}class L extends R{constructor(t,i,s,e,o){super(t,i,s,e,o),this.type=5;}_$AI(t,i=this){var s;if((t=null!==(s=N(this,t,i,0))&&void 0!==s?s:A)===T)return;const e=this._$AH,o=t===A&&e!==A||t.capture!==e.capture||t.once!==e.once||t.passive!==e.passive,n=t!==A&&(e===A||o);o&&this.element.removeEventListener(this.name,this,e),n&&this.element.addEventListener(this.name,this,t),this._$AH=t;}handleEvent(t){var i,s;"function"==typeof this._$AH?this._$AH.call(null!==(s=null===(i=this.options)||void 0===i?void 0:i.host)&&void 0!==s?s:this.element,t):this._$AH.handleEvent(t);}}class z{constructor(t,i,s){this.element=t,this.type=6,this._$AN=void 0,this._$AM=i,this.options=s;}get _$AU(){return this._$AM._$AU}_$AI(t){N(this,t);}}const j=i$1.litHtmlPolyfillSupport;null==j||j(V,M),(null!==(t$1=i$1.litHtmlVersions)&&void 0!==t$1?t$1:i$1.litHtmlVersions=[]).push("2.7.4");const B=(t,i,s)=>{var e,o;const n=null!==(e=null==s?void 0:s.renderBefore)&&void 0!==e?e:i;let l=n._$litPart$;if(void 0===l){const t=null!==(o=null==s?void 0:s.renderBefore)&&void 0!==o?o:null;n._$litPart$=l=new M(i.insertBefore(d(),t),t,void 0,null!=s?s:{});}return l._$AI(t),l};
+var t$2;const i$2=window,s$2=i$2.trustedTypes,e$4=s$2?s$2.createPolicy("lit-html",{createHTML:t=>t}):void 0,o$2="$lit$",n$2=`lit$${(Math.random()+"").slice(9)}$`,l$2="?"+n$2,h=`<${l$2}>`,r$1=document,d=()=>r$1.createComment(""),u=t=>null===t||"object"!=typeof t&&"function"!=typeof t,c$1=Array.isArray,v=t=>c$1(t)||"function"==typeof(null==t?void 0:t[Symbol.iterator]),a$1="[ \t\n\f\r]",f=/<(?:(!--|\/[^a-zA-Z])|(\/?[a-zA-Z][^>\s]*)|(\/?$))/g,_$1=/-->/g,m$1=/>/g,p=RegExp(`>|${a$1}(?:([^\\s"'>=/]+)(${a$1}*=${a$1}*(?:[^ \t\n\f\r"'\`<>=]|("|')|))|$)`,"g"),g$1=/'/g,$$1=/"/g,y=/^(?:script|style|textarea|title)$/i,w=t=>(i,...s)=>({_$litType$:t,strings:i,values:s}),x$1=w(1),T=Symbol.for("lit-noChange"),A=Symbol.for("lit-nothing"),E=new WeakMap,C$1=r$1.createTreeWalker(r$1,129,null,!1),P$1=(t,i)=>{const s=t.length-1,l=[];let r,d=2===i?"<svg>":"",u=f;for(let i=0;i<s;i++){const s=t[i];let e,c,v=-1,a=0;for(;a<s.length&&(u.lastIndex=a,c=u.exec(s),null!==c);)a=u.lastIndex,u===f?"!--"===c[1]?u=_$1:void 0!==c[1]?u=m$1:void 0!==c[2]?(y.test(c[2])&&(r=RegExp("</"+c[2],"g")),u=p):void 0!==c[3]&&(u=p):u===p?">"===c[0]?(u=null!=r?r:f,v=-1):void 0===c[1]?v=-2:(v=u.lastIndex-c[2].length,e=c[1],u=void 0===c[3]?p:'"'===c[3]?$$1:g$1):u===$$1||u===g$1?u=p:u===_$1||u===m$1?u=f:(u=p,r=void 0);const w=u===p&&t[i+1].startsWith("/>")?" ":"";d+=u===f?s+h:v>=0?(l.push(e),s.slice(0,v)+o$2+s.slice(v)+n$2+w):s+n$2+(-2===v?(l.push(void 0),i):w);}const c=d+(t[s]||"<?>")+(2===i?"</svg>":"");if(!Array.isArray(t)||!t.hasOwnProperty("raw"))throw Error("invalid template strings array");return [void 0!==e$4?e$4.createHTML(c):c,l]};class V{constructor({strings:t,_$litType$:i},e){let h;this.parts=[];let r=0,u=0;const c=t.length-1,v=this.parts,[a,f]=P$1(t,i);if(this.el=V.createElement(a,e),C$1.currentNode=this.el.content,2===i){const t=this.el.content,i=t.firstChild;i.remove(),t.append(...i.childNodes);}for(;null!==(h=C$1.nextNode())&&v.length<c;){if(1===h.nodeType){if(h.hasAttributes()){const t=[];for(const i of h.getAttributeNames())if(i.endsWith(o$2)||i.startsWith(n$2)){const s=f[u++];if(t.push(i),void 0!==s){const t=h.getAttribute(s.toLowerCase()+o$2).split(n$2),i=/([.?@])?(.*)/.exec(s);v.push({type:1,index:r,name:i[2],strings:t,ctor:"."===i[1]?k$1:"?"===i[1]?I:"@"===i[1]?L$1:R$1});}else v.push({type:6,index:r});}for(const i of t)h.removeAttribute(i);}if(y.test(h.tagName)){const t=h.textContent.split(n$2),i=t.length-1;if(i>0){h.textContent=s$2?s$2.emptyScript:"";for(let s=0;s<i;s++)h.append(t[s],d()),C$1.nextNode(),v.push({type:2,index:++r});h.append(t[i],d());}}}else if(8===h.nodeType)if(h.data===l$2)v.push({type:2,index:r});else {let t=-1;for(;-1!==(t=h.data.indexOf(n$2,t+1));)v.push({type:7,index:r}),t+=n$2.length-1;}r++;}}static createElement(t,i){const s=r$1.createElement("template");return s.innerHTML=t,s}}function N(t,i,s=t,e){var o,n,l,h;if(i===T)return i;let r=void 0!==e?null===(o=s._$Co)||void 0===o?void 0:o[e]:s._$Cl;const d=u(i)?void 0:i._$litDirective$;return (null==r?void 0:r.constructor)!==d&&(null===(n=null==r?void 0:r._$AO)||void 0===n||n.call(r,!1),void 0===d?r=void 0:(r=new d(t),r._$AT(t,s,e)),void 0!==e?(null!==(l=(h=s)._$Co)&&void 0!==l?l:h._$Co=[])[e]=r:s._$Cl=r),void 0!==r&&(i=N(t,r._$AS(t,i.values),r,e)),i}let S$1 = class S{constructor(t,i){this._$AV=[],this._$AN=void 0,this._$AD=t,this._$AM=i;}get parentNode(){return this._$AM.parentNode}get _$AU(){return this._$AM._$AU}u(t){var i;const{el:{content:s},parts:e}=this._$AD,o=(null!==(i=null==t?void 0:t.creationScope)&&void 0!==i?i:r$1).importNode(s,!0);C$1.currentNode=o;let n=C$1.nextNode(),l=0,h=0,d=e[0];for(;void 0!==d;){if(l===d.index){let i;2===d.type?i=new M(n,n.nextSibling,this,t):1===d.type?i=new d.ctor(n,d.name,d.strings,this,t):6===d.type&&(i=new z(n,this,t)),this._$AV.push(i),d=e[++h];}l!==(null==d?void 0:d.index)&&(n=C$1.nextNode(),l++);}return C$1.currentNode=r$1,o}v(t){let i=0;for(const s of this._$AV)void 0!==s&&(void 0!==s.strings?(s._$AI(t,s,i),i+=s.strings.length-2):s._$AI(t[i])),i++;}};class M{constructor(t,i,s,e){var o;this.type=2,this._$AH=A,this._$AN=void 0,this._$AA=t,this._$AB=i,this._$AM=s,this.options=e,this._$Cp=null===(o=null==e?void 0:e.isConnected)||void 0===o||o;}get _$AU(){var t,i;return null!==(i=null===(t=this._$AM)||void 0===t?void 0:t._$AU)&&void 0!==i?i:this._$Cp}get parentNode(){let t=this._$AA.parentNode;const i=this._$AM;return void 0!==i&&11===(null==t?void 0:t.nodeType)&&(t=i.parentNode),t}get startNode(){return this._$AA}get endNode(){return this._$AB}_$AI(t,i=this){t=N(this,t,i),u(t)?t===A||null==t||""===t?(this._$AH!==A&&this._$AR(),this._$AH=A):t!==this._$AH&&t!==T&&this._(t):void 0!==t._$litType$?this.g(t):void 0!==t.nodeType?this.$(t):v(t)?this.T(t):this._(t);}k(t){return this._$AA.parentNode.insertBefore(t,this._$AB)}$(t){this._$AH!==t&&(this._$AR(),this._$AH=this.k(t));}_(t){this._$AH!==A&&u(this._$AH)?this._$AA.nextSibling.data=t:this.$(r$1.createTextNode(t)),this._$AH=t;}g(t){var i;const{values:s,_$litType$:e}=t,o="number"==typeof e?this._$AC(t):(void 0===e.el&&(e.el=V.createElement(e.h,this.options)),e);if((null===(i=this._$AH)||void 0===i?void 0:i._$AD)===o)this._$AH.v(s);else {const t=new S$1(o,this),i=t.u(this.options);t.v(s),this.$(i),this._$AH=t;}}_$AC(t){let i=E.get(t.strings);return void 0===i&&E.set(t.strings,i=new V(t)),i}T(t){c$1(this._$AH)||(this._$AH=[],this._$AR());const i=this._$AH;let s,e=0;for(const o of t)e===i.length?i.push(s=new M(this.k(d()),this.k(d()),this,this.options)):s=i[e],s._$AI(o),e++;e<i.length&&(this._$AR(s&&s._$AB.nextSibling,e),i.length=e);}_$AR(t=this._$AA.nextSibling,i){var s;for(null===(s=this._$AP)||void 0===s||s.call(this,!1,!0,i);t&&t!==this._$AB;){const i=t.nextSibling;t.remove(),t=i;}}setConnected(t){var i;void 0===this._$AM&&(this._$Cp=t,null===(i=this._$AP)||void 0===i||i.call(this,t));}}let R$1 = class R{constructor(t,i,s,e,o){this.type=1,this._$AH=A,this._$AN=void 0,this.element=t,this.name=i,this._$AM=e,this.options=o,s.length>2||""!==s[0]||""!==s[1]?(this._$AH=Array(s.length-1).fill(new String),this.strings=s):this._$AH=A;}get tagName(){return this.element.tagName}get _$AU(){return this._$AM._$AU}_$AI(t,i=this,s,e){const o=this.strings;let n=!1;if(void 0===o)t=N(this,t,i,0),n=!u(t)||t!==this._$AH&&t!==T,n&&(this._$AH=t);else {const e=t;let l,h;for(t=o[0],l=0;l<o.length-1;l++)h=N(this,e[s+l],i,l),h===T&&(h=this._$AH[l]),n||(n=!u(h)||h!==this._$AH[l]),h===A?t=A:t!==A&&(t+=(null!=h?h:"")+o[l+1]),this._$AH[l]=h;}n&&!e&&this.j(t);}j(t){t===A?this.element.removeAttribute(this.name):this.element.setAttribute(this.name,null!=t?t:"");}};let k$1 = class k extends R$1{constructor(){super(...arguments),this.type=3;}j(t){this.element[this.name]=t===A?void 0:t;}};const H=s$2?s$2.emptyScript:"";class I extends R$1{constructor(){super(...arguments),this.type=4;}j(t){t&&t!==A?this.element.setAttribute(this.name,H):this.element.removeAttribute(this.name);}}let L$1 = class L extends R$1{constructor(t,i,s,e,o){super(t,i,s,e,o),this.type=5;}_$AI(t,i=this){var s;if((t=null!==(s=N(this,t,i,0))&&void 0!==s?s:A)===T)return;const e=this._$AH,o=t===A&&e!==A||t.capture!==e.capture||t.once!==e.once||t.passive!==e.passive,n=t!==A&&(e===A||o);o&&this.element.removeEventListener(this.name,this,e),n&&this.element.addEventListener(this.name,this,t),this._$AH=t;}handleEvent(t){var i,s;"function"==typeof this._$AH?this._$AH.call(null!==(s=null===(i=this.options)||void 0===i?void 0:i.host)&&void 0!==s?s:this.element,t):this._$AH.handleEvent(t);}};class z{constructor(t,i,s){this.element=t,this.type=6,this._$AN=void 0,this._$AM=i,this.options=s;}get _$AU(){return this._$AM._$AU}_$AI(t){N(this,t);}}const j$1=i$2.litHtmlPolyfillSupport;null==j$1||j$1(V,M),(null!==(t$2=i$2.litHtmlVersions)&&void 0!==t$2?t$2:i$2.litHtmlVersions=[]).push("2.7.4");const B=(t,i,s)=>{var e,o;const n=null!==(e=null==s?void 0:s.renderBefore)&&void 0!==e?e:i;let l=n._$litPart$;if(void 0===l){const t=null!==(o=null==s?void 0:s.renderBefore)&&void 0!==o?o:null;n._$litPart$=l=new M(i.insertBefore(d(),t),t,void 0,null!=s?s:{});}return l._$AI(t),l};
 
 /**
  * @license
  * Copyright 2017 Google LLC
  * SPDX-License-Identifier: BSD-3-Clause
- */var l,o$1;class s extends u$1{constructor(){super(...arguments),this.renderOptions={host:this},this._$Do=void 0;}createRenderRoot(){var t,e;const i=super.createRenderRoot();return null!==(t=(e=this.renderOptions).renderBefore)&&void 0!==t||(e.renderBefore=i.firstChild),i}update(t){const i=this.render();this.hasUpdated||(this.renderOptions.isConnected=this.isConnected),super.update(t),this._$Do=B(i,this.renderRoot,this.renderOptions);}connectedCallback(){var t;super.connectedCallback(),null===(t=this._$Do)||void 0===t||t.setConnected(!0);}disconnectedCallback(){var t;super.disconnectedCallback(),null===(t=this._$Do)||void 0===t||t.setConnected(!1);}render(){return T}}s.finalized=!0,s._$litElement$=!0,null===(l=globalThis.litElementHydrateSupport)||void 0===l||l.call(globalThis,{LitElement:s});const n=globalThis.litElementPolyfillSupport;null==n||n({LitElement:s});(null!==(o$1=globalThis.litElementVersions)&&void 0!==o$1?o$1:globalThis.litElementVersions=[]).push("3.3.2");
+ */var l$1,o$1;let s$1 = class s extends u$1{constructor(){super(...arguments),this.renderOptions={host:this},this._$Do=void 0;}createRenderRoot(){var t,e;const i=super.createRenderRoot();return null!==(t=(e=this.renderOptions).renderBefore)&&void 0!==t||(e.renderBefore=i.firstChild),i}update(t){const i=this.render();this.hasUpdated||(this.renderOptions.isConnected=this.isConnected),super.update(t),this._$Do=B(i,this.renderRoot,this.renderOptions);}connectedCallback(){var t;super.connectedCallback(),null===(t=this._$Do)||void 0===t||t.setConnected(!0);}disconnectedCallback(){var t;super.disconnectedCallback(),null===(t=this._$Do)||void 0===t||t.setConnected(!1);}render(){return T}};s$1.finalized=!0,s$1._$litElement$=!0,null===(l$1=globalThis.litElementHydrateSupport)||void 0===l$1||l$1.call(globalThis,{LitElement:s$1});const n$1=globalThis.litElementPolyfillSupport;null==n$1||n$1({LitElement:s$1});(null!==(o$1=globalThis.litElementVersions)&&void 0!==o$1?o$1:globalThis.litElementVersions=[]).push("3.3.2");
 
 /*!
   * Bootstrap v5.3.0 (https://getbootstrap.com/)
@@ -4561,7 +4561,7 @@ class Params {
     };
 }
 
-class Divider extends s {
+class Divider extends s$1 {
     static get = () => {
         return new Divider();
     }
@@ -4571,7 +4571,7 @@ class Divider extends s {
     }
 
     render(){
-        return x`<div class="my-3"></div>`;
+        return x$1`<div class="my-3"></div>`;
     }
     createRenderRoot() {
         return this;
@@ -4580,7 +4580,7 @@ class Divider extends s {
 
 customElements.define('section-divider', Divider);
 
-class InputForm extends s {
+class InputForm extends s$1 {
     static properties = {
         images: {}
     }
@@ -4684,7 +4684,7 @@ class InputForm extends s {
     }
 
     render() {
-        return x`
+        return x$1`
             <div class="container-fluid" id="input-form-section">
                 <section class="input-form-outer row mt-3">
                     <form id="input-form" class="input-form-inner" @submit=${this._onSubmit}>
@@ -4697,10 +4697,10 @@ class InputForm extends s {
                                 <label for="formControlLang" class="col-sm-6 col-form-label-sm">Language</label>
                                 <select class="form-control custom-select mr-sm-2" id="formControlLang" type="text">
                                     ${Params.availableLanguages.map((lang) => {
-                                        let opt = x`
+                                        let opt = x$1`
                                             <option value=${lang}>${lang}</option>`;
                                         if (lang === 'en') {
-                                            opt = x`
+                                            opt = x$1`
                                                 <option selected=true value=${lang}>${lang}</option>`;
                                         }
                                         return opt;
@@ -4764,15 +4764,15 @@ customElements.define('input-form', InputForm);
  * Copyright 2017 Google LLC
  * SPDX-License-Identifier: BSD-3-Clause
  */
-const t={ATTRIBUTE:1,CHILD:2,PROPERTY:3,BOOLEAN_ATTRIBUTE:4,EVENT:5,ELEMENT:6},e$2=t=>(...e)=>({_$litDirective$:t,values:e});class i{constructor(t){}get _$AU(){return this._$AM._$AU}_$AT(t,e,i){this._$Ct=t,this._$AM=e,this._$Ci=i;}_$AS(t,e){return this.update(t,e)}update(t,e){return this.render(...e)}}
+const t$1={ATTRIBUTE:1,CHILD:2,PROPERTY:3,BOOLEAN_ATTRIBUTE:4,EVENT:5,ELEMENT:6},e$3=t=>(...e)=>({_$litDirective$:t,values:e});let i$1 = class i{constructor(t){}get _$AU(){return this._$AM._$AU}_$AT(t,e,i){this._$Ct=t,this._$AM=e,this._$Ci=i;}_$AS(t,e){return this.update(t,e)}update(t,e){return this.render(...e)}};
 
 /**
  * @license
  * Copyright 2017 Google LLC
  * SPDX-License-Identifier: BSD-3-Clause
- */let e$1 = class e extends i{constructor(i){if(super(i),this.et=A,i.type!==t.CHILD)throw Error(this.constructor.directiveName+"() can only be used in child bindings")}render(r){if(r===A||null==r)return this.ft=void 0,this.et=r;if(r===T)return r;if("string"!=typeof r)throw Error(this.constructor.directiveName+"() called with a non-string value");if(r===this.et)return this.ft;this.et=r;const s=[r];return s.raw=s,this.ft={_$litType$:this.constructor.resultType,strings:s,values:[]}}};e$1.directiveName="unsafeHTML",e$1.resultType=1;const o=e$2(e$1);
+ */let e$2 = class e extends i$1{constructor(i){if(super(i),this.et=A,i.type!==t$1.CHILD)throw Error(this.constructor.directiveName+"() can only be used in child bindings")}render(r){if(r===A||null==r)return this.ft=void 0,this.et=r;if(r===T)return r;if("string"!=typeof r)throw Error(this.constructor.directiveName+"() called with a non-string value");if(r===this.et)return this.ft;this.et=r;const s=[r];return s.raw=s,this.ft={_$litType$:this.constructor.resultType,strings:s,values:[]}}};e$2.directiveName="unsafeHTML",e$2.resultType=1;const o=e$3(e$2);
 
-class ResultsContainer extends s {
+class ResultsContainer extends s$1 {
     static properties = {
         _available: false,
         _data: {},
@@ -4793,7 +4793,7 @@ class ResultsContainer extends s {
     }
 
     _pTitle = (titleContent, textContent="", id) => {
-        return x`<div class="my-4">
+        return x$1`<div class="my-4">
             <h3 class="d-inline">${titleContent}</h3>
             <p class="d-inline" id=${id}>${textContent}</p>
         </div>`;
@@ -4827,16 +4827,16 @@ class ResultsContainer extends s {
         this._imagesAvailable = files.length > 0;
         this._images = [];
         for (let i = 0; i<files.length; i++) {
-            const img = x`<img src="${files[i]}" class="d-inline-block mr-2" height="100px" width="auto"/>`;
+            const img = x$1`<img src="${files[i]}" class="d-inline-block mr-2" height="100px" width="auto"/>`;
             this._images.push(img);
         }
     }
 
     render() {
-        let imagesContainer = x``;
+        let imagesContainer = x$1``;
         if (this._imagesAvailable) {
             imagesContainer =
-                x`<div>
+                x$1`<div>
                     ${Divider.get()}
                     ${Divider.get()}
                     <h3 id="input-images-headline">Input Images</h3>
@@ -4845,7 +4845,7 @@ class ResultsContainer extends s {
         }
 
         return this._available
-        ? x`
+        ? x$1`
             <div class="temp-results container-fluid" id="temp-info">
                 <div class="row">
                     <section class="col-10">
@@ -4866,7 +4866,7 @@ class ResultsContainer extends s {
                     </section>
                 </div>
             </div>`
-        : x`<div class="temp-results container-fluid" id="temp-info">
+        : x$1`<div class="temp-results container-fluid" id="temp-info">
                     ${imagesContainer}
                 </div>`;
 
@@ -4879,7 +4879,7 @@ class ResultsContainer extends s {
 
 customElements.define('results-container', ResultsContainer);
 
-class ErrHandler extends s {
+class ErrHandler extends s$1 {
     static properties = {
         _content: undefined,
         visible: false,
@@ -4896,13 +4896,13 @@ class ErrHandler extends s {
     add = (content) => {
         const msg = (content.message !== null) ? content.message : content.msg;
         this.msg +=`<br>${msg}`;
-        this._content = x`<p id="err-message">${o(this.msg)}</p>`;
+        this._content = x$1`<p id="err-message">${o(this.msg)}</p>`;
         this.visible = true;
     }
 
     set = (content) => {
         this.msg = (content.message !== null) ? content.message : content.msg;
-        this._content = x`<p id="err-message">${o(this.msg)}</p>`;
+        this._content = x$1`<p id="err-message">${o(this.msg)}</p>`;
         this.visible = true;
         console.error(this.msg);
     }
@@ -4915,7 +4915,7 @@ class ErrHandler extends s {
 
 
     render(){
-       return x`
+       return x$1`
             <div class="position-relative temp-results container-fluid bg-light ${this.visible ? "d-block" : "d-none"} z-3" id="error-handle">
                 <div class="row bg-warning">
                     <section class="col-11 p-3" id="error-handle-inner">
@@ -4935,7 +4935,7 @@ class ErrHandler extends s {
 
 customElements.define('err-handler', ErrHandler);
 
-class TextInput extends s {
+class TextInput extends s$1 {
     static properties = {
         label: "label",
         showLabel: true,
@@ -4960,9 +4960,9 @@ class TextInput extends s {
     }
 
     render() {
-        return x`<div>
+        return x$1`<div>
             <div class="input-group input-group-sm" id="${this.id}-inner">
-                ${this.showLabel ? x`<span class="input-group-text" id="${this.id}-input-label">${this.label}</span>` : A}
+                ${this.showLabel ? x$1`<span class="input-group-text" id="${this.id}-input-label">${this.label}</span>` : A}
                 <input type="text" class="form-control" id="${this.id}-input"
                        placeholder="${this.showLabel ? this.label : A}"
                        data-mirror="${this.mirror !== null ? this.mirror : A}"
@@ -5015,7 +5015,11 @@ const shuffleArr = (arr) => {
     return arr;
 };
 
-class EvolutionPanel extends s {
+const sumProduct = (arr, weights) => {
+    return arr.reduce((s, v, i) => s + v * weights[i], 0);
+};
+
+class EvolutionPanel extends s$1 {
     static properties = {
         generations: 0,
     }
@@ -5083,7 +5087,7 @@ class EvolutionPanel extends s {
 
 
     render() {
-        return x`
+        return x$1`
             <div id="evolution-panel-inner">
                 <div class="row mb-2">
                     <div class="col-12">
@@ -5111,7 +5115,7 @@ class EvolutionPanel extends s {
 
 customElements.define('evo-panel', EvolutionPanel);
 
-class ColorInput extends s {
+class ColorInput extends s$1 {
     static properties = {
         label: "label",
         showLabel: true,
@@ -5133,9 +5137,9 @@ class ColorInput extends s {
     }
 
     render() {
-        return x`<div>
+        return x$1`<div>
             <div class="input-group input-group-sm" id="${this.id}-inner">
-                ${this.showLabel ? x`<span class="input-group-text" id="${this.id}-colour-picker-label">${this.label}</span>` : A}
+                ${this.showLabel ? x$1`<span class="input-group-text" id="${this.id}-colour-picker-label">${this.label}</span>` : A}
                 <input type="color"
                        class="form-control form-control-color colour-picker mr-2 d-inline-flex ${this.id}-colour-picker"
                        id="${this.id}-colour-picker-1"
@@ -5143,7 +5147,7 @@ class ColorInput extends s {
                        title="colour-typography" data-param="valueA"
                        disabled
                        @change="${this.onChange}">
-                ${this.colorB !== null ? x`<input type="color"
+                ${this.colorB !== null ? x$1`<input type="color"
                        class="form-control form-control-color colour-picker mr-2 d-inline-flex ${this.id}-colour-picker"
                        id="${this.id}-colour-picker-2"
                        value="${this.colorB}"
@@ -5161,7 +5165,7 @@ class ColorInput extends s {
 
 customElements.define('color-input', ColorInput);
 
-class Checkbox extends s {
+class Checkbox extends s$1 {
     static properties = {
         label: "label",
         showLabel: true,
@@ -5179,7 +5183,7 @@ class Checkbox extends s {
     }
 
     render() {
-        return x`<div>
+        return x$1`<div>
             <input class="form-check-input" type="checkbox"
                    id="${this.id}-check" ?checked="${this.checked}"
                    @change="${this.onChange}">
@@ -5194,7 +5198,7 @@ class Checkbox extends s {
 
 customElements.define('checkbox-input', Checkbox);
 
-class Slider extends s {
+class Slider extends s$1 {
     static properties = {
         label: "label",
         min: 0,
@@ -5232,7 +5236,7 @@ class Slider extends s {
     }
 
     render() {
-        return x`<div class="row">
+        return x$1`<div class="row">
             <div class="col-8">
                 <input type="range" class="form-range" id="${this.id}-slider"
                        min="${this.min}" max="${this.max}" step=${this.step} value="${this.value}"
@@ -5253,7 +5257,7 @@ class Slider extends s {
 
 customElements.define('slider-input', Slider);
 
-class DropDownList extends s {
+class DropDownList extends s$1 {
     static properties = {
         label: "label"
     }
@@ -5269,12 +5273,12 @@ class DropDownList extends s {
     }
 
     render() {
-        return x`<div class="row">
+        return x$1`<div class="row">
             <small class="fw-bold col-12">${this.label}</small>
             <div class="col-12 my-2">
                 <select class="form-select form-select-sm" id="${this.id}-list" @change="${this.onChange}">
-                    ${this.options.map ((x$1, i) => {
-                        return x`<option value=${i} ${(this.init === i) ? `selected` : A }>${x$1[0]}</option>`;
+                    ${this.options.map ((x, i) => {
+                        return x$1`<option value=${i} ${(this.init === i) ? `selected` : A }>${x[0]}</option>`;
                     })}´
                 </select>
             </div>
@@ -5288,7 +5292,7 @@ class DropDownList extends s {
 
 customElements.define('dropdown-input', DropDownList);
 
-class TextArea extends s {
+class TextArea extends s$1 {
     static properties = {
         label: "label",
         content: [],
@@ -5310,7 +5314,7 @@ class TextArea extends s {
     }
 
     render() {
-        return x`<div class="row">
+        return x$1`<div class="row">
             <small class="my-2 col-12" id="${this.id}-label">${o(this.label)}</small>
             <div class="col-12">
                 <textarea class="form-control my-2" id="${this.id}-input" rows="${this.content.length}" 
@@ -5326,7 +5330,7 @@ class TextArea extends s {
 
 customElements.define('textarea-input', TextArea);
 
-class GenerationPanel extends s {
+class GenerationPanel extends s$1 {
     static properties = {
         params: {},
         changesInTypefaces: 0
@@ -5555,7 +5559,7 @@ class GenerationPanel extends s {
     }
 
     #tag = (value = "", i) => {
-        return x`<span class="badge text-bg-secondary mr-2 typeface-badge-${value}"
+        return x$1`<span class="badge text-bg-secondary mr-2 typeface-badge-${value}"
                           id="typeface-badge-${value}">${value}
             <span role="button" @click="${() => {
             if (this.params.typography.typefaces.length > 1) {
@@ -5585,7 +5589,7 @@ class GenerationPanel extends s {
 
     // panel sections
     #posterSizeFeatures = () => {
-        return x`
+        return x$1`
             <div class="form-group row">
                 <h3 class="fw-bold col-12">Posters size</h3>
                 ${this.fields.size.width}
@@ -5601,7 +5605,7 @@ class GenerationPanel extends s {
     }
 
     #posterTypographyFeatures = () => {
-        return x`
+        return x$1`
             <div class="form-group row">
                 <h3 class="mb-3 fw-bold col-12">Typography</h3>
                 <div class="row form-group my-2" id="typeface-selector">
@@ -5631,7 +5635,7 @@ class GenerationPanel extends s {
     }
 
     #textBoxesFeatures = () => {
-        return x`
+        return x$1`
             <div class="form-group row">
                 <h3 class="mb-3 fw-bold col-12">Text box features</h3>
                 ${this.fields.textboxes.align}
@@ -5643,14 +5647,14 @@ class GenerationPanel extends s {
     #contentFeatures = () => {
         this.fields.content.set(this.params.sentences);
 
-        return x`<div class="form-group row">
+        return x$1`<div class="form-group row">
             ${this.fields.content}
             <hr class="mt-4">
         </div>`;
     }
 
     #backgroundFeatures = () => {
-        return x`<div class="form-group row">
+        return x$1`<div class="form-group row">
             <h3 class="mb-3 fw-bold col-12">Background features</h3>
             ${this.fields.background.style}
             <div class="row d-flex align-items-center">
@@ -5667,7 +5671,7 @@ class GenerationPanel extends s {
 
     render() {
 
-        return x`
+        return x$1`
             <div class="row form-group my-2 init-selector">
                 <form>
                     ${this.#contentFeatures()}
@@ -5690,7 +5694,7 @@ class GenerationPanel extends s {
 
 customElements.define('generation-panel', GenerationPanel);
 
-class Interface extends s {
+class Interface extends s$1 {
     static properties = {
         evolving: false
     }
@@ -5719,13 +5723,13 @@ class Interface extends s {
 
     #createTab = (name, id, active = false) => {
         const c = active ? `nav-link active` : `nav-link disabled`;
-        return x`<li class="nav-item" role="presentation">
+        return x$1`<li class="nav-item" role="presentation">
             <button class="${c}" id="${id}" data-bs-toggle="tab"  data-bs-target="#${id}-panel"
                     type="button" role="tab" aria-controls="${id}-pane" aria-selected="true">${name}</button></li>`;
     }
 
     render() {
-        return x`
+        return x$1`
             <div class="backdrop z-1 opacity-fade show" id="evo-interface-backdrop"></div>
             <div class="wrapper initial-form-outer container-fluid show z-2" id="evo-interface-outer">
                 <section id="initialForm" class="initial-form-inner row">
@@ -5809,7 +5813,7 @@ class Interface extends s {
 
 customElements.define('init-form', Interface);
 
-class Header extends s {
+class Header extends s$1 {
     static properties = {
         evolutionaryInterface: false
     }
@@ -5824,14 +5828,14 @@ class Header extends s {
     }
 
     render() {
-        return x`<nav class="container-fluid z-3 position-sticky top-0" id="header-container">
+        return x$1`<nav class="container-fluid z-3 position-sticky top-0" id="header-container">
             <header class="navbar justify-content-center align-items-start">
                 <div class="${this.evolutionaryInterface ? `col-10` :  `col-12`} mt-2">
                     <a class="navbar-brand m-0 p-0" href="#">
                         <h1 class="m-0 p-0">Evolving Posters</h1>
                     </a>
                 </div>
-                ${this.evolutionaryInterface ? x`<div class="col-2 d-flex justify-content-end mt-2 d-block">
+                ${this.evolutionaryInterface ? x$1`<div class="col-2 d-flex justify-content-end mt-2 d-block">
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-toggle="collapse" 
                             data-target="#evo-interface-inner" data-bs-target="#evo-interface-inner" aria-controls="evo-interface-inner" 
                             aria-expanded="false" aria-label="Toggle navigation" 
@@ -5856,6 +5860,8 @@ class Header extends s {
 }
 
 customElements.define('header-section', Header);
+
+const t=(t,e,r,l,n)=>l+(t-e)/(r-e)*(n-l),e$1=(t,e,r)=>Math.min(r,Math.max(e,t)),r=t=>t.reduce(((t,e)=>t+e),0)/t.length||0,l=t=>t.reduce(((t,e)=>t+e),0),n=t=>Math.max(...t),a=t=>Math.min(...t),s=t=>{if(t.levels)return {r:parseInt(t.levels[0]),g:parseInt(t.levels[1]),b:parseInt(t.levels[2])};let e=/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(t);return e?{r:parseInt(e[1],16),g:parseInt(e[2],16),b:parseInt(e[3],16)}:null},i=(t,e)=>Math.sqrt(Math.pow(t.r-e.r,2)+Math.pow(t.g-e.g,2)+Math.pow(t.b-e.b,2)),c={MIN_RANGE:50,THRESHOLD_VALID:.2,MODES:["DIF","MIN"]},g={VISUAL_CENTER_FT:20,MODES:["CENTER","LEFT-CENTER","RIGHT-CENTER","LEFT-TOP","RIGHT-TOP","LEFT-BOTTOM","RIGHT-BOTTOM"]};const _={MODES:["RELATIVE","FIXED"]}.MODES;let m=c.MIN_RANGE,R=c.THRESHOLD_VALID,S=c.MODES;const x=(e,r)=>{const l=r.filter(((t,e,r)=>r.indexOf(t)===e)),n=[];for(let t of l)for(let l=0;l<r.length;l++)if(r[l]===t){n.push(e[l]);break}const a=n.filter(((t,e)=>n.indexOf(t)!==e));let o=1;if(!a.length>=1){let a=0;for(let t in r){let o=r[t],s=e[t],i=l.indexOf(o);s!==n[i]&&a++;}o=t(a,0,e.length,0,1);}return o},F=(l,o,s="DIF")=>{S.includes(s)||(s="DIF");const i=n(l),f=a(l);let h=Math.abs(i-f);if(h<m)return 1;const u=n(o),c=a(o);let p=f;if("DIF"===s)for(let t in o)if(o[t]===c){p=l[t];break}const g=o.map((r=>{let l=t(r,c,u,0,h);return l=e$1(l,0,h),l})),d=[];for(let t in l){let e=l[t],r=Math.abs(e-p),n=Math.abs(r-g[t]);d.push(n);}let E=t(r(d),0,h,1,0);return e$1(E,0,1)};var L={anger:{color:{typography:["#ff0000","#00ff00"],background:["#ff0000"]},typefaces:["sans-serif","neo-grotesque"]},joy:{color:{typography:[],background:["#ffff00","#00ff00"]},typefaces:["sans-serif","serif"]},trust:{color:{typography:[],background:["#0000ff","#00ff00"]},typefaces:["neo-grotesque"]},sadness:{color:{typography:[],background:["#0071b6"]},typefaces:[]},disgust:{color:{typography:["#800080"],background:[]},typefaces:[]}},D=Object.freeze({__proto__:null,default:L});const C=441.67,Y=g.VISUAL_CENTER_FT,P=g.MODES,k=(t,e,r,n)=>{const a=[];for(let e in n)a.push(U(t,r[e],n[e]));let o=0,s=0;const i=l(e);for(let t in e)o+=a[t].x*e[t],s+=a[t].y*e[t];return o/=i,s/=i,{x:o,y:s}},U=(t,e,r,l=[0,0,0,0])=>{const n=(t=String(t)).includes("LEFT")?1:t.includes("RIGHT")?2:0,a=t.includes("TOP")?1:t.includes("BOTTOM")?2:0;return {x:0===n?e/2:1===n?e*l[0]:e*(1-l[2]),y:0===a?r/2-r/Y:1===a?r*l[1]:r-r*l[3]}},$=async(t,e,r,l)=>{let n=[],a=[];for(let o in r){n.push(r[o]*l[o]);const s=await t.get(0,t.height/2+e.center[o],t.width,e.l[o]);await s.loadPixels();let i=0,f=0,h=0;const u=s.pixels.length/4;for(let t=0;t<s.pixels.length;t+=4)i+=s.pixels[t],f+=s.pixels[t+1],h+=s.pixels[t+2];i=Math.round(i/u),f=Math.round(f/u),h=Math.round(h/u);const c=(.2126*i+.7152*f+.0722*h)/255;a.push(-Math.log10(c));}return n.map(((t,e)=>t*a[e]))},J=(t=[],e=null,n="RELATIVE",a={height:100,margin:[0,0,0,0]})=>{_.includes(n)||(n="RELATIVE");let o=0;"RELATIVE"===n?o=l(t):"FIXED"===n&&(o=a.height-(a.height*a.margin[1]+a.height*a.margin[3]));const s=t.map((t=>t/o));let i=[];for(let t in e){const r=Math.abs(e[t][3]-s[t]);i.push(r);}return 1-r(i)},q=(t,e,r=1,a=!0,o=[.4,.3,.3])=>{const s=e.map((t=>t[3]));let i,f=[F(t.map((t=>t.weight)),s),F(t.map((t=>t["font-stretch"])),s),r>1?x(t.map((t=>t["font-stretch"])),s):0],h=f.map(((t,e)=>t*o[e]));if(a)i=l(h);else {let t=f.map((t=>t>R)),e=0;for(let r of t)r&&e++;i=n(f)/e;}return i},j=async(t,l,n,a,o=D)=>{let f=t.predominant.emotion;if(void 0===o.default[f])return 1;const h=o.default[f].color.typography,u=o.default[f].color.background,c=o.default[f].typefaces;let p=1;if(void 0!==h&&h.length>0){let t=[];for(let e of l){let r=s(e.color),l=Number.MAX_VALUE;for(let t of h){t=s(t);let e=i(r,t);e<l&&(l=e);}t.push(l);}p=t.length<1?1:r(t),p/=C,p=e$1(1-p,0,1);}let g=1;if(void 0!==u&&0!==u.length){let t=[];g=0;for(let e of n){e=s(e);let r=Number.MAX_VALUE;for(let t of u){t=s(t);let l=i(e,t);l<r&&(r=l);}t.push(r);}g=g.length<1?1:r(t),g/=C,g=e$1(1-g,0,1);}let d=1;if(void 0!==c&&c.length>0){let t=[];for(let e of l){let r=0;const l=a.map((t=>t.family)).indexOf(e.typeface),n=a[l].tags;for(let t of c)n.includes(t)&&(r+=1/c.length);t.push(r);}d=t.length<1?1:r(t),d=e$1(d,0,1);}return (p+g+d)/3},Z=async(t=null,r,l,n,a,o="CENTER",s=null)=>{const i=r.width,f=r.height;P.includes(o)||(o="CENTER");const h=null===s?await $(t,l,n,a):s,u=k(o,h,n,a);let c=U(o,i,f,r.margin),p=Math.pow((u.x-c.x)/i,2)+Math.pow((u.y-c.y)/f,2);return p=1-Math.pow(Math.abs(p/2),.5),e$1(p,0,1)};
 
 var backgroundStyles = {
     solid: (pg, color) => {
@@ -5888,294 +5894,6 @@ var backgroundStyles = {
         pop();
     }
 };
-
-const map = (value, minA, maxA, minB, maxB) => {
-    return minB + (maxB - minB) * ((value - minA) / (maxA - minA));
-};
-
-const arrMean = (arr) => {
-    const sum = arr.reduce((a, b) => a + b, 0);
-    return (sum / arr.length) || 0;
-};
-
-const arrSum = (arr) => {
-    return arr.reduce((partialSum, a) => partialSum + a, 0);
-};
-
-/**
- * Legibility
- *
- * Measure the legibility of the text in the poster
- * it is related to the legibility of the sentence
- * and not the typeface shapes
- *
- * Expected return a value between 0 (good) and (1) bad
- *
- * Sérgio M. Rebelo
- * CDV lab. (CMS, CISUC, Portugal)
- * srebelo[at]dei.uc.pt
- *
- * v1.0.0 August 2018 (as part of evoPoster)
- * v2.0.0 November 2020 (as part of evoPoster)
- * v2.5.0 November 2021 (as part of evoPoster)
- * v3.0.0 November 2023
- */
-
-
-const MAX_CONSTRAINT = 1;
-const WHITE_SPACE_FACTOR = 3;
-
-const compute$2 = (sentencesLength = [], minSize, mode= 'OVERSET', maxLimitScale= 1) => {
-    let results = [];
-    let max = minSize * maxLimitScale;
-    for (let sentence of sentencesLength) {
-        let dif = minSize-sentence;
-        let value = MAX_CONSTRAINT;
-        switch (mode) {
-            case `JUSTIFY`:
-                value = justify(dif, max);
-                break;
-            case `ATTEMPT_JUSTIFY`:
-                value = attemptJustify(dif, max);
-                break;
-            default:
-                value = overset(dif, max);
-                break;
-        }
-        results.push(value);
-    }
-
-    // calculate mean
-    const mean = arrMean([...results]);
-
-    return mean;
-};
-
-const overset = (value, max) => {
-    // only prejudice when text overfits the poster
-    // if dif bigger than 0
-    value = value >= 0 ? 0 : value;
-    // if dif lower than limit
-    value = value <= -max ? -max : value;
-    // transform in scale of 1 (bad) to 0 (good)
-    return map (value, -max, 0, MAX_CONSTRAINT, 0);
-};
-
-const justify = (value, max) => {
-    // prejudice both overset and small lettering
-    value = Math.abs(value);
-    // if the dif is bigger than max
-    value = value > max ? max : value;
-    // transform in scale of 1 (bad) to 0 (good)
-    return map (value, max, 0, MAX_CONSTRAINT, 0);
-};
-
-// attempt to justify the text
-// prejudice more when the text overset box than when it is smaller
-const attemptJustify = (value, max) => {
-    // if dif bigger than 0 (it is not overset), soften the value
-    value = value >= 0 ? value/WHITE_SPACE_FACTOR : value;
-    return justify(value, max);
-};
-
-/**
- * Grid Size Appropriateness
- *
- * Measure the appropriate of the used grid to the size of container
- * it is related to if the width and height of the grid is
- * in accordance with poster size
- *
- * Sérgio M. Rebelo
- * CDV lab. (CMS, CISUC, Portugal)
- * srebelo[at]dei.uc.pt
- *
- * v1.0.0 November 2023
- */
-
-const DEBUG = true;
-
-const compute$1 = (
-    containerWidth, containerHeight,
-    rows = [], columns = [],
-    margins = {left:0, top:0, right:0, bottom:0}
-) => {
-    let invalid = false;
-    // debug
-    let msg = "";
-
-    // height calculation
-    let height = Math.abs(margins.top)+Math.abs(margins.bottom);
-    for (let r of rows) {
-        height = height + parseFloat(r);
-    }
-    // width calculation
-    let width = Math.abs(margins.left)+Math.abs(margins.right);
-    for (let r of columns) {
-        width = width + parseFloat(r);
-    }
-
-    width = Math.round(width);
-    height = Math.round(height);
-
-    if (height > containerHeight) {
-        invalid = true;
-        msg += `Grid height is bigger than container (grid:${height}, container:${containerHeight}). `;
-    } else if (height < containerHeight) {
-        msg += `Grid and container height are not the same (grid:${height}, container:${containerHeight}). `;
-    }
-
-    if (width > containerWidth) {
-        invalid = true;
-        msg += `Grid width is bigger than container (grid:${width}, container:${containerWidth}). `;
-    } else if (width < containerWidth) {
-        msg += `Grid and container width are not the same (grid:${width}, container:${containerWidth}). `;
-    }
-
-    if (msg !== "" && DEBUG) {
-        console.warn(msg);
-    }
-
-    return invalid ? 1 : 0;
-};
-
-/**
- * Visual Balance metric
- *
- * Estimate the visual balance (centred or left-right) of the composition.
- * Based on Harrington et al. (2004)
- *
- *
- * Author: Sérgio M. Rebelo
- * CDV lab. (CMS, CISUC, Portugal)
- * Contact: srebelo[at]dei.uc.pt
- *
- * Version 1.0.0 (March 2020)
- * Version: 1.5.0 (November 2023)
- */
-
-// visual center factor
-// By default, the visual center is taken to be offset a twentieth of the page height towards the top
-const VISUAL_CENTER_FT = 20;
-
-const compute = async (img = null, size, rows, heights, widths, visualWeights = null) => {
-    const dx = size["width"];
-    const dy = size["height"];
-
-    const vw = visualWeights === null ? await visualWeight(img, rows, widths, heights) : visualWeights;
-    const bo = balanceCenter(vw, widths, heights);
-    const vo = visualCenter(dx, dy);
-
-    // calculate central Balance
-    let cb = Math.pow(((bo.x-vo.x)/dx), 2) + Math.pow(((bo.y-vo.y)/dy), 2);
-    cb = 1-Math.pow(Math.abs(cb/2), 1/2);
-
-    console.log (`SIZE`, size);
-    console.log (`ROWS`, rows);
-    console.log (`heights`, heights);
-    console.log (`widths`, widths);
-    console.log (`visualWeights`, vw);
-    console.log (`cb=${cb}`);
-
-    return cb;
-};
-
-
-const balanceCenter = (vws, widths, heights) => {
-    // get text box center
-    const vc = [];
-    for (let i in heights) {
-        vc.push(visualCenter(widths[i], heights[i]));
-    }
-
-    // get page balance center
-    let posX = 0, posY = 0;
-    const m = arrSum(vws);
-
-    for (let i in vws) {
-        posX += vc[i].x*vws[i];
-        posY += vc[i].y*vws[i];
-    }
-
-    posX /= m;
-    posY /= m;
-
-    return {
-        x: posX,
-        y: posY
-    }
-};
-
-
-/**
-* Calculate the visual centre of a element
-* The visual center lies halfway between the left and right edges
-* the visual center is taken to be offset a twentieth of the page height towards the top
-*/
-const visualCenter = (width, height) => {
-    return {
-        x: width/2,
-        y: height/2 - (height/VISUAL_CENTER_FT)
-    }
-};
-
-/**
- * calculate the visual weight of a object
- * visual weight = area x optical density
- */
-const visualWeight = async (img, rows, widths, heights) => {
-    let areas = [];
-    let opticalDensity = [];
-
-    for (let i in widths) {
-
-        // compute areas
-        areas.push(widths[i] * heights[i]);
-
-        // compute visual weight
-        const rendering = await img.get(
-            0,
-            img.height/2 + rows["center"][i],
-            img.width,
-            rows["l"][i]
-        );
-
-        await rendering.loadPixels();
-
-        let r = 0, g = 0, b = 0;
-        const realPixelsSize = rendering.pixels.length/4;
-
-        for (let i=0; i < rendering.pixels.length; i+=4) {
-            r += rendering.pixels[i];
-            g += rendering.pixels[i+1];
-            b += rendering.pixels[i+2];
-        }
-
-        r = Math.round(r/realPixelsSize);
-        g = Math.round(g/realPixelsSize);
-        b = Math.round(b/realPixelsSize);
-
-        const avgLuma = (0.2126*r + 0.7152*g + 0.0722*b);
-        const t = avgLuma / 255;
-        opticalDensity.push(-Math.log10(t));
-    }
-
-    return areas.map((a, i) => a * opticalDensity[i]);
-};
-
-/**
- * Evaluation metrics for evo-poster
- * Sérgio M. Rebelo
- * CDV lab. (CMS, CISUC, Portugal)
- * srebelo[at]dei.uc.pt
- *
- * v0.0.1 July 2023
- */
-
-
-// constraints
-const legibility = compute$2;
-const gridAppropriateSize = compute$1;
-const visualBalance = compute;
 
 function clamp(value, min, max) {
   return Math.max(min, Math.min(value, max));
@@ -6718,10 +6436,33 @@ const COLOR = {
     MAX_COLOR_SCHEME_ATTEMPT: 200,
 };
 
+const EVALUATION = {
+    GLOBAL_WEIGHTS: {
+        SEMANTICS: 0.5,
+        AESTHETICS: 0.5
+    },
+    MODES: {
+        SEMANTICS_VISUALS: `FIXED`
+    },
+    SEMANTICS_WEIGHTS: {
+        EMPHASIS: 0.5,
+        LAYOUT: 0.5,
+        VISUALS: 0
+    },
+    AESTHETICS_WEIGHTS: {
+        ALIGNMENT: 0.1,
+        REGULARITY: 0.1,
+        JUSTIFICATION: 0.3,
+        TYPEFACE_PARING: 0.1,
+        WHITE_BALANCE_FRACTION: 0.2,
+        BALANCE: 0.2
+    }
+};
 
 var evoPoster_config = {
     typography: TYPEFACES !== undefined ? TYPEFACES : {},
-    color: COLOR !== undefined ? COLOR : {}
+    color: COLOR !== undefined ? COLOR : {},
+    evaluation: EVALUATION !== undefined ? EVALUATION : {}
 };
 
 const MIN_CONTRAST = evoPoster_config.color !== null ? evoPoster_config.color.MIN_CONTRAST : 10;
@@ -6786,7 +6527,6 @@ const contrastRatio = (luminance1, luminance2) => {
 };
 
 const MAX_COLOR_SCHEME_ATTEMPT$1 = evoPoster_config["COLOR"] !== undefined ? evoPoster_config["COLOR"]["MAX_COLOR_SCHEME_ATTEMPT"] : 200;
-
 
 class Poster {
     #showGrid = false;
@@ -7007,9 +6747,29 @@ class Poster {
 
     evaluate = async (dist, emotionalData = {predominant: []}) => {
         this.phenotype = await this.draw();
-        this.params["typography"]["typefaces"].length;
+        const noCurrentTypefaces = this.params["typography"]["typefaces"].length;
+        const weights = this.params["evaluation"]["weights"];
 
-        // const layoutSemantics = evaluator.layoutSemantics(this.genotype["grid"]["rows"]["l"], dist, `FIXED`, this.genotype["size"]);
+        let semantics = 0; // semantic part of fitness
+        let aesthetics = 0; // aesthetics part of fitness
+
+        //const ls = layoutSemantics(this.genotype["grid"]["rows"]["l"], dist, `FIXED`, this.genotype["size"]);
+        // const semanticsEmphasis = evaluator.semanticsEmphasis(this.genotype["textboxes"], dist, noCurrentTypefaces);
+        //  const justification = evaluator.legibility(this.sentencesLength, this.genotype["grid"].getAvailableWidth(), `JUSTIFY`);
+        // const visualSemantics = evaluator.semanticsVisuals(emotionalData, this.genotype["textboxes"], this.genotype.background.colors, this.params.typography.typefaces);
+
+        if (weights[0] > 0) {
+            const semanticsWeights = this.params["evaluation"]["semanticsWeights"];
+            const emphasis = (semanticsWeights[0] > 0) ? q(this.genotype["textboxes"], dist, noCurrentTypefaces) : 0;
+            const layoutMode = this.params["evaluation"]["modes"]["semanticsVisuals"] !== undefined ? this.params["evaluation"]["modes"]["semanticsVisuals"] : `FIXED`;
+            const layout = (semanticsWeights[1] > 0) ? J(this.genotype["grid"]["rows"]["l"], dist, layoutMode, this.genotype["size"]) : 0;
+            const visuals = (semanticsWeights[2] > 0) ? await j(emotionalData, this.genotype["textboxes"], this.genotype.background.colors, this.params.typography.typefaces) : 0;
+            semantics = sumProduct( [emphasis, layout, visuals], semanticsWeights);
+        }
+
+
+        // semantics
+        // const ls = layoutSemantics(this.genotype["grid"]["rows"]["l"], dist, `FIXED`, this.genotype["size"]);
         // const semanticsEmphasis = evaluator.semanticsEmphasis(this.genotype["textboxes"], dist, noCurrentTypefaces);
         //  const justification = evaluator.legibility(this.sentencesLength, this.genotype["grid"].getAvailableWidth(), `JUSTIFY`);
         // const visualSemantics = evaluator.semanticsVisuals(emotionalData, this.genotype["textboxes"], this.genotype.background.colors, this.params.typography.typefaces);
@@ -7019,29 +6779,40 @@ class Poster {
 
         // textboxes have the same typography colour
         // const whiteSpace = evaluator.whiteSpaceFraction(this.phenotype, this.genotype["textboxes"][0]["color"]);
-        //const typefaceParing = evaluator.typefaceParing(this.genotype["textboxes"].map(gene => gene["typeface"]), this.params["typography"]["typefaces"]);
-        const balance = visualBalance(
+        //const typefaceParing = evaluator.typefaceParing(this.genotype["textboxes"].map(gene => gene["typeface"]), this.params["typography"]["typefaces"])
+
+        let balanceMode = this.genotype["textboxes"][0]["alignment"] === 0 ? `LEFT` : this.genotype["textboxes"][0]["alignment"] === 1 ? `CENTER` : `RIGHT`;
+        balanceMode += this.genotype["typography"]["verticalAlignment"] === 0 ? `-TOP` : this.genotype["typography"]["verticalAlignment"] === 1 ? `-CENTER` : `-BOTTOM`;
+        
+        const balance = await Z(
             this.phenotype,
             this.genotype["size"],
             this.genotype["grid"]["rows"],
             this.genotype["textboxes"].map(tb => tb.size),
-            this.sentencesLength
+            this.sentencesLength,
+            balanceMode
         );
+
+        console.log (`balance=${balance}`);
 
         // this.fitness = layoutSemantics;
         // this.fitness = (visualSemantics * 0.3 + layoutSemantics * 0.3 + justification * 0.4);
-        this.fitness = balance;
+
 
         // constraints
-        const legibility$1 = legibility(this.sentencesLength, this.genotype["grid"].getAvailableWidth(), `OVERSET`);
-        const gridAppropriateness = gridAppropriateSize(
+        // const legibility = evaluator.legibility(this.sentencesLength, this.genotype["grid"].getAvailableWidth(), `OVERSET`);
+        /*const gridAppropriateness = evaluator.gridAppropriateSize(
             this.genotype["size"].width, this.genotype["size"].height,
             this.genotype["grid"].rows.l, this.genotype["grid"].columns.l, this.genotype["grid"].marginsPos
         );
-        this.constraint = legibility$1 + gridAppropriateness;
+        this.constraint = legibility + gridAppropriateness;*/
 
-        this.metrics["legibility"] = legibility$1;
-        this.metrics["gridAppropriateness"] = gridAppropriateness;
+        // this.metrics["legibility"] = legibility;
+        // this.metrics["gridAppropriateness"] = gridAppropriateness;
+
+        this.fitness = sumProduct([semantics, aesthetics], weights);
+        console.log (`fitness=${this.fitness} (semantics=${semantics}, aesthetics=${aesthetics})`);
+        this.constraint = 1;
 
         // returns a number between 0 and 0.5
         // subtracted to fitness
@@ -8021,6 +7792,10 @@ class Population {
     }
 }
 
+const arrSum = (arr) => {
+    return arr.reduce((partialSum, a) => partialSum + a, 0);
+};
+
 window.preload = () => {};
 
 window.setup = () => {
@@ -8055,7 +7830,7 @@ window.keyPressed = () => {
 
 
 
-class App extends s {
+class App extends s$1 {
     static properties = {
         screen: 0,
         results: {},
@@ -8071,6 +7846,27 @@ class App extends s {
 
         const fonts = this.#getAvailableTypefaces();
 
+
+        let evaluationWeights = [
+            evoPoster_config["evaluation"]["GLOBAL_WEIGHTS"]["SEMANTICS"],
+            evoPoster_config["evaluation"]["GLOBAL_WEIGHTS"]["AESTHETICS"]
+        ];
+
+        let semanticsWeights = [
+            evoPoster_config["evaluation"]["SEMANTICS_WEIGHTS"]["EMPHASIS"],
+            evoPoster_config["evaluation"]["SEMANTICS_WEIGHTS"]["LAYOUT"],
+            evoPoster_config["evaluation"]["SEMANTICS_WEIGHTS"]["VISUALS"]
+        ];
+
+        let aestheticsWeights = [
+            evoPoster_config["evaluation"]["AESTHETICS_WEIGHTS"]["ALIGNMENT"],
+            evoPoster_config["evaluation"]["AESTHETICS_WEIGHTS"]["REGULARITY"],
+            evoPoster_config["evaluation"]["AESTHETICS_WEIGHTS"]["JUSTIFICATION"],
+            evoPoster_config["evaluation"]["AESTHETICS_WEIGHTS"]["TYPEFACE_PARING"],
+            evoPoster_config["evaluation"]["AESTHETICS_WEIGHTS"]["WHITE_BALANCE_FRACTION"],
+            evoPoster_config["evaluation"]["AESTHETICS_WEIGHTS"]["BALANCE"]
+        ];
+
         // evolution controllers
         this.config = {
             evo: {
@@ -8079,6 +7875,14 @@ class App extends s {
                 crossoverProb: Params.evolution.crossoverProb,
                 mutationProb: Params.evolution.mutationProb,
                 eliteSize: Params.evolution.eliteSize,
+            },
+            evaluation: {
+                weights: evaluationWeights.map((x) => x/arrSum(evaluationWeights)),
+                aestheticsWeights: aestheticsWeights.map ((x) => x/arrSum(aestheticsWeights)),
+                semanticsWeights: semanticsWeights.map((x) => x/arrSum(semanticsWeights)),
+                modes: {
+                    semanticsVisuals: evoPoster_config["evaluation"]["MODES"]["SEMANTICS_VISUALS"]
+                }
             },
             size: {
                 width: Params.visualisationGrid.width,
@@ -8248,7 +8052,7 @@ class App extends s {
     }
 
     #nextBts = () => {
-        return x`
+        return x$1`
             <div class="container-fluid">
                 <button type="button" id="btReload" @click="${() => {window.location.reload();}}"
                                 class="btn btn-secondary my-2 nextBts">
@@ -8266,12 +8070,12 @@ class App extends s {
     }
 
     render() {
-        return x`
+        return x$1`
             ${this.errorMessage}
             ${this.header}
             ${this.screen === 3 ? this.initPopForm : A}
             ${this.screen < 2 ? 
-                x`<div id="input-module" class="container-fluid">
+                x$1`<div id="input-module" class="container-fluid">
                     ${this.resultsContainer}
                     ${this.inputForm}
                     ${this.screen === 1 ? this.#nextBts() : A}
