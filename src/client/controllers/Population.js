@@ -113,7 +113,12 @@ export class Population {
         const genData = [];
         for (let ind of this.population) {
             genData.push({
-                genotype: ind.genotype,
+                genotype: {
+                    background: ind["genotype"]["background"],
+                    size: ind["genotype"]["size"],
+                    textboxes: ind["genotype"]["textboxes"],
+                    typography: ind["genotype"]["typography"]
+                },
                 fitness: ind.fitness,
                 constraint: ind.constraint,
                 metrics: ind.metrics
@@ -134,6 +139,24 @@ export class Population {
             }, 100);
         } else {
             this.evolving = false;
+
+            if (!this.pause) {
+                await fetch(`/insert`, {
+                    method: "POST",
+                    mode: "cors",
+                    cache: "no-cache",
+                    credentials: "same-origin",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    redirect: "follow",
+                    referrerPolicy: "no-referrer",
+                    body: JSON.stringify(this.log),
+                }).then((data) => {
+                    console.log("inserted", data);
+                }).catch((err) => console.error(err));
+            }
+            
             console.group (`stats`);
             console.log (this.log);
             console.groupEnd();

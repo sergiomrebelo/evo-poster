@@ -67,12 +67,10 @@ export const TYPEFACES = {
 
     }
 }
-
 export const COLOR = {
     MIN_CONTRAST: 2.5,
     MAX_COLOR_SCHEME_ATTEMPT: 200,
 }
-
 export const EVALUATION = {
     GLOBAL_WEIGHTS: {
         SEMANTICS: 0.5,
@@ -95,6 +93,13 @@ export const EVALUATION = {
         BALANCE: 0.2
     }
 }
+export const EVO = {
+    POP_SIZE: 30,
+    NO_GEN: 10,
+    CROSSOVER_PROB: 0.9,
+    MUTATION_PROB: 0.1,
+    ELITE_SIZE: 1
+}
 
 export default {
     typography: TYPEFACES !== undefined ? TYPEFACES : {},
@@ -103,6 +108,7 @@ export default {
     display: {
         GRID: true
     },
+    evo: EVO !== undefined ? EVO : {},
     log: {
         SAVE_LOG: true,
         SAVE_IMAGES: `GENERATION` // `GENERATION`, `END`, `BEST-GENERATION`, `NO`

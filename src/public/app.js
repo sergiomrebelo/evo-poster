@@ -5498,12 +5498,10 @@ const TYPEFACES = {
 
     }
 };
-
 const COLOR = {
     MIN_CONTRAST: 2.5,
     MAX_COLOR_SCHEME_ATTEMPT: 200,
 };
-
 const EVALUATION = {
     GLOBAL_WEIGHTS: {
         SEMANTICS: 0.5,
@@ -5526,6 +5524,13 @@ const EVALUATION = {
         BALANCE: 0.2
     }
 };
+const EVO = {
+    POP_SIZE: 30,
+    NO_GEN: 10,
+    CROSSOVER_PROB: 0.9,
+    MUTATION_PROB: 0.1,
+    ELITE_SIZE: 1
+};
 
 var evoPoster_config = {
     typography: TYPEFACES !== undefined ? TYPEFACES : {},
@@ -5534,6 +5539,7 @@ var evoPoster_config = {
     display: {
         GRID: true
     },
+    evo: EVO !== undefined ? EVO : {},
     log: {
         SAVE_LOG: true,
         SAVE_IMAGES: `GENERATION` // `GENERATION`, `END`, `BEST-GENERATION`, `NO`
@@ -7551,7 +7557,12 @@ class Population {
         const genData = [];
         for (let ind of this.population) {
             genData.push({
-                genotype: ind.genotype,
+                genotype: {
+                    background: ind["genotype"]["background"],
+                    size: ind["genotype"]["size"],
+                    textboxes: ind["genotype"]["textboxes"],
+                    typography: ind["genotype"]["typography"]
+                },
                 fitness: ind.fitness,
                 constraint: ind.constraint,
                 metrics: ind.metrics
@@ -7572,6 +7583,26 @@ class Population {
             }, 100);
         } else {
             this.evolving = false;
+
+            console.log("this.log", this.log);
+
+            // only if succefully
+            await fetch(`/insert`, {
+                method: "POST",
+                mode: "cors",
+                cache: "no-cache",
+                credentials: "same-origin",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                redirect: "follow",
+                referrerPolicy: "no-referrer",
+                body: JSON.stringify(this.log),
+            }).then ((data) => {
+                console.log ("inserted", data);
+            }).catch((err) => console.error(err));
+
+
             console.group (`stats`);
             console.log (this.log);
             console.groupEnd();
@@ -8010,11 +8041,11 @@ class App extends s$1 {
         // evolution controllers
         this.config = {
             evo: {
-                popSize: Params.evolution.popSize,
-                noGen: Params.evolution.noGen,
-                crossoverProb: Params.evolution.crossoverProb,
-                mutationProb: Params.evolution.mutationProb,
-                eliteSize: Params.evolution.eliteSize,
+                popSize: evoPoster_config["evo"]["POP_SIZE"],
+                noGen: evoPoster_config["evo"]["NO_GEN"],
+                crossoverProb: evoPoster_config["evo"]["CROSSOVER_PROB"],
+                mutationProb: evoPoster_config["evo"]["MUTATION_PROB"],
+                eliteSize: evoPoster_config["evo"]["ELITE_SIZE"]
             },
             evaluation: {
                 weights: evaluationWeights.map((x) => x/arrSum(evaluationWeights)),

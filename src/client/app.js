@@ -91,11 +91,11 @@ export class App extends LitElement {
         // evolution controllers
         this.config = {
             evo: {
-                popSize: Params.evolution.popSize,
-                noGen: Params.evolution.noGen,
-                crossoverProb: Params.evolution.crossoverProb,
-                mutationProb: Params.evolution.mutationProb,
-                eliteSize: Params.evolution.eliteSize,
+                popSize: config["default"]["evo"]["POP_SIZE"],
+                noGen: config["default"]["evo"]["NO_GEN"],
+                crossoverProb: config["default"]["evo"]["CROSSOVER_PROB"],
+                mutationProb: config["default"]["evo"]["MUTATION_PROB"],
+                eliteSize: config["default"]["evo"]["ELITE_SIZE"]
             },
             evaluation: {
                 weights: evaluationWeights.map((x) => x/arrSum(evaluationWeights)),
