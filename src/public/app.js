@@ -3,26 +3,26 @@
  * Copyright 2019 Google LLC
  * SPDX-License-Identifier: BSD-3-Clause
  */
-const t$3=window,e$6=t$3.ShadowRoot&&(void 0===t$3.ShadyCSS||t$3.ShadyCSS.nativeShadow)&&"adoptedStyleSheets"in Document.prototype&&"replace"in CSSStyleSheet.prototype,s$4=Symbol(),n$4=new WeakMap;let o$4 = class o{constructor(t,e,n){if(this._$cssResult$=!0,n!==s$4)throw Error("CSSResult is not constructable. Use `unsafeCSS` or `css` instead.");this.cssText=t,this.t=e;}get styleSheet(){let t=this.o;const s=this.t;if(e$6&&void 0===t){const e=void 0!==s&&1===s.length;e&&(t=n$4.get(s)),void 0===t&&((this.o=t=new CSSStyleSheet).replaceSync(this.cssText),e&&n$4.set(s,t));}return t}toString(){return this.cssText}};const r$3=t=>new o$4("string"==typeof t?t:t+"",void 0,s$4),S$2=(s,n)=>{e$6?s.adoptedStyleSheets=n.map((t=>t instanceof CSSStyleSheet?t:t.styleSheet)):n.forEach((e=>{const n=document.createElement("style"),o=t$3.litNonce;void 0!==o&&n.setAttribute("nonce",o),n.textContent=e.cssText,s.appendChild(n);}));},c$2=e$6?t=>t:t=>t instanceof CSSStyleSheet?(t=>{let e="";for(const s of t.cssRules)e+=s.cssText;return r$3(e)})(t):t;
+const t$3=window,e$6=t$3.ShadowRoot&&(void 0===t$3.ShadyCSS||t$3.ShadyCSS.nativeShadow)&&"adoptedStyleSheets"in Document.prototype&&"replace"in CSSStyleSheet.prototype,s$4=Symbol(),n$4=new WeakMap;let o$5 = class o{constructor(t,e,n){if(this._$cssResult$=!0,n!==s$4)throw Error("CSSResult is not constructable. Use `unsafeCSS` or `css` instead.");this.cssText=t,this.t=e;}get styleSheet(){let t=this.o;const s=this.t;if(e$6&&void 0===t){const e=void 0!==s&&1===s.length;e&&(t=n$4.get(s)),void 0===t&&((this.o=t=new CSSStyleSheet).replaceSync(this.cssText),e&&n$4.set(s,t));}return t}toString(){return this.cssText}};const r$3=t=>new o$5("string"==typeof t?t:t+"",void 0,s$4),S$2=(s,n)=>{e$6?s.adoptedStyleSheets=n.map((t=>t instanceof CSSStyleSheet?t:t.styleSheet)):n.forEach((e=>{const n=document.createElement("style"),o=t$3.litNonce;void 0!==o&&n.setAttribute("nonce",o),n.textContent=e.cssText,s.appendChild(n);}));},c$2=e$6?t=>t:t=>t instanceof CSSStyleSheet?(t=>{let e="";for(const s of t.cssRules)e+=s.cssText;return r$3(e)})(t):t;
 
 /**
  * @license
  * Copyright 2017 Google LLC
  * SPDX-License-Identifier: BSD-3-Clause
- */var s$3;const e$5=window,r$2=e$5.trustedTypes,h$1=r$2?r$2.emptyScript:"",o$3=e$5.reactiveElementPolyfillSupport,n$3={toAttribute(t,i){switch(i){case Boolean:t=t?h$1:null;break;case Object:case Array:t=null==t?t:JSON.stringify(t);}return t},fromAttribute(t,i){let s=t;switch(i){case Boolean:s=null!==t;break;case Number:s=null===t?null:Number(t);break;case Object:case Array:try{s=JSON.parse(t);}catch(t){s=null;}}return s}},a$2=(t,i)=>i!==t&&(i==i||t==t),l$3={attribute:!0,type:String,converter:n$3,reflect:!1,hasChanged:a$2},d$1="finalized";let u$1 = class u extends HTMLElement{constructor(){super(),this._$Ei=new Map,this.isUpdatePending=!1,this.hasUpdated=!1,this._$El=null,this.u();}static addInitializer(t){var i;this.finalize(),(null!==(i=this.h)&&void 0!==i?i:this.h=[]).push(t);}static get observedAttributes(){this.finalize();const t=[];return this.elementProperties.forEach(((i,s)=>{const e=this._$Ep(s,i);void 0!==e&&(this._$Ev.set(e,s),t.push(e));})),t}static createProperty(t,i=l$3){if(i.state&&(i.attribute=!1),this.finalize(),this.elementProperties.set(t,i),!i.noAccessor&&!this.prototype.hasOwnProperty(t)){const s="symbol"==typeof t?Symbol():"__"+t,e=this.getPropertyDescriptor(t,s,i);void 0!==e&&Object.defineProperty(this.prototype,t,e);}}static getPropertyDescriptor(t,i,s){return {get(){return this[i]},set(e){const r=this[t];this[i]=e,this.requestUpdate(t,r,s);},configurable:!0,enumerable:!0}}static getPropertyOptions(t){return this.elementProperties.get(t)||l$3}static finalize(){if(this.hasOwnProperty(d$1))return !1;this[d$1]=!0;const t=Object.getPrototypeOf(this);if(t.finalize(),void 0!==t.h&&(this.h=[...t.h]),this.elementProperties=new Map(t.elementProperties),this._$Ev=new Map,this.hasOwnProperty("properties")){const t=this.properties,i=[...Object.getOwnPropertyNames(t),...Object.getOwnPropertySymbols(t)];for(const s of i)this.createProperty(s,t[s]);}return this.elementStyles=this.finalizeStyles(this.styles),!0}static finalizeStyles(i){const s=[];if(Array.isArray(i)){const e=new Set(i.flat(1/0).reverse());for(const i of e)s.unshift(c$2(i));}else void 0!==i&&s.push(c$2(i));return s}static _$Ep(t,i){const s=i.attribute;return !1===s?void 0:"string"==typeof s?s:"string"==typeof t?t.toLowerCase():void 0}u(){var t;this._$E_=new Promise((t=>this.enableUpdating=t)),this._$AL=new Map,this._$Eg(),this.requestUpdate(),null===(t=this.constructor.h)||void 0===t||t.forEach((t=>t(this)));}addController(t){var i,s;(null!==(i=this._$ES)&&void 0!==i?i:this._$ES=[]).push(t),void 0!==this.renderRoot&&this.isConnected&&(null===(s=t.hostConnected)||void 0===s||s.call(t));}removeController(t){var i;null===(i=this._$ES)||void 0===i||i.splice(this._$ES.indexOf(t)>>>0,1);}_$Eg(){this.constructor.elementProperties.forEach(((t,i)=>{this.hasOwnProperty(i)&&(this._$Ei.set(i,this[i]),delete this[i]);}));}createRenderRoot(){var t;const s=null!==(t=this.shadowRoot)&&void 0!==t?t:this.attachShadow(this.constructor.shadowRootOptions);return S$2(s,this.constructor.elementStyles),s}connectedCallback(){var t;void 0===this.renderRoot&&(this.renderRoot=this.createRenderRoot()),this.enableUpdating(!0),null===(t=this._$ES)||void 0===t||t.forEach((t=>{var i;return null===(i=t.hostConnected)||void 0===i?void 0:i.call(t)}));}enableUpdating(t){}disconnectedCallback(){var t;null===(t=this._$ES)||void 0===t||t.forEach((t=>{var i;return null===(i=t.hostDisconnected)||void 0===i?void 0:i.call(t)}));}attributeChangedCallback(t,i,s){this._$AK(t,s);}_$EO(t,i,s=l$3){var e;const r=this.constructor._$Ep(t,s);if(void 0!==r&&!0===s.reflect){const h=(void 0!==(null===(e=s.converter)||void 0===e?void 0:e.toAttribute)?s.converter:n$3).toAttribute(i,s.type);this._$El=t,null==h?this.removeAttribute(r):this.setAttribute(r,h),this._$El=null;}}_$AK(t,i){var s;const e=this.constructor,r=e._$Ev.get(t);if(void 0!==r&&this._$El!==r){const t=e.getPropertyOptions(r),h="function"==typeof t.converter?{fromAttribute:t.converter}:void 0!==(null===(s=t.converter)||void 0===s?void 0:s.fromAttribute)?t.converter:n$3;this._$El=r,this[r]=h.fromAttribute(i,t.type),this._$El=null;}}requestUpdate(t,i,s){let e=!0;void 0!==t&&(((s=s||this.constructor.getPropertyOptions(t)).hasChanged||a$2)(this[t],i)?(this._$AL.has(t)||this._$AL.set(t,i),!0===s.reflect&&this._$El!==t&&(void 0===this._$EC&&(this._$EC=new Map),this._$EC.set(t,s))):e=!1),!this.isUpdatePending&&e&&(this._$E_=this._$Ej());}async _$Ej(){this.isUpdatePending=!0;try{await this._$E_;}catch(t){Promise.reject(t);}const t=this.scheduleUpdate();return null!=t&&await t,!this.isUpdatePending}scheduleUpdate(){return this.performUpdate()}performUpdate(){var t;if(!this.isUpdatePending)return;this.hasUpdated,this._$Ei&&(this._$Ei.forEach(((t,i)=>this[i]=t)),this._$Ei=void 0);let i=!1;const s=this._$AL;try{i=this.shouldUpdate(s),i?(this.willUpdate(s),null===(t=this._$ES)||void 0===t||t.forEach((t=>{var i;return null===(i=t.hostUpdate)||void 0===i?void 0:i.call(t)})),this.update(s)):this._$Ek();}catch(t){throw i=!1,this._$Ek(),t}i&&this._$AE(s);}willUpdate(t){}_$AE(t){var i;null===(i=this._$ES)||void 0===i||i.forEach((t=>{var i;return null===(i=t.hostUpdated)||void 0===i?void 0:i.call(t)})),this.hasUpdated||(this.hasUpdated=!0,this.firstUpdated(t)),this.updated(t);}_$Ek(){this._$AL=new Map,this.isUpdatePending=!1;}get updateComplete(){return this.getUpdateComplete()}getUpdateComplete(){return this._$E_}shouldUpdate(t){return !0}update(t){void 0!==this._$EC&&(this._$EC.forEach(((t,i)=>this._$EO(i,this[i],t))),this._$EC=void 0),this._$Ek();}updated(t){}firstUpdated(t){}};u$1[d$1]=!0,u$1.elementProperties=new Map,u$1.elementStyles=[],u$1.shadowRootOptions={mode:"open"},null==o$3||o$3({ReactiveElement:u$1}),(null!==(s$3=e$5.reactiveElementVersions)&&void 0!==s$3?s$3:e$5.reactiveElementVersions=[]).push("1.6.2");
+ */var s$3;const e$5=window,r$2=e$5.trustedTypes,h$2=r$2?r$2.emptyScript:"",o$4=e$5.reactiveElementPolyfillSupport,n$3={toAttribute(t,i){switch(i){case Boolean:t=t?h$2:null;break;case Object:case Array:t=null==t?t:JSON.stringify(t);}return t},fromAttribute(t,i){let s=t;switch(i){case Boolean:s=null!==t;break;case Number:s=null===t?null:Number(t);break;case Object:case Array:try{s=JSON.parse(t);}catch(t){s=null;}}return s}},a$2=(t,i)=>i!==t&&(i==i||t==t),l$3={attribute:!0,type:String,converter:n$3,reflect:!1,hasChanged:a$2},d$2="finalized";let u$2 = class u extends HTMLElement{constructor(){super(),this._$Ei=new Map,this.isUpdatePending=!1,this.hasUpdated=!1,this._$El=null,this.u();}static addInitializer(t){var i;this.finalize(),(null!==(i=this.h)&&void 0!==i?i:this.h=[]).push(t);}static get observedAttributes(){this.finalize();const t=[];return this.elementProperties.forEach(((i,s)=>{const e=this._$Ep(s,i);void 0!==e&&(this._$Ev.set(e,s),t.push(e));})),t}static createProperty(t,i=l$3){if(i.state&&(i.attribute=!1),this.finalize(),this.elementProperties.set(t,i),!i.noAccessor&&!this.prototype.hasOwnProperty(t)){const s="symbol"==typeof t?Symbol():"__"+t,e=this.getPropertyDescriptor(t,s,i);void 0!==e&&Object.defineProperty(this.prototype,t,e);}}static getPropertyDescriptor(t,i,s){return {get(){return this[i]},set(e){const r=this[t];this[i]=e,this.requestUpdate(t,r,s);},configurable:!0,enumerable:!0}}static getPropertyOptions(t){return this.elementProperties.get(t)||l$3}static finalize(){if(this.hasOwnProperty(d$2))return !1;this[d$2]=!0;const t=Object.getPrototypeOf(this);if(t.finalize(),void 0!==t.h&&(this.h=[...t.h]),this.elementProperties=new Map(t.elementProperties),this._$Ev=new Map,this.hasOwnProperty("properties")){const t=this.properties,i=[...Object.getOwnPropertyNames(t),...Object.getOwnPropertySymbols(t)];for(const s of i)this.createProperty(s,t[s]);}return this.elementStyles=this.finalizeStyles(this.styles),!0}static finalizeStyles(i){const s=[];if(Array.isArray(i)){const e=new Set(i.flat(1/0).reverse());for(const i of e)s.unshift(c$2(i));}else void 0!==i&&s.push(c$2(i));return s}static _$Ep(t,i){const s=i.attribute;return !1===s?void 0:"string"==typeof s?s:"string"==typeof t?t.toLowerCase():void 0}u(){var t;this._$E_=new Promise((t=>this.enableUpdating=t)),this._$AL=new Map,this._$Eg(),this.requestUpdate(),null===(t=this.constructor.h)||void 0===t||t.forEach((t=>t(this)));}addController(t){var i,s;(null!==(i=this._$ES)&&void 0!==i?i:this._$ES=[]).push(t),void 0!==this.renderRoot&&this.isConnected&&(null===(s=t.hostConnected)||void 0===s||s.call(t));}removeController(t){var i;null===(i=this._$ES)||void 0===i||i.splice(this._$ES.indexOf(t)>>>0,1);}_$Eg(){this.constructor.elementProperties.forEach(((t,i)=>{this.hasOwnProperty(i)&&(this._$Ei.set(i,this[i]),delete this[i]);}));}createRenderRoot(){var t;const s=null!==(t=this.shadowRoot)&&void 0!==t?t:this.attachShadow(this.constructor.shadowRootOptions);return S$2(s,this.constructor.elementStyles),s}connectedCallback(){var t;void 0===this.renderRoot&&(this.renderRoot=this.createRenderRoot()),this.enableUpdating(!0),null===(t=this._$ES)||void 0===t||t.forEach((t=>{var i;return null===(i=t.hostConnected)||void 0===i?void 0:i.call(t)}));}enableUpdating(t){}disconnectedCallback(){var t;null===(t=this._$ES)||void 0===t||t.forEach((t=>{var i;return null===(i=t.hostDisconnected)||void 0===i?void 0:i.call(t)}));}attributeChangedCallback(t,i,s){this._$AK(t,s);}_$EO(t,i,s=l$3){var e;const r=this.constructor._$Ep(t,s);if(void 0!==r&&!0===s.reflect){const h=(void 0!==(null===(e=s.converter)||void 0===e?void 0:e.toAttribute)?s.converter:n$3).toAttribute(i,s.type);this._$El=t,null==h?this.removeAttribute(r):this.setAttribute(r,h),this._$El=null;}}_$AK(t,i){var s;const e=this.constructor,r=e._$Ev.get(t);if(void 0!==r&&this._$El!==r){const t=e.getPropertyOptions(r),h="function"==typeof t.converter?{fromAttribute:t.converter}:void 0!==(null===(s=t.converter)||void 0===s?void 0:s.fromAttribute)?t.converter:n$3;this._$El=r,this[r]=h.fromAttribute(i,t.type),this._$El=null;}}requestUpdate(t,i,s){let e=!0;void 0!==t&&(((s=s||this.constructor.getPropertyOptions(t)).hasChanged||a$2)(this[t],i)?(this._$AL.has(t)||this._$AL.set(t,i),!0===s.reflect&&this._$El!==t&&(void 0===this._$EC&&(this._$EC=new Map),this._$EC.set(t,s))):e=!1),!this.isUpdatePending&&e&&(this._$E_=this._$Ej());}async _$Ej(){this.isUpdatePending=!0;try{await this._$E_;}catch(t){Promise.reject(t);}const t=this.scheduleUpdate();return null!=t&&await t,!this.isUpdatePending}scheduleUpdate(){return this.performUpdate()}performUpdate(){var t;if(!this.isUpdatePending)return;this.hasUpdated,this._$Ei&&(this._$Ei.forEach(((t,i)=>this[i]=t)),this._$Ei=void 0);let i=!1;const s=this._$AL;try{i=this.shouldUpdate(s),i?(this.willUpdate(s),null===(t=this._$ES)||void 0===t||t.forEach((t=>{var i;return null===(i=t.hostUpdate)||void 0===i?void 0:i.call(t)})),this.update(s)):this._$Ek();}catch(t){throw i=!1,this._$Ek(),t}i&&this._$AE(s);}willUpdate(t){}_$AE(t){var i;null===(i=this._$ES)||void 0===i||i.forEach((t=>{var i;return null===(i=t.hostUpdated)||void 0===i?void 0:i.call(t)})),this.hasUpdated||(this.hasUpdated=!0,this.firstUpdated(t)),this.updated(t);}_$Ek(){this._$AL=new Map,this.isUpdatePending=!1;}get updateComplete(){return this.getUpdateComplete()}getUpdateComplete(){return this._$E_}shouldUpdate(t){return !0}update(t){void 0!==this._$EC&&(this._$EC.forEach(((t,i)=>this._$EO(i,this[i],t))),this._$EC=void 0),this._$Ek();}updated(t){}firstUpdated(t){}};u$2[d$2]=!0,u$2.elementProperties=new Map,u$2.elementStyles=[],u$2.shadowRootOptions={mode:"open"},null==o$4||o$4({ReactiveElement:u$2}),(null!==(s$3=e$5.reactiveElementVersions)&&void 0!==s$3?s$3:e$5.reactiveElementVersions=[]).push("1.6.2");
 
 /**
  * @license
  * Copyright 2017 Google LLC
  * SPDX-License-Identifier: BSD-3-Clause
  */
-var t$2;const i$2=window,s$2=i$2.trustedTypes,e$4=s$2?s$2.createPolicy("lit-html",{createHTML:t=>t}):void 0,o$2="$lit$",n$2=`lit$${(Math.random()+"").slice(9)}$`,l$2="?"+n$2,h=`<${l$2}>`,r$1=document,d=()=>r$1.createComment(""),u=t=>null===t||"object"!=typeof t&&"function"!=typeof t,c$1=Array.isArray,v=t=>c$1(t)||"function"==typeof(null==t?void 0:t[Symbol.iterator]),a$1="[ \t\n\f\r]",f=/<(?:(!--|\/[^a-zA-Z])|(\/?[a-zA-Z][^>\s]*)|(\/?$))/g,_$1=/-->/g,m$1=/>/g,p=RegExp(`>|${a$1}(?:([^\\s"'>=/]+)(${a$1}*=${a$1}*(?:[^ \t\n\f\r"'\`<>=]|("|')|))|$)`,"g"),g$1=/'/g,$$1=/"/g,y=/^(?:script|style|textarea|title)$/i,w=t=>(i,...s)=>({_$litType$:t,strings:i,values:s}),x$1=w(1),T=Symbol.for("lit-noChange"),A=Symbol.for("lit-nothing"),E=new WeakMap,C$1=r$1.createTreeWalker(r$1,129,null,!1),P$1=(t,i)=>{const s=t.length-1,l=[];let r,d=2===i?"<svg>":"",u=f;for(let i=0;i<s;i++){const s=t[i];let e,c,v=-1,a=0;for(;a<s.length&&(u.lastIndex=a,c=u.exec(s),null!==c);)a=u.lastIndex,u===f?"!--"===c[1]?u=_$1:void 0!==c[1]?u=m$1:void 0!==c[2]?(y.test(c[2])&&(r=RegExp("</"+c[2],"g")),u=p):void 0!==c[3]&&(u=p):u===p?">"===c[0]?(u=null!=r?r:f,v=-1):void 0===c[1]?v=-2:(v=u.lastIndex-c[2].length,e=c[1],u=void 0===c[3]?p:'"'===c[3]?$$1:g$1):u===$$1||u===g$1?u=p:u===_$1||u===m$1?u=f:(u=p,r=void 0);const w=u===p&&t[i+1].startsWith("/>")?" ":"";d+=u===f?s+h:v>=0?(l.push(e),s.slice(0,v)+o$2+s.slice(v)+n$2+w):s+n$2+(-2===v?(l.push(void 0),i):w);}const c=d+(t[s]||"<?>")+(2===i?"</svg>":"");if(!Array.isArray(t)||!t.hasOwnProperty("raw"))throw Error("invalid template strings array");return [void 0!==e$4?e$4.createHTML(c):c,l]};class V{constructor({strings:t,_$litType$:i},e){let h;this.parts=[];let r=0,u=0;const c=t.length-1,v=this.parts,[a,f]=P$1(t,i);if(this.el=V.createElement(a,e),C$1.currentNode=this.el.content,2===i){const t=this.el.content,i=t.firstChild;i.remove(),t.append(...i.childNodes);}for(;null!==(h=C$1.nextNode())&&v.length<c;){if(1===h.nodeType){if(h.hasAttributes()){const t=[];for(const i of h.getAttributeNames())if(i.endsWith(o$2)||i.startsWith(n$2)){const s=f[u++];if(t.push(i),void 0!==s){const t=h.getAttribute(s.toLowerCase()+o$2).split(n$2),i=/([.?@])?(.*)/.exec(s);v.push({type:1,index:r,name:i[2],strings:t,ctor:"."===i[1]?k$1:"?"===i[1]?I:"@"===i[1]?L$1:R$1});}else v.push({type:6,index:r});}for(const i of t)h.removeAttribute(i);}if(y.test(h.tagName)){const t=h.textContent.split(n$2),i=t.length-1;if(i>0){h.textContent=s$2?s$2.emptyScript:"";for(let s=0;s<i;s++)h.append(t[s],d()),C$1.nextNode(),v.push({type:2,index:++r});h.append(t[i],d());}}}else if(8===h.nodeType)if(h.data===l$2)v.push({type:2,index:r});else {let t=-1;for(;-1!==(t=h.data.indexOf(n$2,t+1));)v.push({type:7,index:r}),t+=n$2.length-1;}r++;}}static createElement(t,i){const s=r$1.createElement("template");return s.innerHTML=t,s}}function N(t,i,s=t,e){var o,n,l,h;if(i===T)return i;let r=void 0!==e?null===(o=s._$Co)||void 0===o?void 0:o[e]:s._$Cl;const d=u(i)?void 0:i._$litDirective$;return (null==r?void 0:r.constructor)!==d&&(null===(n=null==r?void 0:r._$AO)||void 0===n||n.call(r,!1),void 0===d?r=void 0:(r=new d(t),r._$AT(t,s,e)),void 0!==e?(null!==(l=(h=s)._$Co)&&void 0!==l?l:h._$Co=[])[e]=r:s._$Cl=r),void 0!==r&&(i=N(t,r._$AS(t,i.values),r,e)),i}let S$1 = class S{constructor(t,i){this._$AV=[],this._$AN=void 0,this._$AD=t,this._$AM=i;}get parentNode(){return this._$AM.parentNode}get _$AU(){return this._$AM._$AU}u(t){var i;const{el:{content:s},parts:e}=this._$AD,o=(null!==(i=null==t?void 0:t.creationScope)&&void 0!==i?i:r$1).importNode(s,!0);C$1.currentNode=o;let n=C$1.nextNode(),l=0,h=0,d=e[0];for(;void 0!==d;){if(l===d.index){let i;2===d.type?i=new M(n,n.nextSibling,this,t):1===d.type?i=new d.ctor(n,d.name,d.strings,this,t):6===d.type&&(i=new z(n,this,t)),this._$AV.push(i),d=e[++h];}l!==(null==d?void 0:d.index)&&(n=C$1.nextNode(),l++);}return C$1.currentNode=r$1,o}v(t){let i=0;for(const s of this._$AV)void 0!==s&&(void 0!==s.strings?(s._$AI(t,s,i),i+=s.strings.length-2):s._$AI(t[i])),i++;}};class M{constructor(t,i,s,e){var o;this.type=2,this._$AH=A,this._$AN=void 0,this._$AA=t,this._$AB=i,this._$AM=s,this.options=e,this._$Cp=null===(o=null==e?void 0:e.isConnected)||void 0===o||o;}get _$AU(){var t,i;return null!==(i=null===(t=this._$AM)||void 0===t?void 0:t._$AU)&&void 0!==i?i:this._$Cp}get parentNode(){let t=this._$AA.parentNode;const i=this._$AM;return void 0!==i&&11===(null==t?void 0:t.nodeType)&&(t=i.parentNode),t}get startNode(){return this._$AA}get endNode(){return this._$AB}_$AI(t,i=this){t=N(this,t,i),u(t)?t===A||null==t||""===t?(this._$AH!==A&&this._$AR(),this._$AH=A):t!==this._$AH&&t!==T&&this._(t):void 0!==t._$litType$?this.g(t):void 0!==t.nodeType?this.$(t):v(t)?this.T(t):this._(t);}k(t){return this._$AA.parentNode.insertBefore(t,this._$AB)}$(t){this._$AH!==t&&(this._$AR(),this._$AH=this.k(t));}_(t){this._$AH!==A&&u(this._$AH)?this._$AA.nextSibling.data=t:this.$(r$1.createTextNode(t)),this._$AH=t;}g(t){var i;const{values:s,_$litType$:e}=t,o="number"==typeof e?this._$AC(t):(void 0===e.el&&(e.el=V.createElement(e.h,this.options)),e);if((null===(i=this._$AH)||void 0===i?void 0:i._$AD)===o)this._$AH.v(s);else {const t=new S$1(o,this),i=t.u(this.options);t.v(s),this.$(i),this._$AH=t;}}_$AC(t){let i=E.get(t.strings);return void 0===i&&E.set(t.strings,i=new V(t)),i}T(t){c$1(this._$AH)||(this._$AH=[],this._$AR());const i=this._$AH;let s,e=0;for(const o of t)e===i.length?i.push(s=new M(this.k(d()),this.k(d()),this,this.options)):s=i[e],s._$AI(o),e++;e<i.length&&(this._$AR(s&&s._$AB.nextSibling,e),i.length=e);}_$AR(t=this._$AA.nextSibling,i){var s;for(null===(s=this._$AP)||void 0===s||s.call(this,!1,!0,i);t&&t!==this._$AB;){const i=t.nextSibling;t.remove(),t=i;}}setConnected(t){var i;void 0===this._$AM&&(this._$Cp=t,null===(i=this._$AP)||void 0===i||i.call(this,t));}}let R$1 = class R{constructor(t,i,s,e,o){this.type=1,this._$AH=A,this._$AN=void 0,this.element=t,this.name=i,this._$AM=e,this.options=o,s.length>2||""!==s[0]||""!==s[1]?(this._$AH=Array(s.length-1).fill(new String),this.strings=s):this._$AH=A;}get tagName(){return this.element.tagName}get _$AU(){return this._$AM._$AU}_$AI(t,i=this,s,e){const o=this.strings;let n=!1;if(void 0===o)t=N(this,t,i,0),n=!u(t)||t!==this._$AH&&t!==T,n&&(this._$AH=t);else {const e=t;let l,h;for(t=o[0],l=0;l<o.length-1;l++)h=N(this,e[s+l],i,l),h===T&&(h=this._$AH[l]),n||(n=!u(h)||h!==this._$AH[l]),h===A?t=A:t!==A&&(t+=(null!=h?h:"")+o[l+1]),this._$AH[l]=h;}n&&!e&&this.j(t);}j(t){t===A?this.element.removeAttribute(this.name):this.element.setAttribute(this.name,null!=t?t:"");}};let k$1 = class k extends R$1{constructor(){super(...arguments),this.type=3;}j(t){this.element[this.name]=t===A?void 0:t;}};const H=s$2?s$2.emptyScript:"";class I extends R$1{constructor(){super(...arguments),this.type=4;}j(t){t&&t!==A?this.element.setAttribute(this.name,H):this.element.removeAttribute(this.name);}}let L$1 = class L extends R$1{constructor(t,i,s,e,o){super(t,i,s,e,o),this.type=5;}_$AI(t,i=this){var s;if((t=null!==(s=N(this,t,i,0))&&void 0!==s?s:A)===T)return;const e=this._$AH,o=t===A&&e!==A||t.capture!==e.capture||t.once!==e.once||t.passive!==e.passive,n=t!==A&&(e===A||o);o&&this.element.removeEventListener(this.name,this,e),n&&this.element.addEventListener(this.name,this,t),this._$AH=t;}handleEvent(t){var i,s;"function"==typeof this._$AH?this._$AH.call(null!==(s=null===(i=this.options)||void 0===i?void 0:i.host)&&void 0!==s?s:this.element,t):this._$AH.handleEvent(t);}};class z{constructor(t,i,s){this.element=t,this.type=6,this._$AN=void 0,this._$AM=i,this.options=s;}get _$AU(){return this._$AM._$AU}_$AI(t){N(this,t);}}const j$1=i$2.litHtmlPolyfillSupport;null==j$1||j$1(V,M),(null!==(t$2=i$2.litHtmlVersions)&&void 0!==t$2?t$2:i$2.litHtmlVersions=[]).push("2.7.4");const B=(t,i,s)=>{var e,o;const n=null!==(e=null==s?void 0:s.renderBefore)&&void 0!==e?e:i;let l=n._$litPart$;if(void 0===l){const t=null!==(o=null==s?void 0:s.renderBefore)&&void 0!==o?o:null;n._$litPart$=l=new M(i.insertBefore(d(),t),t,void 0,null!=s?s:{});}return l._$AI(t),l};
+var t$2;const i$2=window,s$2=i$2.trustedTypes,e$4=s$2?s$2.createPolicy("lit-html",{createHTML:t=>t}):void 0,o$3="$lit$",n$2=`lit$${(Math.random()+"").slice(9)}$`,l$2="?"+n$2,h$1=`<${l$2}>`,r$1=document,d$1=()=>r$1.createComment(""),u$1=t=>null===t||"object"!=typeof t&&"function"!=typeof t,c$1=Array.isArray,v$1=t=>c$1(t)||"function"==typeof(null==t?void 0:t[Symbol.iterator]),a$1="[ \t\n\f\r]",f$1=/<(?:(!--|\/[^a-zA-Z])|(\/?[a-zA-Z][^>\s]*)|(\/?$))/g,_$1=/-->/g,m$1=/>/g,p$1=RegExp(`>|${a$1}(?:([^\\s"'>=/]+)(${a$1}*=${a$1}*(?:[^ \t\n\f\r"'\`<>=]|("|')|))|$)`,"g"),g$1=/'/g,$$1=/"/g,y$1=/^(?:script|style|textarea|title)$/i,w$1=t=>(i,...s)=>({_$litType$:t,strings:i,values:s}),x$1=w$1(1),T$1=Symbol.for("lit-noChange"),A$1=Symbol.for("lit-nothing"),E$1=new WeakMap,C$1=r$1.createTreeWalker(r$1,129,null,!1),P$1=(t,i)=>{const s=t.length-1,l=[];let r,d=2===i?"<svg>":"",u=f$1;for(let i=0;i<s;i++){const s=t[i];let e,c,v=-1,a=0;for(;a<s.length&&(u.lastIndex=a,c=u.exec(s),null!==c);)a=u.lastIndex,u===f$1?"!--"===c[1]?u=_$1:void 0!==c[1]?u=m$1:void 0!==c[2]?(y$1.test(c[2])&&(r=RegExp("</"+c[2],"g")),u=p$1):void 0!==c[3]&&(u=p$1):u===p$1?">"===c[0]?(u=null!=r?r:f$1,v=-1):void 0===c[1]?v=-2:(v=u.lastIndex-c[2].length,e=c[1],u=void 0===c[3]?p$1:'"'===c[3]?$$1:g$1):u===$$1||u===g$1?u=p$1:u===_$1||u===m$1?u=f$1:(u=p$1,r=void 0);const w=u===p$1&&t[i+1].startsWith("/>")?" ":"";d+=u===f$1?s+h$1:v>=0?(l.push(e),s.slice(0,v)+o$3+s.slice(v)+n$2+w):s+n$2+(-2===v?(l.push(void 0),i):w);}const c=d+(t[s]||"<?>")+(2===i?"</svg>":"");if(!Array.isArray(t)||!t.hasOwnProperty("raw"))throw Error("invalid template strings array");return [void 0!==e$4?e$4.createHTML(c):c,l]};let V$1 = class V{constructor({strings:t,_$litType$:i},e){let h;this.parts=[];let r=0,u=0;const c=t.length-1,v=this.parts,[a,f]=P$1(t,i);if(this.el=V.createElement(a,e),C$1.currentNode=this.el.content,2===i){const t=this.el.content,i=t.firstChild;i.remove(),t.append(...i.childNodes);}for(;null!==(h=C$1.nextNode())&&v.length<c;){if(1===h.nodeType){if(h.hasAttributes()){const t=[];for(const i of h.getAttributeNames())if(i.endsWith(o$3)||i.startsWith(n$2)){const s=f[u++];if(t.push(i),void 0!==s){const t=h.getAttribute(s.toLowerCase()+o$3).split(n$2),i=/([.?@])?(.*)/.exec(s);v.push({type:1,index:r,name:i[2],strings:t,ctor:"."===i[1]?k$1:"?"===i[1]?I$1:"@"===i[1]?L$1:R$1});}else v.push({type:6,index:r});}for(const i of t)h.removeAttribute(i);}if(y$1.test(h.tagName)){const t=h.textContent.split(n$2),i=t.length-1;if(i>0){h.textContent=s$2?s$2.emptyScript:"";for(let s=0;s<i;s++)h.append(t[s],d$1()),C$1.nextNode(),v.push({type:2,index:++r});h.append(t[i],d$1());}}}else if(8===h.nodeType)if(h.data===l$2)v.push({type:2,index:r});else {let t=-1;for(;-1!==(t=h.data.indexOf(n$2,t+1));)v.push({type:7,index:r}),t+=n$2.length-1;}r++;}}static createElement(t,i){const s=r$1.createElement("template");return s.innerHTML=t,s}};function N$1(t,i,s=t,e){var o,n,l,h;if(i===T$1)return i;let r=void 0!==e?null===(o=s._$Co)||void 0===o?void 0:o[e]:s._$Cl;const d=u$1(i)?void 0:i._$litDirective$;return (null==r?void 0:r.constructor)!==d&&(null===(n=null==r?void 0:r._$AO)||void 0===n||n.call(r,!1),void 0===d?r=void 0:(r=new d(t),r._$AT(t,s,e)),void 0!==e?(null!==(l=(h=s)._$Co)&&void 0!==l?l:h._$Co=[])[e]=r:s._$Cl=r),void 0!==r&&(i=N$1(t,r._$AS(t,i.values),r,e)),i}let S$1 = class S{constructor(t,i){this._$AV=[],this._$AN=void 0,this._$AD=t,this._$AM=i;}get parentNode(){return this._$AM.parentNode}get _$AU(){return this._$AM._$AU}u(t){var i;const{el:{content:s},parts:e}=this._$AD,o=(null!==(i=null==t?void 0:t.creationScope)&&void 0!==i?i:r$1).importNode(s,!0);C$1.currentNode=o;let n=C$1.nextNode(),l=0,h=0,d=e[0];for(;void 0!==d;){if(l===d.index){let i;2===d.type?i=new M$1(n,n.nextSibling,this,t):1===d.type?i=new d.ctor(n,d.name,d.strings,this,t):6===d.type&&(i=new z$1(n,this,t)),this._$AV.push(i),d=e[++h];}l!==(null==d?void 0:d.index)&&(n=C$1.nextNode(),l++);}return C$1.currentNode=r$1,o}v(t){let i=0;for(const s of this._$AV)void 0!==s&&(void 0!==s.strings?(s._$AI(t,s,i),i+=s.strings.length-2):s._$AI(t[i])),i++;}};let M$1 = class M{constructor(t,i,s,e){var o;this.type=2,this._$AH=A$1,this._$AN=void 0,this._$AA=t,this._$AB=i,this._$AM=s,this.options=e,this._$Cp=null===(o=null==e?void 0:e.isConnected)||void 0===o||o;}get _$AU(){var t,i;return null!==(i=null===(t=this._$AM)||void 0===t?void 0:t._$AU)&&void 0!==i?i:this._$Cp}get parentNode(){let t=this._$AA.parentNode;const i=this._$AM;return void 0!==i&&11===(null==t?void 0:t.nodeType)&&(t=i.parentNode),t}get startNode(){return this._$AA}get endNode(){return this._$AB}_$AI(t,i=this){t=N$1(this,t,i),u$1(t)?t===A$1||null==t||""===t?(this._$AH!==A$1&&this._$AR(),this._$AH=A$1):t!==this._$AH&&t!==T$1&&this._(t):void 0!==t._$litType$?this.g(t):void 0!==t.nodeType?this.$(t):v$1(t)?this.T(t):this._(t);}k(t){return this._$AA.parentNode.insertBefore(t,this._$AB)}$(t){this._$AH!==t&&(this._$AR(),this._$AH=this.k(t));}_(t){this._$AH!==A$1&&u$1(this._$AH)?this._$AA.nextSibling.data=t:this.$(r$1.createTextNode(t)),this._$AH=t;}g(t){var i;const{values:s,_$litType$:e}=t,o="number"==typeof e?this._$AC(t):(void 0===e.el&&(e.el=V$1.createElement(e.h,this.options)),e);if((null===(i=this._$AH)||void 0===i?void 0:i._$AD)===o)this._$AH.v(s);else {const t=new S$1(o,this),i=t.u(this.options);t.v(s),this.$(i),this._$AH=t;}}_$AC(t){let i=E$1.get(t.strings);return void 0===i&&E$1.set(t.strings,i=new V$1(t)),i}T(t){c$1(this._$AH)||(this._$AH=[],this._$AR());const i=this._$AH;let s,e=0;for(const o of t)e===i.length?i.push(s=new M(this.k(d$1()),this.k(d$1()),this,this.options)):s=i[e],s._$AI(o),e++;e<i.length&&(this._$AR(s&&s._$AB.nextSibling,e),i.length=e);}_$AR(t=this._$AA.nextSibling,i){var s;for(null===(s=this._$AP)||void 0===s||s.call(this,!1,!0,i);t&&t!==this._$AB;){const i=t.nextSibling;t.remove(),t=i;}}setConnected(t){var i;void 0===this._$AM&&(this._$Cp=t,null===(i=this._$AP)||void 0===i||i.call(this,t));}};let R$1 = class R{constructor(t,i,s,e,o){this.type=1,this._$AH=A$1,this._$AN=void 0,this.element=t,this.name=i,this._$AM=e,this.options=o,s.length>2||""!==s[0]||""!==s[1]?(this._$AH=Array(s.length-1).fill(new String),this.strings=s):this._$AH=A$1;}get tagName(){return this.element.tagName}get _$AU(){return this._$AM._$AU}_$AI(t,i=this,s,e){const o=this.strings;let n=!1;if(void 0===o)t=N$1(this,t,i,0),n=!u$1(t)||t!==this._$AH&&t!==T$1,n&&(this._$AH=t);else {const e=t;let l,h;for(t=o[0],l=0;l<o.length-1;l++)h=N$1(this,e[s+l],i,l),h===T$1&&(h=this._$AH[l]),n||(n=!u$1(h)||h!==this._$AH[l]),h===A$1?t=A$1:t!==A$1&&(t+=(null!=h?h:"")+o[l+1]),this._$AH[l]=h;}n&&!e&&this.j(t);}j(t){t===A$1?this.element.removeAttribute(this.name):this.element.setAttribute(this.name,null!=t?t:"");}};let k$1 = class k extends R$1{constructor(){super(...arguments),this.type=3;}j(t){this.element[this.name]=t===A$1?void 0:t;}};const H$1=s$2?s$2.emptyScript:"";let I$1 = class I extends R$1{constructor(){super(...arguments),this.type=4;}j(t){t&&t!==A$1?this.element.setAttribute(this.name,H$1):this.element.removeAttribute(this.name);}};let L$1 = class L extends R$1{constructor(t,i,s,e,o){super(t,i,s,e,o),this.type=5;}_$AI(t,i=this){var s;if((t=null!==(s=N$1(this,t,i,0))&&void 0!==s?s:A$1)===T$1)return;const e=this._$AH,o=t===A$1&&e!==A$1||t.capture!==e.capture||t.once!==e.once||t.passive!==e.passive,n=t!==A$1&&(e===A$1||o);o&&this.element.removeEventListener(this.name,this,e),n&&this.element.addEventListener(this.name,this,t),this._$AH=t;}handleEvent(t){var i,s;"function"==typeof this._$AH?this._$AH.call(null!==(s=null===(i=this.options)||void 0===i?void 0:i.host)&&void 0!==s?s:this.element,t):this._$AH.handleEvent(t);}};let z$1 = class z{constructor(t,i,s){this.element=t,this.type=6,this._$AN=void 0,this._$AM=i,this.options=s;}get _$AU(){return this._$AM._$AU}_$AI(t){N$1(this,t);}};const j$1=i$2.litHtmlPolyfillSupport;null==j$1||j$1(V$1,M$1),(null!==(t$2=i$2.litHtmlVersions)&&void 0!==t$2?t$2:i$2.litHtmlVersions=[]).push("2.7.4");const B$1=(t,i,s)=>{var e,o;const n=null!==(e=null==s?void 0:s.renderBefore)&&void 0!==e?e:i;let l=n._$litPart$;if(void 0===l){const t=null!==(o=null==s?void 0:s.renderBefore)&&void 0!==o?o:null;n._$litPart$=l=new M$1(i.insertBefore(d$1(),t),t,void 0,null!=s?s:{});}return l._$AI(t),l};
 
 /**
  * @license
  * Copyright 2017 Google LLC
  * SPDX-License-Identifier: BSD-3-Clause
- */var l$1,o$1;let s$1 = class s extends u$1{constructor(){super(...arguments),this.renderOptions={host:this},this._$Do=void 0;}createRenderRoot(){var t,e;const i=super.createRenderRoot();return null!==(t=(e=this.renderOptions).renderBefore)&&void 0!==t||(e.renderBefore=i.firstChild),i}update(t){const i=this.render();this.hasUpdated||(this.renderOptions.isConnected=this.isConnected),super.update(t),this._$Do=B(i,this.renderRoot,this.renderOptions);}connectedCallback(){var t;super.connectedCallback(),null===(t=this._$Do)||void 0===t||t.setConnected(!0);}disconnectedCallback(){var t;super.disconnectedCallback(),null===(t=this._$Do)||void 0===t||t.setConnected(!1);}render(){return T}};s$1.finalized=!0,s$1._$litElement$=!0,null===(l$1=globalThis.litElementHydrateSupport)||void 0===l$1||l$1.call(globalThis,{LitElement:s$1});const n$1=globalThis.litElementPolyfillSupport;null==n$1||n$1({LitElement:s$1});(null!==(o$1=globalThis.litElementVersions)&&void 0!==o$1?o$1:globalThis.litElementVersions=[]).push("3.3.2");
+ */var l$1,o$2;let s$1 = class s extends u$2{constructor(){super(...arguments),this.renderOptions={host:this},this._$Do=void 0;}createRenderRoot(){var t,e;const i=super.createRenderRoot();return null!==(t=(e=this.renderOptions).renderBefore)&&void 0!==t||(e.renderBefore=i.firstChild),i}update(t){const i=this.render();this.hasUpdated||(this.renderOptions.isConnected=this.isConnected),super.update(t),this._$Do=B$1(i,this.renderRoot,this.renderOptions);}connectedCallback(){var t;super.connectedCallback(),null===(t=this._$Do)||void 0===t||t.setConnected(!0);}disconnectedCallback(){var t;super.disconnectedCallback(),null===(t=this._$Do)||void 0===t||t.setConnected(!1);}render(){return T$1}};s$1.finalized=!0,s$1._$litElement$=!0,null===(l$1=globalThis.litElementHydrateSupport)||void 0===l$1||l$1.call(globalThis,{LitElement:s$1});const n$1=globalThis.litElementPolyfillSupport;null==n$1||n$1({LitElement:s$1});(null!==(o$2=globalThis.litElementVersions)&&void 0!==o$2?o$2:globalThis.litElementVersions=[]).push("3.3.2");
 
 /*!
   * Bootstrap v5.3.0 (https://getbootstrap.com/)
@@ -4770,7 +4770,7 @@ const t$1={ATTRIBUTE:1,CHILD:2,PROPERTY:3,BOOLEAN_ATTRIBUTE:4,EVENT:5,ELEMENT:6}
  * @license
  * Copyright 2017 Google LLC
  * SPDX-License-Identifier: BSD-3-Clause
- */let e$2 = class e extends i$1{constructor(i){if(super(i),this.et=A,i.type!==t$1.CHILD)throw Error(this.constructor.directiveName+"() can only be used in child bindings")}render(r){if(r===A||null==r)return this.ft=void 0,this.et=r;if(r===T)return r;if("string"!=typeof r)throw Error(this.constructor.directiveName+"() called with a non-string value");if(r===this.et)return this.ft;this.et=r;const s=[r];return s.raw=s,this.ft={_$litType$:this.constructor.resultType,strings:s,values:[]}}};e$2.directiveName="unsafeHTML",e$2.resultType=1;const o=e$3(e$2);
+ */let e$2 = class e extends i$1{constructor(i){if(super(i),this.et=A$1,i.type!==t$1.CHILD)throw Error(this.constructor.directiveName+"() can only be used in child bindings")}render(r){if(r===A$1||null==r)return this.ft=void 0,this.et=r;if(r===T$1)return r;if("string"!=typeof r)throw Error(this.constructor.directiveName+"() called with a non-string value");if(r===this.et)return this.ft;this.et=r;const s=[r];return s.raw=s,this.ft={_$litType$:this.constructor.resultType,strings:s,values:[]}}};e$2.directiveName="unsafeHTML",e$2.resultType=1;const o$1=e$3(e$2);
 
 class ResultsContainer extends s$1 {
     static properties = {
@@ -4858,8 +4858,8 @@ class ResultsContainer extends s$1 {
                         <div id="input-lexicon-results my-4">
                             <h3 class="d-block my-0">Lexicon results:</h3>
                             <div id="temp-res-lexicon-lines">
-                                ${o(this._data.lexicon.lines)}
-                                <p id="temp-res-lexicon-global" class="my-2">${o(this._data.lexicon.global)}</p>
+                                ${o$1(this._data.lexicon.lines)}
+                                <p id="temp-res-lexicon-global" class="my-2">${o$1(this._data.lexicon.global)}</p>
                             </div>
                         </div>
                         ${imagesContainer}
@@ -4896,13 +4896,13 @@ class ErrHandler extends s$1 {
     add = (content) => {
         const msg = (content.message !== null) ? content.message : content.msg;
         this.msg +=`<br>${msg}`;
-        this._content = x$1`<p id="err-message">${o(this.msg)}</p>`;
+        this._content = x$1`<p id="err-message">${o$1(this.msg)}</p>`;
         this.visible = true;
     }
 
     set = (content) => {
         this.msg = (content.message !== null) ? content.message : content.msg;
-        this._content = x$1`<p id="err-message">${o(this.msg)}</p>`;
+        this._content = x$1`<p id="err-message">${o$1(this.msg)}</p>`;
         this.visible = true;
         console.error(this.msg);
     }
@@ -4962,10 +4962,10 @@ class TextInput extends s$1 {
     render() {
         return x$1`<div>
             <div class="input-group input-group-sm" id="${this.id}-inner">
-                ${this.showLabel ? x$1`<span class="input-group-text" id="${this.id}-input-label">${this.label}</span>` : A}
+                ${this.showLabel ? x$1`<span class="input-group-text" id="${this.id}-input-label">${this.label}</span>` : A$1}
                 <input type="text" class="form-control" id="${this.id}-input"
-                       placeholder="${this.showLabel ? this.label : A}"
-                       data-mirror="${this.mirror !== null ? this.mirror : A}"
+                       placeholder="${this.showLabel ? this.label : A$1}"
+                       data-mirror="${this.mirror !== null ? this.mirror : A$1}"
                        value="${this.value}"
                        @change="${this.onChange}">
             </div>
@@ -5139,7 +5139,7 @@ class ColorInput extends s$1 {
     render() {
         return x$1`<div>
             <div class="input-group input-group-sm" id="${this.id}-inner">
-                ${this.showLabel ? x$1`<span class="input-group-text" id="${this.id}-colour-picker-label">${this.label}</span>` : A}
+                ${this.showLabel ? x$1`<span class="input-group-text" id="${this.id}-colour-picker-label">${this.label}</span>` : A$1}
                 <input type="color"
                        class="form-control form-control-color colour-picker mr-2 d-inline-flex ${this.id}-colour-picker"
                        id="${this.id}-colour-picker-1"
@@ -5153,7 +5153,7 @@ class ColorInput extends s$1 {
                        value="${this.colorB}"
                        title="colour-typography" data-param="valueB"
                        disabled
-                       @change="${this.onChange}">` : A}
+                       @change="${this.onChange}">` : A$1}
             </div>
         </div>`;
     }
@@ -5278,7 +5278,7 @@ class DropDownList extends s$1 {
             <div class="col-12 my-2">
                 <select class="form-select form-select-sm" id="${this.id}-list" @change="${this.onChange}">
                     ${this.options.map ((x, i) => {
-                        return x$1`<option value=${i} ${(this.init === i) ? `selected` : A }>${x[0]}</option>`;
+                        return x$1`<option value=${i} ${(this.init === i) ? `selected` : A$1 }>${x[0]}</option>`;
                     })}´
                 </select>
             </div>
@@ -5315,7 +5315,7 @@ class TextArea extends s$1 {
 
     render() {
         return x$1`<div class="row">
-            <small class="my-2 col-12" id="${this.id}-label">${o(this.label)}</small>
+            <small class="my-2 col-12" id="${this.id}-label">${o$1(this.label)}</small>
             <div class="col-12">
                 <textarea class="form-control my-2" id="${this.id}-input" rows="${this.content.length}" 
                           @change="${this.onChange}">${this.content.join(`¶`)}</textarea>
@@ -5847,7 +5847,7 @@ class Header extends s$1 {
                             }}">
                         <span class="navbar-toggler-icon"></span>
                     </button>
-                </div>`: A}
+                </div>`: A$1}
             </header>
             <hr>
         </nav>`;
@@ -5861,7 +5861,7 @@ class Header extends s$1 {
 
 customElements.define('header-section', Header);
 
-const t=(t,e,r,l,n)=>l+(t-e)/(r-e)*(n-l),e$1=(t,e,r)=>Math.min(r,Math.max(e,t)),r=t=>t.reduce(((t,e)=>t+e),0)/t.length||0,l=t=>t.reduce(((t,e)=>t+e),0),n=t=>Math.max(...t),a=t=>Math.min(...t),s=t=>{if(t.levels)return {r:parseInt(t.levels[0]),g:parseInt(t.levels[1]),b:parseInt(t.levels[2])};let e=/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(t);return e?{r:parseInt(e[1],16),g:parseInt(e[2],16),b:parseInt(e[3],16)}:null},i=(t,e)=>Math.sqrt(Math.pow(t.r-e.r,2)+Math.pow(t.g-e.g,2)+Math.pow(t.b-e.b,2)),c={MIN_RANGE:50,THRESHOLD_VALID:.2,MODES:["DIF","MIN"]},g={VISUAL_CENTER_FT:20,MODES:["CENTER","LEFT-CENTER","RIGHT-CENTER","LEFT-TOP","RIGHT-TOP","LEFT-BOTTOM","RIGHT-BOTTOM"]};const _={MODES:["RELATIVE","FIXED"]}.MODES;let m=c.MIN_RANGE,R=c.THRESHOLD_VALID,S=c.MODES;const x=(e,r)=>{const l=r.filter(((t,e,r)=>r.indexOf(t)===e)),n=[];for(let t of l)for(let l=0;l<r.length;l++)if(r[l]===t){n.push(e[l]);break}const a=n.filter(((t,e)=>n.indexOf(t)!==e));let o=1;if(!a.length>=1){let a=0;for(let t in r){let o=r[t],s=e[t],i=l.indexOf(o);s!==n[i]&&a++;}o=t(a,0,e.length,0,1);}return o},F=(l,o,s="DIF")=>{S.includes(s)||(s="DIF");const i=n(l),f=a(l);let h=Math.abs(i-f);if(h<m)return 1;const u=n(o),c=a(o);let p=f;if("DIF"===s)for(let t in o)if(o[t]===c){p=l[t];break}const g=o.map((r=>{let l=t(r,c,u,0,h);return l=e$1(l,0,h),l})),d=[];for(let t in l){let e=l[t],r=Math.abs(e-p),n=Math.abs(r-g[t]);d.push(n);}let E=t(r(d),0,h,1,0);return e$1(E,0,1)};var L={anger:{color:{typography:["#ff0000","#00ff00"],background:["#ff0000"]},typefaces:["sans-serif","neo-grotesque"]},joy:{color:{typography:[],background:["#ffff00","#00ff00"]},typefaces:["sans-serif","serif"]},trust:{color:{typography:[],background:["#0000ff","#00ff00"]},typefaces:["neo-grotesque"]},sadness:{color:{typography:[],background:["#0071b6"]},typefaces:[]},disgust:{color:{typography:["#800080"],background:[]},typefaces:[]}},D=Object.freeze({__proto__:null,default:L});const C=441.67,Y=g.VISUAL_CENTER_FT,P=g.MODES,k=(t,e,r,n)=>{const a=[];for(let e in n)a.push(U(t,r[e],n[e]));let o=0,s=0;const i=l(e);for(let t in e)o+=a[t].x*e[t],s+=a[t].y*e[t];return o/=i,s/=i,{x:o,y:s}},U=(t,e,r,l=[0,0,0,0])=>{const n=(t=String(t)).includes("LEFT")?1:t.includes("RIGHT")?2:0,a=t.includes("TOP")?1:t.includes("BOTTOM")?2:0;return {x:0===n?e/2:1===n?e*l[0]:e*(1-l[2]),y:0===a?r/2-r/Y:1===a?r*l[1]:r-r*l[3]}},$=async(t,e,r,l)=>{let n=[],a=[];for(let o in r){n.push(r[o]*l[o]);const s=await t.get(0,t.height/2+e.center[o],t.width,e.l[o]);await s.loadPixels();let i=0,f=0,h=0;const u=s.pixels.length/4;for(let t=0;t<s.pixels.length;t+=4)i+=s.pixels[t],f+=s.pixels[t+1],h+=s.pixels[t+2];i=Math.round(i/u),f=Math.round(f/u),h=Math.round(h/u);const c=(.2126*i+.7152*f+.0722*h)/255;a.push(-Math.log10(c));}return n.map(((t,e)=>t*a[e]))},J=(t=[],e=null,n="RELATIVE",a={height:100,margin:[0,0,0,0]})=>{_.includes(n)||(n="RELATIVE");let o=0;"RELATIVE"===n?o=l(t):"FIXED"===n&&(o=a.height-(a.height*a.margin[1]+a.height*a.margin[3]));const s=t.map((t=>t/o));let i=[];for(let t in e){const r=Math.abs(e[t][3]-s[t]);i.push(r);}return 1-r(i)},q=(t,e,r=1,a=!0,o=[.4,.3,.3])=>{const s=e.map((t=>t[3]));let i,f=[F(t.map((t=>t.weight)),s),F(t.map((t=>t["font-stretch"])),s),r>1?x(t.map((t=>t["font-stretch"])),s):0],h=f.map(((t,e)=>t*o[e]));if(a)i=l(h);else {let t=f.map((t=>t>R)),e=0;for(let r of t)r&&e++;i=n(f)/e;}return i},j=async(t,l,n,a,o=D)=>{let f=t.predominant.emotion;if(void 0===o.default[f])return 1;const h=o.default[f].color.typography,u=o.default[f].color.background,c=o.default[f].typefaces;let p=1;if(void 0!==h&&h.length>0){let t=[];for(let e of l){let r=s(e.color),l=Number.MAX_VALUE;for(let t of h){t=s(t);let e=i(r,t);e<l&&(l=e);}t.push(l);}p=t.length<1?1:r(t),p/=C,p=e$1(1-p,0,1);}let g=1;if(void 0!==u&&0!==u.length){let t=[];g=0;for(let e of n){e=s(e);let r=Number.MAX_VALUE;for(let t of u){t=s(t);let l=i(e,t);l<r&&(r=l);}t.push(r);}g=g.length<1?1:r(t),g/=C,g=e$1(1-g,0,1);}let d=1;if(void 0!==c&&c.length>0){let t=[];for(let e of l){let r=0;const l=a.map((t=>t.family)).indexOf(e.typeface),n=a[l].tags;for(let t of c)n.includes(t)&&(r+=1/c.length);t.push(r);}d=t.length<1?1:r(t),d=e$1(d,0,1);}return (p+g+d)/3},Z=async(t=null,r,l,n,a,o="CENTER",s=null)=>{const i=r.width,f=r.height;P.includes(o)||(o="CENTER");const h=null===s?await $(t,l,n,a):s,u=k(o,h,n,a);let c=U(o,i,f,r.margin),p=Math.pow((u.x-c.x)/i,2)+Math.pow((u.y-c.y)/f,2);return p=1-Math.pow(Math.abs(p/2),.5),e$1(p,0,1)};
+const t=(t,e,r,l,n)=>l+(t-e)/(r-e)*(n-l),e$1=(t,e,r)=>Math.min(r,Math.max(e,t)),r=t=>t.reduce(((t,e)=>t+e),0)/t.length||0,l=t=>t.reduce(((t,e)=>t+e),0),n=t=>Math.max(...t),a=t=>Math.min(...t),o=t=>t.filter(((t,e,r)=>r.indexOf(t)===e)),s=t=>{if(t.levels)return {r:parseInt(t.levels[0]),g:parseInt(t.levels[1]),b:parseInt(t.levels[2])};let e=/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(t);return e?{r:parseInt(e[1],16),g:parseInt(e[2],16),b:parseInt(e[3],16)}:null},i=(t,e)=>Math.sqrt(Math.pow(t.r-e.r,2)+Math.pow(t.g-e.g,2)+Math.pow(t.b-e.b,2)),f=10,h=[.8,.2],u={MAX_CONSTRAINT:1,WHITE_SPACE_FACTOR:3,MODES:["OVERSET","JUSTIFY","ATTEMPT_JUSTIFY"],DEFAULT_MAX_LIMIT_SCALE:1},c={MIN_RANGE:50,THRESHOLD_VALID:.2,MODES:["DIF","MIN"]},p={MODES:["BOTH","TYPE_FAMILY","CATEGORY"]},g={VISUAL_CENTER_FT:20,MODES:["CENTER","LEFT-CENTER","RIGHT-CENTER","LEFT-TOP","RIGHT-TOP","LEFT-BOTTOM","RIGHT-BOTTOM"]},d=.5,E=10;const T=u.MAX_CONSTRAINT,M=u.WHITE_SPACE_FACTOR,I=u.DEFAULT_MAX_LIMIT_SCALE,O=u.MODES,A=(e,r)=>t(e=(e=e>=0?0:e)<=-r?-r:e,-r,0,T,0),b=(e,r)=>(e=Math.abs(e),t(e=e>r?r:e,r,0,T,0)),y=(t,e)=>b(t=t>=0?t/M:t,e),_={MODES:["RELATIVE","FIXED"]}.MODES;let m=c.MIN_RANGE,R=c.THRESHOLD_VALID,S=c.MODES;const x=(e,r)=>{const l=r.filter(((t,e,r)=>r.indexOf(t)===e)),n=[];for(let t of l)for(let l=0;l<r.length;l++)if(r[l]===t){n.push(e[l]);break}const a=n.filter(((t,e)=>n.indexOf(t)!==e));let o=1;if(!a.length>=1){let a=0;for(let t in r){let o=r[t],s=e[t],i=l.indexOf(o);s!==n[i]&&a++;}o=t(a,0,e.length,0,1);}return o},F=(l,o,s="DIF")=>{S.includes(s)||(s="DIF");const i=n(l),f=a(l);let h=Math.abs(i-f);if(h<m)return 1;const u=n(o),c=a(o);let p=f;if("DIF"===s)for(let t in o)if(o[t]===c){p=l[t];break}const g=o.map((r=>{let l=t(r,c,u,0,h);return l=e$1(l,0,h),l})),d=[];for(let t in l){let e=l[t],r=Math.abs(e-p),n=Math.abs(r-g[t]);d.push(n);}let E=t(r(d),0,h,1,0);return e$1(E,0,1)};var L={anger:{color:{typography:["#ff0000","#00ff00"],background:["#ff0000"]},typefaces:["sans-serif","neo-grotesque"]},joy:{color:{typography:[],background:["#ffff00","#00ff00"]},typefaces:["sans-serif","serif"]},trust:{color:{typography:[],background:["#0000ff","#00ff00"]},typefaces:["neo-grotesque"]},sadness:{color:{typography:[],background:["#0071b6"]},typefaces:[]},disgust:{color:{typography:["#800080"],background:[]},typefaces:[]}},D=Object.freeze({__proto__:null,default:L});const C=441.67,N=f,w=h,v=d,G=E,H=(t,e,r=1)=>{let l=0,n=t.width*r*t.height*r;t.loadPixels();for(let r=0;r<4*n;r+=4){let n={r:t.pixels[r],g:t.pixels[r+1],b:t.pixels[r+2]};i(n,e)<G&&l++;}return l/n},V=p.MODES,Y=g.VISUAL_CENTER_FT,P=g.MODES,k=(t,e,r,n)=>{const a=[];for(let e in n)a.push(U(t,r[e],n[e]));let o=0,s=0;const i=l(e);for(let t in e)o+=a[t].x*e[t],s+=a[t].y*e[t];return o/=i,s/=i,{x:o,y:s}},U=(t,e,r,l=[0,0,0,0])=>{const n=(t=String(t)).includes("LEFT")?1:t.includes("RIGHT")?2:0,a=t.includes("TOP")?1:t.includes("BOTTOM")?2:0;return {x:0===n?e/2:1===n?e*l[0]:e*(1-l[2]),y:0===a?r/2-r/Y:1===a?r*l[1]:r-r*l[3]}},$=async(t,e,r,l)=>{let n=[],a=[];for(let o in r){n.push(r[o]*l[o]);const s=await t.get(0,t.height/2+e.center[o],t.width,e.l[o]);await s.loadPixels();let i=0,f=0,h=0;const u=s.pixels.length/4;for(let t=0;t<s.pixels.length;t+=4)i+=s.pixels[t],f+=s.pixels[t+1],h+=s.pixels[t+2];i=Math.round(i/u),f=Math.round(f/u),h=Math.round(h/u);const c=(.2126*i+.7152*f+.0722*h)/255;a.push(-Math.log10(c));}return n.map(((t,e)=>t*a[e]))},X=(t=[],e,l="OVERSET",n=I)=>{O.includes(l)||(l="OVERSET");let a=[],o=e*n;for(let r of t){let t=e-r,n=T;switch(l){case"JUSTIFY":n=b(t,o);break;case"ATTEMPT_JUSTIFY":n=y(t,o);break;default:n=A(t,o);}a.push(n);}return r([...a])},B=(t,e,r=[],l=[],n={left:0,top:0,right:0,bottom:0})=>{let a=!1,o="",s=Math.abs(n.top)+Math.abs(n.bottom);for(let t of r)s+=parseFloat(t);let i=Math.abs(n.left)+Math.abs(n.right);for(let t of l)i+=parseFloat(t);return i=Math.round(i),s=Math.round(s),s>e?(a=!0,o+=`Grid height is bigger than container (grid:${s}, container:${e}). `):s<e&&(o+=`Grid and container height are not the same (grid:${s}, container:${e}). `),i>t?(a=!0,o+=`Grid width is bigger than container (grid:${i}, container:${t}). `):i<t&&(o+=`Grid and container width are not the same (grid:${i}, container:${t}). `),a?1:0},J=(t=[],e=null,n="RELATIVE",a={height:100,margin:[0,0,0,0]})=>{_.includes(n)||(n="RELATIVE");let o=0;"RELATIVE"===n?o=l(t):"FIXED"===n&&(o=a.height-(a.height*a.margin[1]+a.height*a.margin[3]));const s=t.map((t=>t/o));let i=[];for(let t in e){const r=Math.abs(e[t][3]-s[t]);i.push(r);}return 1-r(i)},q=(t,e,r=1,a=!0,o=[.4,.3,.3])=>{const s=e.map((t=>t[3]));let i,f=[F(t.map((t=>t.weight)),s),F(t.map((t=>t["font-stretch"])),s),r>1?x(t.map((t=>t["font-stretch"])),s):0],h=f.map(((t,e)=>t*o[e]));if(a)i=l(h);else {let t=f.map((t=>t>R)),e=0;for(let r of t)r&&e++;i=n(f)/e;}return i},j=async(t,l,n,a,o=D)=>{let f=t.predominant.emotion;if(void 0===o.default[f])return 1;const h=o.default[f].color.typography,u=o.default[f].color.background,c=o.default[f].typefaces;let p=1;if(void 0!==h&&h.length>0){let t=[];for(let e of l){let r=s(e.color),l=Number.MAX_VALUE;for(let t of h){t=s(t);let e=i(r,t);e<l&&(l=e);}t.push(l);}p=t.length<1?1:r(t),p/=C,p=e$1(1-p,0,1);}let g=1;if(void 0!==u&&0!==u.length){let t=[];g=0;for(let e of n){e=s(e);let r=Number.MAX_VALUE;for(let t of u){t=s(t);let l=i(e,t);l<r&&(r=l);}t.push(r);}g=g.length<1?1:r(t),g/=C,g=e$1(1-g,0,1);}let d=1;if(void 0!==c&&c.length>0){let t=[];for(let e of l){let r=0;const l=a.map((t=>t.family)).indexOf(e.typeface),n=a[l].tags;for(let t of c)n.includes(t)&&(r+=1/c.length);t.push(r);}d=t.length<1?1:r(t),d=e$1(d,0,1);}return (p+g+d)/3},W=(t,e,l=w)=>{if(t.length<2)return 1;let n=t,a=[];for(let t=0;t<n.length-1;t++){let e=Math.abs(n[t]-n[t+1]),r=N/(N+e);a.push(r);}let s=((t,e)=>t.reduce(((t,r,l)=>t+r*e[l]),0))([r(a),1/o(e).length],l);return s},z=t=>{if(t.length<2)return 1;const e=t;let l=[];for(let t=0;t<e.length-1;t++){let r=10/(10+Math.abs(e[t]-e[t+1]));l.push(r);}return r(l)},K=(t,e,r=null,l=v)=>{null===r&&(e=s(e),r=H(t,e,t.pixelDensity()));return 1-4*Math.pow(r-l,2)},Q=(t,e,r="BOTH")=>{V.includes(r)||(r="BOTH");let l=[.5,.5];"TYPE_FAMILY"===r?l=[1,0]:"CATEGORY"===r&&(l=[0,1]);let n=[],a=o(t),s=0,i=0;if("TYPE_FAMILY"!==r){const t=e.map((t=>t.family)),r=e.map((t=>t.category));for(let e of a){const l=t.indexOf(e);-1===l?n.push("undefined"):n.push(r[l]);}n=o(n),s=1/n.length;}"CATEGORY"!==r&&(i=1/a.length);return [i,s].reduce(((t,e,r)=>t+e*l[r]),0)},Z=async(t=null,r,l,n,a,o="CENTER",s=null)=>{const i=r.width,f=r.height;P.includes(o)||(o="CENTER");const h=null===s?await $(t,l,n,a):s,u=k(o,h,n,a);let c=U(o,i,f,r.margin),p=Math.pow((u.x-c.x)/i,2)+Math.pow((u.y-c.y)/f,2);return p=1-Math.pow(Math.abs(p/2),.5),e$1(p,0,1)};
 
 var backgroundStyles = {
     solid: (pg, color) => {
@@ -6543,11 +6543,31 @@ class Poster {
         this.constraint = 0;
 
         this.metrics = {
-            legibility: 1,
-            gridAppropriateness: 1
+            constraints: {
+                legibility: 0,
+                gridAppropriateness: 0,
+                general: 0
+            },
+            aesthetics: {
+                alignment: 0,
+                regularity: 0,
+                justification: 0,
+                typefaceParing: 0,
+                whiteSpace: 0,
+                balance: 0,
+                general: 0,
+                weights: 0
+            },
+            semantics: {
+                emphasis: 0,
+                layout: 0,
+                visuals: 0,
+                general: 0,
+                weights: [0,0,0]
+            }
         };
-        this.sentencesLength = [];
 
+        this.sentencesLength = [];
 
         const h = (genotype === null) ? params["size"]["height"] : genotype["size"]["height"];
         this.maxFontSize = Params.typography.maxSize * h;
@@ -6557,7 +6577,6 @@ class Poster {
 
         this.#showGrid = params !== null ? params.display.grid : false;
         this.phenotype = null;
-        // this.evaluate();
     }
 
     copy = () => {
@@ -6623,7 +6642,7 @@ class Poster {
             JSON.parse(JSON.stringify(params.size.margin))
         );
 
-        // define texboxes
+        // define textboxes
         const textboxes = [];
 
         const alignment = params.typography.verticalAlignment === 0 ?
@@ -6674,7 +6693,6 @@ class Poster {
         }
 
         const images = [];
-        // console.log(`params.images`, params.images);
         for (let input of params.images) {
             const src = input.src;
             const img = loadImage(src, async (img) => {
@@ -6689,7 +6707,6 @@ class Poster {
                 src: img
             });
         }
-
 
         // create genotype
         return {
@@ -6753,11 +6770,6 @@ class Poster {
         let semantics = 0; // semantic part of fitness
         let aesthetics = 0; // aesthetics part of fitness
 
-        //const ls = layoutSemantics(this.genotype["grid"]["rows"]["l"], dist, `FIXED`, this.genotype["size"]);
-        // const semanticsEmphasis = evaluator.semanticsEmphasis(this.genotype["textboxes"], dist, noCurrentTypefaces);
-        //  const justification = evaluator.legibility(this.sentencesLength, this.genotype["grid"].getAvailableWidth(), `JUSTIFY`);
-        // const visualSemantics = evaluator.semanticsVisuals(emotionalData, this.genotype["textboxes"], this.genotype.background.colors, this.params.typography.typefaces);
-
         if (weights[0] > 0) {
             const semanticsWeights = this.params["evaluation"]["semanticsWeights"];
             const emphasis = (semanticsWeights[0] > 0) ? q(this.genotype["textboxes"], dist, noCurrentTypefaces) : 0;
@@ -6765,57 +6777,55 @@ class Poster {
             const layout = (semanticsWeights[1] > 0) ? J(this.genotype["grid"]["rows"]["l"], dist, layoutMode, this.genotype["size"]) : 0;
             const visuals = (semanticsWeights[2] > 0) ? await j(emotionalData, this.genotype["textboxes"], this.genotype.background.colors, this.params.typography.typefaces) : 0;
             semantics = sumProduct( [emphasis, layout, visuals], semanticsWeights);
+
+            // save info
+            this.metrics["semantics"]["emphasis"] = emphasis;
+            this.metrics["semantics"]["layout"] = layout;
+            this.metrics["semantics"]["visuals"] = visuals;
+            this.metrics["semantics"]["general"] = semantics;
+            this.metrics["semantics"]["weights"] = semanticsWeights;
         }
 
 
-        // semantics
-        // const ls = layoutSemantics(this.genotype["grid"]["rows"]["l"], dist, `FIXED`, this.genotype["size"]);
-        // const semanticsEmphasis = evaluator.semanticsEmphasis(this.genotype["textboxes"], dist, noCurrentTypefaces);
-        //  const justification = evaluator.legibility(this.sentencesLength, this.genotype["grid"].getAvailableWidth(), `JUSTIFY`);
-        // const visualSemantics = evaluator.semanticsVisuals(emotionalData, this.genotype["textboxes"], this.genotype.background.colors, this.params.typography.typefaces);
 
-        // const alignment = evaluator.alignment(this.sentencesLength, this.genotype["textboxes"].map(tb => tb["alignment"]));
-        // const regularity = evaluator.regularity(this.genotype["grid"]["rows"]["l"]);
+        if (weights[1] > 0) {
+            const aestheticsWeights = this.params["evaluation"]["aestheticsWeights"];
+            const alignment = (aestheticsWeights[0] > 0) ? W(this.sentencesLength, this.genotype["textboxes"].map(tb => tb["alignment"])) : 0;
+            const regularity = (aestheticsWeights[1] > 0) ? z(this.genotype["grid"]["rows"]["l"]) : 0;
+            const justification = (aestheticsWeights[2] > 0) ? X(this.sentencesLength, this.genotype["grid"].getAvailableWidth(), `JUSTIFY`) : 0;
+            const typefaceParing = (aestheticsWeights[3] > 0) ? Q(this.genotype["textboxes"].map(gene => gene["typeface"]), this.params["typography"]["typefaces"]) : 0;
+            const whiteSpace = (aestheticsWeights[4] > 0) ? K(this.phenotype, this.genotype["textboxes"][0]["color"]) : 0;
+            let balanceMode = this.genotype["textboxes"][0]["alignment"] === 0 ? `LEFT` : this.genotype["textboxes"][0]["alignment"] === 1 ? `CENTER` : `RIGHT`;
+            balanceMode += this.genotype["typography"]["verticalAlignment"] === 0 ? `-TOP` : this.genotype["typography"]["verticalAlignment"] === 1 ? `-CENTER` : `-BOTTOM`;
+            const balance = (aestheticsWeights[5] > 0) ? await Z(this.phenotype, this.genotype["size"], this.genotype["grid"]["rows"], this.genotype["textboxes"].map(tb => tb.size), this.sentencesLength, balanceMode) : 0;
+            aesthetics = sumProduct([alignment, regularity, justification, typefaceParing, whiteSpace, balance], aestheticsWeights);
 
-        // textboxes have the same typography colour
-        // const whiteSpace = evaluator.whiteSpaceFraction(this.phenotype, this.genotype["textboxes"][0]["color"]);
-        //const typefaceParing = evaluator.typefaceParing(this.genotype["textboxes"].map(gene => gene["typeface"]), this.params["typography"]["typefaces"])
-
-        let balanceMode = this.genotype["textboxes"][0]["alignment"] === 0 ? `LEFT` : this.genotype["textboxes"][0]["alignment"] === 1 ? `CENTER` : `RIGHT`;
-        balanceMode += this.genotype["typography"]["verticalAlignment"] === 0 ? `-TOP` : this.genotype["typography"]["verticalAlignment"] === 1 ? `-CENTER` : `-BOTTOM`;
-        
-        const balance = await Z(
-            this.phenotype,
-            this.genotype["size"],
-            this.genotype["grid"]["rows"],
-            this.genotype["textboxes"].map(tb => tb.size),
-            this.sentencesLength,
-            balanceMode
-        );
-
-        console.log (`balance=${balance}`);
-
-        // this.fitness = layoutSemantics;
-        // this.fitness = (visualSemantics * 0.3 + layoutSemantics * 0.3 + justification * 0.4);
+            // save info
+            this.metrics["aesthetics"]["alignment"] = alignment;
+            this.metrics["aesthetics"]["regularity"] = regularity;
+            this.metrics["aesthetics"]["justification"] = justification;
+            this.metrics["aesthetics"]["typefaceParing"] = typefaceParing;
+            this.metrics["aesthetics"]["whiteSpace"] = whiteSpace;
+            this.metrics["aesthetics"]["balance"] = balance;
+            this.metrics["aesthetics"]["general"] = aesthetics;
+            this.metrics["aesthetics"]["weights"] = aestheticsWeights;
+        }
 
 
         // constraints
-        // const legibility = evaluator.legibility(this.sentencesLength, this.genotype["grid"].getAvailableWidth(), `OVERSET`);
-        /*const gridAppropriateness = evaluator.gridAppropriateSize(
+        const legibility = X(this.sentencesLength, this.genotype["grid"].getAvailableWidth(), `OVERSET`);
+        const gridAppropriateness = B(
             this.genotype["size"].width, this.genotype["size"].height,
             this.genotype["grid"].rows.l, this.genotype["grid"].columns.l, this.genotype["grid"].marginsPos
         );
-        this.constraint = legibility + gridAppropriateness;*/
-
-        // this.metrics["legibility"] = legibility;
-        // this.metrics["gridAppropriateness"] = gridAppropriateness;
 
         this.fitness = sumProduct([semantics, aesthetics], weights);
-        console.log (`fitness=${this.fitness} (semantics=${semantics}, aesthetics=${aesthetics})`);
-        this.constraint = 1;
+        this.constraint = legibility + gridAppropriateness;
 
-        // returns a number between 0 and 0.5
-        // subtracted to fitness
+        this.metrics["constraints"]["legibility"] = legibility;
+        this.metrics["constraints"]["gridAppropriateness"] = gridAppropriateness;
+        this.metrics["constraints"]["general"] = this.constraint;
+
         return {
             "fitness": this.fitness,
             "constraints": this.constraint
@@ -7646,9 +7656,6 @@ class Population {
 
     #staticPenalty = async () => {
         this.population = this.population.sort((a,b) => (b.fitness-b.constraint) - (a.fitness-a.constraint));
-        // debug
-        // best individual fitness
-        // console.log ("best individual=", this.population[0].fitness, this.population[0].constraint);
     }
 
     copy = (obj) => {
@@ -8073,14 +8080,14 @@ class App extends s$1 {
         return x$1`
             ${this.errorMessage}
             ${this.header}
-            ${this.screen === 3 ? this.initPopForm : A}
+            ${this.screen === 3 ? this.initPopForm : A$1}
             ${this.screen < 2 ? 
                 x$1`<div id="input-module" class="container-fluid">
                     ${this.resultsContainer}
                     ${this.inputForm}
-                    ${this.screen === 1 ? this.#nextBts() : A}
+                    ${this.screen === 1 ? this.#nextBts() : A$1}
                 </div>` :
-            A }
+            A$1 }
         `;
     }
 

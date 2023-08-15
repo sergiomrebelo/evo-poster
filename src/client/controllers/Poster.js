@@ -1,15 +1,9 @@
 import * as evaluator from '@evoposter/evaluator/lib/evaluator.min.js';
-
-// DEV LINK
-// import * as evaluator from '@evoposter/evaluator/src/index.mjs';
+import backgroundStyles from "./BackgroundStyles.js";
+import {randomScheme, contrastChecker} from "./ColorGenerator.js";
+import {sumProduct} from "../utils.js";
 
 import {Params} from "../Params.js";
-import backgroundStyles from "./BackgroundStyles.js";
-
-import {randomScheme, contrastChecker} from "./ColorGenerator.js";
-
-import {sumArr, sumProduct} from "../utils.js";
-
 import * as config from './../../../evo-poster.config.js';
 
 const MAX_COLOR_SCHEME_ATTEMPT = config["default"]["COLOR"] !== undefined ? config["default"]["COLOR"]["MAX_COLOR_SCHEME_ATTEMPT"] : 200;
@@ -29,11 +23,31 @@ class Poster {
         this.constraint = 0;
 
         this.metrics = {
-            legibility: 1,
-            gridAppropriateness: 1
+            constraints: {
+                legibility: 0,
+                gridAppropriateness: 0,
+                general: 0
+            },
+            aesthetics: {
+                alignment: 0,
+                regularity: 0,
+                justification: 0,
+                typefaceParing: 0,
+                whiteSpace: 0,
+                balance: 0,
+                general: 0,
+                weights: 0
+            },
+            semantics: {
+                emphasis: 0,
+                layout: 0,
+                visuals: 0,
+                general: 0,
+                weights: [0,0,0]
+            }
         }
-        this.sentencesLength = [];
 
+        this.sentencesLength = [];
 
         const h = (genotype === null) ? params["size"]["height"] : genotype["size"]["height"];
         this.maxFontSize = Params.typography.maxSize * h;
@@ -43,7 +57,6 @@ class Poster {
 
         this.#showGrid = params !== null ? params.display.grid : false;
         this.phenotype = null;
-        // this.evaluate();
     }
 
     copy = () => {
@@ -109,7 +122,7 @@ class Poster {
             JSON.parse(JSON.stringify(params.size.margin))
         );
 
-        // define texboxes
+        // define textboxes
         const textboxes = [];
 
         const alignment = params.typography.verticalAlignment === 0 ?
@@ -160,7 +173,6 @@ class Poster {
         }
 
         const images = [];
-        // console.log(`params.images`, params.images);
         for (let input of params.images) {
             const src = input.src;
             const img = loadImage(src, async (img) => {
@@ -175,7 +187,6 @@ class Poster {
                 src: img
             })
         }
-
 
         // create genotype
         return {
@@ -242,11 +253,6 @@ class Poster {
         let semantics = 0; // semantic part of fitness
         let aesthetics = 0; // aesthetics part of fitness
 
-        //const ls = layoutSemantics(this.genotype["grid"]["rows"]["l"], dist, `FIXED`, this.genotype["size"]);
-        // const semanticsEmphasis = evaluator.semanticsEmphasis(this.genotype["textboxes"], dist, noCurrentTypefaces);
-        //  const justification = evaluator.legibility(this.sentencesLength, this.genotype["grid"].getAvailableWidth(), `JUSTIFY`);
-        // const visualSemantics = evaluator.semanticsVisuals(emotionalData, this.genotype["textboxes"], this.genotype.background.colors, this.params.typography.typefaces);
-
         if (weights[0] > 0) {
             const semanticsWeights = this.params["evaluation"]["semanticsWeights"];
             const emphasis = (semanticsWeights[0] > 0) ? evaluator.semanticsEmphasis(this.genotype["textboxes"], dist, noCurrentTypefaces) : 0;
@@ -254,57 +260,55 @@ class Poster {
             const layout = (semanticsWeights[1] > 0) ? evaluator.semanticsLayout(this.genotype["grid"]["rows"]["l"], dist, layoutMode, this.genotype["size"]) : 0;
             const visuals = (semanticsWeights[2] > 0) ? await evaluator.semanticsVisuals(emotionalData, this.genotype["textboxes"], this.genotype.background.colors, this.params.typography.typefaces) : 0;
             semantics = sumProduct( [emphasis, layout, visuals], semanticsWeights);
+
+            // save info
+            this.metrics["semantics"]["emphasis"] = emphasis;
+            this.metrics["semantics"]["layout"] = layout;
+            this.metrics["semantics"]["visuals"] = visuals;
+            this.metrics["semantics"]["general"] = semantics;
+            this.metrics["semantics"]["weights"] = semanticsWeights;
         }
 
 
-        // semantics
-        // const ls = layoutSemantics(this.genotype["grid"]["rows"]["l"], dist, `FIXED`, this.genotype["size"]);
-        // const semanticsEmphasis = evaluator.semanticsEmphasis(this.genotype["textboxes"], dist, noCurrentTypefaces);
-        //  const justification = evaluator.legibility(this.sentencesLength, this.genotype["grid"].getAvailableWidth(), `JUSTIFY`);
-        // const visualSemantics = evaluator.semanticsVisuals(emotionalData, this.genotype["textboxes"], this.genotype.background.colors, this.params.typography.typefaces);
 
-        // const alignment = evaluator.alignment(this.sentencesLength, this.genotype["textboxes"].map(tb => tb["alignment"]));
-        // const regularity = evaluator.regularity(this.genotype["grid"]["rows"]["l"]);
+        if (weights[1] > 0) {
+            const aestheticsWeights = this.params["evaluation"]["aestheticsWeights"];
+            const alignment = (aestheticsWeights[0] > 0) ? evaluator.alignment(this.sentencesLength, this.genotype["textboxes"].map(tb => tb["alignment"])) : 0;
+            const regularity = (aestheticsWeights[1] > 0) ? evaluator.regularity(this.genotype["grid"]["rows"]["l"]) : 0;
+            const justification = (aestheticsWeights[2] > 0) ? evaluator.legibility(this.sentencesLength, this.genotype["grid"].getAvailableWidth(), `JUSTIFY`) : 0;
+            const typefaceParing = (aestheticsWeights[3] > 0) ? evaluator.typefaceParing(this.genotype["textboxes"].map(gene => gene["typeface"]), this.params["typography"]["typefaces"]) : 0;
+            const whiteSpace = (aestheticsWeights[4] > 0) ? evaluator.whiteSpaceFraction(this.phenotype, this.genotype["textboxes"][0]["color"]) : 0;
+            let balanceMode = this.genotype["textboxes"][0]["alignment"] === 0 ? `LEFT` : this.genotype["textboxes"][0]["alignment"] === 1 ? `CENTER` : `RIGHT`;
+            balanceMode += this.genotype["typography"]["verticalAlignment"] === 0 ? `-TOP` : this.genotype["typography"]["verticalAlignment"] === 1 ? `-CENTER` : `-BOTTOM`;
+            const balance = (aestheticsWeights[5] > 0) ? await evaluator.visualBalance(this.phenotype, this.genotype["size"], this.genotype["grid"]["rows"], this.genotype["textboxes"].map(tb => tb.size), this.sentencesLength, balanceMode) : 0;
+            aesthetics = sumProduct([alignment, regularity, justification, typefaceParing, whiteSpace, balance], aestheticsWeights);
 
-        // textboxes have the same typography colour
-        // const whiteSpace = evaluator.whiteSpaceFraction(this.phenotype, this.genotype["textboxes"][0]["color"]);
-        //const typefaceParing = evaluator.typefaceParing(this.genotype["textboxes"].map(gene => gene["typeface"]), this.params["typography"]["typefaces"])
-
-        let balanceMode = this.genotype["textboxes"][0]["alignment"] === 0 ? `LEFT` : this.genotype["textboxes"][0]["alignment"] === 1 ? `CENTER` : `RIGHT`;
-        balanceMode += this.genotype["typography"]["verticalAlignment"] === 0 ? `-TOP` : this.genotype["typography"]["verticalAlignment"] === 1 ? `-CENTER` : `-BOTTOM`;
-        
-        const balance = await evaluator.visualBalance(
-            this.phenotype,
-            this.genotype["size"],
-            this.genotype["grid"]["rows"],
-            this.genotype["textboxes"].map(tb => tb.size),
-            this.sentencesLength,
-            balanceMode
-        );
-
-        console.log (`balance=${balance}`)
-
-        // this.fitness = layoutSemantics;
-        // this.fitness = (visualSemantics * 0.3 + layoutSemantics * 0.3 + justification * 0.4);
+            // save info
+            this.metrics["aesthetics"]["alignment"] = alignment;
+            this.metrics["aesthetics"]["regularity"] = regularity;
+            this.metrics["aesthetics"]["justification"] = justification;
+            this.metrics["aesthetics"]["typefaceParing"] = typefaceParing;
+            this.metrics["aesthetics"]["whiteSpace"] = whiteSpace;
+            this.metrics["aesthetics"]["balance"] = balance;
+            this.metrics["aesthetics"]["general"] = aesthetics;
+            this.metrics["aesthetics"]["weights"] = aestheticsWeights;
+        }
 
 
         // constraints
-        // const legibility = evaluator.legibility(this.sentencesLength, this.genotype["grid"].getAvailableWidth(), `OVERSET`);
-        /*const gridAppropriateness = evaluator.gridAppropriateSize(
+        const legibility = evaluator.legibility(this.sentencesLength, this.genotype["grid"].getAvailableWidth(), `OVERSET`);
+        const gridAppropriateness = evaluator.gridAppropriateSize(
             this.genotype["size"].width, this.genotype["size"].height,
             this.genotype["grid"].rows.l, this.genotype["grid"].columns.l, this.genotype["grid"].marginsPos
         );
-        this.constraint = legibility + gridAppropriateness;*/
-
-        // this.metrics["legibility"] = legibility;
-        // this.metrics["gridAppropriateness"] = gridAppropriateness;
 
         this.fitness = sumProduct([semantics, aesthetics], weights);
-        console.log (`fitness=${this.fitness} (semantics=${semantics}, aesthetics=${aesthetics})`);
-        this.constraint = 1;
+        this.constraint = legibility + gridAppropriateness;
 
-        // returns a number between 0 and 0.5
-        // subtracted to fitness
+        this.metrics["constraints"]["legibility"] = legibility;
+        this.metrics["constraints"]["gridAppropriateness"] = gridAppropriateness;
+        this.metrics["constraints"]["general"] = this.constraint;
+
         return {
             "fitness": this.fitness,
             "constraints": this.constraint

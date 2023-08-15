@@ -357,9 +357,6 @@ export class Population {
 
     #staticPenalty = async () => {
         this.population = this.population.sort((a,b) => (b.fitness-b.constraint) - (a.fitness-a.constraint));
-        // debug
-        // best individual fitness
-        // console.log ("best individual=", this.population[0].fitness, this.population[0].constraint);
     }
 
     copy = (obj) => {
