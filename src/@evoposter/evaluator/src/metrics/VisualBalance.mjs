@@ -13,34 +13,37 @@
  * Version: 1.5.0 (November 2023)
  */
 
-import {arrSum} from "../utils.js";
+import {arrSum, constraint} from "../utils.js";
 import {VISUAL_BALANCE} from "../metrics.config.js";
 
 // visual center factor
 // By default, the visual center is taken to be offset a twentieth of the page height towards the top
 const VISUAL_CENTER_FT = VISUAL_BALANCE["VISUAL_CENTER_FT"];
+const AVAILABLE_MODES = VISUAL_BALANCE["MODES"];
 
-export const compute = async (img = null, size, rows, widths, heights, visualWeights = null) => {
+export const compute = async (img = null, size, rows, widths, heights, mode= `CENTER`, visualWeights = null) => {
     const dx = size["width"];
     const dy = size["height"];
+    if (!AVAILABLE_MODES.includes(mode)) mode = `CENTER`;
 
     const vw = visualWeights === null ? await visualWeight(img, rows, widths, heights) : visualWeights;
-    const bo = balanceCenter(vw, widths, heights);
-    const vo = visualCenter(dx, dy);
+    const bo = balanceCenter(mode, vw, widths, heights);
+    let vo = visualCenter(mode, dx, dy, size["margin"]);
 
     // calculate central Balance
     let cb = Math.pow(((bo.x-vo.x)/dx), 2) + Math.pow(((bo.y-vo.y)/dy), 2);
     cb = 1-Math.pow(Math.abs(cb/2), 1/2);
 
-    return cb;
+    return constraint(cb, 0, 1);
 }
 
 
-const balanceCenter = (vws, widths, heights) => {
+const balanceCenter = (mode, vws, widths, heights) => {
+
     // get text box center
     const vc = [];
     for (let i in heights) {
-        vc.push(visualCenter(widths[i], heights[i]));
+        vc.push(visualCenter(mode, widths[i], heights[i]));
     }
 
     // get page balance center
@@ -67,10 +70,21 @@ const balanceCenter = (vws, widths, heights) => {
 * The visual center lies halfway between the left and right edges
 * the visual center is taken to be offset a twentieth of the page height towards the top
 */
-const visualCenter = (width, height) => {
+const visualCenter = (mode, width, height, margins = [0,0,0,0]) => {
+    mode = String(mode)
+    const posX = mode.includes(`LEFT`) ? 1 : mode.includes(`RIGHT`) ? 2 : 0;
+    const posY = mode.includes(`TOP`) ? 1 : mode.includes(`BOTTOM`) ? 2 : 0;
+
+    let x = posX === 0 ? width/2 :
+        posX === 1 ? (width * margins[0]) : width * (1 - margins[2]) ;
+    let y = posY === 0 ? height/2 - (height/VISUAL_CENTER_FT) :
+        posY === 1 ? (height * margins[1]) : height - (height * margins[3])
+
+
+
     return {
-        x: width/2,
-        y: height/2 - (height/VISUAL_CENTER_FT)
+        x: x,
+        y: y
     }
 }
 

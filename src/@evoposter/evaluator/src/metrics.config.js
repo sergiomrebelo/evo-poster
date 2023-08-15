@@ -34,6 +34,11 @@ export const TYPEFACE_PARING = {
 
 export const VISUAL_BALANCE = {
     "VISUAL_CENTER_FT": 20,
+    "MODES": [
+        `CENTER`,
+        `LEFT-CENTER`, `RIGHT-CENTER`,
+        `LEFT-TOP`, `RIGHT-TOP`,
+        `LEFT-BOTTOM`, `RIGHT-BOTTOM`]
 }
 
 export const WHITE_SPACE_FRACTION = {

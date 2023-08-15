@@ -5,6 +5,7 @@
   "main": "src/server.js",
   "type": "module",
   "dependencies": {
+    "@evoposter/evaluator": "file:src/@evoposter/evaluator",
     "@evoposter/nlp": "file:src/@evoposter/nlp",
     "cors": "^2.8.5",
     "cross-env": "^7.0.3",
@@ -33,7 +34,6 @@
   },
   "homepage": "https://github.com/sergiomrebelo/evo-poster#readme",
   "devDependencies": {
-    "@evoposter/evaluator": "file:src/@evoposter/evaluator",
     "@rollup/plugin-json": "^6.0.0",
     "@rollup/plugin-node-resolve": "^15.1.0",
     "@rollup/plugin-terser": "^0.4.3",
