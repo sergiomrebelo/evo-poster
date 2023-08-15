@@ -140,7 +140,6 @@ export class App extends LitElement {
             }
         }
 
-        console.log (`config["default"]["display"]["GRID"]= ${config["default"]["display"]["GRID"]}`)
 
         this.population = null;
 

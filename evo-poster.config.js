@@ -102,5 +102,9 @@ export default {
     evaluation: EVALUATION !== undefined ? EVALUATION : {},
     display: {
         GRID: true
+    },
+    log: {
+        SAVE_LOG: true,
+        SAVE_IMAGES: `GENERATION` // `GENERATION`, `END`, `BEST-GENERATION`, `NO`
     }
 }

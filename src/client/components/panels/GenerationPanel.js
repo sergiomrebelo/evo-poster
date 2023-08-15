@@ -9,6 +9,9 @@ import {Slider} from "../inputs/Slider.js";
 import {DropDownList} from "../inputs/DropDownList.js";
 import {TextArea} from "../inputs/TextArea.js";
 
+import {TYPEFACES} from "../../../../evo-poster.config.js";
+
+
 export class GenerationPanel extends LitElement {
     static properties = {
         params: {},
@@ -118,19 +121,22 @@ export class GenerationPanel extends LitElement {
                 typefaces: new TextInput(`Add Typeface`, "", `typefaces-add`, (e) => {
                     const name = e.target.value;
                     const current = this.params.typography.typefaces.map(e => e.family);
-                    if (Params.availableTypefaces.includes(name) && !current.includes(name)) {
+                    if (Object.keys(TYPEFACES).includes(name) && !current.includes(name)) {
                         for (let f of Array.from(document.fonts)) {
-                            console.log(f, f.family);
                             if (f.family === name) {
                                 let stretch = f.stretch.replaceAll(`%`, ``);
                                 let stretchValues = stretch.split(" ").map((x) => parseInt(x));
                                 let weightValues = f.weight.split(" ").map((x) => parseInt(x));
+                                const features = TYPEFACES[name];
                                 const fontData = {
                                     family: f.family,
                                     weight: weightValues,
-                                    stretch: stretchValues
+                                    stretch: stretchValues,
+                                    category: features["category"],
+                                    tags: features["tags"],
+                                    leading: features["leading"]
                                 }
-                                this.params.typography.typefaces.push(fontData)
+                                this.params["typography"]["typefaces"].push(fontData)
                                 break;
                             }
                         }
