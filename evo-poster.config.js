@@ -99,5 +99,8 @@ export const EVALUATION = {
 export default {
     typography: TYPEFACES !== undefined ? TYPEFACES : {},
     color: COLOR !== undefined ? COLOR : {},
-    evaluation: EVALUATION !== undefined ? EVALUATION : {}
+    evaluation: EVALUATION !== undefined ? EVALUATION : {},
+    display: {
+        GRID: true
+    }
 }

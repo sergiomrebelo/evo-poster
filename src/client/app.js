@@ -136,9 +136,11 @@ export class App extends LitElement {
                 lock: [false, false, false, false, false, false, false, false]
             },
             display: {
-                grid: true
+                grid: config["default"]["display"]["GRID"] !== undefined ? config["default"]["display"]["GRID"] : true
             }
         }
+
+        console.log (`config["default"]["display"]["GRID"]= ${config["default"]["display"]["GRID"]}`)
 
         this.population = null;
 

@@ -18,7 +18,8 @@ class Poster {
         this.generation = generation;
         this.ready = false;
         // ensure we use a deep copy of params
-        this.params = JSON.parse(JSON.stringify(params));
+        // this.params = JSON.parse(JSON.stringif(pyarams));
+        this.params = params;
 
         this.fitness = 1;
         this.constraint = 0;
@@ -57,7 +58,11 @@ class Poster {
 
         this.genotype = (genotype === null) ? this.#generateGenotype(params) : genotype;
 
-        this.#showGrid = params !== null ? params.display.grid : false;
+        this.#showGrid = false;
+        if (params !== null) {
+            this.#showGrid = this.params["display"]["grid"];
+        }
+
         this.phenotype = null;
     }
 
@@ -232,7 +237,7 @@ class Poster {
 
         if (this.#showGrid || this.#debug) {
             // GRID
-            // this.genotype.grid.display(this.phenotype);
+            this.genotype.grid.display(this.phenotype);
         }
 
         // place graphics
@@ -371,9 +376,9 @@ class Poster {
             const sentenceWidth = ctx.measureText(content).width;
 
             // debug
-            pg.textSize(10);
-            pg.fill (0)
-            pg.text(sentenceWidth, xPos, yPos+15);
+            // pg.textSize(10);
+            // pg.fill (0)
+            // pg.text(sentenceWidth, xPos, yPos+15);
             this.sentencesLength.push(sentenceWidth);
         }
         pg.pop();
@@ -402,6 +407,7 @@ class Poster {
     toggleGrid = (show = null) => {
         if (show === null) {
             show = !this.#showGrid;
+            this.params["display"]["grid"] = show;
         }
         this.#showGrid = show;
         this.draw();

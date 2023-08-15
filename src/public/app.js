@@ -6560,7 +6560,10 @@ const EVALUATION = {
 var evoPoster_config = {
     typography: TYPEFACES !== undefined ? TYPEFACES : {},
     color: COLOR !== undefined ? COLOR : {},
-    evaluation: EVALUATION !== undefined ? EVALUATION : {}
+    evaluation: EVALUATION !== undefined ? EVALUATION : {},
+    display: {
+        GRID: true
+    }
 };
 
 const MIN_CONTRAST = evoPoster_config.color !== null ? evoPoster_config.color.MIN_CONTRAST : 10;
@@ -6639,7 +6642,8 @@ class Poster {
         this.generation = generation;
         this.ready = false;
         // ensure we use a deep copy of params
-        this.params = JSON.parse(JSON.stringify(params));
+        // this.params = JSON.parse(JSON.stringif(pyarams));
+        this.params = params;
 
         this.fitness = 1;
         this.constraint = 0;
@@ -6678,7 +6682,11 @@ class Poster {
 
         this.genotype = (genotype === null) ? this.#generateGenotype(params) : genotype;
 
-        this.#showGrid = params !== null ? params.display.grid : false;
+        this.#showGrid = false;
+        if (params !== null) {
+            this.#showGrid = this.params["display"]["grid"];
+        }
+
         this.phenotype = null;
     }
 
@@ -6851,7 +6859,10 @@ class Poster {
         // typesetting typography on poster
         await this.typeset(this.phenotype);
 
-        if (this.#showGrid || this.#debug) ;
+        if (this.#showGrid || this.#debug) {
+            // GRID
+            this.genotype.grid.display(this.phenotype);
+        }
 
         // place graphics
         // const sideX = width / Math.floor(width/Params.visualisationGrid.width);
@@ -6989,9 +7000,9 @@ class Poster {
             const sentenceWidth = ctx.measureText(content).width;
 
             // debug
-            pg.textSize(10);
-            pg.fill (0);
-            pg.text(sentenceWidth, xPos, yPos+15);
+            // pg.textSize(10);
+            // pg.fill (0)
+            // pg.text(sentenceWidth, xPos, yPos+15);
             this.sentencesLength.push(sentenceWidth);
         }
         pg.pop();
@@ -7020,6 +7031,7 @@ class Poster {
     toggleGrid = (show = null) => {
         if (show === null) {
             show = !this.#showGrid;
+            this.params["display"]["grid"] = show;
         }
         this.#showGrid = show;
         this.draw();
@@ -7855,7 +7867,6 @@ class Population {
             // ensure that phenotype is created
             if (ind.phenotype === null) {
                 this.updated = true;
-                console.log (`outsite=${this.emotionaData}`);
                 await ind.evaluate(this.targetSemanticLayout, this.emotionaData);
             }
 
@@ -7887,7 +7898,6 @@ class Population {
             }
         }
 
-        // await this.evaluate();
     }
 
     saveRaster = () => {
@@ -8038,9 +8048,11 @@ class App extends s$1 {
                 lock: [false, false, false, false, false, false, false, false]
             },
             display: {
-                grid: true
+                grid: evoPoster_config["display"]["GRID"] !== undefined ? evoPoster_config["display"]["GRID"] : true
             }
         };
+
+        console.log (`config["default"]["display"]["GRID"]= ${evoPoster_config["display"]["GRID"]}`);
 
         this.population = null;
 

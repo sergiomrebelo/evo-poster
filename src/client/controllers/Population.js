@@ -436,7 +436,6 @@ export class Population {
             // ensure that phenotype is created
             if (ind.phenotype === null) {
                 this.updated = true;
-                console.log (`outsite=${this.emotionaData}`);
                 await ind.evaluate(this.targetSemanticLayout, this.emotionaData);
             }
 
@@ -468,7 +467,6 @@ export class Population {
             }
         }
 
-        // await this.evaluate();
     }
 
     saveRaster = () => {
