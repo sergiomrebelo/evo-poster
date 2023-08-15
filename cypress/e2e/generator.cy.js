@@ -58,11 +58,11 @@ const inputText = {
             },
             evo: {
                 popSize: {
-                    init: 10,
+                    init: 30,
                     testing: 20
                 },
                 noGen: {
-                    init: 1000,
+                    init: 400,
                     testing: 300
                 },
                 elite: {
@@ -70,12 +70,64 @@ const inputText = {
                     testing: 3
                 },
                 xover: {
-                    init: 0.75,
+                    init: 0.9,
                     testing: 0.5
                 },
                 mutate: {
-                    init: 0.3,
-                    testing: 0.1
+                    init: 0.1,
+                    testing: 0.3
+                },
+                evaluation: {
+                    general: {
+                        semantics: {
+                            init: 0.5,
+                            testing: 0.3
+                        },
+                        aesthetics: {
+                            init: 0.5,
+                            testing: 0.7
+                        }
+                    },
+                    semantics: {
+                        emphasis: {
+                            init: 0.5,
+                            testing: 0.3
+                        },
+                        layout: {
+                            init: 0.5,
+                            testing: 0.3
+                        },
+                        visuals: {
+                            init: 0,
+                            testing: 1
+                        }
+                    },
+                    aesthetics: {
+                        alignment: {
+                            init: 0.1,
+                            testing: 0.3
+                        },
+                        regularity: {
+                            init: 0.1,
+                            testing: 0.4
+                        },
+                        balance: {
+                            init: 0.2,
+                            testing: 0.5
+                        },
+                        whiteSpace: {
+                            init: 0.2,
+                            testing: 0.2
+                        },
+                        justification: {
+                            init: 0.3,
+                            testing: 0.5
+                        },
+                        typographyParing: {
+                            init: 0.1,
+                            testing: 0.2
+                        }
+                    }
                 }
             },
             grid: true
@@ -255,13 +307,34 @@ for (let lang of Object.keys(inputText)) {
             cy.get('#mutation-probability-input').invoke('val').then(parseFloat).should('eq', inputText[lang]["divider"]["evo"]["mutate"]["init"]);
             cy.get('#mutation-probability-input').invoke('val', inputText[lang]["divider"]["evo"]["mutate"]["testing"]).trigger('change');
 
+            // aesthetic measures
+            testingField ("#evaluation-semantic-weight-input", inputText[lang]["divider"]["evo"]["evaluation"]["general"]["semantics"]);
+            testingField ("#evaluation-aesthetics-weight-input", inputText[lang]["divider"]["evo"]["evaluation"]["general"]["aesthetics"]);
+
+            testingField ("#evaluation-semantics-emphasis-weight-input", inputText[lang]["divider"]["evo"]["evaluation"]["semantics"]["emphasis"]);
+            testingField ("#evaluation-semantics-layout-weight-input", inputText[lang]["divider"]["evo"]["evaluation"]["semantics"]["layout"]);
+            testingField ("#evaluation-semantics-visuals-weight-input", inputText[lang]["divider"]["evo"]["evaluation"]["semantics"]["visuals"]);
+
+            let fields = [
+                `#evaluation-aesthetics-alignment-weight-input`, `#evaluation-aesthetics-regularity-weight-input`,
+                `#evaluation-aesthetics-balance-weight-input`, `#evaluation-aesthetics-white-space-weight-input`,
+                `#evaluation-aesthetics-justification-weight-input`, `#evaluation-aesthetics-type-paring-weight-input`
+            ];
+
+            let keys = [`alignment`, `regularity`, `balance`, `whiteSpace`, `justification`, `typographyParing`];
+
+            for (let i in fields) {
+                testingField (fields[i], inputText[lang]["divider"]["evo"]["evaluation"]["aesthetics"][keys[i]]);
+            }
+
+
             cy.get('.navbar-toggler-icon').click();
             cy.wait(1000);
             cy.get('#evo-interface-inner').should('not.be.visible');
             cy.get('.navbar-toggler-icon').click();
 
-            cy.get('#start-bt').should('be.visible').should('not.be.disabled');
-            cy.get('#stop-evolving').should('be.visible').should('be.disabled');
+            cy.get('#start-bt').should('not.be.disabled');
+            cy.get('#stop-evolving').should('be.disabled');
             cy.get('#evolve-bt').should('not.be.visible');
 
             cy.get('#start-bt').click();
@@ -341,4 +414,12 @@ for (let lang of Object.keys(inputText)) {
         });
 
     });
+}
+
+
+const testingField = (id,obj) => {
+    cy.get(id).should('exist');
+    cy.get(id).invoke('val').then(parseFloat).should('eq', obj["init"]);
+    cy.get(id).invoke('val', obj["testing"]).trigger('change');
+
 }
