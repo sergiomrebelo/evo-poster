@@ -1,4 +1,5 @@
 import {LitElement, html, css, nothing} from "lit";
+import * as config from '../../evo-poster.config.js';
 
 import 'bootstrap/dist/js/bootstrap';
 import 'p5';
@@ -10,11 +11,12 @@ import {ErrHandler} from "./components/ErrHandler.js";
 import {Interface} from "./components/Interface.js"
 import {Header} from "./components/Header.js";
 import Population from "./controllers/Population.js";
-import * as config from '../../evo-poster.config.js';
+import {sumArr} from "./utils.js";
 
 import 'bootstrap/scss/bootstrap.scss';
 import './main.css';
-import {arrSum} from "@evoposter/evaluator/src/utils.js";
+
+
 
 
 window.preload = () => {}
@@ -50,6 +52,9 @@ window.keyPressed = () => {
 }
 
 
+
+const VISIBLE_POSTERS =  config["default"]["display"] !== undefined ? config["default"]["display"]["VISIBLE_POSTERS"] : 10;
+const POP_SIZE = config["default"]["evo"]["POP_SIZE"];
 
 export class App extends LitElement {
     static properties = {
@@ -91,16 +96,16 @@ export class App extends LitElement {
         // evolution controllers
         this.config = {
             evo: {
-                popSize: config["default"]["evo"]["POP_SIZE"],
+                popSize: POP_SIZE,
                 noGen: config["default"]["evo"]["NO_GEN"],
                 crossoverProb: config["default"]["evo"]["CROSSOVER_PROB"],
                 mutationProb: config["default"]["evo"]["MUTATION_PROB"],
                 eliteSize: config["default"]["evo"]["ELITE_SIZE"]
             },
             evaluation: {
-                weights: evaluationWeights.map((x) => x/arrSum(evaluationWeights)),
-                aestheticsWeights: aestheticsWeights.map ((x) => x/arrSum(aestheticsWeights)),
-                semanticsWeights: semanticsWeights.map((x) => x/arrSum(semanticsWeights)),
+                weights: evaluationWeights.map((x) => x/sumArr(evaluationWeights)),
+                aestheticsWeights: aestheticsWeights.map ((x) => x/sumArr(aestheticsWeights)),
+                semanticsWeights: semanticsWeights.map((x) => x/sumArr(semanticsWeights)),
                 modes: {
                     semanticsVisuals: config["default"]["evaluation"]["MODES"]["SEMANTICS_VISUALS"]
                 }
@@ -265,8 +270,10 @@ export class App extends LitElement {
 
     #initCanvas = () => {
         // calculate the height of canvas
-        // HERE
-        let numberOfPosters = Params.visiblePosters > Params["evolution"]["popSize"] ? Params["evolution"]["popSize"] : Params.visiblePosters;
+
+        console.log(`VISIBLE_POSTERS`, VISIBLE_POSTERS, POP_SIZE);
+
+        let numberOfPosters = VISIBLE_POSTERS > POP_SIZE ? POP_SIZE : VISIBLE_POSTERS;
         let h = Math.ceil(numberOfPosters / Math.floor(windowWidth/this.config.size.width));
         h *= (this.config.size.height + (Params.visualisationGrid.marginY*2));
         createCanvas(windowWidth, h); //WEBGL

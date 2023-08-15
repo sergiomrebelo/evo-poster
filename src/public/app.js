@@ -24,6 +24,124 @@ var t$2;const i$2=window,s$2=i$2.trustedTypes,e$4=s$2?s$2.createPolicy("lit-html
  * SPDX-License-Identifier: BSD-3-Clause
  */var l$1,o$2;let s$1 = class s extends u$2{constructor(){super(...arguments),this.renderOptions={host:this},this._$Do=void 0;}createRenderRoot(){var t,e;const i=super.createRenderRoot();return null!==(t=(e=this.renderOptions).renderBefore)&&void 0!==t||(e.renderBefore=i.firstChild),i}update(t){const i=this.render();this.hasUpdated||(this.renderOptions.isConnected=this.isConnected),super.update(t),this._$Do=B$1(i,this.renderRoot,this.renderOptions);}connectedCallback(){var t;super.connectedCallback(),null===(t=this._$Do)||void 0===t||t.setConnected(!0);}disconnectedCallback(){var t;super.disconnectedCallback(),null===(t=this._$Do)||void 0===t||t.setConnected(!1);}render(){return T$1}};s$1.finalized=!0,s$1._$litElement$=!0,null===(l$1=globalThis.litElementHydrateSupport)||void 0===l$1||l$1.call(globalThis,{LitElement:s$1});const n$1=globalThis.litElementPolyfillSupport;null==n$1||n$1({LitElement:s$1});(null!==(o$2=globalThis.litElementVersions)&&void 0!==o$2?o$2:globalThis.litElementVersions=[]).push("3.3.2");
 
+const TYPEFACES = {
+    Amstelvar: {
+        leading: 1.05,
+        tags: [`serif`],
+        axes: [`wght`, `wdth`, `opsz`],
+        url: `https://github.com/googlefonts/amstelvar`,
+        category: `serif`,
+        path: `./assets/Amstelvar-Roman[wdth,wght,opsz].ttf`,
+        format: `truetype-variations`,
+        weight: {
+            min: 100,
+            max: 900
+        },
+        stretch: {
+            min: 50,
+            max: 125,
+        }
+    },
+    Anybody: {
+        leading: 1.05,
+        tags: [`sans-serif`, `90s`, `europe`],
+        axes: [`wght`, `wdth`],
+        url: `https://github.com/Etcetera-Type-Co/Anybody`,
+        category: `sans-serif`,
+    },
+    Barlow: {
+        leading: 1.05,
+        tags: [`sans-serif`, `gothic`, `monoline`, `neo-grotesque`],
+        axes: [`wght`, `wdth`],
+        url: `https://tribby.com/fonts/barlow/`,
+        category: `sans-serif`,
+    },
+    Cabin: {
+        leading: 1.05,
+        tags: [`sans-serif`, `gothic`, `soft-corners`],
+        axes: [`wght`],
+        url: `https://fonts.google.com/specimen/Cabin`,
+        category: `sans-serif`,
+    },
+    Emberly: {
+        leading: 1.05,
+        tags: [`serif`, `didone`],
+        axes: [`wght`, `wdth`],
+        url: `https://www.behance.net/gallery/87667103/Emberly-Free-Typeface-54-Styles`,
+        category: `serif`,
+    },
+    Epilogue: {
+        leading: 1.05,
+        tags: [`sans-serif`],
+        axes: [`wght`, `wdth`],
+        url: `https://etceteratype.co/epilogue`,
+        category: `sans-serif`,
+    },
+    IBMPlexSans: {
+        leading: 1.05,
+        tags: [`sans-serif`],
+        axes: [`wght`, `wdth`],
+        url: `https://fonts.google.com/specimen/IBM+Plex+Sans`,
+        category: `sans-serif`,
+    },
+    Inconsolata: {
+        leading: 1.05,
+        tags: [`sans-serif`, `mono`],
+        axes: [`wght`, `wdth`],
+        url: `https://fonts.google.com/specimen/Inconsolata`,
+        category: `nonospace`,
+
+    }
+};
+const COLOR = {
+    MIN_CONTRAST: 2.5,
+    MAX_COLOR_SCHEME_ATTEMPT: 200,
+};
+const EVALUATION = {
+    GLOBAL_WEIGHTS: {
+        SEMANTICS: 0.5,
+        AESTHETICS: 0.5
+    },
+    MODES: {
+        SEMANTICS_VISUALS: `FIXED`
+    },
+    SEMANTICS_WEIGHTS: {
+        EMPHASIS: 0.5,
+        LAYOUT: 0.5,
+        VISUALS: 0
+    },
+    AESTHETICS_WEIGHTS: {
+        ALIGNMENT: 0.1,
+        REGULARITY: 0.1,
+        JUSTIFICATION: 0.3,
+        TYPEFACE_PARING: 0.1,
+        WHITE_BALANCE_FRACTION: 0.2,
+        BALANCE: 0.2
+    }
+};
+const EVO = {
+    POP_SIZE: 30,
+    NO_GEN: 10,
+    CROSSOVER_PROB: 0.9,
+    MUTATION_PROB: 0.1,
+    ELITE_SIZE: 1
+};
+
+var evoPoster_config = {
+    typography: TYPEFACES !== undefined ? TYPEFACES : {},
+    color: COLOR !== undefined ? COLOR : {},
+    evaluation: EVALUATION !== undefined ? EVALUATION : {},
+    display: {
+        GRID: true,
+        VISIBLE_POSTERS: 30
+    },
+    evo: EVO !== undefined ? EVO : {},
+    log: {
+        SAVE_LOG: true,
+        SAVE_IMAGES: `END` // `GENERATION`, `END`, `BEST-GENERATION`, `NO`
+    }
+};
+
 /*!
   * Bootstrap v5.3.0 (https://getbootstrap.com/)
   * Copyright 2011-2023 The Bootstrap Authors (https://github.com/twbs/bootstrap/graphs/contributors)
@@ -5431,124 +5549,6 @@ class TextArea extends s$1 {
 
 customElements.define('textarea-input', TextArea);
 
-const TYPEFACES = {
-    Amstelvar: {
-        leading: 1.05,
-        tags: [`serif`],
-        axes: [`wght`, `wdth`, `opsz`],
-        url: `https://github.com/googlefonts/amstelvar`,
-        category: `serif`,
-        path: `./assets/Amstelvar-Roman[wdth,wght,opsz].ttf`,
-        format: `truetype-variations`,
-        weight: {
-            min: 100,
-            max: 900
-        },
-        stretch: {
-            min: 50,
-            max: 125,
-        }
-    },
-    Anybody: {
-        leading: 1.05,
-        tags: [`sans-serif`, `90s`, `europe`],
-        axes: [`wght`, `wdth`],
-        url: `https://github.com/Etcetera-Type-Co/Anybody`,
-        category: `sans-serif`,
-    },
-    Barlow: {
-        leading: 1.05,
-        tags: [`sans-serif`, `gothic`, `monoline`, `neo-grotesque`],
-        axes: [`wght`, `wdth`],
-        url: `https://tribby.com/fonts/barlow/`,
-        category: `sans-serif`,
-    },
-    Cabin: {
-        leading: 1.05,
-        tags: [`sans-serif`, `gothic`, `soft-corners`],
-        axes: [`wght`],
-        url: `https://fonts.google.com/specimen/Cabin`,
-        category: `sans-serif`,
-    },
-    Emberly: {
-        leading: 1.05,
-        tags: [`serif`, `didone`],
-        axes: [`wght`, `wdth`],
-        url: `https://www.behance.net/gallery/87667103/Emberly-Free-Typeface-54-Styles`,
-        category: `serif`,
-    },
-    Epilogue: {
-        leading: 1.05,
-        tags: [`sans-serif`],
-        axes: [`wght`, `wdth`],
-        url: `https://etceteratype.co/epilogue`,
-        category: `sans-serif`,
-    },
-    IBMPlexSans: {
-        leading: 1.05,
-        tags: [`sans-serif`],
-        axes: [`wght`, `wdth`],
-        url: `https://fonts.google.com/specimen/IBM+Plex+Sans`,
-        category: `sans-serif`,
-    },
-    Inconsolata: {
-        leading: 1.05,
-        tags: [`sans-serif`, `mono`],
-        axes: [`wght`, `wdth`],
-        url: `https://fonts.google.com/specimen/Inconsolata`,
-        category: `nonospace`,
-
-    }
-};
-const COLOR = {
-    MIN_CONTRAST: 2.5,
-    MAX_COLOR_SCHEME_ATTEMPT: 200,
-};
-const EVALUATION = {
-    GLOBAL_WEIGHTS: {
-        SEMANTICS: 0.5,
-        AESTHETICS: 0.5
-    },
-    MODES: {
-        SEMANTICS_VISUALS: `FIXED`
-    },
-    SEMANTICS_WEIGHTS: {
-        EMPHASIS: 0.5,
-        LAYOUT: 0.5,
-        VISUALS: 0
-    },
-    AESTHETICS_WEIGHTS: {
-        ALIGNMENT: 0.1,
-        REGULARITY: 0.1,
-        JUSTIFICATION: 0.3,
-        TYPEFACE_PARING: 0.1,
-        WHITE_BALANCE_FRACTION: 0.2,
-        BALANCE: 0.2
-    }
-};
-const EVO = {
-    POP_SIZE: 30,
-    NO_GEN: 10,
-    CROSSOVER_PROB: 0.9,
-    MUTATION_PROB: 0.1,
-    ELITE_SIZE: 1
-};
-
-var evoPoster_config = {
-    typography: TYPEFACES !== undefined ? TYPEFACES : {},
-    color: COLOR !== undefined ? COLOR : {},
-    evaluation: EVALUATION !== undefined ? EVALUATION : {},
-    display: {
-        GRID: true,
-        VISIBLE_POSTERS: 30
-    },
-    evo: EVO !== undefined ? EVO : {},
-    log: {
-        SAVE_LOG: true,
-        SAVE_IMAGES: `END` // `GENERATION`, `END`, `BEST-GENERATION`, `NO`
-    }
-};
-
 class GenerationPanel extends s$1 {
     static properties = {
         params: {},
@@ -7458,7 +7458,7 @@ const TOURNAMENT_SIZE = 10;
 const MAX_COLOR_SCHEME_ATTEMPT = evoPoster_config["color"] !== undefined ? evoPoster_config["color"]["MAX_COLOR_SCHEME_ATTEMPT"] : 200;
 const SAVE_LOG = evoPoster_config["log"] !== undefined ? evoPoster_config["log"]["SAVE_LOG"] : true;
 const SAVE_IMAGES = evoPoster_config["log"] !== undefined ? evoPoster_config["log"]["SAVE_IMAGES"] : `NO`;
-const VISIBLE_POSTERS = evoPoster_config["display"] !== undefined ? evoPoster_config["display"]["VISIBLE_POSTERS"] : 10;
+const VISIBLE_POSTERS$1 = evoPoster_config["display"] !== undefined ? evoPoster_config["display"]["VISIBLE_POSTERS"] : 10;
 
 class Population {
     #typefaces;
@@ -7911,7 +7911,7 @@ class Population {
             this.ready = typefacesLoaded;
         } */
 
-        const n = this.population.length < VISIBLE_POSTERS ? this.population.length : VISIBLE_POSTERS;
+        const n = this.population.length < VISIBLE_POSTERS$1 ? this.population.length : VISIBLE_POSTERS$1;
         let posX = 0, posY = 0;
         for (let i=0; i<this.population.length; i++) {
             const ind = this.population[i];
@@ -8018,6 +8018,9 @@ window.keyPressed = () => {
 
 
 
+const VISIBLE_POSTERS =  evoPoster_config["display"] !== undefined ? evoPoster_config["display"]["VISIBLE_POSTERS"] : 10;
+const POP_SIZE = evoPoster_config["evo"]["POP_SIZE"];
+
 class App extends s$1 {
     static properties = {
         screen: 0,
@@ -8058,16 +8061,16 @@ class App extends s$1 {
         // evolution controllers
         this.config = {
             evo: {
-                popSize: evoPoster_config["evo"]["POP_SIZE"],
+                popSize: POP_SIZE,
                 noGen: evoPoster_config["evo"]["NO_GEN"],
                 crossoverProb: evoPoster_config["evo"]["CROSSOVER_PROB"],
                 mutationProb: evoPoster_config["evo"]["MUTATION_PROB"],
                 eliteSize: evoPoster_config["evo"]["ELITE_SIZE"]
             },
             evaluation: {
-                weights: evaluationWeights.map((x) => x/arrSum(evaluationWeights)),
-                aestheticsWeights: aestheticsWeights.map ((x) => x/arrSum(aestheticsWeights)),
-                semanticsWeights: semanticsWeights.map((x) => x/arrSum(semanticsWeights)),
+                weights: evaluationWeights.map((x) => x/sumArr(evaluationWeights)),
+                aestheticsWeights: aestheticsWeights.map ((x) => x/sumArr(aestheticsWeights)),
+                semanticsWeights: semanticsWeights.map((x) => x/sumArr(semanticsWeights)),
                 modes: {
                     semanticsVisuals: evoPoster_config["evaluation"]["MODES"]["SEMANTICS_VISUALS"]
                 }
@@ -8232,8 +8235,10 @@ class App extends s$1 {
 
     #initCanvas = () => {
         // calculate the height of canvas
-        // HERE
-        let numberOfPosters = Params.visiblePosters;
+
+        console.log(`VISIBLE_POSTERS`, VISIBLE_POSTERS, POP_SIZE);
+
+        let numberOfPosters = VISIBLE_POSTERS > POP_SIZE ? POP_SIZE : VISIBLE_POSTERS;
         let h = Math.ceil(numberOfPosters / Math.floor(windowWidth/this.config.size.width));
         h *= (this.config.size.height + (Params.visualisationGrid.marginY*2));
         createCanvas(windowWidth, h); //WEBGL
