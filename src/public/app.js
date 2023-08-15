@@ -5068,10 +5068,85 @@ class EvolutionPanel extends s$1 {
                     params["evo"]["mutationProb"] = this.#validateValue(e.target.value, params["evo"]["mutationProb"], 0, 1);
                     e.target.value = params["evo"]["mutationProb"];
                 }
-            }, ["col-12", "my-2"])
+            }, ["col-12", "my-2"]),
+            fitness: {
+                general: {
+                    semanticPart: new TextInput(`Semantics`, params["evaluation"]["weights"][0], "evaluation-semantic-weight",
+                        (e) => {
+                            params["evaluation"]["weights"][0] = this.#validateValue(e.target.value, params["evaluation"]["weights"][0], 0, 1);
+                            e.target.value = params["evaluation"]["weights"][0];
+                            this.restart();
+                        }, ["col-12", "evolution-locked"]),
+                    aestheticPart: new TextInput(`Aesthetics`, params["evaluation"]["weights"][1], "evaluation-aesthetics-weight",
+                        (e) => {
+                            params["evaluation"]["weights"][1] = this.#validateValue(e.target.value, params["evaluation"]["weights"][1], 0, 1);
+                            e.target.value = params["evaluation"]["weights"][1];
+                            this.restart();
+                        }, ["col-12", "my-2", "evolution-locked"]),
+                },
+                semantics: {
+                    emphasis: new TextInput(`Semantic Emphasis`, params["evaluation"]["semanticsWeights"][0], "evaluation-semantics-emphasis-weight",
+                        (e) => {
+                            params["evaluation"]["semanticsWeights"][0] = this.#validateValue(e.target.value, params["evaluation"]["semanticsWeights"][0], 0, 1);
+                            e.target.value = params["evaluation"]["semanticsWeights"][0];
+                            this.restart();
+                        }, ["col-12", "evolution-locked"]),
+                    layout: new TextInput(`Semantic Layout`, params["evaluation"]["semanticsWeights"][1], "evaluation-semantics-layout-weight",
+                        (e) => {
+                            params["evaluation"]["semanticsWeights"][1]= this.#validateValue(e.target.value, params["evaluation"]["semanticsWeights"][1], 0, 1);
+                            e.target.value = params["evaluation"]["semanticsWeights"][1];
+                            this.restart();
+                        }, ["col-12", "my-2", "evolution-locked"]),
+                    visuals: new TextInput(`Semantic Visuals`, params["evaluation"]["semanticsWeights"][2], "evaluation-semantics-visuals-weight",
+                        (e) => {
+                            params["evaluation"]["semanticsWeights"][2]= this.#validateValue(e.target.value, params["evaluation"]["semanticsWeights"][2], 0, 1);
+                            e.target.value = params["evaluation"]["semanticsWeights"][2];
+                            this.restart();
+                        }, ["col-12", "evolution-locked", "mb-2"]),
+                },
+                aesthetics: {
+                    alignment: new TextInput(`Alignment`, params["evaluation"]["aestheticsWeights"][0], "evaluation-aesthetics-alignment-weight",
+                        (e) => {
+                            params["evaluation"]["aestheticsWeights"][0] = this.#validateValue(e.target.value, params["evaluation"]["aestheticsWeights"][0], 0, 1);
+                            e.target.value = params["evaluation"]["aestheticsWeights"][0];
+                            this.restart();
+                        }, ["col-12", "evolution-locked"]),
+                    regularity: new TextInput(`Regularity`, params["evaluation"]["aestheticsWeights"][1], "evaluation-aesthetics-regularity-weight",
+                        (e) => {
+                            params["evaluation"]["aestheticsWeights"][1] = this.#validateValue(e.target.value, params["evaluation"]["aestheticsWeights"][1], 0, 1);
+                            e.target.value = params["evaluation"]["aestheticsWeights"][1];
+                            this.restart();
+                        }, ["col-12", "evolution-locked", "my-2"]),
+                    justification: new TextInput(`Justification`, params["evaluation"]["aestheticsWeights"][2], "evaluation-aesthetics-justification-weight",
+                        (e) => {
+                            params["evaluation"]["aestheticsWeights"][2] = this.#validateValue(e.target.value, params["evaluation"]["aestheticsWeights"][2], 0, 1);
+                            e.target.value = params["evaluation"]["aestheticsWeights"][2];
+                            this.restart();
+                        }, ["col-12", "evolution-locked", "mb-2"]),
+                    typefaceParing: new TextInput(`Typeface Paring`, params["evaluation"]["aestheticsWeights"][3], "evaluation-aesthetics-type-paring-weight",
+                        (e) => {
+                            params["evaluation"]["aestheticsWeights"][3] = this.#validateValue(e.target.value, params["evaluation"]["aestheticsWeights"][3], 0, 1);
+                            e.target.value = params["evaluation"]["aestheticsWeights"][3];
+                            this.restart();
+                        }, ["col-12", "evolution-locked", "mb-2"]),
+                    whiteSpace: new TextInput(`White Space Fraction`, params["evaluation"]["aestheticsWeights"][4], "evaluation-aesthetics-white-space-weight",
+                        (e) => {
+                            params["evaluation"]["aestheticsWeights"][4] = this.#validateValue(e.target.value, params["evaluation"]["aestheticsWeights"][4], 0, 1);
+                            e.target.value = params["evaluation"]["aestheticsWeights"][4];
+                            this.restart();
+                        }, ["col-12", "evolution-locked", "mb-2"]),
+                    balance: new TextInput(`Balance`, params["evaluation"]["aestheticsWeights"][5], "evaluation-aesthetics-balance-weight",
+                        (e) => {
+                            params["evaluation"]["aestheticsWeights"][5] = this.#validateValue(e.target.value, params["evaluation"]["aestheticsWeights"][5], 0, 1);
+                            e.target.value = params["evaluation"]["aestheticsWeights"][5];
+                            this.restart();
+                        }, ["col-12", "evolution-locked", "mb-2"]),
+                }
+            }
         };
     }
 
+    // global ev
 
     #validateValue = (value, current, min, max = null) => {
         let v = validateNumberInput(value, current);
@@ -5084,7 +5159,6 @@ class EvolutionPanel extends s$1 {
         }
         return current;
     }
-
 
     render() {
         return x$1`
@@ -5105,6 +5179,31 @@ class EvolutionPanel extends s$1 {
                     ${this.fields.mutationProbability}
                 </div>
                 <hr>
+                <h3>Evolution Setup</h3>
+                ${Divider.get()}
+                <div class="row">
+                    <p class="fw-bold small">Fitness Assignment Scheme Weights</p>
+                    ${this.fields.fitness.general.semanticPart}
+                    ${this.fields.fitness.general.aestheticPart}
+                </div>
+                ${Divider.get()}
+                <div class="row">
+                    <p class="fw-bold small">Semantics Metrics</p>
+                    ${this.fields.fitness.semantics.emphasis}
+                    ${this.fields.fitness.semantics.layout}
+                    ${this.fields.fitness.semantics.visuals}
+                </div>
+                ${Divider.get()}
+                <div class="row">
+                    <p class="fw-bold small">Aesthetics Metrics</p>
+                    ${this.fields.fitness.aesthetics.alignment}
+                    ${this.fields.fitness.aesthetics.regularity}
+                    ${this.fields.fitness.aesthetics.balance}
+                    ${this.fields.fitness.aesthetics.whiteSpace}
+                    ${this.fields.fitness.aesthetics.justification}
+                    ${this.fields.fitness.aesthetics.typefaceParing}
+                </div>
+                ${Divider.get()}
             </div>`;
     }
 
@@ -5361,7 +5460,6 @@ class GenerationPanel extends s$1 {
         this.errorMessage = errorMessage;
 
         // input fields
-        // TODO: refactor to list or array
         const sentences = this.params ? this.params["sentences"] : [];
         this.fields = {
             content: new TextArea(`<b>Content</b> The text lines are defined by pilcrows (¶)`,
@@ -6526,6 +6624,10 @@ const contrastRatio = (luminance1, luminance2) => {
     return (lighterLum + 0.05) / (darkerLum + 0.05);
 };
 
+const arrSum = (arr) => {
+    return arr.reduce((partialSum, a) => partialSum + a, 0);
+};
+
 const MAX_COLOR_SCHEME_ATTEMPT$1 = evoPoster_config["COLOR"] !== undefined ? evoPoster_config["COLOR"]["MAX_COLOR_SCHEME_ATTEMPT"] : 200;
 
 class Poster {
@@ -6543,6 +6645,7 @@ class Poster {
         this.constraint = 0;
 
         this.metrics = {
+            weights: [0,0],
             constraints: {
                 legibility: 0,
                 gridAppropriateness: 0,
@@ -6765,12 +6868,26 @@ class Poster {
     evaluate = async (dist, emotionalData = {predominant: []}) => {
         this.phenotype = await this.draw();
         const noCurrentTypefaces = this.params["typography"]["typefaces"].length;
-        const weights = this.params["evaluation"]["weights"];
+
+        // restrict the weight array values to sum up to a total of 1 (100%).
+        let weightSum = arrSum(this.params["evaluation"]["weights"]);
+        if (weightSum !== 1) {
+            this.params["evaluation"]["weights"] = this.params["evaluation"]["weights"].map(x => x/weightSum);
+        }
+
+        let weights = this.params["evaluation"]["weights"];
+        this.metrics["weights"] = weights;
+
 
         let semantics = 0; // semantic part of fitness
         let aesthetics = 0; // aesthetics part of fitness
 
         if (weights[0] > 0) {
+            // restrict the weight array values to sum up to a total of 1 (100%).
+            let semanticsWeightSum = arrSum(this.params["evaluation"]["semanticsWeights"]);
+            if (semanticsWeightSum !== 1) {
+                this.params["evaluation"]["semanticsWeights"] = this.params["evaluation"]["semanticsWeights"].map(x => x/semanticsWeightSum);
+            }
             const semanticsWeights = this.params["evaluation"]["semanticsWeights"];
             const emphasis = (semanticsWeights[0] > 0) ? q(this.genotype["textboxes"], dist, noCurrentTypefaces) : 0;
             const layoutMode = this.params["evaluation"]["modes"]["semanticsVisuals"] !== undefined ? this.params["evaluation"]["modes"]["semanticsVisuals"] : `FIXED`;
@@ -6786,9 +6903,12 @@ class Poster {
             this.metrics["semantics"]["weights"] = semanticsWeights;
         }
 
-
-
         if (weights[1] > 0) {
+            // restrict the weight array values to sum up to a total of 1 (100%).
+            let aestheticsWeightsSum = arrSum(this.params["evaluation"]["aestheticsWeights"]);
+            if (aestheticsWeightsSum !== 1) {
+                this.params["evaluation"]["aestheticsWeights"] = this.params["evaluation"]["aestheticsWeights"].map(x => x/aestheticsWeightsSum);
+            }
             const aestheticsWeights = this.params["evaluation"]["aestheticsWeights"];
             const alignment = (aestheticsWeights[0] > 0) ? W(this.sentencesLength, this.genotype["textboxes"].map(tb => tb["alignment"])) : 0;
             const regularity = (aestheticsWeights[1] > 0) ? z(this.genotype["grid"]["rows"]["l"]) : 0;
@@ -7799,10 +7919,6 @@ class Population {
     }
 }
 
-const arrSum = (arr) => {
-    return arr.reduce((partialSum, a) => partialSum + a, 0);
-};
-
 window.preload = () => {};
 
 window.setup = () => {
@@ -8010,7 +8126,6 @@ class App extends s$1 {
         e.preventDefault();
         this.screen = 2;
         // get images
-        // TODO: error
         this.config.images = Array.from(document.querySelectorAll(`#input-images img`));
 
 

@@ -5,6 +5,7 @@ import {sumProduct} from "../utils.js";
 
 import {Params} from "../Params.js";
 import * as config from './../../../evo-poster.config.js';
+import {arrSum} from "@evoposter/evaluator/src/utils.js";
 
 const MAX_COLOR_SCHEME_ATTEMPT = config["default"]["COLOR"] !== undefined ? config["default"]["COLOR"]["MAX_COLOR_SCHEME_ATTEMPT"] : 200;
 
@@ -23,6 +24,7 @@ class Poster {
         this.constraint = 0;
 
         this.metrics = {
+            weights: [0,0],
             constraints: {
                 legibility: 0,
                 gridAppropriateness: 0,
@@ -248,12 +250,26 @@ class Poster {
     evaluate = async (dist, emotionalData = {predominant: []}) => {
         this.phenotype = await this.draw();
         const noCurrentTypefaces = this.params["typography"]["typefaces"].length;
-        const weights = this.params["evaluation"]["weights"];
+
+        // restrict the weight array values to sum up to a total of 1 (100%).
+        let weightSum = arrSum(this.params["evaluation"]["weights"]);
+        if (weightSum !== 1) {
+            this.params["evaluation"]["weights"] = this.params["evaluation"]["weights"].map(x => x/weightSum);
+        }
+
+        let weights = this.params["evaluation"]["weights"];
+        this.metrics["weights"] = weights;
+
 
         let semantics = 0; // semantic part of fitness
         let aesthetics = 0; // aesthetics part of fitness
 
         if (weights[0] > 0) {
+            // restrict the weight array values to sum up to a total of 1 (100%).
+            let semanticsWeightSum = arrSum(this.params["evaluation"]["semanticsWeights"]);
+            if (semanticsWeightSum !== 1) {
+                this.params["evaluation"]["semanticsWeights"] = this.params["evaluation"]["semanticsWeights"].map(x => x/semanticsWeightSum);
+            }
             const semanticsWeights = this.params["evaluation"]["semanticsWeights"];
             const emphasis = (semanticsWeights[0] > 0) ? evaluator.semanticsEmphasis(this.genotype["textboxes"], dist, noCurrentTypefaces) : 0;
             const layoutMode = this.params["evaluation"]["modes"]["semanticsVisuals"] !== undefined ? this.params["evaluation"]["modes"]["semanticsVisuals"] : `FIXED`;
@@ -269,9 +285,12 @@ class Poster {
             this.metrics["semantics"]["weights"] = semanticsWeights;
         }
 
-
-
         if (weights[1] > 0) {
+            // restrict the weight array values to sum up to a total of 1 (100%).
+            let aestheticsWeightsSum = arrSum(this.params["evaluation"]["aestheticsWeights"]);
+            if (aestheticsWeightsSum !== 1) {
+                this.params["evaluation"]["aestheticsWeights"] = this.params["evaluation"]["aestheticsWeights"].map(x => x/aestheticsWeightsSum);
+            }
             const aestheticsWeights = this.params["evaluation"]["aestheticsWeights"];
             const alignment = (aestheticsWeights[0] > 0) ? evaluator.alignment(this.sentencesLength, this.genotype["textboxes"].map(tb => tb["alignment"])) : 0;
             const regularity = (aestheticsWeights[1] > 0) ? evaluator.regularity(this.genotype["grid"]["rows"]["l"]) : 0;

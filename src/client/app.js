@@ -224,7 +224,6 @@ export class App extends LitElement {
         e.preventDefault();
         this.screen = 2;
         // get images
-        // TODO: error
         this.config.images = Array.from(document.querySelectorAll(`#input-images img`));
 
 
