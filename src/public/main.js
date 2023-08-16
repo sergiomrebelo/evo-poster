@@ -2966,8 +2966,6 @@ const VISIBLE_POSTERS$1 = evoPoster_config["display"] !== undefined ? evoPoster_
 const MARGIN_Y$1 = evoPoster_config["display"] !== undefined ? evoPoster_config["display"]["MARGIN_Y"] : 10;
 const WIDTH = evoPoster_config["size"] !== undefined ?  evoPoster_config["size"]["WIDTH"] : 100;
 
-
-
 class Population {
     #typefaces;
     #data;
@@ -3093,7 +3091,6 @@ class Population {
 
         if(this.generations < this.params["evo"]["noGen"] && !this.pause) {
             let ms = 100;
-            console.log(this.params);
             if (this.params["log"]["saveImages"] === `GENERATION` &&  this.params["log"]["save"]) {
                 this.saveRaster(this.population.length);
                 ms = 2000;
@@ -3122,14 +3119,18 @@ class Population {
                     referrerPolicy: "no-referrer",
                     body: JSON.stringify(this.log),
                 }).then((data) => {
-                    console.log(`log data saved to file`);
+                    console.groupCollapsed (`stats ${this.id} saved to file`);
+                    console.log (this.log);
+                    console.groupEnd();
                 }).catch((err) => console.error(err));
+            } else {
+                console.groupCollapsed (`stats ${this.id} not saved to file`);
+                console.log (this.log);
+                console.groupEnd();
             }
 
 
-            console.group (`stats`);
-            console.log (this.log);
-            console.groupEnd();
+
         }
     }
 

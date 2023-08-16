@@ -11,8 +11,6 @@ const VISIBLE_POSTERS = config["default"]["display"] !== undefined ? config["def
 const MARGIN_Y = config["default"]["display"] !== undefined ? config["default"]["display"]["MARGIN_Y"] : 10;
 const WIDTH = config["default"]["size"] !== undefined ?  config["default"]["size"]["WIDTH"] : 100;
 
-
-
 export class Population {
     #typefaces;
     #data;
@@ -138,7 +136,6 @@ export class Population {
 
         if(this.generations < this.params["evo"]["noGen"] && !this.pause) {
             let ms = 100;
-            console.log(this.params);
             if (this.params["log"]["saveImages"] === `GENERATION` &&  this.params["log"]["save"]) {
                 this.saveRaster(this.population.length);
                 ms = 2000;
@@ -167,14 +164,18 @@ export class Population {
                     referrerPolicy: "no-referrer",
                     body: JSON.stringify(this.log),
                 }).then((data) => {
-                    console.log(`log data saved to file`);
+                    console.groupCollapsed (`stats ${this.id} saved to file`);
+                    console.log (this.log);
+                    console.groupEnd();
                 }).catch((err) => console.error(err));
+            } else {
+                console.groupCollapsed (`stats ${this.id} not saved to file`);
+                console.log (this.log);
+                console.groupEnd()
             }
 
 
-            console.groupCollapsed (`stats ${this.id}`);
-            console.log (this.log);
-            console.group();
+
         }
     }
 
