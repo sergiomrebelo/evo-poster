@@ -1,6 +1,11 @@
 import {LitElement, html} from "lit";
-import {Params} from "../Params.js";
 import {Divider} from "./Divider.js";
+
+import * as config from "../../../evo-poster.config.js";
+
+const AVAILABLE_LANGUAGES = config["default"]["display"] !== undefined ? config["default"]["display"]["AVAILABLE_LANGUAGES"] : [`en`]
+const MAX_IMAGE_SIZE = config["default"]["display"] !== undefined ? config["default"]["display"]["MAX_IMAGE_SIZE"] : 1024;
+
 
 export class InputForm extends LitElement {
     static properties = {
@@ -81,14 +86,14 @@ export class InputForm extends LitElement {
         };
 
         for (let i = 0; i < files.length; i++) {
-            if (files[i].size/1024 < Params.imageMaxSize) {
+            if (files[i].size/1024 < MAX_IMAGE_SIZE) {
                 if (files[i].type.includes('image')) {
                     res.push(getBase64(files[i]));
                 } else {
                     err.push(`error loading the following image(s): ${files[i].name}.`);
                 }
             } else {
-                err.push(`${files[i].name} size bigger than ${Params.imageMaxSize} kb. (size: ${files[i].size})`);
+                err.push(`${files[i].name} size bigger than ${MAX_IMAGE_SIZE} kb. (size: ${files[i].size})`);
             }
         }
 
@@ -118,7 +123,7 @@ export class InputForm extends LitElement {
                             <div class="form-group mb-2 col-sm-3">
                                 <label for="formControlLang" class="col-sm-6 col-form-label-sm">Language</label>
                                 <select class="form-control custom-select mr-sm-2" id="formControlLang" type="text">
-                                    ${Params.availableLanguages.map((lang) => {
+                                    ${AVAILABLE_LANGUAGES.map((lang) => {
                                         let opt = html`
                                             <option value=${lang}>${lang}</option>`;
                                         if (lang === 'en') {

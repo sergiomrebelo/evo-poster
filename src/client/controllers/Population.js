@@ -1,17 +1,17 @@
-import {Params} from "../Params.js";
 import Poster, {Grid} from "./Poster.js";
 import {contrastChecker, randomScheme} from "./ColorGenerator.js";
 import {shuffleArr, sumArr, sus, swap} from "../utils.js";
 
 import * as config from './../../../evo-poster.config.js';
 
-
-const SIZE_MUTATION_ADJUST = 5;
-const TOURNAMENT_SIZE = 10;
+const SIZE_MUTATION_ADJUST = config["default"]["evo"] !== undefined ? config["default"]["evo"]["SIZE_MUTATION_ADJUST"] : 5;
+const TOURNAMENT_SIZE = config["default"]["evo"] !== undefined ? config["default"]["evo"]["TOURNAMENT_SIZE"] : 10;
 const MAX_COLOR_SCHEME_ATTEMPT = config["default"]["color"] !== undefined ? config["default"]["color"]["MAX_COLOR_SCHEME_ATTEMPT"] : 200;
 const SAVE_LOG = config["default"]["log"] !== undefined ? config["default"]["log"]["SAVE_LOG"] : true;
 const SAVE_IMAGES = config["default"]["log"] !== undefined ? config["default"]["log"]["SAVE_IMAGES"] : `NO`;
 const VISIBLE_POSTERS = config["default"]["display"] !== undefined ? config["default"]["display"]["VISIBLE_POSTERS"] : 10;
+const MARGIN_Y = config["default"]["display"] !== undefined ? config["default"]["display"]["MARGIN_Y"] : 10;
+const WIDTH = config["default"]["size"] !== undefined ?  config["default"]["size"]["WIDTH"] : 100;
 
 export class Population {
     #typefaces;
@@ -482,8 +482,8 @@ export class Population {
             if (i < n) {
                 // get phenotype
                 let pg = ind.phenotype;
-                const sideX = width / Math.floor(width / Params.visualisationGrid.width);
-                const sideY = ind.genotype.grid.size.height + Params.visualisationGrid.marginY;
+                const sideX = width / Math.floor(width / WIDTH);
+                const sideY = ind.genotype.grid.size.height + MARGIN_Y;
                 const x = posX * sideX + sideX / 2;
                 const y = posY * sideY + sideY / 2;
 
@@ -499,7 +499,7 @@ export class Population {
                 // pg.remove();
 
                 posX += 1;
-                if (posX % Math.floor(width / Params.visualisationGrid.width) === 0) { // (Params.visualisationGrid.cols-1)
+                if (posX % Math.floor(width / WIDTH) === 0) {
                     posX = 0;
                     posY += 1;
                 }

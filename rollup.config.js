@@ -10,17 +10,9 @@ import copy from 'rollup-plugin-copy';
 
 import { rollupPluginHTML as html } from '@web/rollup-plugin-html';
 
-
-
-const production = !process.env.ROLLUP_WATCH
-
-// live loaading plugi
-// tree-shaling -->
-
-
 export default [
     {
-        input: 'src/client/app.js',
+        input: 'src/client/main.js',
         preserveEntrySignatures: 'strict',
         output: [
             {

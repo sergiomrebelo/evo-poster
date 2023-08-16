@@ -1,8 +1,10 @@
+import {App} from "./app.js";
 import 'bootstrap/dist/js/bootstrap';
 import 'p5';
 
 import 'bootstrap/scss/bootstrap.scss';
 import './main.css';
+
 
 window.preload = () => {}
 
@@ -27,11 +29,4 @@ window.draw = () => {
 
 window.windowResized = () => {
     if (window.app.screen < 2) return null;
-}
-
-window.keyPressed = () => {
-    if (window.app.screen < 2) return null;
-    // if (key.toUpperCase() === 'S') {
-    // window.app.save();
-    // }
 }

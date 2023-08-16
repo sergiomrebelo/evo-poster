@@ -1,7 +1,6 @@
 import {html, LitElement} from "lit";
 import {TextInput} from "../inputs/TextInput.js";
 import {validateNumberInput} from "../../utils.js"
-import {Params} from "../../Params.js";
 import {Divider} from "../Divider.js";
 import {ColorInput} from "../inputs/ColorInput.js";
 import {Checkbox} from "../inputs/Checkbox.js";
@@ -9,8 +8,12 @@ import {Slider} from "../inputs/Slider.js";
 import {DropDownList} from "../inputs/DropDownList.js";
 import {TextArea} from "../inputs/TextArea.js";
 
-import {TYPEFACES} from "../../../../evo-poster.config.js";
+import * as config from "../../../../evo-poster.config.js";
 
+const TYPEFACES = config["default"]["typefaces"];
+const BACKGROUND = config["default"]["color"]["BACKGROUND"];
+const SIZE = config["default"]["size"];
+const TYPOGRAPHY = config["default"]["typography"];
 
 export class GenerationPanel extends LitElement {
     static properties = {
@@ -114,7 +117,7 @@ export class GenerationPanel extends LitElement {
                         this.restart();
                     }, ["my-2"]),
                 },
-                verticalAlignment: new DropDownList(`Vertical alignment`, Params.textAlignmentOptions, 0, `vertical-align`, (e) => {
+                verticalAlignment: new DropDownList(`Vertical alignment`, TYPOGRAPHY["TEXT_ALIGNMENT"]["GLOBAL"], 0, `vertical-align`, (e) => {
                     this.params.typography.verticalAlignment = parseInt(e.target.value);
                     this.restart();
                 }, ["mb-2"]),
@@ -143,13 +146,13 @@ export class GenerationPanel extends LitElement {
                         this.restart();
                         this.changesInTypefaces++;
                     } else {
-                        this.errorMessage.set({message: `Typeface ${name} is not available<br>available typefaces: ${Params.availableTypefaces}`});
+                        this.errorMessage.set({message: `Typeface ${name} is not available<br>available typefaces: ${TYPEFACES}`});
                         this.numberOfTypeface += 1;
                     }
                 }, ["mb-2"])
             },
             textboxes: {
-                align: new DropDownList(`Texbox alignment`, Params.textAlignmentTbOptions, 0, `texbox-align`, (e) => {
+                align: new DropDownList(`Texbox alignment`, TYPOGRAPHY["TEXT_ALIGNMENT"]["TEXTBOXES"], 0, `texbox-align`, (e) => {
                     this.params.typography.textAlignment = parseInt(e.target.value);
                     this.params.typography.lock[7] = e.target.value !== 0;
                     this.restart();
@@ -160,14 +163,14 @@ export class GenerationPanel extends LitElement {
                 })
             },
             background: {
-                style: new DropDownList(`Background Style`, Params.background.availableStyles, 0, `background-style`, (e) => {
+                style: new DropDownList(`Background Style`, BACKGROUND["AVAILABLE_STYLES"], 0, `background-style`, (e) => {
                     const els = document.querySelectorAll(`.background-colour-picker`);
                     const isRandom = document.getElementById(`bk-color-check`).checked;
                     this.params.background.color.random = isRandom;
                     this.params.background.style = parseInt(e.target.value);
                     this.params.background.lock[0] = (this.params.background.style !== 0);
                     if (!isRandom) {
-                        const numberOfColours = Params.background.availableStyles[parseInt(e.target.value)][1];
+                        const numberOfColours = BACKGROUND["AVAILABLE_STYLES"][parseInt(e.target.value)][1];
                         els.forEach((el, i) => {
                             if (i < numberOfColours) {
                                 el.disabled = false;
@@ -192,7 +195,7 @@ export class GenerationPanel extends LitElement {
                     this.params.background.lock[1] = !isRandom;
                     if (!isRandom) {
                         const style = document.getElementById(`background-style-list`).value;
-                        const numberOfColours = Params.background.availableStyles[parseInt(style)][1];
+                        const numberOfColours = BACKGROUND["AVAILABLE_STYLES"][parseInt(style)][1];
                         els.forEach((el, i) => {
                             if (i < numberOfColours) {
                                 el.disabled = false;
@@ -225,8 +228,8 @@ export class GenerationPanel extends LitElement {
             width = 1;
         }
 
-        this.params.size.width = Params.visualisationGrid.width * width;
-        this.params.size.height = Params.visualisationGrid.width * height;
+        this.params.size.width = SIZE["WIDTH"] * width;
+        this.params.size.height = SIZE["HEIGHT"] * height;
         this.params.size.margin = [ml, mt, mr, mb];
 
         // console.log(`margins=[${ml} | ${mt} | ${mr} | ${mb}]`);

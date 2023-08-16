@@ -70,6 +70,11 @@ export const TYPEFACES = {
 export const COLOR = {
     MIN_CONTRAST: 2.5,
     MAX_COLOR_SCHEME_ATTEMPT: 200,
+
+    BACKGROUND: {
+        AVAILABLE_STYLES: [ ["Random", 2], [`Solid`, 1], [`Gradient`,2], [`Triangle`,2]],
+        DEFAULT_COLORS: [`#ffffff`, `#000000`]
+    }
 }
 export const EVALUATION = {
     GLOBAL_WEIGHTS: {
@@ -95,23 +100,57 @@ export const EVALUATION = {
 }
 export const EVO = {
     POP_SIZE: 30,
-    NO_GEN: 10,
+    NO_GEN: 400,
     CROSSOVER_PROB: 0.9,
     MUTATION_PROB: 0.1,
-    ELITE_SIZE: 1
+    ELITE_SIZE: 1,
+    SIZE_MUTATION_ADJUST: 5,
+    TOURNAMENT_SIZE: 10
+}
+export const IBM_AVAILABLE_LANGUAGES = [
+    'ar', 'bn', 'bs', 'bg', 'zh', 'hr', 'cs', 'da', 'nl', 'en',
+    'et', 'fi', 'fr', 'de', 'el', 'gu', 'he', 'hi', 'hu', 'ga',
+    'id', 'it', 'ja', 'ko', 'lv', 'lt', 'ms', 'ml', 'mt', 'ne',
+    'nb', 'pl', 'pt', 'ro', 'ru', 'si', 'sk', 'sl', 'es', 'sv',
+    'ta', 'te', 'th', 'tr', 'uk', 'ur', 'vi', 'cy'
+];
+export const SIZE = {
+    HEIGHT: 282,
+    WIDTH: 200,
+    MARGINS: [.05, .05, .05, .05],
+}
+export const TYPOGRAPHY = {
+    DEFAULT_COLOR: `#000000`,
+    RANGE: 0.05,
+    SIZE: {
+        MAX: 0.95,
+        MIN: 0.05
+    },
+    TEXT_ALIGNMENT: {
+        GLOBAL: [[`Random`],[`Top`],[`Middle`],["Bottom"]],
+        TEXTBOXES: [[`Random`],[`LEFT`],[`CENTER`],[`RIGHT`]]
+    }
 }
 
+
+// check if size is used
+
 export default {
-    typography: TYPEFACES !== undefined ? TYPEFACES : {},
+    typography: TYPOGRAPHY !== undefined ? TYPOGRAPHY : {},
+    typefaces: TYPEFACES !== undefined ? TYPEFACES : {},
     color: COLOR !== undefined ? COLOR : {},
+    size: SIZE !== undefined ? SIZE : {},
     evaluation: EVALUATION !== undefined ? EVALUATION : {},
     display: {
         GRID: true,
-        VISIBLE_POSTERS: 30
+        MARGIN_Y: 10,
+        VISIBLE_POSTERS: 30,
+        AVAILABLE_LANGUAGES: IBM_AVAILABLE_LANGUAGES !== undefined ? IBM_AVAILABLE_LANGUAGES : [`en`],
+        MAX_IMAGE_SIZE: 1024
     },
     evo: EVO !== undefined ? EVO : {},
     log: {
         SAVE_LOG: true,
-        SAVE_IMAGES: `END` // `GENERATION`, `END`, `BEST-GENERATION`, `NO`
+        SAVE_IMAGES: `NO` // `GENERATION`, `END`, `BEST-GENERATION`, `NO`
     }
 }

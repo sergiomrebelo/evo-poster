@@ -176,9 +176,9 @@ for (let lang of Object.keys(inputText)) {
             cy.get(`#size-x-input`).clear();
             cy.get(`#size-x-input`).type('{selectall}{backspace}'+inputText[lang]["divider"]["size"]["modifiedWidth"], {force: true}).blur();
             cy.get(`#size-x-input`).should('have.value', '1');
+            cy.wait(100);
             cy.get(`#size-y-input`).should('have.value', inputText[lang]["divider"]["size"]["modifiedHeight"]);
             cy.get('#size-mg-b-input').scrollIntoView();
-
             // verify the typefaces
             cy.get(`#typeface-badge-${inputText[lang]["divider"]["typography"]["testingTypeface"]}`).should('be.visible');
             cy.get(`#typeface-badge-${inputText[lang]["divider"]["typography"]["testingTypeface"]} > span`).click();
@@ -352,6 +352,8 @@ for (let lang of Object.keys(inputText)) {
             cy.window().then((w) => {
                 let valueInterface = w.app.config.size.height/w.app.config.size.width;
                 const configFile = parseFloat(inputText[lang]["divider"]["size"]["modifiedHeight"]);
+                // FIXME
+
                 expect(valueInterface).to.equal(configFile);
 
                 const typefaces = w.app.config.typography.typefaces.map(x => x.family);
