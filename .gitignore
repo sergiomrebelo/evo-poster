@@ -24,3 +24,4 @@ src/public/bundle.js
 /coverage
 
 cypress/downloads/
+*.db
