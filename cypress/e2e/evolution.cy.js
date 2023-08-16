@@ -17,7 +17,7 @@ let checkingInterval;
 
 for (let i in TESTING_EXAMPLES) {
     let e = TESTING_EXAMPLES[i];
-    describe(`testing no. ${i} (elitist Mode)`, () => {
+    describe(`testing no. ${i}`, () => {
         beforeEach(() => {
             cy.visit(`http://localhost:8000`);
         });
@@ -41,6 +41,7 @@ const evolve = (text, elite = 0, EVAL_SET = [0.5,0.5]) => {
     cy.get("#lineDivisionCheck").uncheck();
     cy.get('button.btn.btn-primary.mb-2').click();
     cy.get('#bt-start-evo').click();
+    cy.get(`#grid-display-check`).uncheck();
     cy.get('#evolve-bt').click();
     cy.get(`#evaluation-semantic-weight-input`).invoke(`val`, EVAL_SET[0]).trigger(`change`).then( () => {
         cy.get(`#evaluation-aesthetics-weight-input`).invoke(`val`, EVAL_SET[1]).trigger(`change`).then(() => {
