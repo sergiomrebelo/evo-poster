@@ -87,6 +87,10 @@ export class App extends LitElement {
             },
             display: {
                 grid: config["default"]["display"]["GRID"] !== undefined ? config["default"]["display"]["GRID"] : true
+            },
+            log: {
+                save: config["default"]["log"] !== undefined ? config["default"]["log"]["SAVE_LOG"] : false,
+                saveImages: config["default"]["log"] !== undefined ? config["default"]["log"]["SAVE_IMAGES"] : `NO`
             }
         }
 

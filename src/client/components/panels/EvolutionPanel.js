@@ -10,9 +10,6 @@ export class EvolutionPanel extends LitElement {
 
     constructor(params, restart, errorMessage, pop) {
         super();
-
-        console.log ("POP", params["evo"]);
-
         this.params = params;
         this.restart = restart;
         this.errorMessage = errorMessage;

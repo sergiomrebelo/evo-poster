@@ -650,9 +650,6 @@ class EvolutionPanel extends s$1 {
 
     constructor(params, restart, errorMessage, pop) {
         super();
-
-        console.log ("POP", params["evo"]);
-
         this.params = params;
         this.restart = restart;
         this.errorMessage = errorMessage;
@@ -2965,11 +2962,11 @@ class Grid {
 const SIZE_MUTATION_ADJUST = evoPoster_config["evo"] !== undefined ? evoPoster_config["evo"]["SIZE_MUTATION_ADJUST"] : 5;
 const TOURNAMENT_SIZE = evoPoster_config["evo"] !== undefined ? evoPoster_config["evo"]["TOURNAMENT_SIZE"] : 10;
 const MAX_COLOR_SCHEME_ATTEMPT = evoPoster_config["color"] !== undefined ? evoPoster_config["color"]["MAX_COLOR_SCHEME_ATTEMPT"] : 200;
-const SAVE_LOG = evoPoster_config["log"] !== undefined ? evoPoster_config["log"]["SAVE_LOG"] : true;
-const SAVE_IMAGES = evoPoster_config["log"] !== undefined ? evoPoster_config["log"]["SAVE_IMAGES"] : `NO`;
 const VISIBLE_POSTERS$1 = evoPoster_config["display"] !== undefined ? evoPoster_config["display"]["VISIBLE_POSTERS"] : 10;
 const MARGIN_Y$1 = evoPoster_config["display"] !== undefined ? evoPoster_config["display"]["MARGIN_Y"] : 10;
 const WIDTH = evoPoster_config["size"] !== undefined ?  evoPoster_config["size"]["WIDTH"] : 100;
+
+
 
 class Population {
     #typefaces;
@@ -3096,12 +3093,11 @@ class Population {
 
         if(this.generations < this.params["evo"]["noGen"] && !this.pause) {
             let ms = 100;
-
-            if (SAVE_IMAGES === `GENERATION` &&  SAVE_LOG) {
-                console.log (`this.population size`, this.population.length);
+            console.log(this.params);
+            if (this.params["log"]["saveImages"] === `GENERATION` &&  this.params["log"]["save"]) {
                 this.saveRaster(this.population.length);
                 ms = 2000;
-            } else if (SAVE_IMAGES === `BEST-GENERATION` &&  SAVE_LOG) {
+            } else if (this.params["log"]["saveImages"] === `BEST-GENERATION` && this.params["log"]["save"]) {
                 this.saveRaster(1);
             }
             // need to possible to visualise the posters evolving
@@ -3110,8 +3106,8 @@ class Population {
             }, ms);
         } else {
             this.evolving = false;
-            if (!this.pause && SAVE_LOG) {
-                if (SAVE_IMAGES === `END`) {
+            if (!this.pause && this.params["log"]["save"]) {
+                if (this.params["log"]["saveImages"] === `END`) {
                     this.saveRaster(this.population.length);
                 }
                 await fetch(`/insert`, {
@@ -3574,6 +3570,10 @@ class App extends s$1 {
             },
             display: {
                 grid: evoPoster_config["display"]["GRID"] !== undefined ? evoPoster_config["display"]["GRID"] : true
+            },
+            log: {
+                save: evoPoster_config["log"] !== undefined ? evoPoster_config["log"]["SAVE_LOG"] : false,
+                saveImages: evoPoster_config["log"] !== undefined ? evoPoster_config["log"]["SAVE_IMAGES"] : `NO`
             }
         };
 

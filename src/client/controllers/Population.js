@@ -7,11 +7,11 @@ import * as config from './../../../evo-poster.config.js';
 const SIZE_MUTATION_ADJUST = config["default"]["evo"] !== undefined ? config["default"]["evo"]["SIZE_MUTATION_ADJUST"] : 5;
 const TOURNAMENT_SIZE = config["default"]["evo"] !== undefined ? config["default"]["evo"]["TOURNAMENT_SIZE"] : 10;
 const MAX_COLOR_SCHEME_ATTEMPT = config["default"]["color"] !== undefined ? config["default"]["color"]["MAX_COLOR_SCHEME_ATTEMPT"] : 200;
-const SAVE_LOG = config["default"]["log"] !== undefined ? config["default"]["log"]["SAVE_LOG"] : true;
-const SAVE_IMAGES = config["default"]["log"] !== undefined ? config["default"]["log"]["SAVE_IMAGES"] : `NO`;
 const VISIBLE_POSTERS = config["default"]["display"] !== undefined ? config["default"]["display"]["VISIBLE_POSTERS"] : 10;
 const MARGIN_Y = config["default"]["display"] !== undefined ? config["default"]["display"]["MARGIN_Y"] : 10;
 const WIDTH = config["default"]["size"] !== undefined ?  config["default"]["size"]["WIDTH"] : 100;
+
+
 
 export class Population {
     #typefaces;
@@ -138,12 +138,11 @@ export class Population {
 
         if(this.generations < this.params["evo"]["noGen"] && !this.pause) {
             let ms = 100;
-
-            if (SAVE_IMAGES === `GENERATION` &&  SAVE_LOG) {
-                console.log (`this.population size`, this.population.length);
+            console.log(this.params);
+            if (this.params["log"]["saveImages"] === `GENERATION` &&  this.params["log"]["save"]) {
                 this.saveRaster(this.population.length);
                 ms = 2000;
-            } else if (SAVE_IMAGES === `BEST-GENERATION` &&  SAVE_LOG) {
+            } else if (this.params["log"]["saveImages"] === `BEST-GENERATION` && this.params["log"]["save"]) {
                 this.saveRaster(1);
             }
             // need to possible to visualise the posters evolving
@@ -152,8 +151,8 @@ export class Population {
             }, ms);
         } else {
             this.evolving = false;
-            if (!this.pause && SAVE_LOG) {
-                if (SAVE_IMAGES === `END`) {
+            if (!this.pause && this.params["log"]["save"]) {
+                if (this.params["log"]["saveImages"] === `END`) {
                     this.saveRaster(this.population.length);
                 }
                 await fetch(`/insert`, {
@@ -173,9 +172,9 @@ export class Population {
             }
 
 
-            console.group (`stats`);
+            console.groupCollapsed (`stats ${this.id}`);
             console.log (this.log);
-            console.groupEnd();
+            console.group();
         }
     }
 
