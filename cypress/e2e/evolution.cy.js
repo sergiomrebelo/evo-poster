@@ -27,7 +27,7 @@ for (let i in TESTING_EXAMPLES) {
                 cy.window().then((w) => {
                     cy.window().should('have.property', 'app');
                     w.app.config.log.save = true;
-                    w.app.config.log.saveImages = `BEST-GENERATION`;
+                    w.app.config.log.saveImages = IMAGES_LOG;
                     evolve(e.text, ELITE, EVAL_SET[0]);
                 });
             });
