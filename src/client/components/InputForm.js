@@ -157,10 +157,10 @@ export class InputForm extends LitElement {
                                        checked="files[]" accept="image/jpeg, image/png, image/jpg" multiple>
                             </div>
                             ${Divider.get()}
-                            <div class="form-check form-check-inline mb-2" id="imagePlacementField">
+                            <div class="form-check form-check-inline mb-2 disabled disabled-inputs" id="imagePlacementField">
                                 <label for="form-check-label" class="col-form-label-sm" id="imagePlacementCheck">Image Random Placement</label>
                                 <input type="checkbox" value="1" @change="${this._toggleVisibility}"
-                                       class="form-check-input" id="imagePlacementCheck" data-related="imageAnchorField" checked>
+                                       class="form-check-input disabled readonly" id="imagePlacementCheck" data-related="imageAnchorField" checked readonly>
                             </div>
                             <div class="form-group mb-2 d-none col-sm-3" id="imageAnchorField">
                                 <label for="formControlImagePlaceholderDelimiter" class="col-form-label-sm" checked=${false}>Image

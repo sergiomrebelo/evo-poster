@@ -215,7 +215,6 @@ export class App extends LitElement {
 
     #initCanvas = () => {
         // calculate the height of canvas
-        console.log(`MARGIN_Y`, MARGIN_Y);
         let numberOfPosters = VISIBLE_POSTERS > POP_SIZE ? POP_SIZE : VISIBLE_POSTERS;
         let h = Math.ceil(numberOfPosters / Math.floor(windowWidth/this.config.size.width));
         h *= this.config.size.height + MARGIN_Y * 2;

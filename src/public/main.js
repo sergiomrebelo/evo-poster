@@ -354,10 +354,10 @@ class InputForm extends s$1 {
                                        checked="files[]" accept="image/jpeg, image/png, image/jpg" multiple>
                             </div>
                             ${Divider.get()}
-                            <div class="form-check form-check-inline mb-2" id="imagePlacementField">
+                            <div class="form-check form-check-inline mb-2 disabled disabled-inputs" id="imagePlacementField">
                                 <label for="form-check-label" class="col-form-label-sm" id="imagePlacementCheck">Image Random Placement</label>
                                 <input type="checkbox" value="1" @change="${this._toggleVisibility}"
-                                       class="form-check-input" id="imagePlacementCheck" data-related="imageAnchorField" checked>
+                                       class="form-check-input disabled readonly" id="imagePlacementCheck" data-related="imageAnchorField" checked readonly>
                             </div>
                             <div class="form-group mb-2 d-none col-sm-3" id="imageAnchorField">
                                 <label for="formControlImagePlaceholderDelimiter" class="col-form-label-sm" checked=${false}>Image
@@ -650,6 +650,8 @@ class EvolutionPanel extends s$1 {
 
     constructor(params, restart, errorMessage, pop) {
         super();
+
+        console.log ("POP", params["evo"]);
 
         this.params = params;
         this.restart = restart;
@@ -1272,11 +1274,8 @@ class GenerationPanel extends s$1 {
         }
 
         this.params.size.width = SIZE$1["WIDTH"] * width;
-        this.params.size.height = SIZE$1["HEIGHT"] * height;
+        this.params.size.height = SIZE$1["WIDTH"] * height;
         this.params.size.margin = [ml, mt, mr, mb];
-
-        // console.log(`margins=[${ml} | ${mt} | ${mr} | ${mb}]`);
-        // console.log(`width=${width}. height=${height}`);
 
         document.getElementById(`size-x-input`).value = width;
         document.getElementById(`size-y-input`).value = height;
@@ -3703,7 +3702,6 @@ class App extends s$1 {
 
     #initCanvas = () => {
         // calculate the height of canvas
-        console.log(`MARGIN_Y`, MARGIN_Y);
         let numberOfPosters = VISIBLE_POSTERS > POP_SIZE ? POP_SIZE : VISIBLE_POSTERS;
         let h = Math.ceil(numberOfPosters / Math.floor(windowWidth/this.config.size.width));
         h *= this.config.size.height + MARGIN_Y * 2;

@@ -229,11 +229,8 @@ export class GenerationPanel extends LitElement {
         }
 
         this.params.size.width = SIZE["WIDTH"] * width;
-        this.params.size.height = SIZE["HEIGHT"] * height;
+        this.params.size.height = SIZE["WIDTH"] * height;
         this.params.size.margin = [ml, mt, mr, mb];
-
-        // console.log(`margins=[${ml} | ${mt} | ${mr} | ${mb}]`);
-        // console.log(`width=${width}. height=${height}`);
 
         document.getElementById(`size-x-input`).value = width;
         document.getElementById(`size-y-input`).value = height;
