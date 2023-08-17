@@ -1,4 +1,4 @@
-import * as evaluator from '@evoposter/evaluator/lib/evaluator.min.js';
+import * as evaluator from '@evoposter/evaluator/dist/evaluator.min.js';
 import * as config from './../../../evo-poster.config.js';
 
 import backgroundStyles from "./BackgroundStyles.js";
