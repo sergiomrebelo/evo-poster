@@ -14,9 +14,17 @@ import {WHITE_SPACE_FRACTION} from "../metrics.config.js";
  * return a value between 1 (good) and 0 (bad)
  * in first version, we used a no-linear method and onlyy works with solid backgrounds
  *
+ *
+ *
  * Author: Sérgio M. Rebelo
- * CDV lab. (CMS, CISUC, Portugal)
+ * CMS, CISUC, Portugal
  * Contact: srebelo[at]dei.uc.pt
+ *
+ * Author and Supervisor: JJ Merelo
+ * UGR + Raku
+ * Contact: jjmerelo[at]gmail.com
+ *
+ * License: MIT (see LICENSE.md)
  *
  * Version 1.0.0 (March 2020)
  * Version: 1.5.0 (November 2023)

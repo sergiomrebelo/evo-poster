@@ -7,9 +7,17 @@
  *
  * return a value between 1 (good) and 0 (bad)
  *
+ *
+ *
  * Author: Sérgio M. Rebelo
- * CDV lab. (CMS, CISUC, Portugal)
+ * CMS, CISUC, Portugal
  * Contact: srebelo[at]dei.uc.pt
+ *
+ * Author and Supervisor: JJ Merelo
+ * UGR + Raku
+ * Contact: jjmerelo[at]gmail.com
+ *
+ * License: MIT (see LICENSE.md)
  *
  * Version 1.0.0 (March 2020)
  * Version: 1.5.0 (November 2023)
