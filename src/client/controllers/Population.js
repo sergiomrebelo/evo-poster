@@ -1,6 +1,6 @@
 import Poster, {Grid} from "./Poster.js";
 import {contrastChecker, randomScheme} from "./ColorGenerator.js";
-import {shuffleArr, sumArr, sus, swap} from "../utils.js";
+import {shuffleArr, sumArr, stochasticUniversalSampling, swap} from "../utils.js";
 
 import * as config from './../../../evo-poster.config.js';
 
@@ -87,7 +87,7 @@ export class Population {
             if (Math.random() <= this.params["evo"]["crossoverProb"]) {
                 const parents = this.#rankingTournament(rank, TOURNAMENT_SIZE, 2);
                 // crossover method
-                const child = await this.uniformCrossover(this.population[parents[0]], this.population[parents[1]]);
+                const child = this.uniformCrossover(this.population[parents[0]], this.population[parents[1]]);
                 offspring.push(child);
             } else {
                 const ind = this.#rankingTournament(rank, TOURNAMENT_SIZE, 1);
@@ -426,8 +426,7 @@ export class Population {
         probabilities = probabilities.map((p) => p / probabilitiesSum);
         probabilities = shuffleArr(probabilities);
         for (let j = 0; j < parentSize; j++) {
-            let ix = sus(probabilities);
-            // sus
+            let ix = stochasticUniversalSampling(probabilities);
             parents.push(parseInt(ix));
         }
         return parents;

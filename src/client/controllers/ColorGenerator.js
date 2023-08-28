@@ -1,4 +1,4 @@
-import {harmony, analogue, complement, triad } from 'simpler-color';
+import {harmony, analogue, complement, triad} from 'simpler-color';
 import * as config from '../../../evo-poster.config.js';
 
 const MIN_CONTRAST = config["default"].color !== null ? config["default"].color.MIN_CONTRAST : 10;

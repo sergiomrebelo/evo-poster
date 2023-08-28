@@ -619,7 +619,8 @@ const sumArr = (arr) => {
     return arr.reduce((partialSum, a) => partialSum + a, 0);
 };
 
-const sus = (probs, max=1) => {
+
+const stochasticUniversalSampling = (probs, max=1) => {
     const r = Math.random()*max;
     let c = 0;
     for (let i in probs) {
@@ -3042,7 +3043,7 @@ class Population {
             if (Math.random() <= this.params["evo"]["crossoverProb"]) {
                 const parents = this.#rankingTournament(rank, TOURNAMENT_SIZE, 2);
                 // crossover method
-                const child = await this.uniformCrossover(this.population[parents[0]], this.population[parents[1]]);
+                const child = this.uniformCrossover(this.population[parents[0]], this.population[parents[1]]);
                 offspring.push(child);
             } else {
                 const ind = this.#rankingTournament(rank, TOURNAMENT_SIZE, 1);
@@ -3381,8 +3382,7 @@ class Population {
         probabilities = probabilities.map((p) => p / probabilitiesSum);
         probabilities = shuffleArr(probabilities);
         for (let j = 0; j < parentSize; j++) {
-            let ix = sus(probabilities);
-            // sus
+            let ix = stochasticUniversalSampling(probabilities);
             parents.push(parseInt(ix));
         }
         return parents;
