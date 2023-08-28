@@ -43,7 +43,7 @@ export class Params {
     static imageMaxSize = 1024;
 
     static evolution = {
-        popSize: 10,
+        popSize: 20,
         noGen: 400,
         crossoverProb: 0.75,
         mutationProb: 0.30,

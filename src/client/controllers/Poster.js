@@ -5,7 +5,6 @@ import * as evaluator from "../../@evoposter/evaluator/src/index.mjs";
 import {randomScheme} from "./ColorGenerator.js";
 
 
-
 class Poster {
     #showGrid = false;
     #debug = false;
@@ -18,6 +17,12 @@ class Poster {
         params = JSON.parse(JSON.stringify(params));
 
         this.fitness = 1;
+        this.constraint = 0;
+
+        this.metrics = {
+            legibility: 1,
+            gridAppropriateness: 1
+        }
         this.sentencesLenght = [];
 
         const h = (genotype === null) ? params["size"]["height"] : genotype["size"]["height"];
@@ -219,15 +224,25 @@ class Poster {
 
     evaluate = async () => {
         this.phenotype = await this.draw();
-        this.fitness = 1; // multicreatira
+        this.fitness = 1;
 
         // constraints
-        const legibility = evaluator.legibility(this.sentencesLenght, this.genotype["grid"].getAvailableWidth(), `JUSTIFY`);
-        // const gridAppropriateness = evaluator.gridAppropriateSize(this.genotype["size"], this.genotype["grid"]);
+        const legibility = evaluator.legibility(this.sentencesLenght, this.genotype["grid"].getAvailableWidth(), `OVERSET`);
+        const gridAppropriateness = evaluator.gridAppropriateSize(
+            this.genotype["size"].width, this.genotype["size"].height,
+            this.genotype["grid"].rows.l, this.genotype["grid"].columns.l, this.genotype["grid"].marginsPos
+        );
+        this.constraint = legibility + gridAppropriateness;
+
+        this.metrics["legibility"] = legibility;
+        this.metrics["gridAppropriateness"] = gridAppropriateness;
 
         // returns a number between 0 and 0.5
         // subtracted to fitness
-        this.fitness -= legibility;
+        return {
+            "fitness": this.fitness,
+            "constraints": this.constraint
+        }
     }
 
     typeset = async(pg) => {
@@ -477,7 +492,11 @@ export class Grid {
         this.columns.y.bottom = (this.size.height / 2) - (this.marginsPos.bottom);
 
         const inc = (this.size.width - (this.marginsPos.left + this.marginsPos.right)) / this.v;
-        this.columns.l = inc;
+        let horizontalSpace = [];
+        for (let i=0; i<this.v; i++) {
+            horizontalSpace.push(inc);
+        }
+        this.columns.l = horizontalSpace;
 
         // start cod of x
         let x = -(this.size.width / 2) + this.marginsPos.left;

@@ -1,9 +1,10 @@
 import {Params} from "../Params.js";
 import Poster, {Grid} from "./Poster.js";
 import {randomScheme} from "./ColorGenerator.js";
+import {shuffleArr, sumArr, sus, swap} from "../utils.js";
 
 const SIZE_MUTATION_ADJUST = 5;
-const TOURNAMENT_SIZE = 5;
+const TOURNAMENT_SIZE = 10;
 
 export class Population {
     #typefaces;
@@ -65,18 +66,31 @@ export class Population {
             offspring.push(this.population[i].copy());
         }
 
+        let fitness = this.population.map((ind) => ind.fitness);
+        let constraints = this.population.map((ind) => ind.constraint);
+
+        // select the indices using Stochastic Ranking
+        const rank = await this.#stochasticRanking(fitness, constraints);
+
+
+        // sort population
+        // const newPopulation = [];
+        // for (let i=0; i<indices.length; i++) {
+        // newPopulation.push(this.population[indices[i]].copy());
+        // }
+        // this.population = newPopulation;
+
+
         // crossover
         for (let i = eliteSize; i < this.params["evo"]["popSize"]; i++) {
             if (Math.random() <= this.params["evo"]["crossoverProb"]) {
-
-                const parentA = this.tournament(TOURNAMENT_SIZE);
-                const parentB = this.tournament(TOURNAMENT_SIZE);
+                const parents = this.#rankingTournament(rank, TOURNAMENT_SIZE, 2);
                 // crossover method
-                const child = await this.uniformCrossover(parentA, parentB);
+                const child = await this.uniformCrossover(this.population[parents[0]], this.population[parents[1]]);
                 offspring.push(child);
             } else {
-                const ind = this.tournament();
-                offspring.push(ind);
+                const ind = this.#rankingTournament(rank, TOURNAMENT_SIZE, 1);
+                offspring.push(this.population[ind[0]].copy());
             }
         }
 
@@ -101,7 +115,9 @@ export class Population {
         for (let ind of this.population) {
             genData.push({
                 genotype: ind.genotype,
-                fitness: ind.fitness
+                fitness: ind.fitness,
+                constraint: ind.constraint,
+                metrics: ind.metrics
             })
         }
         this.log["generations"].push({
@@ -118,6 +134,7 @@ export class Population {
                 this.evolve();
             }, 100);
         } else {
+            this.evolving = false;
             console.group (`stats`);
             console.log (this.log);
             console.groupEnd();
@@ -294,28 +311,79 @@ export class Population {
         for (let individual of this.population) {
             await individual.evaluate();
         }
-
+        // sort the population based on staticPenalty
+        // enables visualisation and elite
         // sort individuals in the population by fitness (fittest first)
-        this.population = this.population.sort((a,b) => b.fitness - a.fitness);
+        await this.#staticPenalty();
+    }
+
+
+    #stochasticRanking = async (fitness, constraints, pF= 0.45) => { //0.45
+        let populationSize = this.population.length;
+        let indices = Array.from(Array(populationSize).keys())
+
+        for (let i=0; i<populationSize; i++) {
+            let noSwap = true;
+            for (let j=0; j<populationSize-1; j++) {
+                let u = Math.random();
+                if ((constraints[indices[j]] === 0 && constraints[indices[j + 1]] === 0) || u <= pF) {
+                    if (fitness[indices[j]] > fitness[indices[j + 1]]) {
+                        swap(indices, j, j + 1)
+                        noSwap = false;
+                    } else {
+                        if (constraints[indices[j]] > constraints[indices[j + 1]]) {
+                            swap(indices, j, j + 1)
+                            noSwap = false;
+                        }
+                    }
+                }
+            }
+            if (noSwap) {
+                break;
+            } else {
+                noSwap = true;
+            }
+        }
+        return indices;
+    }
+
+    #staticPenalty = async () => {
+        this.population = this.population.sort((a,b) => (b.fitness-b.constraint) - (a.fitness-a.constraint));
     }
 
     copy = (obj) => {
         return JSON.parse(JSON.stringify(obj));
     }
 
-    tournament = (size = 2) => {
+    // ranking based
+    // return n individuals
+    // More the selection pressure more will be the Convergence rate
+    #rankingTournament = (rank, tournamentSize = 5, parentSize = 2, sp = 2) => {
+        // check the tournament size and parentSize
+        tournamentSize = tournamentSize < parentSize ? parentSize : tournamentSize;
+        let parents = [];
+        // select the pool of parents
         let pool = [];
-        for (let i = 0; i < size; i++) {
-            const r = Math.round(Math.random()*(this.population.length-1));
-            pool.push(this.population[r]);
+        for (let i = 0; i < tournamentSize; i++) {
+            const r = Math.round(Math.random() * (rank.length - 1));
+            pool.push(r);
         }
-        let fittest = pool[0];
-        for (let i=1; i <pool.length; i++) {
-            if (pool[i].fitness > fittest.fitness) {
-                fittest = pool[i];
-            }
+        // sort by ranking
+        pool.sort((a, b) => a - b);
+        // define the probability based on ranking fitness
+        let probabilities = pool.map((ind) => {
+            return sp - (2 * ind * (sp - 1.0)) / (this.population.length - 1);
+        });
+        // normalize to sum up to 1
+        const probabilitiesSum = sumArr(probabilities);
+        probabilities = probabilities.map((p) => p / probabilitiesSum);
+        probabilities = shuffleArr(probabilities);
+        for (let j = 0; j < parentSize; j++) {
+            let ix = sus(probabilities);
+            // sus
+            parents.push(parseInt(ix));
         }
-        return fittest;
+        return parents;
     }
 
     // draw aux function

@@ -7,8 +7,8 @@
  * v0.0.1 July 2023
  */
 
-import * as Legibility from "./constraints/Legibility.mjs";
-import * as GridAppropriateSize from "./constraints/GridAppropriateSize.mjs";
+import * as Legibility from "./metrics/Legibility.mjs";
+import * as GridAppropriateSize from "./metrics/GridAppropriateSize.mjs";
 
 export const info = () => {
     console.log ("Evaluator working");
