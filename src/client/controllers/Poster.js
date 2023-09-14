@@ -58,6 +58,8 @@ class Poster {
 
         this.genotype = (genotype === null) ? this.#generateGenotype(params) : genotype;
 
+        console.log ("genotype", this.genotype);
+
         this.#showGrid = false;
         if (params !== null) {
             this.#showGrid = this.params["display"]["grid"];
@@ -133,8 +135,9 @@ class Poster {
         const textboxes = [];
 
         const alignment = params.typography.verticalAlignment === 0 ?
-            Math.round(Math.random() * (TYPOGRAPHY["TEXT_ALIGNMENT"].length - 2) + 1) :
+            Math.round(Math.random() * (TYPOGRAPHY["TEXT_ALIGNMENT"]["GLOBAL"].length - 2) + 1) :
             params.typography.verticalAlignment;
+
 
         for (let i in params["sentences"]) {
             const sentence = params["sentences"][i]
