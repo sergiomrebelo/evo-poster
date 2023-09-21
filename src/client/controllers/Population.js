@@ -339,7 +339,11 @@ export class Population {
         for (let img of ind.genotype["images"]) {
             if (Math.random() < prob) {
                 img["scale"] = Math.random();
+            }
+            if (Math.random() < prob) {
                 img["x"] = Math.random();
+            }
+            if (Math.random() < prob) {
                 img["y"] = Math.random();
             }
         }

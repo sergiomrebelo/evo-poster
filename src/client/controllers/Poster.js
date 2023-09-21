@@ -161,13 +161,10 @@ class Poster {
             let size = Math.round(grid.rows.l[0]) / leading;
             size += Math.round(-(size * TYPOGRAPHY["RANGE"])+(Math.random()*(size * TYPOGRAPHY["RANGE"])));
             size = Math.max(
-
                 Math.round(params.size.height * TYPOGRAPHY["SIZE"]["MIN"]),
                 Math.min(Math.round(params.size.height *  TYPOGRAPHY["SIZE"]["MAX"]), size)
             );
             grid.defineRow(i, size * leading, alignment);
-
-
 
             const alignmentLine = params.typography.textAlignment === 0 ?
                 Math.round(Math.random() * (TYPOGRAPHY["TEXT_ALIGNMENT"]["TEXTBOXES"].length-2) + 1) :
@@ -211,7 +208,6 @@ class Poster {
                 margin: params.size.margin,
             },
             background: {
-                // HERE
                 style: params.background.style === 0 ? Math.round(1+Math.random()*(BACKGROUND["AVAILABLE_STYLES"].length-2)) : params.background.style,
                 colors: [
                     params.background.color.random ? colorScheme.colorA : color(params.background.color.valueA),
