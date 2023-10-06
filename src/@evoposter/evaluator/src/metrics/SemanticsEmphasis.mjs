@@ -44,9 +44,9 @@ export const compute = (textboxes, dist, noCurrentTypefaces = 1, allowMultiple =
     // if textboxes size is 1 ---> 1
     const perDist = dist.map((e) => e[3]);
 
-    const fontWeight = checkDifferenceVariableFeature(textboxes.map((b) => b["weight"]), perDist);
-    const fontStretch = checkDifferenceVariableFeature(textboxes.map((b) => b["font-stretch"]), perDist);
-    let typefaceDesign = noCurrentTypefaces > 1 ? (checkDifferenceUniqueFeatures(textboxes.map((b) => b["font-stretch"]), perDist)) : 0;
+    const fontWeight = 1-checkDifferenceVariableFeature(textboxes.map((b) => b["weight"]), perDist);
+    const fontStretch = 1-checkDifferenceVariableFeature(textboxes.map((b) => b["font-stretch"]), perDist);
+    let typefaceDesign = noCurrentTypefaces > 1 ? 1-(checkDifferenceUniqueFeatures(textboxes.map((b) => b["font-stretch"]), perDist)) : 1;
 
     // way of combine and only checks one
     let res = [fontWeight, fontStretch, typefaceDesign];

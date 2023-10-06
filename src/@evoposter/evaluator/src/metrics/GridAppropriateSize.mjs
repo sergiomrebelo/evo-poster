@@ -1,10 +1,10 @@
 /**
  * Grid Size Appropriateness
  *
- * Measure the appropriate of the used grid to the size of container
- * it is related to if the width and height of the grid is
- * in accordance with poster size
- *
+     * Measure the appropriate of the used grid to the size of container
+     * it is related to if the width and height of the grid is
+     * in accordance with poster size
+     *
  *
  *
  * Author: Sérgio M. Rebelo

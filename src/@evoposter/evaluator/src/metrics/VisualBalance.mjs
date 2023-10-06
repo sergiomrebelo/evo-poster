@@ -1,7 +1,7 @@
 /**
  * Visual Balance metric
  *
- * Estimate the visual balance (centred) of the composition.
+ * Estimate the visual balance of the composition.
  * Based on Harrington et al. (2004)
  *
  *

@@ -35,9 +35,11 @@ import * as VisualBalance from "./metrics/VisualBalance.mjs";
 
 export const legibility = Legibility.compute;
 export const gridAppropriateSize = GridAppropriateSize.compute;
+
 export const semanticsLayout = SemanticsLayout.compute;
 export const semanticsEmphasis = SemanticsEmphasis.compute;
 export const semanticsVisuals = SemanticsVisuals.compute;
+
 export const alignment = Alignment.compute;
 export const regularity = Regularity.compute;
 export const whiteSpaceFraction = WhiteSpaceFraction.compute;

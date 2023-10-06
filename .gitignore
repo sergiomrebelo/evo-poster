@@ -25,3 +25,5 @@ src/public/bundle.js
 
 cypress/downloads/
 *.db
+
+res/experimental/
