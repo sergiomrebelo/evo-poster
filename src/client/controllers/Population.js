@@ -150,7 +150,11 @@ export class Population {
             this.evolving = false;
             if (!this.pause && this.params["log"]["save"]) {
                 if (this.params["log"]["saveImages"] === `END`) {
-                    this.saveRaster(this.population.length);
+                    try {
+                        this.saveRaster(this.population.length);
+                    } catch (e) {
+                        console.error(e);
+                    }
                 }
                 await fetch(`/insert`, {
                     method: "POST",
@@ -170,12 +174,18 @@ export class Population {
                 }).catch((err) => console.error(err));
             } else {
                 console.groupCollapsed (`stats ${this.id} not saved to file`);
-                console.log (this.log);
-                console.groupEnd()
+               console.log (this.log);
+               console.groupEnd()
             }
 
-
-
+            // download anyway the results
+            let dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(this.log));
+            let downloadAnchorNode = document.createElement('a');
+            downloadAnchorNode.setAttribute("href",     dataStr);
+            downloadAnchorNode.setAttribute("download", this.id + ".json");
+            document.body.appendChild(downloadAnchorNode); // required for firefox
+            downloadAnchorNode.click();
+            downloadAnchorNode.remove();
         }
     }
 
@@ -514,7 +524,7 @@ export class Population {
     saveRaster = async (size = this.population.length) => {
         for (let i=0; i<size; i++) {
             const ind = this.population[i];
-            await save(ind.phenotype, `${this.id}-${this.generations}-${i}`);
+            await save(ind.phenotype, `${this.id}/${this.id}-${this.generations}-${i}`);
         }
     }
 

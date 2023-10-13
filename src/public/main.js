@@ -2202,7 +2202,6 @@ class Poster {
 
         this.genotype = (genotype === null) ? this.#generateGenotype(params) : genotype;
 
-        console.log ("genotype", this.genotype);
 
         this.#showGrid = false;
         if (params !== null) {
@@ -2305,13 +2304,10 @@ class Poster {
             let size = Math.round(grid.rows.l[0]) / leading;
             size += Math.round(-(size * TYPOGRAPHY$1["RANGE"])+(Math.random()*(size * TYPOGRAPHY$1["RANGE"])));
             size = Math.max(
-
                 Math.round(params.size.height * TYPOGRAPHY$1["SIZE"]["MIN"]),
                 Math.min(Math.round(params.size.height *  TYPOGRAPHY$1["SIZE"]["MAX"]), size)
             );
             grid.defineRow(i, size * leading, alignment);
-
-
 
             const alignmentLine = params.typography.textAlignment === 0 ?
                 Math.round(Math.random() * (TYPOGRAPHY$1["TEXT_ALIGNMENT"]["TEXTBOXES"].length-2) + 1) :
@@ -2355,7 +2351,6 @@ class Poster {
                 margin: params.size.margin,
             },
             background: {
-                // HERE
                 style: params.background.style === 0 ? Math.round(1+Math.random()*(BACKGROUND$1["AVAILABLE_STYLES"].length-2)) : params.background.style,
                 colors: [
                     params.background.color.random ? colorScheme.colorA : color(params.background.color.valueA),
@@ -3109,7 +3104,11 @@ class Population {
             this.evolving = false;
             if (!this.pause && this.params["log"]["save"]) {
                 if (this.params["log"]["saveImages"] === `END`) {
-                    this.saveRaster(this.population.length);
+                    try {
+                        this.saveRaster(this.population.length);
+                    } catch (e) {
+                        console.error(e);
+                    }
                 }
                 await fetch(`/insert`, {
                     method: "POST",
@@ -3129,12 +3128,18 @@ class Population {
                 }).catch((err) => console.error(err));
             } else {
                 console.groupCollapsed (`stats ${this.id} not saved to file`);
-                console.log (this.log);
-                console.groupEnd();
+               console.log (this.log);
+               console.groupEnd();
             }
 
-
-
+            // download anyway the results
+            let dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(this.log));
+            let downloadAnchorNode = document.createElement('a');
+            downloadAnchorNode.setAttribute("href",     dataStr);
+            downloadAnchorNode.setAttribute("download", this.id + ".json");
+            document.body.appendChild(downloadAnchorNode); // required for firefox
+            downloadAnchorNode.click();
+            downloadAnchorNode.remove();
         }
     }
 
@@ -3298,7 +3303,11 @@ class Population {
         for (let img of ind.genotype["images"]) {
             if (Math.random() < prob) {
                 img["scale"] = Math.random();
+            }
+            if (Math.random() < prob) {
                 img["x"] = Math.random();
+            }
+            if (Math.random() < prob) {
                 img["y"] = Math.random();
             }
         }
@@ -3469,7 +3478,7 @@ class Population {
     saveRaster = async (size = this.population.length) => {
         for (let i=0; i<size; i++) {
             const ind = this.population[i];
-            await save(ind.phenotype, `${this.id}-${this.generations}-${i}`);
+            await save(ind.phenotype, `${this.id}/${this.id}-${this.generations}-${i}`);
         }
     }
 

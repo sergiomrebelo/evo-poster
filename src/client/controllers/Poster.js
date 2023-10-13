@@ -58,7 +58,6 @@ class Poster {
 
         this.genotype = (genotype === null) ? this.#generateGenotype(params) : genotype;
 
-        console.log ("genotype", this.genotype);
 
         this.#showGrid = false;
         if (params !== null) {
