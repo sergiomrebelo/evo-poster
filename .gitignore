@@ -27,3 +27,4 @@ cypress/downloads/
 *.db
 
 res/experimental-01-00/
+res/misc-res
