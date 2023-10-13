@@ -26,4 +26,4 @@ src/public/bundle.js
 cypress/downloads/
 *.db
 
-res/experimental-01-00/
+res/experimental-01-00
