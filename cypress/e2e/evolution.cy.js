@@ -12,7 +12,7 @@ const TESTING_EXAMPLES = [
         book: `Journey to Portugal`
     },
     {
-        text: `Nothing Strengthens Authority¶So Much As Silence`,
+        text: `Nothing¶Strengthens Authority¶So Much¶As Silence`,
         author: `Leonardo da Vinci`,
         lang: `en`,
         book: `tbd`
@@ -161,7 +161,7 @@ const IMAGES_LOG = `END`;
 const ELITE = 1;
 
 const CURRENT_EVAL = 0;
-const CURRENT_TEXT = 2;
+const CURRENT_TEXT = 9;
 
 
 // check if system is evolving
@@ -184,6 +184,10 @@ describe(`testing no. ${CURRENT_TEXT}`, () => {
             });
         });
     }
+
+    afterEach(() => {
+        Cypress.config("firstRun", true);
+    });
 });
 
 
@@ -213,14 +217,22 @@ const evolve = (text, lang = "en", elite = 0, EVAL_SET = [0.5, 0.5]) => {
 
 const isEvolving = async (pop) => {
     return new Promise((resolve, reject) => {
-        checkingInterval = setInterval(() => {
-            if (!pop.evolving) {
-                clearInterval(checkingInterval);
-                resolve({
-                    type: 'success',
-                    nGen: pop.generations
-                })
-            }
-        }, 10000)
+        try {
+            checkingInterval = setInterval(() => {
+                if (!pop.evolving) {
+                    try {
+                        clearInterval(checkingInterval);
+                        resolve({
+                            type: 'success',
+                            nGen: pop.generations
+                        });
+                    } catch (err) {
+                        reject(`rejected inside=${err}`);
+                    }
+                }
+            }, 10000);
+        } catch (err) {
+            reject(`rejected outside=${err}`);
+        }
     });
 }

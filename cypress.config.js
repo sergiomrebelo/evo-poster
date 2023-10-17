@@ -7,4 +7,5 @@ export default defineConfig({
     },
   },
   reporter: 'reporters/custom.js',
+  numTestsKeptInMemory: 0,
 });
