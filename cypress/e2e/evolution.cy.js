@@ -1,7 +1,8 @@
 import 'cypress-wait-until';
 
 const TESTING_EXAMPLES = [
-    {text: `Never Mind¶The Bollocks,¶Here's the¶Sex Pistols`}
+    {text: `Never Mind¶The Bollocks,¶Here's the¶Sex Pistols`},
+    {text: `The children¶almost broken¶by the world¶become the adults¶most likely¶to change it`}
 ]
 
 // check if system is evolving

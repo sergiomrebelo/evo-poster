@@ -9,30 +9,6 @@ export class Params {
     ];
 
 
-    static availableTypefaces = [
-        'Amstelvar', 'Anybody', 'Barlow', 'Cabin', 'Emberly', 'Epilogue', 'IBMPlexSans', 'Inconsolata'
-    ]
-
-    static availableTypefacesInfo = {
-        'Amstelvar':{
-            leading: 1.05
-        }, 'Anybody':{
-            leading: 1.05
-        }, 'Barlow':{
-            leading: 1.05
-        }, 'Cabin':{
-            leading: 1.05
-        }, 'Emberly':{
-            leading: 1.05
-        }, 'Epilogue':{
-            leading: 1.05
-        }, 'IBMPlexSans':{
-            leading: 1.05
-        }, 'Inconsolata':{
-            leading: 1.05
-        }
-    }
-
     static visualisationGrid = {
         height: 423,
         width: 300,
@@ -43,10 +19,10 @@ export class Params {
     static imageMaxSize = 1024;
 
     static evolution = {
-        popSize: 20,
+        popSize: 50,
         noGen: 400,
-        crossoverProb: 0.75,
-        mutationProb: 0.30,
+        crossoverProb: 0.90,
+        mutationProb: 0.10,
         eliteSize: 1
     }
 

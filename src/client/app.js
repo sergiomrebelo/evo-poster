@@ -9,13 +9,13 @@ import {ResultsContainer} from "./components/ResultsContainer.js";
 import {ErrHandler} from "./components/ErrHandler.js";
 import {Interface} from "./components/Interface.js"
 import {Header} from "./components/Header.js";
-
 import Population from "./controllers/Population.js";
-
-import {info} from "../@evoposter/evaluator/src/index.mjs";
+import * as config from '../../evo-poster.config.js';
 
 import 'bootstrap/scss/bootstrap.scss';
 import './main.css';
+
+
 
 window.preload = () => {}
 
@@ -34,7 +34,6 @@ window.draw = () => {
         background(window.app.backgroundColor);
         window.app.population.draw();
         pop();
-        // console.log(`draw`);
     }
 
 }
@@ -50,6 +49,8 @@ window.keyPressed = () => {
     // }
 }
 
+
+
 export class App extends LitElement {
     static properties = {
         screen: 0,
@@ -62,10 +63,11 @@ export class App extends LitElement {
         this.results = null;
         this.screen = 0;
         this.evolving = false;
+        this.params = config.default;
 
         const fonts = this.#getAvailableTypefaces();
+
         // evolution controllers
-        //
         this.config = {
             evo: {
                 popSize: Params.evolution.popSize,
@@ -137,9 +139,13 @@ export class App extends LitElement {
         }
 
         for (let font of Array.from(document.fonts)) {
-            if (Params.availableTypefaces.includes(font.family)) {
+            if (Object.keys(this.params.typography).includes(font.family)) {
                 let stretch = font.stretch.replaceAll(`%`, ``);
-                let stretchValues = stretch.split(" ").map((x) => parseInt(x));
+                let stretchValues = [100, 100];
+                if (stretch !== `normal`) {
+                    stretchValues = stretch.split(" ").map((x) => parseInt(x));
+                }
+
                 if (fonts.stretch.min > stretchValues[0]) {
                     fonts.stretch.min = stretchValues[0]
                 }
@@ -157,7 +163,9 @@ export class App extends LitElement {
                 fonts.typefaces.push({
                     family: font.family,
                     weight: weightValues,
-                    stretch: stretchValues
+                    stretch: stretchValues,
+                    tags: this.params.typography[font.family]["tags"],
+                    leading: this.params.typography[font.family]["leading"]
                 });
             }
         }
@@ -214,8 +222,8 @@ export class App extends LitElement {
             if (this.config["sentences"] == null) {
                 this.config["sentences"] = this.results.sentences;
             }
-            this.population = new Population(this.config);
-            this.population.initialisation();
+            this.population = new Population(this.config, this.results);
+            // this.population.initialisation();
             this.initPopForm.pop = this.population;
             this.screen = 3;
             this.header.showControls();
