@@ -23,6 +23,13 @@ export const arrMin = (arr) => {
     return Math.min(...arr);
 }
 
+export const arrUnique = (arr) => {
+    return arr.filter((value, index, array) => array.indexOf(value) === index);
+}
+
+export const sumProduct = (arr, weights) => {
+    return arr.reduce((s, v, i) => s + v * weights[i], 0);
+}
 
 export const hexToRGB = (hex) => {
     if (hex["levels"]) {

@@ -13,23 +13,30 @@
  * RELATIVE mode is related to the composition height
  * FIXED height is related to the container's height
  *
- * Sérgio M. Rebelo
- * CDV lab. (CMS, CISUC, Portugal)
- * srebelo[at]dei.uc.pt
+ *
+ *
+ * Author: Sérgio M. Rebelo
+ * CMS, CISUC, Portugal
+ * Contact: srebelo[at]dei.uc.pt
+ *
+ * Author and Supervisor: JJ Merelo
+ * UGR + Raku
+ * Contact: jjmerelo[at]gmail.com
+ *
+ * License: MIT (see LICENSE.md)
  *
  * v1.0.0 April 2020
  * v2.0.0 November 2023
  */
 
 import {arrMean, arrSum} from "../utils.js";
+import {SEMANTICS_LAYOUT} from "../metrics.config.js";
 
+const AVAILABLE_MODES = SEMANTICS_LAYOUT["MODES"];
 
-let dist = null;
-
-export const compute = (textboxesHeights = [], dist, mode=`RELATIVE`, size = {height: 100, margin:[0,0,0,0]}) => {
-
+export const compute = (textboxesHeights = [], dist = null, mode=`RELATIVE`, size = {height: 100, margin:[0,0,0,0]}) => {
     // mode validation
-    if (mode !== `RELATIVE` && mode !== `FIXED`) mode = `RELATIVE`;
+    if (!AVAILABLE_MODES.includes(mode)) mode = `RELATIVE`;
 
     // define max height
     let height = 0;

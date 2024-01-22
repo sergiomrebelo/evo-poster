@@ -91,7 +91,7 @@ const TESTING_PARAMS = [
     }
 ]
 
-describe(`Testing Layout Semantics metric`, () => {
+describe(`Testing Semantics Layout metric`, () => {
     for (let i in TESTING_PARAMS) {
         let params = TESTING_PARAMS[i];
         test(`Test ${i}`, async () => {

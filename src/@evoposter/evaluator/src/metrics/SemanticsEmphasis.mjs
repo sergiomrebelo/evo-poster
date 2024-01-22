@@ -17,16 +17,24 @@
  *
  *
  *
- * Sérgio M. Rebelo
- * CDV lab. (CMS, CISUC, Portugal)
- * srebelo[at]dei.uc.pt
+ * Author: Sérgio M. Rebelo
+ * CMS, CISUC, Portugal
+ * Contact: srebelo[at]dei.uc.pt
+ *
+ * Author and Supervisor: JJ Merelo
+ * UGR + Raku
+ * Contact: jjmerelo[at]gmail.com
+ *
+ * License: MIT (see LICENSE.md)
  *
  * v1.0.0 November 2023
  */
 import {arrMax, arrMean, arrMin, arrSum, constraint, map} from "../utils.js";
+import {SEMANTICS_EMPHASIS} from "../metrics.config.js";
 
-let MIN_RANGE = 50;
-let THRESHOLD_VALID = 0.2;
+let MIN_RANGE = SEMANTICS_EMPHASIS["MIN_RANGE"];
+let THRESHOLD_VALID = SEMANTICS_EMPHASIS["THRESHOLD_VALID"];
+let AVAILABLE_MODES = SEMANTICS_EMPHASIS["MODES"];
 
 // by tradition, use more that a method to emphasize
 // the text is considered "typecrime".
@@ -36,9 +44,9 @@ export const compute = (textboxes, dist, noCurrentTypefaces = 1, allowMultiple =
     // if textboxes size is 1 ---> 1
     const perDist = dist.map((e) => e[3]);
 
-    const fontWeight = checkDifferenceVariableFeature(textboxes.map((b) => b["weight"]), perDist);
-    const fontStretch = checkDifferenceVariableFeature(textboxes.map((b) => b["font-stretch"]), perDist);
-    let typefaceDesign = noCurrentTypefaces > 1 ? (checkDifferenceUniqueFeatures(textboxes.map((b) => b["font-stretch"]), perDist)) : 0;
+    const fontWeight = 1-checkDifferenceVariableFeature(textboxes.map((b) => b["weight"]), perDist);
+    const fontStretch = 1-checkDifferenceVariableFeature(textboxes.map((b) => b["font-stretch"]), perDist);
+    let typefaceDesign = noCurrentTypefaces > 1 ? 1-(checkDifferenceUniqueFeatures(textboxes.map((b) => b["font-stretch"]), perDist)) : 1;
 
     // way of combine and only checks one
     let res = [fontWeight, fontStretch, typefaceDesign];
@@ -111,7 +119,7 @@ const checkDifferenceUniqueFeatures = (currentFeatures, dist) => {
 }
 
 const checkDifferenceVariableFeature = (currentFeatures, dist, mode = `DIF`) => {
-    if (mode !== `MIN` && mode !== `DIF`) {
+    if (!AVAILABLE_MODES.includes(mode)) {
         mode = `DIF`;
     }
     // max feature range
