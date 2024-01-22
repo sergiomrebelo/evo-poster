@@ -14,7 +14,8 @@ export const sumArr = (arr) => {
     return arr.reduce((partialSum, a) => partialSum + a, 0);
 }
 
-export const sus = (probs, max=1) => {
+
+export const stochasticUniversalSampling = (probs, max=1) => {
     const r = Math.random()*max;
     let c = 0;
     for (let i in probs) {
@@ -36,4 +37,8 @@ export const shuffleArr = (arr) => {
 
 export default () => {
     console.log (`default export utils`);
+}
+
+export const sumProduct = (arr, weights) => {
+    return arr.reduce((s, v, i) => s + v * weights[i], 0);
 }

@@ -23,3 +23,10 @@ src/public/bundle.js
 
 /coverage
 
+cypress/downloads/
+*.db
+
+/res/1-experiment-s-0
+/res/2-experiment-0-a
+/res/3-experiment-s-a
+/res/misc-res

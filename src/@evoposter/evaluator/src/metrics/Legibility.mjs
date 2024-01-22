@@ -7,9 +7,17 @@
  *
  * Expected return a value between 0 (good) and (1) bad
  *
- * Sérgio M. Rebelo
- * CDV lab. (CMS, CISUC, Portugal)
- * srebelo[at]dei.uc.pt
+ *
+ *
+ * Author: Sérgio M. Rebelo
+ * CMS, CISUC, Portugal
+ * Contact: srebelo[at]dei.uc.pt
+ *
+ * Author and Supervisor: JJ Merelo
+ * UGR + Raku
+ * Contact: jjmerelo[at]gmail.com
+ *
+ * License: MIT (see LICENSE.md)
  *
  * v1.0.0 August 2018 (as part of evoPoster)
  * v2.0.0 November 2020 (as part of evoPoster)
@@ -18,13 +26,17 @@
  */
 
 import {arrMean, map} from "../utils.js";
+import {LEGIBILITY} from "../metrics.config.js";
 
-const MAX_CONSTRAINT = 1;
-const WHITE_SPACE_FACTOR = 3;
+const MAX_CONSTRAINT = LEGIBILITY["MAX_CONSTRAINT"];
+const WHITE_SPACE_FACTOR = LEGIBILITY["WHITE_SPACE_FACTOR"];
+const DEFAULT_MAX_LIMIT_SCALE = LEGIBILITY["DEFAULT_MAX_LIMIT_SCALE"];
+const AVAILABLE_MODES = LEGIBILITY ["MODES"]
 
-const MODES = [`OVERSET`, `JUSTIFY`,`ATTEMPT_JUSTIFY`];
-
-export const compute = (sentencesLength = [], minSize, mode= 'OVERSET', maxLimitScale= 1) => {
+export const compute = (sentencesLength = [], minSize, mode= 'OVERSET', maxLimitScale= DEFAULT_MAX_LIMIT_SCALE) => {
+    if (!AVAILABLE_MODES.includes(mode)) {
+        mode = `OVERSET`;
+    }
     let results = [];
     let max = minSize * maxLimitScale;
     for (let sentence of sentencesLength) {

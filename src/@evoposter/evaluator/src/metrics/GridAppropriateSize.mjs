@@ -1,24 +1,30 @@
 /**
  * Grid Size Appropriateness
  *
- * Measure the appropriate of the used grid to the size of container
- * it is related to if the width and height of the grid is
- * in accordance with poster size
+     * Measure the appropriate of the used grid to the size of container
+     * it is related to if the width and height of the grid is
+     * in accordance with poster size
+     *
  *
- * Sérgio M. Rebelo
- * CDV lab. (CMS, CISUC, Portugal)
- * srebelo[at]dei.uc.pt
+ *
+ * Author: Sérgio M. Rebelo
+ * CMS, CISUC, Portugal
+ * Contact: srebelo[at]dei.uc.pt
+ *
+ * Author and Supervisor: JJ Merelo
+ * UGR + Raku
+ * Contact: jjmerelo[at]gmail.com
+ *
+ * License: MIT (see LICENSE.md)
  *
  * v1.0.0 November 2023
  */
 
-const DEBUG = true;
+import * as CONFIG from "../metrics.config.js";
 
-export const compute = (
-    containerWidth, containerHeight,
-    rows = [], columns = [],
-    margins = {left:0, top:0, right:0, bottom:0}
-) => {
+const DEBUG = CONFIG["default"]["DEBUG"];
+
+export const compute = (containerWidth, containerHeight, rows = [], columns = [], margins = {left:0, top:0, right:0, bottom:0}) => {
     let invalid = false;
     // debug
     let msg = "";

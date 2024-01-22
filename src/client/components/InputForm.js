@@ -1,6 +1,11 @@
 import {LitElement, html} from "lit";
-import {Params} from "../Params.js";
 import {Divider} from "./Divider.js";
+
+import * as config from "../../../evo-poster.config.js";
+
+const AVAILABLE_LANGUAGES = config["default"]["display"] !== undefined ? config["default"]["display"]["AVAILABLE_LANGUAGES"] : [`en`]
+const MAX_IMAGE_SIZE = config["default"]["display"] !== undefined ? config["default"]["display"]["MAX_IMAGE_SIZE"] : 1024;
+
 
 export class InputForm extends LitElement {
     static properties = {
@@ -81,14 +86,14 @@ export class InputForm extends LitElement {
         };
 
         for (let i = 0; i < files.length; i++) {
-            if (files[i].size/1024 < Params.imageMaxSize) {
+            if (files[i].size/1024 < MAX_IMAGE_SIZE) {
                 if (files[i].type.includes('image')) {
                     res.push(getBase64(files[i]));
                 } else {
                     err.push(`error loading the following image(s): ${files[i].name}.`);
                 }
             } else {
-                err.push(`${files[i].name} size bigger than ${Params.imageMaxSize} kb. (size: ${files[i].size})`);
+                err.push(`${files[i].name} size bigger than ${MAX_IMAGE_SIZE} kb. (size: ${files[i].size})`);
             }
         }
 
@@ -118,7 +123,7 @@ export class InputForm extends LitElement {
                             <div class="form-group mb-2 col-sm-3">
                                 <label for="formControlLang" class="col-sm-6 col-form-label-sm">Language</label>
                                 <select class="form-control custom-select mr-sm-2" id="formControlLang" type="text">
-                                    ${Params.availableLanguages.map((lang) => {
+                                    ${AVAILABLE_LANGUAGES.map((lang) => {
                                         let opt = html`
                                             <option value=${lang}>${lang}</option>`;
                                         if (lang === 'en') {
@@ -152,10 +157,10 @@ export class InputForm extends LitElement {
                                        checked="files[]" accept="image/jpeg, image/png, image/jpg" multiple>
                             </div>
                             ${Divider.get()}
-                            <div class="form-check form-check-inline mb-2" id="imagePlacementField">
+                            <div class="form-check form-check-inline mb-2 disabled disabled-inputs" id="imagePlacementField">
                                 <label for="form-check-label" class="col-form-label-sm" id="imagePlacementCheck">Image Random Placement</label>
                                 <input type="checkbox" value="1" @change="${this._toggleVisibility}"
-                                       class="form-check-input" id="imagePlacementCheck" data-related="imageAnchorField" checked>
+                                       class="form-check-input disabled readonly" id="imagePlacementCheck" data-related="imageAnchorField" checked readonly>
                             </div>
                             <div class="form-group mb-2 d-none col-sm-3" id="imageAnchorField">
                                 <label for="formControlImagePlaceholderDelimiter" class="col-form-label-sm" checked=${false}>Image
