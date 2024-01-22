@@ -1,3 +1,7 @@
+import * as config from "../../evo-poster.config.js";
+import {arrSum} from "@evoposter/evaluator/src/utils.js";
+const EVALUATION = config["default"]["evaluation"];
+
 const inputText = {
     "en": {
         divider: {
@@ -80,52 +84,63 @@ const inputText = {
                 evaluation: {
                     general: {
                         semantics: {
-                            init: 0.5,
-                            testing: 0.3
+                            init: EVALUATION.GLOBAL_WEIGHTS.SEMANTICS,
+                            testing: 0.3,
+                            final: 0.3488372093023256
                         },
                         aesthetics: {
-                            init: 0.5,
-                            testing: 0.7
+                            init: EVALUATION.GLOBAL_WEIGHTS.AESTHETICS,
+                            testing: 0.7,
+                            final: 0.6511627906976745
                         }
                     },
                     semantics: {
                         emphasis: {
-                            init: 0.5,
-                            testing: 0.3
+                            init: EVALUATION.SEMANTICS_WEIGHTS.EMPHASIS,
+                            testing: 0.3,
+                            final: 0.2777777777777778
                         },
                         layout: {
-                            init: 0.5,
-                            testing: 0.3
+                            init: EVALUATION.SEMANTICS_WEIGHTS.LAYOUT,
+                            testing: 0.3,
+                            final: 0.22222222222222224
                         },
                         visuals: {
-                            init: 0,
-                            testing: 1
+                            init: EVALUATION.SEMANTICS_WEIGHTS.VISUALS,
+                            testing: 1,
+                            final: 0.5
                         }
                     },
                     aesthetics: {
                         alignment: {
-                            init: 0.1,
-                            testing: 0.3
+                            init: EVALUATION.AESTHETICS_WEIGHTS.ALIGNMENT,
+                            testing: 0.3,
+                            final: 0.0775755068266446,
                         },
                         regularity: {
-                            init: 0.1,
-                            testing: 0.4
+                            init: EVALUATION.AESTHETICS_WEIGHTS.REGULARITY,
+                            testing: 0.4,
+                            final: 0.12412081092263139,
                         },
                         balance: {
-                            init: 0.2,
-                            testing: 0.5
+                            init: EVALUATION.AESTHETICS_WEIGHTS.BALANCE,
+                            testing: 0.5,
+                            final: 0.3108191973520894
                         },
                         whiteSpace: {
-                            init: 0.2,
-                            testing: 0.2
+                            init: EVALUATION.AESTHETICS_WEIGHTS.WHITE_BALANCE_FRACTION,
+                            testing: 0.2,
+                            final: 0.17097641704592476
                         },
                         justification: {
-                            init: 0.3,
-                            testing: 0.5
+                            init: EVALUATION.AESTHETICS_WEIGHTS.JUSTIFICATION,
+                            testing: 0.5,
+                            final: 0.1122258998758792
                         },
                         typographyParing: {
-                            init: 0.1,
-                            testing: 0.2
+                            init: EVALUATION.AESTHETICS_WEIGHTS.TYPEFACE_PARING,
+                            testing: 0.2,
+                            final: 0.2042821679768308
                         }
                     }
                 }
@@ -176,9 +191,9 @@ for (let lang of Object.keys(inputText)) {
             cy.get(`#size-x-input`).clear();
             cy.get(`#size-x-input`).type('{selectall}{backspace}'+inputText[lang]["divider"]["size"]["modifiedWidth"], {force: true}).blur();
             cy.get(`#size-x-input`).should('have.value', '1');
+            cy.wait(100);
             cy.get(`#size-y-input`).should('have.value', inputText[lang]["divider"]["size"]["modifiedHeight"]);
             cy.get('#size-mg-b-input').scrollIntoView();
-
             // verify the typefaces
             cy.get(`#typeface-badge-${inputText[lang]["divider"]["typography"]["testingTypeface"]}`).should('be.visible');
             cy.get(`#typeface-badge-${inputText[lang]["divider"]["typography"]["testingTypeface"]} > span`).click();
@@ -352,6 +367,7 @@ for (let lang of Object.keys(inputText)) {
             cy.window().then((w) => {
                 let valueInterface = w.app.config.size.height/w.app.config.size.width;
                 const configFile = parseFloat(inputText[lang]["divider"]["size"]["modifiedHeight"]);
+
                 expect(valueInterface).to.equal(configFile);
 
                 const typefaces = w.app.config.typography.typefaces.map(x => x.family);
@@ -402,6 +418,23 @@ for (let lang of Object.keys(inputText)) {
 
                 const mutateProb = w.app.config.evo.mutationProb;
                 expect(mutateProb).to.equal(inputText[lang]["divider"]["evo"]["mutate"]["testing"]);
+
+                expect(w.app.config.evaluation.weights[0]).to.equal(inputText[lang]["divider"]["evo"]["evaluation"]["general"]["semantics"]["final"]);
+                expect(w.app.config.evaluation.weights[1]).to.equal(inputText[lang]["divider"]["evo"]["evaluation"]["general"]["aesthetics"]["final"]);
+
+                expect(w.app.config.evaluation.semanticsWeights[0]).to.equal(inputText[lang]["divider"]["evo"]["evaluation"]["semantics"]["emphasis"]["final"]);
+                expect(w.app.config.evaluation.semanticsWeights[1]).to.equal(inputText[lang]["divider"]["evo"]["evaluation"]["semantics"]["layout"]["final"]);
+                expect(w.app.config.evaluation.semanticsWeights[2]).to.equal(inputText[lang]["divider"]["evo"]["evaluation"]["semantics"]["visuals"]["final"]);
+                expect(w.app.config.evaluation.aestheticsWeights[0]).to.equal(inputText[lang]["divider"]["evo"]["evaluation"]["aesthetics"]["alignment"]["final"]);
+                expect(w.app.config.evaluation.aestheticsWeights[1]).to.equal(inputText[lang]["divider"]["evo"]["evaluation"]["aesthetics"]["regularity"]["final"]);
+                expect(w.app.config.evaluation.aestheticsWeights[2]).to.equal(inputText[lang]["divider"]["evo"]["evaluation"]["aesthetics"]["balance"]["final"]);
+                expect(w.app.config.evaluation.aestheticsWeights[3]).to.equal(inputText[lang]["divider"]["evo"]["evaluation"]["aesthetics"]["whiteSpace"]["final"]);
+                expect(w.app.config.evaluation.aestheticsWeights[4]).to.equal(inputText[lang]["divider"]["evo"]["evaluation"]["aesthetics"]["justification"]["final"]);
+                expect(w.app.config.evaluation.aestheticsWeights[5]).to.equal(inputText[lang]["divider"]["evo"]["evaluation"]["aesthetics"]["typographyParing"]["final"]);
+
+                expect(arrSum(w.app.config.evaluation.aestheticsWeights)).to.equal(1);
+                expect(arrSum(w.app.config.evaluation.semanticsWeights)).to.equal(1);
+                expect(arrSum(w.app.config.evaluation.weights)).to.equal(1);
 
                 cy.end();
             });

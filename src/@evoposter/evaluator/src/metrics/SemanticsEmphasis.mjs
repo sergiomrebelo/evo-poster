@@ -17,9 +17,15 @@
  *
  *
  *
- * Sérgio M. Rebelo
- * CDV lab. (CMS, CISUC, Portugal)
- * srebelo[at]dei.uc.pt
+ * Author: Sérgio M. Rebelo
+ * CMS, CISUC, Portugal
+ * Contact: srebelo[at]dei.uc.pt
+ *
+ * Author and Supervisor: JJ Merelo
+ * UGR + Raku
+ * Contact: jjmerelo[at]gmail.com
+ *
+ * License: MIT (see LICENSE.md)
  *
  * v1.0.0 November 2023
  */
@@ -38,9 +44,9 @@ export const compute = (textboxes, dist, noCurrentTypefaces = 1, allowMultiple =
     // if textboxes size is 1 ---> 1
     const perDist = dist.map((e) => e[3]);
 
-    const fontWeight = checkDifferenceVariableFeature(textboxes.map((b) => b["weight"]), perDist);
-    const fontStretch = checkDifferenceVariableFeature(textboxes.map((b) => b["font-stretch"]), perDist);
-    let typefaceDesign = noCurrentTypefaces > 1 ? (checkDifferenceUniqueFeatures(textboxes.map((b) => b["font-stretch"]), perDist)) : 0;
+    const fontWeight = 1-checkDifferenceVariableFeature(textboxes.map((b) => b["weight"]), perDist);
+    const fontStretch = 1-checkDifferenceVariableFeature(textboxes.map((b) => b["font-stretch"]), perDist);
+    let typefaceDesign = noCurrentTypefaces > 1 ? 1-(checkDifferenceUniqueFeatures(textboxes.map((b) => b["font-stretch"]), perDist)) : 1;
 
     // way of combine and only checks one
     let res = [fontWeight, fontStretch, typefaceDesign];

@@ -1,53 +1,26 @@
 import {LitElement, html, css, nothing} from "lit";
-
-import 'bootstrap/dist/js/bootstrap';
-import 'p5';
-
-import {Params} from "./Params.js";
+import * as config from '../../evo-poster.config.js';
 import {InputForm} from "./components/InputForm.js";
 import {ResultsContainer} from "./components/ResultsContainer.js";
 import {ErrHandler} from "./components/ErrHandler.js";
 import {Interface} from "./components/Interface.js"
 import {Header} from "./components/Header.js";
 import Population from "./controllers/Population.js";
-import * as config from '../../evo-poster.config.js';
+import {sumArr} from "./utils.js";
 
-import 'bootstrap/scss/bootstrap.scss';
-import './main.css';
-import {arrSum} from "@evoposter/evaluator/src/utils.js";
-
-
-window.preload = () => {}
-
-window.setup = () => {
-    window.app = document.createElement(`app-evo`); // create app
-    document.querySelector(`main`).appendChild(app);
-    noCanvas();
-    noLoop();
-    frameRate(25);
-}
-
-window.draw = () => {
-    if (window.app.screen < 3) return null;
-    if (window.app.population.updated) {
-        push();
-        background(window.app.backgroundColor);
-        window.app.population.draw();
-        pop();
-    }
-
-}
-
-window.windowResized = () => {
-    if (window.app.screen < 2) return null;
-}
-
-window.keyPressed = () => {
-    if (window.app.screen < 2) return null;
-    // if (key.toUpperCase() === 'S') {
-        // window.app.save();
-    // }
-}
+const VISIBLE_POSTERS =  config["default"]["display"] !== undefined ? config["default"]["display"]["VISIBLE_POSTERS"] : 10;
+const MARGIN_Y =  config["default"]["display"] !== undefined ? config["default"]["display"]["MARGIN_Y"] : 10;
+const POP_SIZE = config["default"]["evo"]["POP_SIZE"];
+const SIZE = config["default"]["size"];
+const BACKGROUND = config["default"]["color"]["BACKGROUND"];
+const TYPOGRAPHY = config["default"]["typography"];
+const TYPEFACES = config["default"]["typefaces"];
+const EVAL_WEIGHTS = [config["default"]["evaluation"]["GLOBAL_WEIGHTS"]["SEMANTICS"], config["default"]["evaluation"]["GLOBAL_WEIGHTS"]["AESTHETICS"]];
+const SEMANTICS_WEIGHTS = [config["default"]["evaluation"]["SEMANTICS_WEIGHTS"]["EMPHASIS"],
+    config["default"]["evaluation"]["SEMANTICS_WEIGHTS"]["LAYOUT"], config["default"]["evaluation"]["SEMANTICS_WEIGHTS"]["VISUALS"]];
+const AESTHETICS_WEIGHTS = [config["default"]["evaluation"]["AESTHETICS_WEIGHTS"]["ALIGNMENT"], config["default"]["evaluation"]["AESTHETICS_WEIGHTS"]["REGULARITY"],
+    config["default"]["evaluation"]["AESTHETICS_WEIGHTS"]["JUSTIFICATION"], config["default"]["evaluation"]["AESTHETICS_WEIGHTS"]["TYPEFACE_PARING"],
+    config["default"]["evaluation"]["AESTHETICS_WEIGHTS"]["WHITE_BALANCE_FRACTION"], config["default"]["evaluation"]["AESTHETICS_WEIGHTS"]["BALANCE"]]
 
 
 
@@ -63,52 +36,30 @@ export class App extends LitElement {
         this.results = null;
         this.screen = 0;
         this.evolving = false;
-        this.params = config.default;
 
         const fonts = this.#getAvailableTypefaces();
-
-
-        let evaluationWeights = [
-            config["default"]["evaluation"]["GLOBAL_WEIGHTS"]["SEMANTICS"],
-            config["default"]["evaluation"]["GLOBAL_WEIGHTS"]["AESTHETICS"]
-        ];
-
-        let semanticsWeights = [
-            config["default"]["evaluation"]["SEMANTICS_WEIGHTS"]["EMPHASIS"],
-            config["default"]["evaluation"]["SEMANTICS_WEIGHTS"]["LAYOUT"],
-            config["default"]["evaluation"]["SEMANTICS_WEIGHTS"]["VISUALS"]
-        ];
-
-        let aestheticsWeights = [
-            config["default"]["evaluation"]["AESTHETICS_WEIGHTS"]["ALIGNMENT"],
-            config["default"]["evaluation"]["AESTHETICS_WEIGHTS"]["REGULARITY"],
-            config["default"]["evaluation"]["AESTHETICS_WEIGHTS"]["JUSTIFICATION"],
-            config["default"]["evaluation"]["AESTHETICS_WEIGHTS"]["TYPEFACE_PARING"],
-            config["default"]["evaluation"]["AESTHETICS_WEIGHTS"]["WHITE_BALANCE_FRACTION"],
-            config["default"]["evaluation"]["AESTHETICS_WEIGHTS"]["BALANCE"]
-        ]
 
         // evolution controllers
         this.config = {
             evo: {
-                popSize: Params.evolution.popSize,
-                noGen: Params.evolution.noGen,
-                crossoverProb: Params.evolution.crossoverProb,
-                mutationProb: Params.evolution.mutationProb,
-                eliteSize: Params.evolution.eliteSize,
+                popSize: POP_SIZE,
+                noGen: config["default"]["evo"]["NO_GEN"],
+                crossoverProb: config["default"]["evo"]["CROSSOVER_PROB"],
+                mutationProb: config["default"]["evo"]["MUTATION_PROB"],
+                eliteSize: config["default"]["evo"]["ELITE_SIZE"]
             },
             evaluation: {
-                weights: evaluationWeights.map((x) => x/arrSum(evaluationWeights)),
-                aestheticsWeights: aestheticsWeights.map ((x) => x/arrSum(aestheticsWeights)),
-                semanticsWeights: semanticsWeights.map((x) => x/arrSum(semanticsWeights)),
+                weights: EVAL_WEIGHTS.map((x) => x/sumArr(EVAL_WEIGHTS)),
+                aestheticsWeights: AESTHETICS_WEIGHTS.map ((x) => x/sumArr(AESTHETICS_WEIGHTS)),
+                semanticsWeights: SEMANTICS_WEIGHTS.map((x) => x/sumArr(SEMANTICS_WEIGHTS)),
                 modes: {
                     semanticsVisuals: config["default"]["evaluation"]["MODES"]["SEMANTICS_VISUALS"]
                 }
             },
             size: {
-                width: Params.visualisationGrid.width,
-                height: Params.visualisationGrid.height,
-                margin: Params.visualisationGrid.posterMargins
+                width: SIZE.WIDTH,
+                height: SIZE.HEIGHT,
+                margin: SIZE.MARGINS
             },
             images: [],
             sentences: null,
@@ -116,8 +67,8 @@ export class App extends LitElement {
                 style: 0,
                 color: {
                     random: true,
-                    valueA: Params.background.defaultColors[0],
-                    valueB: Params.background.defaultColors[1]
+                    valueA: BACKGROUND["DEFAULT_COLORS"][0],
+                    valueB: BACKGROUND["DEFAULT_COLORS"][1],
                 },
                 lock: [false, false]
             },
@@ -125,18 +76,21 @@ export class App extends LitElement {
                 verticalAlignment: 0,
                 color:  {
                     random: true,
-                    value: Params.typography.defaultColor,
+                    value: TYPOGRAPHY["DEFAULT_COLOR"],
                 },
                 textAlignment: 0,
                 typefaces: fonts.typefaces,
                 weight: fonts.weight,
                 stretch: fonts.stretch,
                 uppercase: false,
-                texboxAlignment: 0,
                 lock: [false, false, false, false, false, false, false, false]
             },
             display: {
                 grid: config["default"]["display"]["GRID"] !== undefined ? config["default"]["display"]["GRID"] : true
+            },
+            log: {
+                save: config["default"]["log"] !== undefined ? config["default"]["log"]["SAVE_LOG"] : false,
+                saveImages: config["default"]["log"] !== undefined ? config["default"]["log"]["SAVE_IMAGES"] : `NO`
             }
         }
 
@@ -169,7 +123,7 @@ export class App extends LitElement {
         }
 
         for (let font of Array.from(document.fonts)) {
-            if (Object.keys(this.params.typography).includes(font.family)) {
+            if (Object.keys(TYPEFACES).includes(font.family)) {
                 let stretch = font.stretch.replaceAll(`%`, ``);
                 let stretchValues = [100, 100];
                 if (stretch !== `normal`) {
@@ -194,9 +148,9 @@ export class App extends LitElement {
                     family: font.family,
                     weight: weightValues,
                     stretch: stretchValues,
-                    tags: this.params.typography[font.family]["tags"],
-                    category: this.params.typography[font.family]["category"],
-                    leading: this.params.typography[font.family]["leading"]
+                    tags: TYPEFACES[font.family]["tags"],
+                    category: TYPEFACES[font.family]["category"],
+                    leading: TYPEFACES[font.family]["leading"]
                 });
             }
         }
@@ -265,10 +219,10 @@ export class App extends LitElement {
 
     #initCanvas = () => {
         // calculate the height of canvas
-        let numberOfPosters = Params.visiblePosters > Params["evolution"]["popSize"] ? Params["evolution"]["popSize"] : Params.visiblePosters;
+        let numberOfPosters = VISIBLE_POSTERS > POP_SIZE ? POP_SIZE : VISIBLE_POSTERS;
         let h = Math.ceil(numberOfPosters / Math.floor(windowWidth/this.config.size.width));
-        h *= (this.config.size.height + (Params.visualisationGrid.marginY*2));
-        createCanvas(windowWidth, h); //WEBGL
+        h *= this.config.size.height + MARGIN_Y * 2;
+        createCanvas(windowWidth, h); // WEBGL
         loop();
     }
 

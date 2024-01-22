@@ -1,14 +1,15 @@
-import {Params} from "../Params.js";
 import Poster, {Grid} from "./Poster.js";
 import {contrastChecker, randomScheme} from "./ColorGenerator.js";
-import {shuffleArr, sumArr, sus, swap} from "../utils.js";
+import {shuffleArr, sumArr, stochasticUniversalSampling, swap} from "../utils.js";
 
 import * as config from './../../../evo-poster.config.js';
 
-
-const SIZE_MUTATION_ADJUST = 5;
-const TOURNAMENT_SIZE = 10;
-const MAX_COLOR_SCHEME_ATTEMPT = config["default"]["COLOR"] !== undefined ? config["default"]["COLOR"]["MAX_COLOR_SCHEME_ATTEMPT"] : 200;
+const SIZE_MUTATION_ADJUST = config["default"]["evo"] !== undefined ? config["default"]["evo"]["SIZE_MUTATION_ADJUST"] : 5;
+const TOURNAMENT_SIZE = config["default"]["evo"] !== undefined ? config["default"]["evo"]["TOURNAMENT_SIZE"] : 10;
+const MAX_COLOR_SCHEME_ATTEMPT = config["default"]["color"] !== undefined ? config["default"]["color"]["MAX_COLOR_SCHEME_ATTEMPT"] : 200;
+const VISIBLE_POSTERS = config["default"]["display"] !== undefined ? config["default"]["display"]["VISIBLE_POSTERS"] : 10;
+const MARGIN_Y = config["default"]["display"] !== undefined ? config["default"]["display"]["MARGIN_Y"] : 10;
+const WIDTH = config["default"]["size"] !== undefined ?  config["default"]["size"]["WIDTH"] : 100;
 
 export class Population {
     #typefaces;
@@ -18,6 +19,7 @@ export class Population {
         this.params = params;
         this.population = [];
         this.generations = 0;
+        this.id = Date.now();
         this.ready = false;
         this.evolving = false;
         this.pause = false;
@@ -85,7 +87,7 @@ export class Population {
             if (Math.random() <= this.params["evo"]["crossoverProb"]) {
                 const parents = this.#rankingTournament(rank, TOURNAMENT_SIZE, 2);
                 // crossover method
-                const child = await this.uniformCrossover(this.population[parents[0]], this.population[parents[1]]);
+                const child = this.uniformCrossover(this.population[parents[0]], this.population[parents[1]]);
                 offspring.push(child);
             } else {
                 const ind = this.#rankingTournament(rank, TOURNAMENT_SIZE, 1);
@@ -113,7 +115,12 @@ export class Population {
         const genData = [];
         for (let ind of this.population) {
             genData.push({
-                genotype: ind.genotype,
+                genotype: {
+                    background: ind["genotype"]["background"],
+                    size: ind["genotype"]["size"],
+                    textboxes: ind["genotype"]["textboxes"],
+                    typography: ind["genotype"]["typography"]
+                },
                 fitness: ind.fitness,
                 constraint: ind.constraint,
                 metrics: ind.metrics
@@ -128,15 +135,57 @@ export class Population {
         this.updated = true;
 
         if(this.generations < this.params["evo"]["noGen"] && !this.pause) {
+            let ms = 100;
+            if (this.params["log"]["saveImages"] === `GENERATION` &&  this.params["log"]["save"]) {
+                this.saveRaster(this.population.length);
+                ms = 2000;
+            } else if (this.params["log"]["saveImages"] === `BEST-GENERATION` && this.params["log"]["save"]) {
+                this.saveRaster(1);
+            }
             // need to possible to visualise the posters evolving
             setTimeout(() => {
                 this.evolve();
-            }, 100);
+            }, ms);
         } else {
             this.evolving = false;
-            console.group (`stats`);
-            console.log (this.log);
-            console.groupEnd();
+            if (!this.pause && this.params["log"]["save"]) {
+                if (this.params["log"]["saveImages"] === `END`) {
+                    try {
+                        this.saveRaster(this.population.length);
+                    } catch (e) {
+                        console.error(e);
+                    }
+                }
+                await fetch(`/insert`, {
+                    method: "POST",
+                    mode: "cors",
+                    cache: "no-cache",
+                    credentials: "same-origin",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    redirect: "follow",
+                    referrerPolicy: "no-referrer",
+                    body: JSON.stringify(this.log),
+                }).then((data) => {
+                    console.groupCollapsed (`stats ${this.id} saved to file`);
+                    console.log (this.log);
+                    console.groupEnd();
+                }).catch((err) => console.error(err));
+            } else {
+                console.groupCollapsed (`stats ${this.id} not saved to file`);
+               console.log (this.log);
+               console.groupEnd()
+            }
+
+            // download anyway the results
+            let dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(this.log));
+            let downloadAnchorNode = document.createElement('a');
+            downloadAnchorNode.setAttribute("href",     dataStr);
+            downloadAnchorNode.setAttribute("download", this.id + ".json");
+            document.body.appendChild(downloadAnchorNode); // required for firefox
+            downloadAnchorNode.click();
+            downloadAnchorNode.remove();
         }
     }
 
@@ -300,7 +349,11 @@ export class Population {
         for (let img of ind.genotype["images"]) {
             if (Math.random() < prob) {
                 img["scale"] = Math.random();
+            }
+            if (Math.random() < prob) {
                 img["x"] = Math.random();
+            }
+            if (Math.random() < prob) {
                 img["y"] = Math.random();
             }
         }
@@ -387,8 +440,7 @@ export class Population {
         probabilities = probabilities.map((p) => p / probabilitiesSum);
         probabilities = shuffleArr(probabilities);
         for (let j = 0; j < parentSize; j++) {
-            let ix = sus(probabilities);
-            // sus
+            let ix = stochasticUniversalSampling(probabilities);
             parents.push(parseInt(ix));
         }
         return parents;
@@ -425,7 +477,7 @@ export class Population {
             this.ready = typefacesLoaded;
         } */
 
-        const n = this.population.length < Params.visiblePosters ? this.population.length : Params.visiblePosters;
+        const n = this.population.length < VISIBLE_POSTERS ? this.population.length : VISIBLE_POSTERS;
         let posX = 0, posY = 0;
         for (let i=0; i<this.population.length; i++) {
             const ind = this.population[i];
@@ -443,8 +495,8 @@ export class Population {
             if (i < n) {
                 // get phenotype
                 let pg = ind.phenotype;
-                const sideX = width / Math.floor(width / Params.visualisationGrid.width);
-                const sideY = ind.genotype.grid.size.height + Params.visualisationGrid.marginY;
+                const sideX = width / Math.floor(width / WIDTH);
+                const sideY = ind.genotype.grid.size.height + MARGIN_Y;
                 const x = posX * sideX + sideX / 2;
                 const y = posY * sideY + sideY / 2;
 
@@ -460,7 +512,7 @@ export class Population {
                 // pg.remove();
 
                 posX += 1;
-                if (posX % Math.floor(width / Params.visualisationGrid.width) === 0) { // (Params.visualisationGrid.cols-1)
+                if (posX % Math.floor(width / WIDTH) === 0) {
                     posX = 0;
                     posY += 1;
                 }
@@ -469,10 +521,10 @@ export class Population {
 
     }
 
-    saveRaster = () => {
-        for (let i in this.population) {
+    saveRaster = async (size = this.population.length) => {
+        for (let i=0; i<size; i++) {
             const ind = this.population[i];
-            save(ind.phenotype, `${Date.now()}-${this.generations}-${i}`);
+            await save(ind.phenotype, `${this.id}/${this.id}-${this.generations}-${i}`);
         }
     }
 

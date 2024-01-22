@@ -5,7 +5,7 @@ export default {
     plugins: [terser()],
     output: [
         {
-            file: `lib/evaluator.min.js`,
+            file: `dist/evaluator.min.js`,
             format: 'es',
             sourcemap: true
         },

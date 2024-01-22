@@ -10,9 +10,17 @@
  *
  * As of now, the function exclusively considers the predominant emotions from ML analysis.
  *
+ *
+ *
  * Author: Sérgio M. Rebelo
- * CDV lab. (CMS, CISUC, Portugal)
+ * CMS, CISUC, Portugal
  * Contact: srebelo[at]dei.uc.pt
+ *
+ * Author and Supervisor: JJ Merelo
+ * UGR + Raku
+ * Contact: jjmerelo[at]gmail.com
+ *
+ * License: MIT (see LICENSE.md)
  *
  * Version: 1.0.0 (November 2023)
  */

@@ -1,13 +1,13 @@
-import * as evaluator from '@evoposter/evaluator/lib/evaluator.min.js';
+import * as evaluator from '@evoposter/evaluator/dist/evaluator.min.js';
+import * as config from './../../../evo-poster.config.js';
+
 import backgroundStyles from "./BackgroundStyles.js";
 import {randomScheme, contrastChecker} from "./ColorGenerator.js";
-import {sumProduct} from "../utils.js";
+import {sumArr, sumProduct} from "../utils.js";
 
-import {Params} from "../Params.js";
-import * as config from './../../../evo-poster.config.js';
-import {arrSum} from "@evoposter/evaluator/src/utils.js";
-
-const MAX_COLOR_SCHEME_ATTEMPT = config["default"]["COLOR"] !== undefined ? config["default"]["COLOR"]["MAX_COLOR_SCHEME_ATTEMPT"] : 200;
+const MAX_COLOR_SCHEME_ATTEMPT = config["default"]["color"] !== undefined ? config["default"]["color"]["MAX_COLOR_SCHEME_ATTEMPT"] : 200;
+const BACKGROUND = config["default"]["color"]["BACKGROUND"];
+const TYPOGRAPHY = config["default"]["typography"];
 
 class Poster {
     #showGrid = false;
@@ -18,7 +18,7 @@ class Poster {
         this.generation = generation;
         this.ready = false;
         // ensure we use a deep copy of params
-        // this.params = JSON.parse(JSON.stringif(pyarams));
+        // this.params = JSON.parse(JSON.stringify(params));
         this.params = params;
 
         this.fitness = 1;
@@ -53,10 +53,11 @@ class Poster {
         this.sentencesLength = [];
 
         const h = (genotype === null) ? params["size"]["height"] : genotype["size"]["height"];
-        this.maxFontSize = Params.typography.maxSize * h;
-        this.minFontSize = Params.typography.minSize * h;
+        this.maxFontSize = TYPOGRAPHY["SIZE"]["MAX"] * h;
+        this.minFontSize = TYPOGRAPHY["SIZE"]["MIN"] * h;
 
         this.genotype = (genotype === null) ? this.#generateGenotype(params) : genotype;
+
 
         this.#showGrid = false;
         if (params !== null) {
@@ -133,8 +134,9 @@ class Poster {
         const textboxes = [];
 
         const alignment = params.typography.verticalAlignment === 0 ?
-            Math.round(Math.random() * (Params.textAlignmentOptions.length-2) + 1) :
+            Math.round(Math.random() * (TYPOGRAPHY["TEXT_ALIGNMENT"]["GLOBAL"].length - 2) + 1) :
             params.typography.verticalAlignment;
+
 
         for (let i in params["sentences"]) {
             const sentence = params["sentences"][i]
@@ -156,15 +158,15 @@ class Poster {
             // define initial size
             const leading = this.params.typography.typefaces[selectedTypeface]["leading"];
             let size = Math.round(grid.rows.l[0]) / leading;
-            size += Math.round(-(size*Params.typography.range)+(Math.random()*(size*Params.typography.range)));
+            size += Math.round(-(size * TYPOGRAPHY["RANGE"])+(Math.random()*(size * TYPOGRAPHY["RANGE"])));
             size = Math.max(
-                Math.round(params.size.height * Params.typography.minSize),
-                Math.min(Math.round(params.size.height * Params.typography.maxSize), size)
+                Math.round(params.size.height * TYPOGRAPHY["SIZE"]["MIN"]),
+                Math.min(Math.round(params.size.height *  TYPOGRAPHY["SIZE"]["MAX"]), size)
             );
             grid.defineRow(i, size * leading, alignment);
 
             const alignmentLine = params.typography.textAlignment === 0 ?
-                Math.round(Math.random() * (Params.textAlignmentTbOptions.length-2) + 1) :
+                Math.round(Math.random() * (TYPOGRAPHY["TEXT_ALIGNMENT"]["TEXTBOXES"].length-2) + 1) :
                 params.typography.textAlignment;
 
             textboxes.push({
@@ -205,7 +207,7 @@ class Poster {
                 margin: params.size.margin,
             },
             background: {
-                style: params.background.style === 0 ? Math.round(1+Math.random()*(Params.background.availableStyles.length-2)) : params.background.style,
+                style: params.background.style === 0 ? Math.round(1+Math.random()*(BACKGROUND["AVAILABLE_STYLES"].length-2)) : params.background.style,
                 colors: [
                     params.background.color.random ? colorScheme.colorA : color(params.background.color.valueA),
                     params.background.color.random ? colorScheme.colorB : color(params.background.color.valueB)
@@ -257,7 +259,7 @@ class Poster {
         const noCurrentTypefaces = this.params["typography"]["typefaces"].length;
 
         // restrict the weight array values to sum up to a total of 1 (100%).
-        let weightSum = arrSum(this.params["evaluation"]["weights"]);
+        let weightSum = sumArr(this.params["evaluation"]["weights"]);
         if (weightSum !== 1) {
             this.params["evaluation"]["weights"] = this.params["evaluation"]["weights"].map(x => x/weightSum);
         }
@@ -271,13 +273,14 @@ class Poster {
 
         if (weights[0] > 0) {
             // restrict the weight array values to sum up to a total of 1 (100%).
-            let semanticsWeightSum = arrSum(this.params["evaluation"]["semanticsWeights"]);
+            let semanticsWeightSum = sumArr(this.params["evaluation"]["semanticsWeights"]);
             if (semanticsWeightSum !== 1) {
                 this.params["evaluation"]["semanticsWeights"] = this.params["evaluation"]["semanticsWeights"].map(x => x/semanticsWeightSum);
             }
             const semanticsWeights = this.params["evaluation"]["semanticsWeights"];
             const emphasis = (semanticsWeights[0] > 0) ? evaluator.semanticsEmphasis(this.genotype["textboxes"], dist, noCurrentTypefaces) : 0;
-            const layoutMode = this.params["evaluation"]["modes"]["semanticsVisuals"] !== undefined ? this.params["evaluation"]["modes"]["semanticsVisuals"] : `FIXED`;
+            let layoutMode = this.params["evaluation"]["modes"]["semanticsVisuals"] !== undefined ? this.params["evaluation"]["modes"]["semanticsVisuals"] : `FIXED`;
+            console.log(`layoutMode=`, layoutMode);
             const layout = (semanticsWeights[1] > 0) ? evaluator.semanticsLayout(this.genotype["grid"]["rows"]["l"], dist, layoutMode, this.genotype["size"]) : 0;
             const visuals = (semanticsWeights[2] > 0) ? await evaluator.semanticsVisuals(emotionalData, this.genotype["textboxes"], this.genotype.background.colors, this.params.typography.typefaces) : 0;
             semantics = sumProduct( [emphasis, layout, visuals], semanticsWeights);
@@ -292,7 +295,7 @@ class Poster {
 
         if (weights[1] > 0) {
             // restrict the weight array values to sum up to a total of 1 (100%).
-            let aestheticsWeightsSum = arrSum(this.params["evaluation"]["aestheticsWeights"]);
+            let aestheticsWeightsSum = sumArr(this.params["evaluation"]["aestheticsWeights"]);
             if (aestheticsWeightsSum !== 1) {
                 this.params["evaluation"]["aestheticsWeights"] = this.params["evaluation"]["aestheticsWeights"].map(x => x/aestheticsWeightsSum);
             }
@@ -534,7 +537,7 @@ export class Grid {
         this.#defHorizontal();
     }
 
-    update = (rows = null, cols = null) => {
+    update = (rows = null) => {
         if ((rows !== null) && (rows !== this.v)) {
             console.log(`grid updated from ${this.v} to ${rows}`);
         }
@@ -547,7 +550,7 @@ export class Grid {
         let dif = this.rows.l[id]-init;
         // center: update the two margins
         dif = (align === 2) ? dif/2 : dif;
-        const percent = (this.marginsPos.bottom - dif) / this.size.height;
+        // const percent = (this.marginsPos.bottom - dif) / this.size.height;
         if (align <= 2) {
             // top and center
             this.size.margin[3] = (this.marginsPos.bottom - dif) / this.size.height;
@@ -695,8 +698,7 @@ export class Grid {
 
     getAvailableWidth = (margins = true) => {
         if (margins) {
-            let availableWidth = this.size.width - (this.size.width * this.size.margin[0]) - (this.size.width * this.size.margin[2]);
-            return availableWidth;
+            return this.size.width - (this.size.width * this.size.margin[0]) - (this.size.width * this.size.margin[2]);
         } else {
             return this.size.width;
         }

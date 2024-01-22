@@ -1,13 +1,20 @@
 /**
  * Visual Balance metric
  *
- * Estimate the visual balance (centred) of the composition.
+ * Estimate the visual balance of the composition.
  * Based on Harrington et al. (2004)
  *
  *
+ *
  * Author: Sérgio M. Rebelo
- * CDV lab. (CMS, CISUC, Portugal)
+ * CMS, CISUC, Portugal
  * Contact: srebelo[at]dei.uc.pt
+ *
+ * Author and Supervisor: JJ Merelo
+ * UGR + Raku
+ * Contact: jjmerelo[at]gmail.com
+ *
+ * License: MIT (see LICENSE.md)
  *
  * Version 1.0.0 (March 2020)
  * Version: 1.5.0 (November 2023)
