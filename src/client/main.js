@@ -17,6 +17,7 @@ window.setup = () => {
 }
 
 window.draw = () => {
+    console.log("screen", window.app.screen);
     if (window.app.screen < 3) return null;
     if (window.app.population.updated) {
         push();
@@ -29,4 +30,10 @@ window.draw = () => {
 
 window.windowResized = () => {
     if (window.app.screen < 2) return null;
+}
+
+window.keyPressed = () => {
+    if (key === 's' || key === 'S') {
+        window.app.population.saveRaster();
+    }
 }

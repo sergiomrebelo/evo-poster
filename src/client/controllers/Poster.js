@@ -279,7 +279,8 @@ class Poster {
             }
             const semanticsWeights = this.params["evaluation"]["semanticsWeights"];
             const emphasis = (semanticsWeights[0] > 0) ? evaluator.semanticsEmphasis(this.genotype["textboxes"], dist, noCurrentTypefaces) : 0;
-            const layoutMode = this.params["evaluation"]["modes"]["semanticsVisuals"] !== undefined ? this.params["evaluation"]["modes"]["semanticsVisuals"] : `FIXED`;
+            let layoutMode = this.params["evaluation"]["modes"]["semanticsVisuals"] !== undefined ? this.params["evaluation"]["modes"]["semanticsVisuals"] : `FIXED`;
+            console.log(`layoutMode=`, layoutMode);
             const layout = (semanticsWeights[1] > 0) ? evaluator.semanticsLayout(this.genotype["grid"]["rows"]["l"], dist, layoutMode, this.genotype["size"]) : 0;
             const visuals = (semanticsWeights[2] > 0) ? await evaluator.semanticsVisuals(emotionalData, this.genotype["textboxes"], this.genotype.background.colors, this.params.typography.typefaces) : 0;
             semantics = sumProduct( [emphasis, layout, visuals], semanticsWeights);
