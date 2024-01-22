@@ -104,7 +104,7 @@ export const EVO = {
     CROSSOVER_PROB: 0.9,
     MUTATION_PROB: 0.1,
     ELITE_SIZE: 1,
-    SIZE_MUTATION_ADJUST: 5,
+    SIZE_MUTATION_ADJUST: 1,
     TOURNAMENT_SIZE: 10
 }
 export const IBM_AVAILABLE_LANGUAGES = [
@@ -115,8 +115,8 @@ export const IBM_AVAILABLE_LANGUAGES = [
     'ta', 'te', 'th', 'tr', 'uk', 'ur', 'vi', 'cy'
 ];
 export const SIZE = {
-    HEIGHT: 282,
-    WIDTH: 200,
+    HEIGHT: 141,
+    WIDTH: 100,
     MARGINS: [.05, .05, .05, .05],
 }
 export const TYPOGRAPHY = {
@@ -124,7 +124,7 @@ export const TYPOGRAPHY = {
     RANGE: 0.05,
     SIZE: {
         MAX: 0.95,
-        MIN: 0.05
+        MIN: 0.08
     },
     TEXT_ALIGNMENT: {
         GLOBAL: [[`Random`],[`Top`],[`Middle`],["Bottom"]],

@@ -6,6 +6,6 @@ export default defineConfig({
       // implement node event listeners here
     },
   },
-  reporter: 'reporters/custom.js',
-  numTestsKeptInMemory: 0,
+  numTestsKeptInMemory: 1,
+  experimentalMemoryManagement: true
 });

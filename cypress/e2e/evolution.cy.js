@@ -153,15 +153,18 @@ const TESTING_EXAMPLES = [
 ]
 
 const EVAL_SET = [
-    [1, 0], [0.5, 0.5], [0.25, 0.75], [0, 1]
+    [1, 0], [0.5, 0.5], [0, 1]
 ];
 
-const N_TIMES = 15;
+// [0.25, 0.75] --> all metric with the same weight
+
+const N_TIMES = 2;
 const IMAGES_LOG = `END`;
 const ELITE = 1;
 
 const CURRENT_EVAL = 0;
-const CURRENT_TEXT = 9;
+const CURRENT_TEXT = 5; // 18 not wokring
+// 11, 1 --> generate again
 
 
 // check if system is evolving
@@ -169,26 +172,31 @@ let checkingInterval;
 
 
 let e = TESTING_EXAMPLES[CURRENT_TEXT];
-describe(`testing no. ${CURRENT_TEXT}`, () => {
-    beforeEach(() => {
-        cy.visit(`http://localhost:8000`);
-    });
-
-    for (let i = 0; i < N_TIMES; i++) {
-        it(`a new poster for the text ${e.text} (test no. ${i})`, () => {
-            cy.window().then((w) => {
-                cy.window().should('have.property', 'app');
-                w.app.config.log.save = true;
-                w.app.config.log.saveImages = IMAGES_LOG;
-                evolve(e.text, e.lang, ELITE, EVAL_SET[CURRENT_EVAL]);
-            });
+for (let j=8; j<9; j++) {
+    let e = TESTING_EXAMPLES[j];
+    describe(`testing no. ${j}`, () => {
+        beforeEach(() => {
+            cy.visit(`http://localhost:8000`);
         });
-    }
+        afterEach(() => {
+            cy.reload();
+            Cypress.config("firstRun", true);
+        });
 
-    afterEach(() => {
-        Cypress.config("firstRun", true);
+        for (let i = 0; i < N_TIMES; i++) {
+            it(`a new poster for the text ${e.text} (test no. ${i})`, () => {
+                cy.window().then((w) => {
+                    cy.window().should('have.property', 'app');
+                    w.app.config.log.save = true;
+                    w.app.config.log.saveImages = IMAGES_LOG;
+                    evolve(e.text, e.lang, ELITE, EVAL_SET[CURRENT_EVAL]);
+                });
+            });
+        }
+
+
     });
-});
+}
 
 
 const evolve = (text, lang = "en", elite = 0, EVAL_SET = [0.5, 0.5]) => {
@@ -196,8 +204,15 @@ const evolve = (text, lang = "en", elite = 0, EVAL_SET = [0.5, 0.5]) => {
     cy.get(`#formControlLang`).select(lang);
     cy.get("#lineDivisionCheck").uncheck();
     cy.get('button.btn.btn-primary.mb-2').click();
+
     cy.get('#bt-start-evo').click();
     cy.get(`#grid-display-check`).uncheck();
+
+    cy.get(`#random-colour-typo-check`).uncheck();
+    cy.get(`#bk-color-check`).uncheck();
+    cy.get(`#background-style-list`).select(`Solid`);
+
+
     cy.get('#evolve-bt').click();
     cy.get(`#evaluation-semantic-weight-input`).invoke(`val`, EVAL_SET[0]).trigger(`change`).then(() => {
         cy.get(`#evaluation-aesthetics-weight-input`).invoke(`val`, EVAL_SET[1]).trigger(`change`).then(() => {
