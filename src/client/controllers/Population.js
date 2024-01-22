@@ -1,13 +1,15 @@
 import {Params} from "../Params.js";
 import Poster, {Grid} from "./Poster.js";
 import {randomScheme} from "./ColorGenerator.js";
+import {shuffleArr, sumArr, sus, swap} from "../utils.js";
 
 const SIZE_MUTATION_ADJUST = 5;
-const TOURNAMENT_SIZE = 5;
+const TOURNAMENT_SIZE = 10;
 
 export class Population {
     #typefaces;
-    constructor(params) {
+    #data;
+    constructor(params, data) {
         this.size = params["evo"]["popSize"];
         this.params = params;
         this.population = [];
@@ -15,7 +17,10 @@ export class Population {
         this.ready = false;
         this.evolving = false;
         this.pause = false;
-        
+        this.#data = data;
+        this.targetSemanticLayout = this.#calculateSemanticTargetLayout(this.#data);
+        this.emotionaData = this.#data["classification"]["emotions"]["data"];
+
         this.#typefaces = [];
         this.updated = true;
 
@@ -24,7 +29,7 @@ export class Population {
             generations: []
         };
 
-        // this._data = data; // private variable new version
+        this.initialisation();
     }
 
     initialisation = async () => {
@@ -47,17 +52,17 @@ export class Population {
         }
 
         // evaluate
-        this.evaluate();
+        await this.evaluate();
         this.updated = true;
     }
 
-    // evolve
     evolve = async () => {
+        const offspring = [];
+
         // clean graphics hidden on canvas
         await this.#cleanGraphics();
         document.getElementById(`generation-number`).textContent=this.generations;
 
-        const offspring = [];
 
         // copy the elite to next generation
         const eliteSize = parseInt(this.params["evo"]["eliteSize"]);
@@ -65,18 +70,22 @@ export class Population {
             offspring.push(this.population[i].copy());
         }
 
+        let fitness = this.population.map((ind) => ind.fitness);
+        let constraints = this.population.map((ind) => ind.constraint);
+
+        // select the indices using Stochastic Ranking
+        const rank = await this.#stochasticRanking(fitness, constraints);
+
         // crossover
         for (let i = eliteSize; i < this.params["evo"]["popSize"]; i++) {
             if (Math.random() <= this.params["evo"]["crossoverProb"]) {
-
-                const parentA = this.tournament(TOURNAMENT_SIZE);
-                const parentB = this.tournament(TOURNAMENT_SIZE);
+                const parents = this.#rankingTournament(rank, TOURNAMENT_SIZE, 2);
                 // crossover method
-                const child = await this.uniformCrossover(parentA, parentB);
+                const child = await this.uniformCrossover(this.population[parents[0]], this.population[parents[1]]);
                 offspring.push(child);
             } else {
-                const ind = this.tournament();
-                offspring.push(ind);
+                const ind = this.#rankingTournament(rank, TOURNAMENT_SIZE, 1);
+                offspring.push(this.population[ind[0]].copy());
             }
         }
 
@@ -101,7 +110,9 @@ export class Population {
         for (let ind of this.population) {
             genData.push({
                 genotype: ind.genotype,
-                fitness: ind.fitness
+                fitness: ind.fitness,
+                constraint: ind.constraint,
+                metrics: ind.metrics
             })
         }
         this.log["generations"].push({
@@ -118,6 +129,7 @@ export class Population {
                 this.evolve();
             }, 100);
         } else {
+            this.evolving = false;
             console.group (`stats`);
             console.log (this.log);
             console.groupEnd();
@@ -144,7 +156,8 @@ export class Population {
         child.genotype["grid"] = new Grid(this.params.size, 2, this.params.sentences.length, this.params.size.margin);
         for (const i in child.genotype["textboxes"]) {
             const tb = child.genotype["textboxes"][i];
-            const leading = Params.availableTypefacesInfo[tb["typeface"]].leading;
+            const typefaceIndex = this.params["typography"]["typefaces"].map(t => t.family).indexOf(tb["typeface"]);
+            const leading = this.params["typography"]["typefaces"][typefaceIndex]["leading"];
             child.genotype["grid"].defineRow(i, (tb["size"] * leading), child.genotype["typography"]["verticalAlignment"]);
         }
         // background
@@ -233,8 +246,7 @@ export class Population {
                 tb["typeface"] = this.params["typography"]["typefaces"][r]["family"];
             }
 
-            // size. double probability
-            if (Math.random() < prob*2) {
+            if (Math.random() < prob) {
                 let size = Math.round(tb["size"] + -SIZE_MUTATION_ADJUST+(Math.random()*SIZE_MUTATION_ADJUST));
                 // check if inside typeface min and max thresholds
                 size = Math.min(Math.max(size, ind.minFontSize), ind.maxFontSize);
@@ -250,7 +262,7 @@ export class Population {
                 tb["weight"] = Math.round(Math.random() * (maxWeight - minWeight) + minWeight);
             }
 
-            // strech
+            // stretch
             if (Math.random() < prob) {
                 let availableStretch = this.params["typography"]["typefaces"][selectedTypeface]["stretch"];
                 const minStretch = Math.max(parseInt(availableStretch[0]), this.params["typography"]["stretch"]["min"]);
@@ -266,7 +278,8 @@ export class Population {
             ind.genotype["grid"] = new Grid(this.params.size, 2, this.params.sentences.length, this.params.size.margin);
             for (let i in ind.genotype["textboxes"]) {
                 const tb = ind.genotype["textboxes"][i];
-                const leading = Params.availableTypefacesInfo[tb["typeface"]].leading;
+                const typefaceIndex = this.params["typography"]["typefaces"].map(t => t.family).indexOf(tb["typeface"]);
+                const leading = this.params["typography"]["typefaces"][typefaceIndex]["leading"];
                 ind.genotype["grid"].defineRow(i, (tb["size"] * leading), ind.genotype["typography"]["verticalAlignment"]);
             }
         }
@@ -288,34 +301,91 @@ export class Population {
         this.updated = true;
     }
 
-
     evaluate = async () => {
         // force evaluation of individuals
         for (let individual of this.population) {
-            await individual.evaluate();
+            console.group ();
+            console.log (`# emotional data`, this.emotionaData);
+            await individual.evaluate(this.targetSemanticLayout, this.emotionaData);
+            console.groupEnd();
         }
 
-        // sort individuals in the population by fitness (fittest first)
-        this.population = this.population.sort((a,b) => b.fitness - a.fitness);
+
+        // sort the population based on staticPenalty
+        // enables visualisation and elite
+        // sort individuals in the population by fitness (the fittest first)
+        await this.#staticPenalty();
+    }
+
+    #stochasticRanking = async (fitness, constraints, pF= 0.45) => { //0.45
+        let populationSize = this.population.length;
+        let indices = Array.from(Array(populationSize).keys())
+
+        for (let i=0; i<populationSize; i++) {
+            let noSwap = true;
+            for (let j=0; j<populationSize-1; j++) {
+                let u = Math.random();
+                if ((constraints[indices[j]] === 0 && constraints[indices[j + 1]] === 0) || u <= pF) {
+                    if (fitness[indices[j]] > fitness[indices[j + 1]]) {
+                        swap(indices, j, j + 1)
+                        noSwap = false;
+                    } else {
+                        if (constraints[indices[j]] > constraints[indices[j + 1]]) {
+                            swap(indices, j, j + 1)
+                            noSwap = false;
+                        }
+                    }
+                }
+            }
+            if (noSwap) {
+                break;
+            } else {
+                noSwap = true;
+            }
+        }
+        return indices;
+    }
+
+    #staticPenalty = async () => {
+        this.population = this.population.sort((a,b) => (b.fitness-b.constraint) - (a.fitness-a.constraint));
+        // debug
+        // best individual fitness
+        // console.log ("best individual=", this.population[0].fitness, this.population[0].constraint);
     }
 
     copy = (obj) => {
         return JSON.parse(JSON.stringify(obj));
     }
 
-    tournament = (size = 2) => {
+    // ranking based
+    // return n individuals
+    // More the selection pressure more will be the Convergence rate
+    #rankingTournament = (rank, tournamentSize = 5, parentSize = 2, sp = 2) => {
+        // check the tournament size and parentSize
+        tournamentSize = tournamentSize < parentSize ? parentSize : tournamentSize;
+        let parents = [];
+        // select the pool of parents
         let pool = [];
-        for (let i = 0; i < size; i++) {
-            const r = Math.round(Math.random()*(this.population.length-1));
-            pool.push(this.population[r]);
+        for (let i = 0; i < tournamentSize; i++) {
+            const r = Math.round(Math.random() * (rank.length - 1));
+            pool.push(r);
         }
-        let fittest = pool[0];
-        for (let i=1; i <pool.length; i++) {
-            if (pool[i].fitness > fittest.fitness) {
-                fittest = pool[i];
-            }
+        // sort by ranking
+        pool.sort((a, b) => a - b);
+        // define the probability based on ranking fitness
+        let probabilities = pool.map((ind) => {
+            return sp - (2 * ind * (sp - 1.0)) / (this.population.length - 1);
+        });
+        // normalize to sum up to 1
+        const probabilitiesSum = sumArr(probabilities);
+        probabilities = probabilities.map((p) => p / probabilitiesSum);
+        probabilities = shuffleArr(probabilities);
+        for (let j = 0; j < parentSize; j++) {
+            let ix = sus(probabilities);
+            // sus
+            parents.push(parseInt(ix));
         }
-        return fittest;
+        return parents;
     }
 
     // draw aux function
@@ -360,7 +430,8 @@ export class Population {
             // ensure that phenotype is created
             if (ind.phenotype === null) {
                 this.updated = true;
-                await ind.evaluate();
+                console.log (`outsite=${this.emotionaData}`);
+                await ind.evaluate(this.targetSemanticLayout, this.emotionaData);
             }
 
             // display
@@ -391,7 +462,7 @@ export class Population {
             }
         }
 
-        await this.evaluate();
+        // await this.evaluate();
     }
 
     saveRaster = () => {
@@ -399,6 +470,27 @@ export class Population {
             const ind = this.population[i];
             save(ind.phenotype, `${Date.now()}-${this.generations}-${i}`);
         }
+    }
+
+    #calculateSemanticTargetLayout = (data, emphasis= 0.1) => {
+        // emphasis is the min importance in layout of neutrals (between 0.1 and 1)
+        // emotional score is added to the emphasis
+        let dist = [];
+        for (let sentence of data["lexicon"]["sentences"]) {
+            let amount = sentence["emotions"]["data"]["recognisedEmotions"].length;
+            let emotions = sentence["emotions"]["data"]["recognisedEmotions"].map((e) => e[0]);
+            let score = sentence["emotions"]["data"]["recognisedEmotions"].reduce((accumulator, a) => {
+                return accumulator + a[1];
+            }, 0);
+            score +=emphasis;
+            dist.push([amount, emotions, score]);
+        }
+        const sum = sumArr(dist.map((d) => d[2]));
+        // normalised value
+        dist = dist.map((d) => {
+            return [d[0],d[1],d[2],Math.round(d[2]/sum*100)/100];
+        });
+        return dist;
     }
 }
 

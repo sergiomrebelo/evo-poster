@@ -27,7 +27,7 @@ export default [
                 dir: 'src/public',
                 name: 'version',
                 assetFileNames: 'assets/[name]-[hash][extname]',
-                plugins: [terser()],
+                plugins: [], //terser()
             }
         ],
         watch: {

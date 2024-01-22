@@ -2,7 +2,7 @@ import {html, LitElement} from "lit";
 import {TextInput} from "../inputs/TextInput.js";
 import {Divider} from "../Divider.js";
 import {Params} from "../../Params.js";
-import {validateNumberInput} from "../inputs/utils.js";
+import {validateNumberInput} from "../../utils.js"
 
 export class EvolutionPanel extends LitElement {
     static properties = {

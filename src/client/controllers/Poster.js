@@ -3,7 +3,8 @@ import backgroundStyles from "./BackgroundStyles.js";
 
 import * as evaluator from "../../@evoposter/evaluator/src/index.mjs";
 import {randomScheme} from "./ColorGenerator.js";
-
+import {sumArr} from "../utils.js";
+import {semanticsEmphasis} from "../../@evoposter/evaluator/src/index.mjs";
 
 
 class Poster {
@@ -15,9 +16,15 @@ class Poster {
         this.generation = generation;
         this.ready = false;
         // ensure we use a deep copy of params
-        params = JSON.parse(JSON.stringify(params));
+        this.params = JSON.parse(JSON.stringify(params));
 
         this.fitness = 1;
+        this.constraint = 0;
+
+        this.metrics = {
+            legibility: 1,
+            gridAppropriateness: 1
+        }
         this.sentencesLenght = [];
 
         const h = (genotype === null) ? params["size"]["height"] : genotype["size"]["height"];
@@ -26,9 +33,9 @@ class Poster {
 
         this.genotype = (genotype === null) ? this.#generateGenotype(params) : genotype;
 
-        this.#showGrid = params !== null ? params.display.grid : true;
+        this.#showGrid = params !== null ? params.display.grid : false;
         this.phenotype = null;
-        this.evaluate();
+        // this.evaluate();
     }
 
     copy = () => {
@@ -68,7 +75,7 @@ class Poster {
             typography: typography,
             images: images
         }
-        return new Poster(this.n, this.generation, null, genotypeCopy);
+        return new Poster(this.n, this.generation, this.params, genotypeCopy);
     }
 
     #generateGenotype = (params) => {
@@ -111,7 +118,7 @@ class Poster {
             selectedStretch = Math.max(stretchDefaultParams[0], Math.min(selectedStretch, stretchDefaultParams[1]));
 
             // define initial size
-            const leading = Params.availableTypefacesInfo[Params.availableTypefaces[selectedTypeface]]["leading"];
+            const leading = this.params.typography.typefaces[selectedTypeface]["leading"];
             let size = Math.round(grid.rows.l[0]) / leading;
             size += Math.round(-(size*Params.typography.range)+(Math.random()*(size*Params.typography.range)));
             size = Math.max(
@@ -177,7 +184,7 @@ class Poster {
         }
     }
 
-    // generate phenotype and evaluate poster
+    // generate phenotype
     draw = async () => {
         this.ready = true;
         this.phenotype = createGraphics(this.genotype.size.width, this.genotype.size.height);
@@ -217,17 +224,37 @@ class Poster {
         return this.phenotype;
     }
 
-    evaluate = async () => {
+    evaluate = async (dist, emotionalData = {predominant: []}) => {
         this.phenotype = await this.draw();
-        this.fitness = 1; // multicreatira
+        const noCurrentTypefaces = this.params["typography"]["typefaces"].length;
+
+        // const layoutSemantics = evaluator.layoutSemantics(this.genotype["grid"]["rows"]["l"], dist, `FIXED`, this.genotype["size"]);
+        // const semanticsEmphasis = evaluator.semanticsEmphasis(this.genotype["textboxes"], dist, noCurrentTypefaces);
+        //  const justification = evaluator.legibility(this.sentencesLenght, this.genotype["grid"].getAvailableWidth(), `JUSTIFY`);
+        const visualSemantics = evaluator.semanticsVisuals(emotionalData, this.genotype["textboxes"], this.genotype.background.colors, this.params.typography.typefaces);
+
+
+        // this.fitness = layoutSemantics;
+        // this.fitness = (visualSemantics * 0.3 + layoutSemantics * 0.3 + justification * 0.4);
+        this.fitness = visualSemantics;
 
         // constraints
-        const legibility = evaluator.legibility(this.sentencesLenght, this.genotype["grid"].getAvailableWidth(), `JUSTIFY`);
-        // const gridAppropriateness = evaluator.gridAppropriateSize(this.genotype["size"], this.genotype["grid"]);
+        const legibility = evaluator.legibility(this.sentencesLenght, this.genotype["grid"].getAvailableWidth(), `OVERSET`);
+        const gridAppropriateness = evaluator.gridAppropriateSize(
+            this.genotype["size"].width, this.genotype["size"].height,
+            this.genotype["grid"].rows.l, this.genotype["grid"].columns.l, this.genotype["grid"].marginsPos
+        );
+        this.constraint = legibility + gridAppropriateness;
+
+        this.metrics["legibility"] = legibility;
+        this.metrics["gridAppropriateness"] = gridAppropriateness;
 
         // returns a number between 0 and 0.5
         // subtracted to fitness
-        this.fitness -= legibility;
+        return {
+            "fitness": this.fitness,
+            "constraints": this.constraint
+        }
     }
 
     typeset = async(pg) => {
@@ -477,7 +504,11 @@ export class Grid {
         this.columns.y.bottom = (this.size.height / 2) - (this.marginsPos.bottom);
 
         const inc = (this.size.width - (this.marginsPos.left + this.marginsPos.right)) / this.v;
-        this.columns.l = inc;
+        let horizontalSpace = [];
+        for (let i=0; i<this.v; i++) {
+            horizontalSpace.push(inc);
+        }
+        this.columns.l = horizontalSpace;
 
         // start cod of x
         let x = -(this.size.width / 2) + this.marginsPos.left;
