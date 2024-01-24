@@ -62,7 +62,7 @@ Clone the repository and install dependencies
 2. Build the Project:
    ```
    npm run build
-3. Stop the application:
+3. To disconnect the application:
    ```
    npm run stop
    ```
@@ -89,16 +89,37 @@ LANGUAGE_TRANSLATOR_URL=WATSON_API_KEY_URL
 The system parameters and available visual and typographic features can be customised through the `evo-poster.config.js` file.
 
 
-
 ## Contributing
+
+We welcome contributions to enhance and improve this project! Whether you want to report a bug, request a new feature, or contribute code, your involvement is highly appreciated.
+
+### Bug Reports and Feature Requests
+
+If you come across any issues or have ideas for new features, please [open an issue](https://github.com/sergiomrebelo/evo-poster/issues) on GitHub. When creating an issue, be sure to include relevant details such as the version, operating system, and steps to reproduce the problem.
+
+### Code Contributions
+
+We encourage you to contribute to the codebase. Here's how you can do it:
+
+1. Fork the repository to your GitHub account.
+2. Create a new branch for your changes.
+3. Make changes and commit them to your branch.
+4. Open a pull request (PR) against the `dev` branch of this repository.
+
+
+## Papers and Documentation
+- project wiki
+The code repository for this project is accessible at~\repo (visited: 8 November 2023). Supplementary materials are also available at \url{https://cdv.dei.uc.pt/evoposter}
 
 ## Acknowledgments
 This work is partially supported by national funds through the Foundation for Science and Technology (FCT), Portugal, within the scope of the project UID/CEC/00326/2019. Sérgio M. Rebelo is funded by FCT under the grant SFRH/BD/132728/2017 and COVID/BD/151969/2021. This work is based upon work from a scholarship supported by [SPECIES](https://species-society.org/), the Society for the Promotion of Evolutionary Computation in Europe and its Surroundings.
 
-## Supplemenrary Material
-- project wiki
-The code repository for this project is accessible at~\repo (visited: 8 November 2023). Supplementary materials are also available at \url{https://cdv.dei.uc.pt/evoposter}
 
 ## License
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 
+---
+
+MIT License
+
+Copyright (c) 2023 Sérgio M. Rebelo
