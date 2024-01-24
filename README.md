@@ -25,10 +25,69 @@ In this work, we introduce an emotion recognition Nature Language Processing met
 ![Project Banner](res/results.png)
 
 The development of this work follows an [agile science methodology](https://arxiv.org/abs/2104.12545), structured around potential [user cases and scenarios]((https://github.com/sergiomrebelo/evo-poster/wiki/Users-Stories-and-Scenarios)). In summary, these users' stories and scenarios unveil that this system can present two main challenges: visual exploration and discovery; and automation. 
-We observed that since the system is able to identify the most important parts of a given text, it can be also used as a casual visualization tool, it can address the secondary challenge of visualisation.
+We observed that since the system is able to identify the most emotional significant parts of a given text, it can be also used as a casual visualization tool. 
 
 
 ## Getting Started
+Follow these steps to get the project up and running on your local machine.
+
+### Prerequisites
+Make sure you have installed [Node.js](https://nodejs.org/) (version 21.6.0 or higher) and [npm](https://www.npmjs.com/) on your machine.
+
+<!-- TODO API -->
+
+### Installation
+Clone the repository and install dependencies
+```bash
+   git clone https://github.com/sergiomrebelo/evo-poster.git
+   cd evo-poster
+   npm install
+   ```
+
+### Usage
+1. To run the application, use the following command:
+```bash
+   npm start
+   ```
+2. Open your browser and go to http://localhost:8000/
+3. Upload the input image and text
+4. Click on the "Next" button
+5. Setup the system parameters, and, in the end, it will start the evolutionary process
+
+### Additional Commands
+1. Run the server in development mode:
+   ```
+   npm run dev
+   ```
+2. Build the Project:
+   ```
+   npm run build
+3. Stop the application:
+   ```
+   npm run stop
+   ```
+4. Run the tests:
+   ``` 
+   npm run test
+   npm test:cypress
+   ```
+
+### Customise Configuration
+Users must define the some settings in the `.env` file before running the application. 
+
+#### Example Configuration File
+```
+NODE_ENV=development
+PORT=8000
+
+MW_API_KEY=YOUR_MW_API_KEY
+
+LANGUAGE_TRANSLATOR_IAM_APIKEY=WATSON_API_KEY
+LANGUAGE_TRANSLATOR_URL=WATSON_API_KEY_URL
+```
+
+The system parameters and available visual and typographic features can be customised through the `evo-poster.config.js` file.
+
 
 
 ## Contributing
