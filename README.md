@@ -11,6 +11,7 @@ Evolutionary Poster Composer **(Evo-poster)** is a computational design approach
     - [Installation](#installation)
     - [Usage](#usage)
 4. [Contributing](#contributing)
+5. [Acknowledgments](#acknowledgments)
 5. [License](#license)
 
 ## About
@@ -23,5 +24,13 @@ In this work, we introduce an emotion recognition NLP method, combining lexicon-
 
 ![Project Banner](res/results.png)
 
+## Getting Started
+
+## Contributing
+
+## Acknowledgments
+This work is partially supported by national funds through the Foundation for Science and Technology (FCT), Portugal, within the scope of the project UID/CEC/00326/2019. Sérgio M. Rebelo is funded by FCT under the grant SFRH/BD/132728/2017 and COVID/BD/151969/2021. This work is based upon work from a scholarship supported by [SPECIES](https://species-society.org/), the Society for the Promotion of Evolutionary Computation in Europe and its Surroundings.
+
+## License
 
 ## 
