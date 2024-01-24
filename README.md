@@ -10,9 +10,14 @@ Evolutionary Poster Composer **(Evo-poster)** is a computational design approach
     - [Prerequisites](#prerequisites)
     - [Installation](#installation)
     - [Usage](#usage)
+    - [Additional Commands](#additional-commands)
+    - [Customise Configuration](#customise-configuration)
 4. [Contributing](#contributing)
-5. [Acknowledgments](#acknowledgments)
-5. [License](#license)
+   - [Bug Reports and Feature Requests](#bug-reports-and-feature-requests)
+   - [Code Contributions](#code-contributions)
+5. [Papers and Documentation](#papers-and-documentation)
+6. [Acknowledgments](#acknowledgments)
+7. [License](#license)
 
 ## About
 
@@ -27,14 +32,13 @@ In this work, we introduce an emotion recognition Nature Language Processing met
 The development of this work follows an [agile science methodology](https://arxiv.org/abs/2104.12545), structured around potential [user cases and scenarios]((https://github.com/sergiomrebelo/evo-poster/wiki/Users-Stories-and-Scenarios)). In summary, these users' stories and scenarios unveil that this system can present two main challenges: visual exploration and discovery; and automation. 
 We observed that since the system is able to identify the most emotional significant parts of a given text, it can be also used as a casual visualization tool. 
 
-
 ## Getting Started
 Follow these steps to get the project up and running on your local machine.
 
 ### Prerequisites
 Make sure you have installed [Node.js](https://nodejs.org/) (version 21.6.0 or higher) and [npm](https://www.npmjs.com/) on your machine.
 
-<!-- TODO API -->
+This system uses the [IBM Watson Language Translator](https://www.ibm.com/watson/services/language-translator/) and [Merriam-Webster dictionary](https://www.merriam-webster.com/) APIs. To use these APIs, you must create an account and get the API keys.
 
 ### Installation
 Clone the repository and install dependencies
@@ -108,6 +112,8 @@ We encourage you to contribute to the codebase. Here's how you can do it:
 
 
 ## Papers and Documentation
+Evolutionary Poster Approach
+
 - project wiki
 The code repository for this project is accessible at~\repo (visited: 8 November 2023). Supplementary materials are also available at \url{https://cdv.dei.uc.pt/evoposter}
 
@@ -117,9 +123,3 @@ This work is partially supported by national funds through the Foundation for Sc
 
 ## License
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
-
-MIT License
-
-Copyright (c) 2023 Sérgio M. Rebelo
