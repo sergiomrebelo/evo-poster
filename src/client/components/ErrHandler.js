@@ -26,6 +26,7 @@ export class ErrHandler extends LitElement {
         this.msg = (content.message !== null) ? content.message : content.msg;
         this._content = html`<p id="err-message">${unsafeHTML(this.msg)}</p>`;
         this.visible = true;
+        console.error(this.msg);
     }
 
     clear = () => {
@@ -37,11 +38,14 @@ export class ErrHandler extends LitElement {
 
     render(){
        return html`
-            <div class="temp-results container-fluid bg-light ${this.visible ? "d-block" : "d-none"}" id="error-handle">
-                <div class="row">
-                    <section class="col-12 bg-warning p-3" id="error-handle-inner">
+            <div class="position-relative temp-results container-fluid bg-light ${this.visible ? "d-block" : "d-none"} z-3" id="error-handle">
+                <div class="row bg-warning">
+                    <section class="col-11 p-3" id="error-handle-inner">
                         ${this._content}
                     </section>
+                    <div class="col-1 p-3"  @click="${() => {
+                        this.visible = false;
+                    }}"><span role="button">&times;</span></div>
                 </div>
             </div>`;
     }

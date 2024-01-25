@@ -1,0 +1,86 @@
+{
+  "_comments": {
+    "textboxes": [
+      {
+        "content": "text to be displayed",
+        "weight": "weight of the font",
+        "font-stretch": "stretch of the font",
+        "alignment": "alignment of the text, 0 for left, 1 for center, 2 for right",
+        "size": "size of the font",
+        "color": "colour of the text",
+        "case": "text case",
+        "typeface": "name of the font"
+      }
+    ],
+    "images": [
+      {
+        "position": [
+          "horizontal position (x) of image in percentages of the width",
+          "vertical position (y) of image in percentages of the height"],
+        "width": "width of the image in pixels",
+        "height": "height of the image in pixels",
+        "src": "the image stored at Binary Large Object (BLOb) format",
+      }
+    ],
+    "poster": {
+      "size": {
+        "width": "width of the poster in pixels",
+        "height": "height of the poster in pixels",
+        "margin": [
+          "top margin in percentage of poster height",
+          "right margin in percentage of poster width",
+          "bottom margin in percentage of poster height",
+          "left margin in percentage of poster width"
+        ]
+      },
+      "background": {
+        "style": "integer representing the background style, based on the styles available",
+        "colors": ["first colour", "second colour"]
+      },
+      "verticalAlignment": "vertical alignment of the poster, 0 for top, 1 for middle, 2 for bottom"
+    },
+  },
+  "textboxes": [
+    {
+      "content": "Lorem ipsum",
+      "weight": 600,
+      "font-stretch": 100,
+      "alignment": 2,
+      "size": 40,
+      "color": "#000000",
+      "case": "uppercase",
+      "typeface": "Emberly"
+    },
+    {
+      "content": "dolor sit amet,",
+      "weight": 400,
+      "font-stretch": 80,
+      "alignment": 3,
+      "size": 35,
+      "color": "#000000",
+      "case": "uppercase",
+      "typeface": "Anybody"
+    }
+  ],
+  "images": [
+    {
+      "position": [0.03, 0.5],
+      "width": 100,
+      "height": 200,
+      "src": "data:image/png;base64,R0lGODlhD ...."
+
+    }
+  ],
+  "poster": {
+    "size": {
+      "width": 100,
+      "height": 141,
+      "margin": [0.05, 0.05, 0.05, 0.05]
+    },
+    "background": {
+      "style": 0,
+      "colors": ["#ff0000", "#00ff00"]
+    },
+    "verticalAlignment": 1
+  }
+}

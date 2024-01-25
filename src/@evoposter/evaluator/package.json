@@ -1,0 +1,22 @@
+{
+  "name": "@evoposter/evaluator",
+  "version": "0.0.1",
+  "description": "set of metric for evaluation of poster designs",
+  "main": "lib/evaluator.js",
+  "scripts": {
+    "test": "NODE_OPTIONS=--experimental-vm-modules jest",
+    "build": "rollup --config"
+  },
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sergiomrebelo/evo-poster.git"
+  },
+  "author": "Sérgio M. Rebelo <sergiorebelo@me.com> (https://sergiorebelo.work/)",
+  "license": "ISC",
+  "devDependencies": {
+    "@rollup/plugin-terser": "^0.4.3",
+    "jest": "^29.6.1",
+    "rollup": "^3.28.0"
+  }
+}
