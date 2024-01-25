@@ -24,13 +24,16 @@ Evolutionary Poster Composer **(Evo-poster)** is a computational design approach
 **Evo-poster** approach takes inspiration from the highly algorithmic processes of letterpress design in [nineteenth-century print houses](https://en.wikipedia.org/wiki/Letterpress_printing). During this era, typographers, in collaboration with clients, selected and composed typography, ornaments, and wood-engraved illustrations to fill a matrix. Design choices were very pragmatic, with condensed typefaces for lengthy sentences and extended typefaces for shorter ones. Important content was highlighted using bigger and bolder typefaces.
 
 In this version of **evo-poster** `(3.0.1)`, our approach considers aesthetic and semantic objectives alongside legibility constraints. The fitness of an individual is determined using a hardwired fitness assignment scheme strategy. We explore two strategies for managing constrained evolution, including the utilisation of stochastic ranking selection. Users can define the search space of the Genetic Algorithm, controlling the visual variation in evolved outputs. Furthermore, users can customise the evolutionary and evaluation processes through a dedicated interface by adjusting the system parameters.
+The evaluation metrics consist of the evaluation of designs in terms of their legibility, aesthetic features, and coverage of content semantics. **Legibility** metrics determine whether all text content is adequately displayed and readable within the design, including the evaluation of *text legibility* and *grid appropriateness*. **Aesthetic** metrics assess the visual quality of the designs, examining aspects like *alignment,* *balance,* *justification,* *regularity,* *typeface pairing,* and *negative space fraction.* **Semantic** metrics focus on assessing how the composed text effectively conveys the semantic meaning of the content in terms of *layout,* *visuals,* and *typography*.
 
 In this work, we introduce an emotion recognition Nature Language Processing method, combining lexicon-based and Machine Learning techniques. This method facilitates the identification of emotionally significant parts of input texts, dividing them into sentences. Moreover, users can visually characterise each emotion according to their preferences, incorporating this information into the design process.
+
+Both metrics and emotion recognition methods are developed as stand-alone modules (see [src/@evoposter](/src/@evoposter)). 
 
 ![Project Banner](res/results.png)
 
 The development of this work follows an [agile science methodology](https://arxiv.org/abs/2104.12545), structured around potential [user cases and scenarios]((https://github.com/sergiomrebelo/evo-poster/wiki/Users-Stories-and-Scenarios)). In summary, these users' stories and scenarios unveil that this system can present two main challenges: visual exploration and discovery; and automation. 
-We observed that since the system can identify the most emotionally significant parts of a given text, it can be also used as a casual visualization tool. 
+We observed that since the system can identify the most emotionally significant parts of a given text, it can be also used as a casual visualization tool.
 
 ## Getting Started
 Follow these steps to get the project up and running on your local machine.
