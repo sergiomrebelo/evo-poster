@@ -23,7 +23,7 @@
     "fin-negation": "^1.0.8",
     "fin-urls": "^1.0.4",
     "finnlp": "^1.1.1",
-    "ibm-watson": "^7.1.2",
+    "ibm-watson": "^7.2.0",
     "node-emoji": "^1.11.0",
     "node-fetch": "^3.3.0",
     "sbd": "^1.0.19",
