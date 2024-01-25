@@ -21,7 +21,7 @@ Evolutionary Poster Composer **(Evo-poster)** is a computational design approach
 
 ## About
 
-**(Evo-poster)** approach takes inspiration from the highly algorithmic processes of letterpress design in [nineteenth-century print houses](https://en.wikipedia.org/wiki/Letterpress_printing). During this era, typographers, in collaboration with clients, selected and composed typography, ornaments, and wood-engraved illustrations to fill a matrix. Design choices were very pragmatic, with condensed typefaces for lengthy sentences and extended typefaces for shorter ones. Important content was highlighted using bigger and bolder typefaces.
+**Evo-poster** approach takes inspiration from the highly algorithmic processes of letterpress design in [nineteenth-century print houses](https://en.wikipedia.org/wiki/Letterpress_printing). During this era, typographers, in collaboration with clients, selected and composed typography, ornaments, and wood-engraved illustrations to fill a matrix. Design choices were very pragmatic, with condensed typefaces for lengthy sentences and extended typefaces for shorter ones. Important content was highlighted using bigger and bolder typefaces.
 
 In this version of **evo-poster** `(3.0.1)`, our approach considers aesthetic and semantic objectives alongside legibility constraints. The fitness of an individual is determined using a hardwired fitness assignment scheme strategy. We explore two strategies for managing constrained evolution, including the utilisation of stochastic ranking selection. Users can define the search space of the Genetic Algorithm, controlling the visual variation in evolved outputs. Furthermore, users can customise the evolutionary and evaluation processes through a dedicated interface by adjusting the system parameters.
 
@@ -30,7 +30,7 @@ In this work, we introduce an emotion recognition Nature Language Processing met
 ![Project Banner](res/results.png)
 
 The development of this work follows an [agile science methodology](https://arxiv.org/abs/2104.12545), structured around potential [user cases and scenarios]((https://github.com/sergiomrebelo/evo-poster/wiki/Users-Stories-and-Scenarios)). In summary, these users' stories and scenarios unveil that this system can present two main challenges: visual exploration and discovery; and automation. 
-We observed that since the system is able to identify the most emotional significant parts of a given text, it can be also used as a casual visualization tool. 
+We observed that since the system can identify the most emotionally significant parts of a given text, it can be also used as a casual visualization tool. 
 
 ## Getting Started
 Follow these steps to get the project up and running on your local machine.
@@ -50,7 +50,7 @@ Clone the repository and install dependencies
 
 ### Usage
 1. To run the application, use the following command:
-```bash
+   ```bash
    npm start
    ```
 2. Open your browser and go to http://localhost:8000/
@@ -77,7 +77,7 @@ Clone the repository and install dependencies
    ```
 
 ### Customise Configuration
-Users must define the some settings in the `.env` file before running the application. 
+Users must define some settings in the `.env` file before running the application. 
 
 #### Example Configuration File
 ```
@@ -112,13 +112,23 @@ We encourage you to contribute to the codebase. Here's how you can do it:
 
 
 ## Papers and Documentation
-Evolutionary Poster Approach
+**Evo-poster** is a part of the experimental work conducted within the scope of the 
+**Computational Graphic Design and Typography Practices** Ph.D. thesis in Informatics Engineering, Human-Centered Computing, of Sérgio M. Rebelo supervised by Professors Penousal Machado and João Bicker.
 
-- project wiki
-The code repository for this project is accessible at~\repo (visited: 8 November 2023). Supplementary materials are also available at \url{https://cdv.dei.uc.pt/evoposter}
+One may find more supplementary material at [res](/res) including the data related to the preliminary testing of this approach.
+For more information about work and previous related works, please visit [cdv.dei.uc.pt/projects/evoposter](https://cdv.dei.uc.pt/projects/evoposter)
+
+### Publications
+- S. M. Rebelo, J. J. Merelo, J. Bicker and P. Machado. Evaluation Metrics for Automated Typographic Poster Generation. In *Artificial Intelligence in Music, Sound, Art and Design. 13th International Conference, EvoMUSART 2024, Held as Part of EvoStar 2024, Aberystwyth, Wales, UK, April 3–5, 2024, Proceedings.* Springer, Cham.
+
+### Related Previous Work
+- S. M. Rebelo, T. Martins, J. Bicker, and P. Machado, [Exploring Automatic Fitness Evaluation for Evolutionary Typesetting](https://cdv.dei.uc.pt/wp-content/uploads/publications-cdv/rebelo2021a.pdf). In *C&C ’21: Creativity and Cognition Virtual Event Italy June 22 - 23, 2021,* pp. 1–9
+- S. M. Rebelo, J. Bicker, and P. Machado, [Evolutionary Experiments in Typesetting of Letterpress-Inspired Posters,](https://cdv.dei.uc.pt/wp-content/uploads/publications-cdv/rebelo2020a.pdf). In *Proceedings of the Eleventh International Conference on Computational Creativity, September 7–11,* 2020.
+- S. M. Rebelo, C. M. Fonseca, J. Bicker, and P. Machado, [Evolutionary Experiments in the Development of Typographical Posters](https://cdv.dei.uc.pt/wp-content/uploads/publications-cdv/rebelofonsecaBM2018.pdf). In *6th Conference on Computation, Communication, Aesthetics & X, Madrid, Spain (xCoAx 2018),* 2018, pp. 65–75.
+
 
 ## Acknowledgments
-This work is partially supported by national funds through the Foundation for Science and Technology (FCT), Portugal, within the scope of the project UID/CEC/00326/2019. Sérgio M. Rebelo is funded by FCT under the grant SFRH/BD/132728/2017 and COVID/BD/151969/2021. This work is based upon work from a scholarship supported by [SPECIES](https://species-society.org/), the Society for the Promotion of Evolutionary Computation in Europe and its Surroundings.
+This work is supported by the Foundation for Science and Technology (FCT), Portugal, within the scope of the project UID/CEC/00326/2019. Sérgio M. Rebelo was funded by FCT under the grant SFRH/BD/132728/2017 and COVID/BD/151969/2021. This work is based upon work from a scholarship supported by [SPECIES](https://species-society.org/), the Society for the Promotion of Evolutionary Computation in Europe and its Surroundings.
 
 
 ## License
